@@ -1,0 +1,8 @@
+The install is a mess/crude
+
+--- It'd be better to generate the .so file in numpy itself instead of having Python call Python on the command line
+--- User shouldn't have to edit the install directory
+--- If the package name changes, I'd have to manually edit every instance of pyRT_DISORT
+--- If we need libraries besides numpy, check_required_libraries would break
+--- Sometimes if I run this in Terminal it simply refuses and throws a permission error
+--- I don't know how to ensure the resultant .so file goes where Python looks for libraries... so I ask users to do it manually
