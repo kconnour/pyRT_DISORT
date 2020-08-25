@@ -1,7 +1,8 @@
 import numpy as np
 
+
 # Make the super class
-class Aerosol():
+class Aerosol(object):
     def check_valid_asymmetry_parameter(self, g):
         """Check the HG asymmetry parameter is valid
 
@@ -41,8 +42,8 @@ class Aerosol():
 
 
 # Make the sub-classes
-class Dust(Aerosol):   # or whatever for g.. I just made up a number for now
-    def __init__(self, phase_function_file, theta):
+class Dust(Aerosol):
+    def __init__(self, phase_function_file, aerosol_file, theta, wavelength):
         """Initialize the Dust class
 
         Parameters
@@ -53,8 +54,9 @@ class Dust(Aerosol):   # or whatever for g.. I just made up a number for now
             The angle at which to evaluate the phase functions in radians
         """
         self.phase_file = phase_function_file
-        self.g = 0.78
+        self.aerosol_file = aerosol_file
         self.theta = theta
+        self.wavelength = wavelength
 
     def get_phase_coefficients(self):
         """ Read in the the Legendre coefficients for dust
@@ -65,7 +67,7 @@ class Dust(Aerosol):   # or whatever for g.. I just made up a number for now
         """
         return np.load(self.phase_file, allow_pickle=True)
 
-    def empirical_phase_function(self):
+    def evaluate_phase_function(self):
         """Evaluate the empirical phase function from Legendre coefficients at a given angle
 
         Returns
@@ -73,6 +75,21 @@ class Dust(Aerosol):   # or whatever for g.. I just made up a number for now
         float
         """
         return np.polynomial.legendre.legval(self.theta, self.get_phase_coefficients())
+
+    def read_dust_file(self):
+        return np.load(self.aerosol_file, allow_pickle=True)
+
+    def interpolate_dust_asymmetry_parameter(self):
+        """ Interpolate the dust HG asymmetry parameter at a wavelength
+
+        Returns
+        -------
+        float: the interpolated parameter
+        """
+        dust_info = self.read_dust_file()
+        wavelengths = dust_info[:, 0]
+        g = dust_info[:, -1]
+        return np.interp(self.wavelength, wavelengths, g)
 
 
 # Right now this class doesn't really seem necessary but it could be a useful extension later on...
@@ -88,7 +105,6 @@ class WaterIce(Aerosol):
             The angle at which to evaluate the phase functions in radians
         """
         self.phase_file = phase_function_file
-        self.g = 0.5
         self.theta = theta
 
     def get_phase_coefficients(self):
@@ -100,7 +116,7 @@ class WaterIce(Aerosol):
         """
         return np.load(self.phase_file, allow_pickle=True)
 
-    def empirical_phase_function(self):
+    def evaluate_phase_function(self):
         """Evaluate the empirical phase function from Legendre coefficients at a given angle
 
         Returns
@@ -109,13 +125,17 @@ class WaterIce(Aerosol):
         """
         return np.polynomial.legendre.legval(self.theta, self.get_phase_coefficients())
 
+    def read_ice_file(self):
+        return np.load(self.aerosol_file, allow_pickle=True)
 
-''' #Examples
-dustfile = '/Users/kyco2464/pyRT_DISORT/aux/legendre_coeff_dust.npy'
-icefile = '/Users/kyco2464/pyRT_DISORT/aux/legendre_coeff_h2o_ice.npy'
-dust = Dust(dustfile, 0.5)
-print(dust.empirical_phase_function())
-print(dust.make_hg_phase_function(0.78, 0.5))
-ice = WaterIce(icefile, 0.5)
-print(ice.empirical_phase_function())
-print(ice.make_hg_phase_function(0.78, 0.5))'''
+    def interpolate_ice_asymmetry_parameter(self):
+        """ Interpolate the ice HG asymmetry parameter at a wavelength
+
+        Returns
+        -------
+        float: the interpolated parameter
+        """
+        ice_info = self.read_ice_file()
+        wavelengths = ice_info[:, 0]
+        g = ice_info[:, -1]
+        return np.interp(self.wavelength, wavelengths, g)
