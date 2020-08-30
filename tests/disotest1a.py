@@ -57,7 +57,7 @@ trnmed = np.zeros(6)
 #print(disort1.__doc__)
 
 # More practically, if desired print the "disort" function's inputs and outputs
-#print(disort.disort.__doc__)
+print(disort.disort.__doc__)
 
 # Run disort, putting DFDT, UAVG, and UU in a, b, and c, respectively
 a, b, c = disort.disort(usrang, usrtau, ibcnd, onlyfl, prnt, plank, lamber, deltamplus, do_pseudo_sphere, dtauc, ssalb,

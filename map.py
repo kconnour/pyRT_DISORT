@@ -1,6 +1,7 @@
 import numpy as np
 import scipy.interpolate.interpolate as interpolate
 
+
 # Make the super class
 class Map():
     def __init__(self, map_file, latitude, longitude):
@@ -10,6 +11,7 @@ class Map():
 
     def read_map(self):
         return np.load(self.map_file, allow_pickle=True)
+
 
 # This is its own class for now because we may extend this to include hyperspectral albedo
 class Albedo(Map):

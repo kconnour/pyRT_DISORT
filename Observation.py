@@ -93,7 +93,8 @@ class Observation:
         azimuthal_angle = self.phi0 + 180 - d_phi
         return azimuthal_angle
 
-    def wavelength_to_wavenumber(self, wavelength):
+    @staticmethod
+    def wavelength_to_wavenumber(wavelength):
         """ Convert wavelength (in nm) to wavenumber (in inverse cm)
 
         Returns

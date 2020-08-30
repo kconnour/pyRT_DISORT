@@ -109,7 +109,7 @@ class Layers:
             The number density in the given layer
         """
         integral, absolute_error = quadrature(self.calculate_number_density, layer_bottom, layer_top)
-        return integral, error
+        return integral, absolute_error
 
 
 class Atmosphere:
