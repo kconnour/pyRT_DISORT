@@ -4,7 +4,7 @@ import scipy.interpolate.interpolate as interpolate
 
 class Observation:
     def __init__(self, short_wavelength, long_wavelength, solar_zenith_angle, emission_angle, phase_angle, latitude,
-                 longitude, map_path):
+                 longitude, altitude_map_path, solar_flux):
         """ Initialize the class
 
         Parameters
@@ -23,8 +23,10 @@ class Observation:
             The pixel latitude (in degrees)
         longitude: float
             The pixel longitude (in degrees east). Note The convention is 0--360, not -180 -- +180
-        map_path: str
+        altitude_map_path: str
             The Unix-like path to the .npy file containing the MOLA map of altitudes
+        solar_flux: str
+            The Unix-like path the the .npy file containing the solar flux
         """
         self.short_wavelength = short_wavelength
         self.long_wavelength = long_wavelength
@@ -36,8 +38,9 @@ class Observation:
         self.phi0 = 0
         self.low_wavenumber = self.wavelength_to_wavenumber(self.long_wavelength)
         self.high_wavenumber = self.wavelength_to_wavenumber(self.short_wavelength)
-        self.map_path = map_path
+        self.map_path = altitude_map_path
         self.altitude = self.interpolate_altitude()
+        self.solar_flux = solar_flux
 
     def interpolate_altitude(self):
         map_array = np.load(self.map_path)
@@ -104,3 +107,25 @@ class Observation:
         """
         cm_wavelength = wavelength * 10**-7
         return 1 / cm_wavelength
+
+    def calculate_low_wavenumber(self):
+        return self.wavelength_to_wavenumber(self.long_wavelength)
+
+    def calculate_high_wavenumber(self):
+        return self.wavelength_to_wavenumber(self.short_wavelength)
+
+    def calculate_solar_flux(self):
+        """Calculate the incident solar flux between the input wavelengths. Note this is NOT corrected
+        for solar zenith angle; in other words, flux = calculate_solar_flux * cos(SZA)
+
+        Returns
+        -------
+        integrated_flux: float
+            The integrated flux
+        """
+        solar_spec = np.load(self.solar_flux, allow_pickle=True)
+        wavelengths = solar_spec[:, 0]
+        fluxes = solar_spec[:, 1]
+        interp_fluxes = np.interp(np.array([self.short_wavelength, self.long_wavelength]), wavelengths, fluxes)
+        integrated_flux = np.mean(interp_fluxes) * (self.long_wavelength - self.short_wavelength)
+        return integrated_flux

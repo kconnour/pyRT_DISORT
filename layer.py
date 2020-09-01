@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 from scipy.integrate import quadrature
 from scipy.constants import Boltzmann
 
+from planets.mars.aerosols import MarsDust
+
 
 class Layers:
     def __init__(self, n_layers, n_moments, quadrature_order, scale_height, atmosphere_file):
@@ -101,7 +103,7 @@ class Layers:
         layer_bottom: float
             The altitude of the bottom of the layer
         layer_top: float
-            The altitude of hte top of the layer
+            The altitude of the top of the layer
 
         Returns
         -------
@@ -109,7 +111,26 @@ class Layers:
             The number density in the given layer
         """
         integral, absolute_error = quadrature(self.calculate_number_density, layer_bottom, layer_top)
-        return integral, absolute_error
+        return integral
+
+    def make_layer_midpoints(self):
+        layers = self.read_atmosphere()[0]
+        return (layers[1:] + layers[:-1]) / 2
+
+    def make_dust_optical_depths(self, phase_function_file, aerosol_file, theta, wavelength, column_OD):
+        dust = MarsDust(phase_function_file, aerosol_file, theta, wavelength)
+        scaling = dust.wavelength_scaling()
+        print(scaling)
+        z = self.read_atmosphere()[0]
+        z_midpoints = self.make_layer_midpoints()
+        column_density = np.zeros(len(z_midpoints))
+        for i in range(len(column_density)):
+            column_density[i] = self.calculate_column_density(z[i], z[i+1])
+        q = dust.conrath_profile(z_midpoints, 10000, 0.3)
+
+        dust_scaling = np.sum(column_density * q)
+        tau_dust = scaling * column_OD * q * column_density / dust_scaling
+        return tau_dust
 
 
 class Atmosphere:
@@ -126,3 +147,8 @@ class Atmosphere:
             return True
         else:
             return False
+
+
+layer = Layers(10, 10, 10, 10, '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/mars_atm.npy')
+asdf = layer.make_dust_optical_depths('/home/kyle/repos/pyRT_DISORT/planets/mars/aux/legendre_coeff_dust.npy',
+                               '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/dust.npy', 0.5, 9300, 1)

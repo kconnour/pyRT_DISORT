@@ -1,74 +1,36 @@
-class Observation
-    short_wavelength (WVNMHI)
-    long_wavelength (WVNMLO)
-    sza
-    emission_angle
-    phase_angle
-    latitude
-    longitude
-        (these collectively cover MU0, MU, PHI0, PHI)
+start on: hapke_subs.f
 
-class Computation   <-- I might kill this class
-    n_streams (MAXCMU)
-    ? (MAXULV)
-    do_pseudo_sphere (DO_PSEUDO_SPHERE)
-    deltamplus (DELTAMPLUS)
+disort_multi files successfully ported over:
+---aerosol_dust.dat
+---aerosol_ice.dat
+---get_column.f
+---
 
-class Mars_Planet
-    mars_radius (EARTH_RADIUS)
+disort_multi files NOT YET ported over:
+---BDREF.f
+---bdref_ls.f
+---bdref_mcewen.f
+---bdref_min.f
+---bdref_multi.f
+---bdref_multi_tilt.f
+---conrath.f
+---corrk_mds.f
+---D1MACH.f
+---DISORT.f (and I may not...)
+---disort_multi.f
+---ErrPack.f
+---getmom.f
 
-class Mars_Atm
-    plank (PLANK)
-    legendre_coeff_h20_ice
-    legendre_coeff_dust
-    ... [other coeff]
+disort_multi files NOT ported over (reason):
+---bilinear.f (just does linear interpolation; I use numpy/scipy)
+---ChangeLog (only tracks changes; we have Git nowadays)
+---DISORT.doc (this seems identical to the regular disort documentation)
+---DISOTEST.doc (this seems identical to the other documentation)
+---DISOTEST.f
+---ERF.f (I just use scipy erf)
+---getfits_xy.f (I transform .fits from astropy to numpy)\
+---getfits_xy_stub.f (it doesn't seem necessary)
 
-class Boundary
-    top_emissivity (TEMIS)
-    bottom_temp (BTEMP)
-    top_temp (TTEMP)
-    top_isotropic_intensity (FISOT)
-    top_beam_flux (FBEAM)
-    albedo (ALBEDO)
-    isotropic_surface (LAMBER)
-
-class Layers
-    n_layers (MAXCLY)
-    n_moments (MAXMOM)
-    n_mu (MAXUMU)
-    n_phi (MAXPHI)
-    optical_depths (DTAUC) shape: n_layers
-    single_scattering_albedos (SSALB) shape: n_layers
-    temperature (TEMPER) shape: n_layers + 1
-    legendre_moments (PMOM) shape: n_moments, n_layers
-
-
-class Output
-    user_specified_angles (USRANG)
-    user_specified_boundary (USRTAU)
-    ? (IBCND)
-    only_flux (ONLYFL)
-    prnt (PRNT)
-    header (HEADER)
-
-
-Required, unallocated variables:
-UTAU
-H_LYR
-RHOQ
-RHOU
-RHO_ACCURATE
-BEMST
-EMUST
-ACCUR
-RFLDIR
-RFLDN
-FLUP
-DFDT
-UAVG
-UU
-ALBMED
-TRNMED
 
 Assumptions so far
 --- PHI0 is always 0
@@ -78,5 +40,8 @@ Assumptions so far
 --- phsfn_98 is dust phase function Legendre coefficients and phsfn_99 is the same but for ice
 
 Questions
---- Where do I get albedo?
 --- Is phase function wavelength dependent? If so where is that stored? What wavelengths does phsfn_9[8,9] store?
+--- I'm interpreting MAXULV == n_boundaries but I don't think this is completely correct
+--- If PLANK=True, TTEMP = 0... why?
+--- Is Cext_tmp the (interpolated) value of c_extinction at my wavelength? And is cext_ref at same quantity at 9.3 microns?
+---
