@@ -1,9 +1,12 @@
 import numpy as np
 
 
-# Make the super class
 class Aerosol(object):
-    def check_valid_asymmetry_parameter(self, g):
+    def __init__(self, g=0.0):
+        self.g = g
+
+    @staticmethod
+    def check_valid_asymmetry_parameter(g):
         """Check the HG asymmetry parameter is valid
 
         Parameters
@@ -40,5 +43,19 @@ class Aerosol(object):
             print('The asymmetry parameter is not valid. Ensure it\'s between [-1, 1]')
             return
 
+    def make_hg_legendre_coefficients(self, order):
+        """ Make the Legendre coefficients of a Henyey-Greenstein phase function up to order
 
+        Parameters
+        ----------
+        order: int
+            The maximum order of coefficient to get
 
+        Returns
+        -------
+        coefficients: np.ndarray
+            The coefficients of the Legendre polynomials
+        """
+        orders = np.linspace(0, order, num=order+1)
+        coefficients = (2*orders + 1) * self.g**orders
+        return coefficients

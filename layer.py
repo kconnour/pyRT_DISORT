@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from scipy.integrate import quadrature
 from scipy.constants import Boltzmann
 
-from planets.mars.aerosols import MarsDust
+from planets.mars.mars_aerosols import MarsDust
 
 
 class Layers:
@@ -56,6 +56,7 @@ class Layers:
         frac = np.exp(-z / self.H)
         return frac
 
+    # Ported
     def read_atmosphere(self):
         """Read in the atmospheric layers
 
@@ -74,6 +75,7 @@ class Layers:
         T = atm[:, 2]
         return z, P, T
 
+    # Ported
     def calculate_number_density(self, altitudes):
         """Calculate number density (particles / unit volume) at any altitude.
         Assume the atmosphere obeys the ideal gas law.
@@ -94,6 +96,7 @@ class Layers:
         number_density = interp_pressure / interp_temperature / Boltzmann
         return number_density
 
+    # Ported
     def calculate_column_density(self, layer_bottom, layer_top):
         """Calculate the column density (particles / unit area) in a given layer. This is computed by integrating
         number density from the layer bottom to layer top with Gaussian quadrature.
@@ -113,6 +116,7 @@ class Layers:
         integral, absolute_error = quadrature(self.calculate_number_density, layer_bottom, layer_top)
         return integral
 
+    # Ported
     def make_layer_midpoints(self):
         layers = self.read_atmosphere()[0]
         return (layers[1:] + layers[:-1]) / 2
