@@ -21,7 +21,7 @@ temperatures = atmosphere.T
 # Add dust to the atmosphere
 marsdust = DustAtmosphere(mars_atm_file, dust_file, 10000, 0.5)
 column_OD = 2
-tau_dust = marsdust.make_dust_optical_depths(column_OD)
+tau_dust = marsdust.calculate_dust_optical_depths(column_OD)
 
 # DISORT variables that Mike just defined
 usrtau = False
@@ -34,7 +34,7 @@ ibcnd = 0
 prnt = np.array([True, False, False, False, True])
 accur = 0
 
-# DISORT variables that can change, but these are good test cases
+# DISORT variables that can change, but these seem like reasonable test cases
 plank = True
 lamber = True
 n_streams = 8
@@ -67,12 +67,12 @@ longitude = 30
 altitude_map = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/altitude_map.npy'
 solar_spec = '/home/kyle/repos/pyRT_DISORT/aux/solar_spectrum.npy'
 obs = Observation(short_wav, long_wav, sza, emission_angle, phase_angle, latitude, longitude, altitude_map, solar_spec)
-phi = np.array([obs.phi()])
+phi = np.array([obs.calculate_phi()])
 low_wavenumber = obs.calculate_low_wavenumber()
 high_wavenumber = obs.calculate_high_wavenumber()
 phi0 = obs.phi0
-umu0 = obs.mu0()
-umu = np.array([obs.mu()])
+umu0 = obs.calculate_mu0()
+umu = np.array([obs.calculate_mu()])
 fbeam = obs.calculate_solar_flux()
 
 # Make the output variables

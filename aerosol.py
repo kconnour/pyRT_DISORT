@@ -43,7 +43,7 @@ class Aerosol(object):
             print('The asymmetry parameter is not valid. Ensure it\'s between [-1, 1]')
             return
 
-    def make_hg_legendre_coefficients(self, order):
+    def calculate_hg_legendre_coefficients(self, order):
         """ Make the Legendre coefficients of a Henyey-Greenstein phase function up to order
 
         Parameters

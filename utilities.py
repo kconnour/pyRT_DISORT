@@ -14,7 +14,7 @@ def turn_npy_to_csv(file, headers):
     pd.DataFrame(array).to_csv('{}.csv'.format(path), header=headers, index=False)
 
 
-'''# An example
-file = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/mars_atm.npy'
-headers = ['Altitude (m)', 'Pressure (Pascal)', 'Temperature (K)']
-turn_npy_to_csv(file, headers)'''
+# An example
+file = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/mars_atm_test.csv'
+turn_csv_to_npy(file)
+

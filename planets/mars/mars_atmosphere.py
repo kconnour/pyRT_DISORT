@@ -6,7 +6,7 @@ from atmosphere import Atmosphere
 from planets.mars.mars_aerosols import MarsDust
 
 
-class DustAtmosphere(Atmosphere):
+class AtmosphericDust(Atmosphere):
     def __init__(self, atmosphere_file, dust_file, dust_scale_height, conrath_nu):
         super().__init__(atmosphere_file)
         self.dust_file = dust_file
@@ -32,7 +32,7 @@ class DustAtmosphere(Atmosphere):
             print('Bad Conrath nu parameter: it cannot be negative. Fix...')
             raise SystemExit('')
 
-    def conrath_profile(self):
+    def make_conrath_profile(self):
         """Calculate the vertical dust distribution assuming a Conrath profile, i.e.
         q(z) / q(0) = exp( nu * (1 - exp(z / H)))
         where q is the mass mixing ratio
@@ -46,7 +46,7 @@ class DustAtmosphere(Atmosphere):
         fractional_mixing_ratio = np.exp(self.nu * (1 - np.exp(self.z_midpoints / self.H)))
         return fractional_mixing_ratio
 
-    def make_dust_optical_depths(self, column_optical_depth, wavelength):
+    def calculate_dust_optical_depths(self, column_optical_depth, wavelength):
         """ Make the optical depths within each layer
 
         Parameters

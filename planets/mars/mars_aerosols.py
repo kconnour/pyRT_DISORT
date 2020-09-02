@@ -71,7 +71,7 @@ class MarsDust(Aerosol):
             print('{} nm is longer than {:.0f} nm---the longest wavelength in the file. '
                   'Using g from that wavelength'.format(wavelength, self.wavs[-1]))
 
-    def make_wavelength_scaling(self, wavelength):
+    def calculate_wavelength_scaling(self, wavelength):
         """ Make the wavelength scaling between a wavelength and the reference wavelength
 
         Parameters

@@ -39,17 +39,17 @@ class Observation:
         self.low_wavenumber = self.wavelength_to_wavenumber(self.long_wavelength)
         self.high_wavenumber = self.wavelength_to_wavenumber(self.short_wavelength)
         self.map_path = altitude_map_path
-        self.altitude = self.interpolate_altitude()
+        self.altitude = self.calculate_altitude()
         self.solar_flux = solar_flux
 
-    def interpolate_altitude(self):
+    def calculate_altitude(self):
         map_array = np.load(self.map_path)
         latitudes = np.linspace(-90, 90, num=180, endpoint=True)
         longitudes = np.linspace(0, 360, num=360, endpoint=True)
         interp = interpolate.RectBivariateSpline(latitudes, longitudes, map_array)
         return interp(self.latitude, self.longitude)[0]
 
-    def mu0(self):
+    def calculate_mu0(self):
         """ Calculate the cosine of the solar zenith angle
 
         Returns
@@ -58,7 +58,7 @@ class Observation:
         """
         return np.cos(np.deg2rad(self.sza))
 
-    def mu(self):
+    def calculate_mu(self):
         """ Calculate the cosine of the emission angle
 
         Returns
@@ -67,7 +67,7 @@ class Observation:
         """
         return np.cos(np.deg2rad(self.emission))
 
-    def phi(self):
+    def calculate_phi(self):
         """ Calculate the azimuthal angle for the given geometry.
 
         Returns
