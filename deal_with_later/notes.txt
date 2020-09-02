@@ -5,6 +5,22 @@ Conventions:
 "get" if I'm basically fetching a value
 "check" if I'm making sure some value isn't crap
 
+Altitudes are in km
+Wavelengths are in microns
+Everything else is in mks units
+
+
+
+
+
+
+
+
+
+
+
+
+
 start on: hapke_subs.f
 
 disort_multi files successfully ported over:

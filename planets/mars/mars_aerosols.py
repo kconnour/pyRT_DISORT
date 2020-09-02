@@ -6,7 +6,7 @@ from aerosol import Aerosol
 
 
 class MarsDust(Aerosol):
-    def __init__(self, dust_file, wavelength_reference=9.3*10**3):
+    def __init__(self, dust_file, wavelength_reference=9.3):
         self.dust_file = dust_file
         self.wave_ref = wavelength_reference
         self.wavs, self.c_ext, self.c_sca, self.kappa, self.g = self.read_dust_file()
@@ -65,10 +65,10 @@ class MarsDust(Aerosol):
         None
         """
         if wavelength < self.wavs[0]:
-            print('{} nm is shorter than {:.0f} nm---the shortest wavelength in the file. '
+            print('{} nm is shorter than {:.0f} microns---the shortest wavelength in the file. '
                   'Using g from that wavelength'.format(wavelength, self.wavs[0]))
         if wavelength > self.wavs[-1]:
-            print('{} nm is longer than {:.0f} nm---the longest wavelength in the file. '
+            print('{} nm is longer than {:.0f} microns---the longest wavelength in the file. '
                   'Using g from that wavelength'.format(wavelength, self.wavs[-1]))
 
     def calculate_wavelength_scaling(self, wavelength):

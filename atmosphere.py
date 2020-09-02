@@ -5,7 +5,7 @@ from scipy.integrate import quadrature
 
 
 class Atmosphere:
-    def __init__(self, atmosphere_file, n_layers=14, z_bottom=0, z_top=100000, p_surface=492, scale_height=10000,
+    def __init__(self, atmosphere_file, n_layers=14, z_bottom=0, z_top=100, p_surface=492, scale_height=10,
                  constant_pressure=True, top_temperature=160, bottom_temperature=212):
         # Needed for creating an atmosphere from user-defined values
         self.atm_file = atmosphere_file
@@ -167,8 +167,8 @@ class Atmosphere:
         """
         column_density = np.zeros(len(self.z_midpoints))
         for i in range(len(column_density)):
-            integral, absolute_error = quadrature(self.calculate_number_density, self.z[i], self.z[i+1])
-            column_density[i] = integral
+            integral, absolute_error = quadrature(self.calculate_number_density, self.z[i]*1000, self.z[i+1]*1000)
+            column_density[i] = integral * 1000
 
         return column_density
 

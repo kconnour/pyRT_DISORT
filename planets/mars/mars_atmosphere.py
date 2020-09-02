@@ -62,10 +62,10 @@ class AtmosphericDust(Atmosphere):
             The optical depths in each layer
         """
         dust = MarsDust(self.dust_file)
-        scaling = dust.make_wavelength_scaling(wavelength)
-        fractional_mxing_ratio = self.conrath_profile()
-        dust_scaling = np.sum(self.n * fractional_mxing_ratio)
-        tau_dust = scaling * column_optical_depth * fractional_mxing_ratio * self.n / dust_scaling
+        scaling = dust.calculate_wavelength_scaling(wavelength)
+        fractional_mixing_ratio = self.make_conrath_profile()
+        dust_scaling = np.sum(self.n * fractional_mixing_ratio)
+        tau_dust = scaling * column_optical_depth * fractional_mixing_ratio * self.n / dust_scaling
         return tau_dust
 
 

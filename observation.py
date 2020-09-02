@@ -4,7 +4,7 @@ import scipy.interpolate.interpolate as interpolate
 
 class Observation:
     def __init__(self, short_wavelength, long_wavelength, solar_zenith_angle, emission_angle, phase_angle, latitude,
-                 longitude, altitude_map_path, solar_flux):
+                 longitude, altitude_map_path, solar_flux_map_path):
         """ Initialize the class
 
         Parameters
@@ -25,7 +25,7 @@ class Observation:
             The pixel longitude (in degrees east). Note The convention is 0--360, not -180 -- +180
         altitude_map_path: str
             The Unix-like path to the .npy file containing the MOLA map of altitudes
-        solar_flux: str
+        solar_flux_map_path: str
             The Unix-like path the the .npy file containing the solar flux
         """
         self.short_wavelength = short_wavelength
@@ -39,10 +39,10 @@ class Observation:
         self.low_wavenumber = self.wavelength_to_wavenumber(self.long_wavelength)
         self.high_wavenumber = self.wavelength_to_wavenumber(self.short_wavelength)
         self.map_path = altitude_map_path
-        self.altitude = self.calculate_altitude()
-        self.solar_flux = solar_flux
+        self.altitude = self.get_altitude()
+        self.solar_flux = solar_flux_map_path
 
-    def calculate_altitude(self):
+    def get_altitude(self):
         map_array = np.load(self.map_path)
         latitudes = np.linspace(-90, 90, num=180, endpoint=True)
         longitudes = np.linspace(0, 360, num=360, endpoint=True)
@@ -129,3 +129,5 @@ class Observation:
         interp_fluxes = np.interp(np.array([self.short_wavelength, self.long_wavelength]), wavelengths, fluxes)
         integrated_flux = np.mean(interp_fluxes) * (self.long_wavelength - self.short_wavelength)
         return integrated_flux
+
+#o = Observation(200, 250, 0, 0, 0, 10, 10, '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/altitude_map.npy', 'asfd')
