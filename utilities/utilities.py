@@ -26,5 +26,5 @@ np.save('/home/kyle/repos/pyRT_DISORT/planets/mars/aux/ice.npy', ice)
 print(ice[:, 0])'''
 
 # Take a .npy file and turn it into a .csv
-dust = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/dust.npy'
-turn_npy_to_csv(dust, ['wavelength (microns)', 'c_extinction', 'c_scattering', 'kappa', 'g'])
+#dust = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/dust.npy'
+#turn_npy_to_csv(dust, ['wavelength (microns)', 'c_extinction', 'c_scattering', 'kappa', 'g'])

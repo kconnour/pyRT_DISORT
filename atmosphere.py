@@ -3,6 +3,9 @@ import numpy as np
 from scipy.constants import Boltzmann
 from scipy.integrate import quadrature
 
+# Local imports
+from utilities.rayleigh_co2 import rayleigh_co2
+
 
 class Atmosphere:
     def __init__(self, atmosphere_file, n_layers=14, z_bottom=0, z_top=100, p_surface=492, scale_height=10,
@@ -49,6 +52,9 @@ class Atmosphere:
 
         # Make a list to hold any aerosols that can be added to the atmosphere
         self.aerosols = []
+
+        # Add Rayleigh scattering
+        self.tau_rayleigh = 0
 
     def read_atmosphere(self):
         """ Read in the atmospheric quantities from atmosphere_file
@@ -172,13 +178,41 @@ class Atmosphere:
 
         return column_density
 
+    def add_rayleigh_co2_optical_depth(self, wavelength):
+        """ Add the optical depth from Rayleigh scattering of CO2 to the total Rayleigh optical depth
+
+        Parameters
+        ----------
+        wavelength: float
+            The wavelength of the observation
+
+        Returns
+        -------
+        None
+        """
+        self.tau_rayleigh += self.calculate_rayleigh_co2_optical_depth(wavelength)
+
+    def calculate_rayleigh_co2_optical_depth(self, wavelength):
+        """ Calculate the Rayleigh CO2 optical depth at a given wavelength
+
+        Parameters
+        ----------
+        wavelength: float
+            The wavelength of the observation
+
+        Returns
+        -------
+
+        """
+        tau_rayleigh_co2 = rayleigh_co2(wavelength) * self.N
+        return tau_rayleigh_co2
+
     def add_aerosol(self, aerosol):
         """ Add an aerosol to the atmosphere object
 
         Parameters
         ----------
-        aerosol: tuple
-            The aerosol's optical depths, single scattering albedo, and phase function
+        aerosol:
 
         Returns
         -------
@@ -186,8 +220,43 @@ class Atmosphere:
         """
         self.aerosols.append(aerosol)
 
+    def calculate_column_optical_depth(self):
+        """ Calculate the optical depth of each layer in a column
 
-#atmfile = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/mars_atm.npy'
-#atm = Atmosphere(atmfile)
-#atmtest = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/mars_atm_test.npy'
-#atm0 = Atmosphere(atmtest)
+        Returns
+        -------
+        column_optical_depth: np.ndarray
+            The optical depths in each layer
+        """
+        total_aerosols = len(self.aerosols)
+        # Add in Rayleigh scattering
+        column_optical_depth = np.zeros(len(self.z_midpoints)) * self.tau_rayleigh
+
+        # Add in the optical depths of each aerosol
+        for i in range(total_aerosols):
+            aerosol_optical_depth = self.aerosols[i].optical_depth
+            column_optical_depth += aerosol_optical_depth
+        return column_optical_depth
+
+    def calculate_single_scattering_albedo(self):
+        """ Calculate the single scattering albedo of each layer in a column
+
+        Returns
+        -------
+        single_scattering_albedo: np.ndarray
+            The SSAs in each layer
+        """
+        total_aerosols = len(self.aerosols)
+        # Add in Rayleigh scattering
+        single_scattering_albedo = self.tau_rayleigh
+
+        # Add in the single scattering albedo of each aerosol
+        for i in range(total_aerosols):
+            scattering = self.aerosols[i].scattering_ratio * self.aerosols[i].optical_depth
+            single_scattering_albedo += scattering
+
+        # Finally, we need to divide the added optical depths by each layer's optical depth. But we also need to
+        # account for the fact that the optical depth can be 0
+        column_optical_depth = self.calculate_column_optical_depth()
+        column_optical_depth = np.where(column_optical_depth == 0, np.inf, column_optical_depth)
+        return single_scattering_albedo / column_optical_depth

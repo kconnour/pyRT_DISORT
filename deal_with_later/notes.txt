@@ -64,7 +64,14 @@ Assumptions so far
 
 Questions
 --- Is phase function wavelength dependent? If so where is that stored? What wavelengths does phsfn_9[8,9] store?
---- I'm interpreting MAXULV == n_boundaries but I don't think this is completely correct
---- If PLANK=True, TTEMP = 0... why?
---- Is Cext_tmp the (interpolated) value of c_extinction at my wavelength? And is cext_ref at same quantity at 9.3 microns?
----
+
+To-do list:
+--- Computers generally hate integrating large numbers, and I think I have a problem with the Gaussian quadrature
+--- Add ability to input any combo of OD, SSA, PHSFN (z) in a file... or use my routines
+--- tau_rayleigh isn't quite correct
+--- Convert solar spectrum to microns
+--- Figure out what are DISORT's output variables. Then remake the .so file
+--- Make a good installation
+--- Figure out what to do for SSA if the OD in a layer = 0. Right now I just divide by infinity
+--- SSA has impossible values... probably related to the integration problem
+
