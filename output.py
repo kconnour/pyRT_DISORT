@@ -15,11 +15,11 @@ class Output:
 
     def make_rhoq(self):
         # Make the variable "rhoq"
-        return np.zeros((0.5*self.cmu, 0.5*self.cmu+1, self.cmu))
+        return np.zeros((int(0.5*self.cmu), int(0.5*self.cmu+1), self.cmu))
 
     def make_rhou(self):
         # Make the variable "rhou"
-        return np.zeros((self.umu, 0.5*self.cmu+1, self.cmu))
+        return np.zeros((self.umu, int(0.5*self.cmu+1), self.cmu))
 
     def make_rho_accurate(self):
         # Make the variable "rho_accurate"
@@ -27,7 +27,7 @@ class Output:
 
     def make_bemst(self):
         # Make the variable "bemst"
-        return np.zeros(0.5*self.cmu)
+        return np.zeros(int(0.5*self.cmu))
 
     def make_emust(self):
         # Make the variable "emust"

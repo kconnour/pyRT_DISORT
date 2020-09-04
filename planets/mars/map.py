@@ -27,8 +27,8 @@ class Albedo(Map):
 
 
 class Altitude(Map):
-    def __init__(self, latitude, longitude, map_file):
-        super().__init__(latitude, longitude, map_file)
+    def __init__(self, map_file, latitude, longitude):
+        super().__init__(map_file, latitude, longitude)
 
     def interpolate_altitude(self):
         map_array = self.read_map()

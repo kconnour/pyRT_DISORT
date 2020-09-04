@@ -85,7 +85,7 @@ class Observation:
             d_phi = np.pi
 
         else:
-            temp_var = (np.cos(np.deg2rad(self.phase)) - self.mu0()*self.mu()) / \
+            temp_var = (np.cos(np.deg2rad(self.phase)) - self.calculate_mu0()*self.calculate_mu0()) / \
                        (sin_emission_angle * sin_solar_zenith_angle)
             # Trap the round-off case for arc cosine
             if np.abs(temp_var) > 1:
@@ -129,5 +129,3 @@ class Observation:
         interp_fluxes = np.interp(np.array([self.short_wavelength, self.long_wavelength]), wavelengths, fluxes)
         integrated_flux = np.mean(interp_fluxes) * (self.long_wavelength - self.short_wavelength)
         return integrated_flux
-
-#o = Observation(200, 250, 0, 0, 0, 10, 10, '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/altitude_map.npy', 'asfd')

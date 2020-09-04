@@ -74,4 +74,7 @@ To-do list:
 --- Make a good installation
 --- Figure out what to do for SSA if the OD in a layer = 0. Right now I just divide by infinity
 --- SSA has impossible values... probably related to the integration problem
+--- add_aerosol is a terrible method name if I can't add anything from the Aerosol class
+--- PMOM has the same problem with 0 in the denominator when dtauc or ssalb == 0
+--- If n and N are specified in the input file, I need layer n and N so I need to interpolate
 

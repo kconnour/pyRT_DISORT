@@ -96,14 +96,6 @@ transmissivity_medium = output.make_transmissivity_medium()
 albedo_map = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/albedo_map.npy'
 albedo = Albedo(obs.latitude, obs.longitude, albedo_map)
 
-
-
-'''Remaining
-ssalb
-pmom
-utau
-'''
-
 dfdt, uavg, uu = disort.disort(usrang, usrtau, ibcnd, onlyfl, prnt, plank, lamber, deltamplus, do_pseudo_sphere, tau_dust,
                                ssalb, pmom, temperatures, low_wavenumber, high_wavenumber, utau, umu0, phi0, umu, phi, fbeam, fisot, albedo,
                                surface_temp, top_temp, top_emissivity, earth_radius, h_lyr, rhoq, rhou, rho_accurate, bemst, emust, accur,

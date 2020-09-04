@@ -4,7 +4,7 @@ from scipy.constants import Boltzmann
 from scipy.integrate import quadrature
 
 # Local imports
-from utilities.rayleigh_co2 import rayleigh_co2
+from utilities.rayleigh_co2 import rayleigh_co2, make_rayleigh_phase_function
 
 
 class Atmosphere:
@@ -230,12 +230,11 @@ class Atmosphere:
         """
         total_aerosols = len(self.aerosols)
         # Add in Rayleigh scattering
-        column_optical_depth = np.zeros(len(self.z_midpoints)) * self.tau_rayleigh
+        column_optical_depth = self.tau_rayleigh
 
         # Add in the optical depths of each aerosol
         for i in range(total_aerosols):
-            aerosol_optical_depth = self.aerosols[i].optical_depth
-            column_optical_depth += aerosol_optical_depth
+            column_optical_depth += self.aerosols[i].optical_depth
         return column_optical_depth
 
     def calculate_single_scattering_albedo(self):
@@ -260,3 +259,30 @@ class Atmosphere:
         column_optical_depth = self.calculate_column_optical_depth()
         column_optical_depth = np.where(column_optical_depth == 0, np.inf, column_optical_depth)
         return single_scattering_albedo / column_optical_depth
+
+    def calculate_polynomial_moments(self):
+        """ Calculate the polynomial moments for the atmosphere
+
+        Returns
+        -------
+        polynomial_moments: np.ndarray
+            A 2D array of the polynomial moments
+        """
+        total_aerosols = len(self.aerosols)
+
+        # Get info I'll need
+        rayleigh_moments = make_rayleigh_phase_function(len(self.aerosols[0].legendre_coefficients))
+
+        # Start by adding in the Rayleigh moments
+        polynomial_moments = np.outer(rayleigh_moments, self.tau_rayleigh)
+
+        # Add in the moments for each aerosol
+        for i in range(total_aerosols):
+            scattering = self.aerosols[i].scattering_ratio * self.aerosols[i].optical_depth
+            polynomial_moments += scattering * np.outer(self.aerosols[i].legendre_coefficients, self.aerosols[i].optical_depth)
+
+        column_optical_depth = self.calculate_column_optical_depth()
+        single_scattering_albedo = self.calculate_single_scattering_albedo()
+        scaling = column_optical_depth * single_scattering_albedo
+        scaling = np.where(scaling == 0, np.mean(scaling), scaling)
+        return polynomial_moments / scaling#[:, np.newaxis]
