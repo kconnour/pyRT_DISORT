@@ -59,6 +59,8 @@ umu0 = obs.calculate_mu0()
 umu = np.array([obs.calculate_mu()])
 fbeam = np.pi
 
+# junk for a commit
+
 # Just define a bunch of variables
 usrtau = False
 usrang = True

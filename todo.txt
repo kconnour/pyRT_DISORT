@@ -1,0 +1,24 @@
+Things to start fixing:
+
+--- Update readme to include pandas?, scipy
+--- A generalized aerosol should have all the dust methods. Clouds can have a Conrath profile evidently
+--- Ozone isn't an aerosol but it needs added with the add_aerosol method to do dtauc correctly. So fix the naming
+--- add_aerosol is a terrible method name if I can't add anything from the Aerosol class
+--- The structure is getting sloppy. deal_with_later should deal with now
+--- Convert solar spectrum to microns + make a note somewhere that it's at 1AU
+--- Computers generally hate integrating large numbers, and I think I have a problem with the Gaussian quadrature
+--- tau_rayleigh isn't quite correct
+--- Figure out what are DISORT's output variables. Then remake the .so file
+--- Make an output array class that defines arrays of 0s for DISORT
+--- Figure out what to do for SSA if the OD in a layer = 0. Right now I just divide by infinity
+--- SSA has impossible values... probably related to the integration problem
+--- PMOM has the same problem with 0 in the denominator when dtauc or ssalb == 0
+--- If n and N are specified in the input file, I need layer n and N so I need to interpolate
+--- Specify n_moments and only read/create phase functions with those number of moments
+
+Things to add:
+--- Make a good installation
+--- Add test cases for just Rayleigh scattering
+--- Add Hapke phase function
+--- Add wavelength dependence for dtauc, ssa, pmom
+--- Add ability to input any combo of OD, SSA, PHSFN (z) in a file... or use my routines
