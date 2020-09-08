@@ -1,0 +1,12 @@
+Conventions:
+"read" if I'm reading in a file
+"make" if I'm just making an object or defining a function
+"calculate" if I'm doing math
+"get" if I'm basically fetching a value
+"check" if I'm making sure some value isn't crap
+
+Altitudes are in km
+Wavelengths are in microns
+Everything else is in mks units
+
+The solar spectrum values are at 1AU

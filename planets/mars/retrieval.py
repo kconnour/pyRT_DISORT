@@ -3,11 +3,11 @@ import numpy as np
 
 # Local imports
 #from planets.mars.mars_aerosols import MarsDust
-from observation import Observation
+from generic.observation import Observation
 import disort
 from planets.mars.map import Albedo
-from output import Output
-from atmosphere import Atmosphere
+from generic.output import Output
+from generic.atmosphere import Atmosphere
 from planets.mars.mars_atmosphere import DustAtmosphere
 
 # Read in the atmosphere and define variables   NOTE: I should have an option to read in OR create an atm

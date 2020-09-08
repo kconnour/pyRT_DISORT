@@ -2,7 +2,7 @@
 import numpy as np
 
 # Local imports
-from aerosol import Aerosol
+from generic.aerosol import Aerosol
 
 
 class MarsDust(Aerosol):

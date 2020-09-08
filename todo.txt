@@ -1,11 +1,9 @@
 Things to start fixing:
 
---- Update readme to include pandas?, scipy
 --- A generalized aerosol should have all the dust methods. Clouds can have a Conrath profile evidently
 --- Ozone isn't an aerosol but it needs added with the add_aerosol method to do dtauc correctly. So fix the naming
 --- add_aerosol is a terrible method name if I can't add anything from the Aerosol class
---- The structure is getting sloppy. deal_with_later should deal with now
---- Convert solar spectrum to microns + make a note somewhere that it's at 1AU
+--- Convert solar spectrum to microns
 --- Computers generally hate integrating large numbers, and I think I have a problem with the Gaussian quadrature
 --- tau_rayleigh isn't quite correct
 --- Figure out what are DISORT's output variables. Then remake the .so file
@@ -22,3 +20,4 @@ Things to add:
 --- Add Hapke phase function
 --- Add wavelength dependence for dtauc, ssa, pmom
 --- Add ability to input any combo of OD, SSA, PHSFN (z) in a file... or use my routines
+--- Add classes that encapsulate numpy/scipy functions

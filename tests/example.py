@@ -1,12 +1,7 @@
 # An example file for Mike
 
-from atmosphere import Atmosphere
+from generic.atmosphere import Atmosphere
 from planets.mars.mars_atmosphere import AtmosphericDust
-import disort
-import numpy as np
-from observation import Observation
-from output import Output
-from planets.mars.map import Albedo
 
 # For now I'm just passing files in where necessary
 atmfile = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/mars_atm.npy'
