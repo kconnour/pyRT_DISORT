@@ -62,6 +62,6 @@ class HenyeyGreenstein:
         coefficients: np.ndarray
             The coefficients of the Legendre polynomials
         """
-        orders = np.linspace(0, self.n_moments, num=self.n_moments+1)
+        orders = np.linspace(0, self.n_moments, num=self.n_moments)
         coefficients = (2*orders + 1) * self.g**orders
         return coefficients
