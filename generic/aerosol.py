@@ -1,47 +1,32 @@
 import numpy as np
-from generic.phase_function import EmpiricalPhaseFunction, HenyeyGreenstein
 
 
 class Aerosol:
-    def __init__(self, n_moments, phase_function_type, wavelength_reference, wavelengths, aerosol_file='', g=np.nan,
-                 legendre_file=''):
+    def __init__(self, aerosol_file, phase_function, wavelengths, wavelength_reference):
         """ Initialize the class
 
         Parameters
         ----------
-        n_moments: int
-            The number of phase function moments
-        phase_function_type: str
-            A string of which phase function to use. Can be 'hg' for HG. It's a parameter to extend the class in the
-            future
-        wavelength_reference: float
-            The reference wavelength to scale the aerosol to
+        aerosol_file: str
+            The Unix-like path to the file containing the aerosol's properties
+        phase_function: PhaseFunction (duck typed...)
+            The phase function object
         wavelengths: np.ndarray
-            The wavelengths to at which this aerosol was observed
-        aerosol_file: str, optional
-            The Unix-like path to the aerosol info file. Default is ''
-        g: float, optional
-            The HG asymmetry parameter. Default is np.nan
-        legendre_file: str, optional
-            The Unix-like path to the Legendre coefficients file. Default is ''
+            The wavelengths at which this aerosol was observed
+        wavelength_reference: float
+            The wavelength at which to scale the wavelengths
         """
-        self.n_moments = n_moments
-        self.phase_function_type = phase_function_type
-        self.wave_ref = wavelength_reference
-        self.wavelengths = wavelengths
+
         self.aerosol_file = aerosol_file
-        self.g = g
-        self.legendre_file = legendre_file
+        self.phase_function = phase_function
+        self.wavelengths = wavelengths
+        self.wave_ref = wavelength_reference
 
-        if self.aerosol_file:
-            self.wavs, self.c_ext, self.c_sca, self.kappa, self.g, self.p_max, self.theta_max = self.read_aerosol_file()
-            self.scaling = self.calculate_wavelength_scaling()
-            self.scattering_coeff = self.calculate_aerosol_scattering_coefficients()
-
-        if self.legendre_file:
-            self.phase_function = self.make_empirical_phase()
-        else:
-            self.phase_function = self.make_hg_phase()
+        # Make sure the aerosol knows its properties
+        self.wavs, self.c_ext, self.c_sca, self.kappa, self.g, self.p_max, self.theta_max = self.read_aerosol_file()
+        self.check_wavelength()
+        self.extinction_ratio = self.calculate_wavelength_extinction_ratio()
+        self.single_scattering_albedo = self.calculate_single_scattering_albedo()
 
     def read_aerosol_file(self):
         """ Read the aerosol file
@@ -88,85 +73,44 @@ class Aerosol:
         """
         if np.size((too_short := self.wavelengths[self.wavelengths < self.wavs[0]]) != 0):
             print('{} nm is shorter than {:.1f} microns---the shortest wavelength in the file. '
-                  'Using g from that wavelength'.format(too_short, self.wavs[0]))
+                  'Using properties from that wavelength'.format(too_short, self.wavs[0]))
         if np.size((too_long := self.wavelengths[self.wavelengths > self.wavs[-1]]) != 0):
             print('{} nm is longer than {:.1f} microns---the longest wavelength in the file. '
-                  'Using g from that wavelength'.format(too_long, self.wavs[-1]))
+                  'Using properties from that wavelength'.format(too_long, self.wavs[-1]))
 
-    def calculate_wavelength_scaling(self):
-        """ Make the wavelength scaling between the reference wavelength and input wavelengths
+    def calculate_wavelength_extinction_ratio(self):
+        """ Calculate the wavelength scaling between the input wavelengths and reference wavelength
 
         Returns
         -------
-        scaling: np.ndarray
-            The ratios between C_extinction at the wavelengths and the reference wavelength
+        extinction_ratio: np.ndarray
+            The ratios between C_extinction at wavelengths and the reference wavelength
         """
         reference_c_ext = np.interp(np.array([self.wave_ref]), self.wavs, self.c_ext)
         wavelengths_c_ext = np.interp(self.wavelengths, self.wavs, self.c_ext)
-        scaling = wavelengths_c_ext / reference_c_ext
-        return scaling
+        extinction_ratio = wavelengths_c_ext / reference_c_ext
+        return extinction_ratio
 
-    def get_asymmetry_parameters(self):
-        """ Interpolate the HG asymmetry parameter at a given wavelength
+    def calculate_single_scattering_albedo(self):
+        """ Calculate the single scattering albedo = C_scattering / C_extinction at the input wavelengths
+
+        Returns
+        -------
+        single_scattering_albedo: np.ndarray
+            The single_scattering_albedo at the input wavelengths
+        """
+        interpolated_extinction = np.interp(self.wavelengths, self.wavs, self.c_ext)
+        interpolated_scattering = np.interp(self.wavelengths, self.wavs, self.c_sca)
+        single_scattering_albedo = interpolated_scattering / interpolated_extinction
+        return single_scattering_albedo
+
+    def calculate_asymmetry_parameter(self):
+        """ Calculate the HG asymmetry parameter at the input wavelengths
 
         Returns
         -------
         interpolated_g: np.ndarray
-            The HG asymmetry parameter at the input wavelengths
+            The interpolated asymmetry parameter
         """
-        self.check_wavelength()
         interpolated_g = np.interp(self.wavelengths, self.wavs, self.g)
         return interpolated_g
-
-    def make_hg_phase(self):
-        """ Make the possibly wavelength-dependent HG phase function
-
-        Returns
-        -------
-        phase_function: np.ndarray
-            The 2D array of the phase function moments
-        """
-        # If you want a HG phase function and know the g values at all the wavelengths
-        if self.phase_function_type == 'hg' and self.aerosol_file:
-            asymmetry_parameters = self.get_asymmetry_parameters()
-            phase_function = np.zeros((self.n_moments, len(self.wavelengths)))
-            for wavelength in range(len(self.wavelengths)):
-                hg = HenyeyGreenstein(asymmetry_parameters[wavelength], self.n_moments)
-                phase_function[:, wavelength] = hg.moments
-
-        # If you want a HG phase function and don't know g, use user input
-        elif self.phase_function_type == 'hg':
-            phase_function = np.zeros((self.n_moments, len(self.wavelengths)))
-            for wavelength in range(len(self.wavelengths)):
-                hg = HenyeyGreenstein(self.g, self.n_moments)
-                phase_function[:, wavelength] = hg.moments
-
-        return phase_function
-
-    def make_empirical_phase(self):
-        """ Make a wavelength-independent phase function (for now...)
-
-        Returns
-        -------
-        phase_function: np.ndarray
-            The 2D array of the phase function moments
-        """
-        if self.legendre_file:
-            legendre_coefficients = EmpiricalPhaseFunction(self.legendre_file, self.n_moments).moments
-            phase_function = np.zeros((self.n_moments, len(self.wavelengths)))
-            for wavelength in range(len(self.wavelengths)):
-                phase_function[:, wavelength] = legendre_coefficients
-        return phase_function
-
-    def calculate_aerosol_scattering_coefficients(self):
-        """ Calculate the scattering coefficient, C_scattering / C_extinction at the wavelengths
-
-        Returns
-        -------
-        scattering_coefficients: np.ndarray
-            The scattering coefficients at the input wavelengths
-        """
-        interpolated_extinction = np.interp(self.wavelengths, self.wavs, self.c_ext)
-        interpolated_scattering = np.interp(self.wavelengths, self.wavs, self.c_sca)
-        scattering_coefficients = interpolated_scattering / interpolated_extinction
-        return scattering_coefficients
