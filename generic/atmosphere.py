@@ -263,6 +263,40 @@ class Atmosphere:
         column_optical_depth = self.calculate_column_optical_depth()
         return single_scattering_albedo / column_optical_depth
 
+    def calculate_polynomial_moments(self):
+        """ Calculate the polynomial moments for the atmosphere
+
+        Returns
+        -------
+        polynomial_moments: np.ndarray
+            An array of the polynomial moments
+        """
+        # Get info I'll need
+        n_moments = self.columns[0].aerosol.n_moments
+        n_layers = len(self.z_midpoints)
+        n_wavelengths = len(self.columns[0].aerosol.wavelengths)
+        rayleigh_moments = make_rayleigh_phase_function(n_moments, n_layers, n_wavelengths)
+        tau_rayleigh = np.copy(self.tau_rayleigh)
+
+        # Start by populating PMOM with Rayleigh scattering
+        polynomial_moments = tau_rayleigh * rayleigh_moments
+
+        # Add in the moments for each column
+        for i in range(len(self.columns)):
+            scattering = self.columns[i].aerosol.scattering_coeff
+            column_optical_depths = self.columns[i].calculate_aerosol_optical_depths(self.z_midpoints, self.N)
+            moments = self.columns[i].aerosol.phase_function
+            moments_holder = np.zeros(polynomial_moments.shape)
+            for j in range(len(self.z_midpoints)):
+                moments_holder[:, j, :] = moments
+            polynomial_moments += scattering * column_optical_depths * moments_holder
+
+        column_optical_depth = self.calculate_column_optical_depth()
+        single_scattering_albedo = self.calculate_single_scattering_albedo()
+        scaling = column_optical_depth * single_scattering_albedo
+        scaling = np.where(scaling == 0, 10**10, scaling)
+        return polynomial_moments / scaling
+
 
 atm = Atmosphere('/home/kyle/repos/pyRT_DISORT/planets/mars/aux/mars_atm.npy')
 atm.add_rayleigh_co2_optical_depth(np.array([1, 2, 5, 15, 24, 49]))
@@ -271,5 +305,5 @@ dust = Aerosol(128, 'emp', 1, np.array([1, 2, 5, 15, 24, 49]), g=0.5,
                legendre_file='/home/kyle/repos/pyRT_DISORT/planets/mars/aux/legendre_coeff_dust.npy')
 c = Column(dust, 10, 0.5, 1)
 atm.add_column(c)
-ods = atm.calculate_single_scattering_albedo()
-
+m = atm.calculate_polynomial_moments()
+print(m[:, 7, 3])

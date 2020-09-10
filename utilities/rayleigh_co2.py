@@ -34,21 +34,3 @@ def rayleigh_co2(wavelength):
     # cross_section is in cm**2 so convert to m**2
     cross_section /= 10**4
     return cross_section
-
-
-def make_rayleigh_phase_function(n_moments):
-    """ Make the Rayleigh phase function
-
-    Parameters
-    ----------
-    n_moments: int
-        The number of moments desired in the phase function
-
-    Returns
-    -------
-    phase_function: np.ndarray
-        The phase function coefficients
-    """
-    phase_function = np.zeros(n_moments)
-    phase_function[0] = 1
-    return phase_function

@@ -5,63 +5,114 @@ class EmpiricalPhaseFunction:
     def __init__(self, legendre_coefficients_file, n_moments):
         self.legendre_file = legendre_coefficients_file
         self.n_moments = n_moments
-        self.moments = self.make_phase_moments()
 
     def get_phase_function(self):
         return np.load(self.legendre_file, allow_pickle=True)
 
-    def make_phase_moments(self):
-        """ Make an array of the phase function moments. It will truncate at n_moments, or append 0s to the coefficients
-        found in legendre_coefficients_file
+    def update_phase_function(self):
+        """ Make an array of empirical phase function moments of length n_moments
 
         Returns
         -------
         moments: np.ndarray
-            The empirical phase function moments
+            A truncated array of moments, or the array of empirical moments with 0s appended
         """
-        phase_function = self.get_phase_function()
-        if len(phase_function) < self.n_moments:
+        phase_function_coefficients = self.get_phase_function()
+        if len(phase_function_coefficients) < self.n_moments:
             moments = np.zeros(self.n_moments)
-            moments[: len(phase_function)] = phase_function
+            moments[: len(phase_function_coefficients)] = phase_function_coefficients
             return moments
         else:
-            moments = phase_function[: self.n_moments]
+            moments = phase_function_coefficients[: self.n_moments]
             return moments
 
+    def make_phase_function(self, n_layers, n_wavelengths):
+        """ Make an empirical phase function
 
-class HenyeyGreenstein:
-    def __init__(self, g, n_moments):
-        self.g = self.make_valid_asymmetry_parameter(g)
+        Parameters
+        ----------
+        n_layers: int
+            The number of atmospheric layers
+        n_wavelengths: int
+            The number of wavelengths
+
+        Returns
+        -------
+        empirical_phase_function: np.ndarray
+            An array of the empirical coefficients
+        """
+        phase_function = self.update_phase_function()
+        empirical_phase_function = np.zeros((self.n_moments, n_layers, n_wavelengths))
+        for i in range(n_layers):
+            for j in range(n_wavelengths):
+                empirical_phase_function[:, i, j] = phase_function
+
+        return empirical_phase_function
+
+
+class HenyeyGreensteinPhaseFunction:
+    def __init__(self, n_moments):
         self.n_moments = n_moments
-        self.moments = self.calculate_hg_legendre_coefficients()
 
-    @staticmethod
-    def make_valid_asymmetry_parameter(g):
-        """Check the HG asymmetry parameter is valid
+    def calculate_hg_legendre_coefficients(self, g):
+        """ Calculate the HG Legendre coefficients up to n_moments for a given g asymmetry parameter
 
         Parameters
         ----------
         g: float
-            The Henyey-Greenstein asymmetry parameter. Can range from [-1, 1]
-
-        Returns
-        -------
-        g if the parameter is valid; -1 or +1 if it's outside the valid range
-        """
-        if -1 <= g <= 1:
-            return g
-        else:
-            print('The value of g ({}) isn\'t in the range [-1, 1]. Choosing the nearest value'.format(g))
-            return np.sign(g)
-
-    def calculate_hg_legendre_coefficients(self):
-        """ Make the Legendre coefficients of a Henyey-Greenstein phase function up to n_moments
+            The HG asymmetry parameter
 
         Returns
         -------
         coefficients: np.ndarray
-            The coefficients of the Legendre polynomials
+            The coefficients for this g
         """
-        orders = np.linspace(0, self.n_moments, num=self.n_moments)
-        coefficients = (2*orders + 1) * self.g**orders
+        orders = np.linspace(0, self.n_moments-1, num=self.n_moments)
+        coefficients = (2*orders + 1) * g**orders
         return coefficients
+
+    def make_phase_function(self, n_layers, g_values):
+        """ Make a Henyey-Greenstein phase function
+
+        Parameters
+        ----------
+        n_layers: int
+            The number of atmospheric layers
+        g_values: np.ndarray
+            The g asymmetry parameters for each of the wavelengths
+
+        Returns
+        -------
+        hg_phase_function: np.ndarray
+            An array of HG coefficients
+        """
+        hg_phase_function = np.zeros((self.n_moments, n_layers, len(g_values)))
+        for i in range(n_layers):
+            for counter, g in enumerate(g_values):
+                hg_phase_function[:, i, counter] = self.calculate_hg_legendre_coefficients(g)
+
+        return hg_phase_function
+
+
+class RayleighPhaseFunction:
+    def __init__(self, n_moments):
+        self.n_moments = n_moments
+
+    def make_phase_function(self, n_layers, n_wavelengths):
+        """ Make a Rayleigh phase function
+
+        Parameters
+        ----------
+        n_layers: int
+            The number of atmospheric layers
+        n_wavelengths: int
+            The number of wavelengths
+
+        Returns
+        -------
+        rayleigh_phase_function: np.ndarray
+            An array of the Rayleigh coefficients
+        """
+        rayleigh_phase_function = np.zeros((self.n_moments, n_layers, n_wavelengths))
+        rayleigh_phase_function[0, :, :] = 1
+        return rayleigh_phase_function

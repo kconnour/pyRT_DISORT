@@ -1,13 +1,21 @@
-# An example file for Mike
+import disort
 
-from atmosphere import Atmosphere
-from planets.mars.mars_atmosphere import AtmosphericDust
+#from atmosphere import Atmosphere
+#from planets.mars.mars_atmosphere import AtmosphericDust
+import numpy as np
+from generic.atmosphere import Atmosphere
+from generic.aerosol import Aerosol
+from generic.aerosol_column import Column
+from generic.observation import Observation
+from generic.output import Output
+from planets.mars.map import Albedo
 
 # For now I'm just passing files in where necessary
 atmfile = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/mars_atm.npy'
 dustfile = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/dust.npy'
 polyfile = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/legendre_coeff_dust.npy'
 
+'''
 # Create an atmosphere object, which holds z, P, T, n, and N---equation of state variables
 # It finds what variables are absent and makes them based on optional arguments. Useful for exoplanet
 # (where you know nothing) to GCM (where you know everything)
@@ -33,7 +41,22 @@ moments = atm.calculate_polynomial_moments()
 
 print(dust_od)
 print(ssa)
-raise SystemExit('')
+raise SystemExit('')'''
+
+atm = Atmosphere('/home/kyle/repos/pyRT_DISORT/planets/mars/aux/mars_atm.npy')
+atm.add_rayleigh_co2_optical_depth(np.array([1, 2, 5, 15, 24, 49]))
+dust = Aerosol(128, 'emp', 1, np.array([1, 2, 5, 15, 24, 49]), g=0.5,
+               aerosol_file='/home/kyle/repos/pyRT_DISORT/planets/mars/aux/dust.npy',
+               legendre_file='/home/kyle/repos/pyRT_DISORT/planets/mars/aux/legendre_coeff_dust.npy')
+c = Column(dust, 10, 0.5, 1)
+atm.add_column(c)
+
+# Make the disort variables
+temperatures = atm.T
+dust_od = atm.calculate_column_optical_depth()[:, 0]
+ssa = atm.calculate_single_scattering_albedo()[:, 0]
+moments = atm.calculate_polynomial_moments()[:, :, 0]
+print(moments.shape)
 
 # Make up a fake observation
 short_wav = 1    # microns
@@ -53,8 +76,6 @@ phi0 = obs.phi0
 umu0 = obs.calculate_mu0()
 umu = np.array([obs.calculate_mu()])
 fbeam = np.pi
-
-# junk for a commit
 
 # Just define a bunch of variables
 usrtau = False
@@ -108,3 +129,5 @@ dfdt, uavg, uu = disort.disort(usrang, usrtau, ibcnd, onlyfl, prnt, plank, lambe
                                surface_temp, top_temp, top_emissivity, earth_radius, h_lyr, rhoq, rhou, rho_accurate, bemst, emust, accur,
                                header, direct_beam_flux, diffuse_down_flux, diffuse_up_flux, flux_divergence, mean_intensity,
                                intensity, albedo_medium, transmissivity_medium)
+
+print(uu)

@@ -1,6 +1,4 @@
 Things to start fixing:
-- Aerosols
---- Fix PMOM to have wavelength dependence + check correctness
 - Fix classes
 --- If n and N are specified in the input file, I need layer n and N so I need to interpolate
 --- Specify n_moments and only read/create phase functions with those number of moments
@@ -10,11 +8,13 @@ Things to start fixing:
 --- I need a phase function class to clean up Aerosol. It might be best to assume a dust.npy-type file will always
     be provided
 - Bug testing
+--- PMOM doesn't seem right if the first coefficient is supposed to be 1
 --- Computers generally hate integrating large numbers, and I think I have a problem with the Gaussian quadrature
 --- tau_rayleigh isn't quite correct
 --- Figure out what are DISORT's output variables. Then remake the .so file
 --- If tau_rayleigh isn't added and no columns are added, SSA will be 0... not a matrix. It'd be better to define it as
     a matrix, then add in Rayleigh, columns, etc.
+--- Force all aerosols to have the same n_moments and wavelengths
 - Considerations
 --- I set dtauc = 10**-7 if it'd otherwise be less than that
 --- SSA = 0 sometimes, which causes problems for PMOM
