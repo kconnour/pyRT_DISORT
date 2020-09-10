@@ -34,8 +34,9 @@ class Aerosol:
         self.legendre_file = legendre_file
 
         if self.aerosol_file:
-            self.wavs, self.c_ext, self.c_sca, self.kappa, self.g, p_max, theta_max = self.read_aerosol_file()
+            self.wavs, self.c_ext, self.c_sca, self.kappa, self.g, self.p_max, self.theta_max = self.read_aerosol_file()
             self.scaling = self.calculate_wavelength_scaling()
+            self.scattering_coeff = self.calculate_aerosol_scattering_coefficients()
 
         if self.legendre_file:
             self.phase_function = self.make_empirical_phase()
@@ -157,9 +158,15 @@ class Aerosol:
                 phase_function[:, wavelength] = legendre_coefficients
         return phase_function
 
+    def calculate_aerosol_scattering_coefficients(self):
+        """ Calculate the scattering coefficient, C_scattering / C_extinction at the wavelengths
 
-'''dust = Aerosol(128, 'hg', 1, np.array([1, 2, 5, 15, 24, 49]), g=0.5, 
-               aerosol_file='/home/kyle/repos/pyRT_DISORT/planets/mars/aux/dust.npy',
-               legendre_file='/home/kyle/repos/pyRT_DISORT/planets/mars/aux/legendre_coeff_dust.npy')
-a = dust.make_hg_phase()
-print(a.shape)'''
+        Returns
+        -------
+        scattering_coefficients: np.ndarray
+            The scattering coefficients at the input wavelengths
+        """
+        interpolated_extinction = np.interp(self.wavelengths, self.wavs, self.c_ext)
+        interpolated_scattering = np.interp(self.wavelengths, self.wavs, self.c_sca)
+        scattering_coefficients = interpolated_scattering / interpolated_extinction
+        return scattering_coefficients

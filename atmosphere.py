@@ -1,8 +1,7 @@
+# 3rd-party imports
 import numpy as np
 from scipy.constants import Boltzmann
 from scipy.integrate import quadrature
-from generic.aerosol import Aerosol
-from generic.aerosol_column import Column
 
 # Local imports
 from utilities.rayleigh_co2 import rayleigh_co2, make_rayleigh_phase_function
@@ -51,8 +50,8 @@ class Atmosphere:
         if np.all(self.N == 0):
             self.N = self.calculate_column_density()
 
-        # Make a list to hold any aerosol columns that can be added to the atmosphere
-        self.columns = []
+        # Make a list to hold any aerosols that can be added to the atmosphere
+        self.aerosols = []
 
         # Add Rayleigh scattering
         self.tau_rayleigh = 0
@@ -89,7 +88,7 @@ class Atmosphere:
         altitudes: np.ndarray
             An array of equally spaced boundaries of the altitudes
         """
-        altitudes = np.linspace(self._z_bottom, self._z_top, num=self._n_layers + 1)
+        altitudes = np.linspace(self._z_bottom, self._z_top, num=self._n_layers+1)
         return altitudes
 
     def make_constant_pressure_boundaries(self):
@@ -103,7 +102,7 @@ class Atmosphere:
         """
         top_pressure = self.make_pressure_profile(self._z_top)
         bottom_pressure = self.make_pressure_profile(self._z_bottom)
-        fractional_pressures = np.linspace(bottom_pressure, top_pressure, num=self._n_layers + 1, endpoint=True)
+        fractional_pressures = np.linspace(bottom_pressure, top_pressure, num=self._n_layers+1, endpoint=True)
         boundaries = -self._H * np.log(fractional_pressures)
         return boundaries, fractional_pressures
 
@@ -131,7 +130,7 @@ class Atmosphere:
         temperatures: np.ndarray
             An array of equally spaced boundaries of the temperatures
         """
-        temperatures = np.linspace(self._T_bottom, self._T_top, num=self._n_layers + 1)
+        temperatures = np.linspace(self._T_bottom, self._T_top, num=self._n_layers+1)
         return temperatures
 
     def calculate_altitude_midpoints(self):
@@ -174,8 +173,7 @@ class Atmosphere:
         """
         column_density = np.zeros(len(self.z_midpoints))
         for i in range(len(column_density)):
-            integral, absolute_error = quadrature(self.calculate_number_density, self.z[i] * 1000,
-                                                  self.z[i + 1] * 1000)
+            integral, absolute_error = quadrature(self.calculate_number_density, self.z[i]*1000, self.z[i+1]*1000)
             column_density[i] = integral * 1000
 
         return column_density
@@ -185,7 +183,7 @@ class Atmosphere:
 
         Parameters
         ----------
-        wavelength:
+        wavelength: float
             The wavelength of the observation
 
         Returns
@@ -199,31 +197,30 @@ class Atmosphere:
 
         Parameters
         ----------
-        wavelength:
+        wavelength: float
             The wavelength of the observation
 
         Returns
         -------
 
         """
-        tau_rayleigh_co2 = np.outer(self.N, rayleigh_co2(wavelength))
+        tau_rayleigh_co2 = rayleigh_co2(wavelength) * self.N
         return tau_rayleigh_co2
 
-    def add_column(self, column):
-        """ Add a column of an aerosol or gas to the atmosphere
+    def add_aerosol(self, aerosol):
+        """ Add an aerosol to the atmosphere object
 
         Parameters
         ----------
-        column: Column
-            A column instance of an aerosol or gas
+        aerosol:
 
         Returns
         -------
         None
         """
-        self.columns.append(column)
+        self.aerosols.append(aerosol)
 
-    def calculate_column_optical_depth(self, optical_depth_minimum=10**-7):
+    def calculate_column_optical_depth(self):
         """ Calculate the optical depth of each layer in a column
 
         Returns
@@ -231,15 +228,13 @@ class Atmosphere:
         column_optical_depth: np.ndarray
             The optical depths in each layer
         """
+        total_aerosols = len(self.aerosols)
         # Add in Rayleigh scattering
-        column_optical_depth = np.copy(self.tau_rayleigh)
+        column_optical_depth = self.tau_rayleigh
 
-        # Add in the optical depths of each column
-        for i in range(len(self.columns)):
-            column_optical_depth += self.columns[i].calculate_aerosol_optical_depths(self.z_midpoints, self.N)
-
-        # Make sure ODs cannot be 0 to avoid dividing by 0 later on
-        column_optical_depth = np.where(column_optical_depth < optical_depth_minimum, optical_depth_minimum, column_optical_depth)
+        # Add in the optical depths of each aerosol
+        for i in range(total_aerosols):
+            column_optical_depth += self.aerosols[i].optical_depth
         return column_optical_depth
 
     def calculate_single_scattering_albedo(self):
@@ -250,26 +245,44 @@ class Atmosphere:
         single_scattering_albedo: np.ndarray
             The SSAs in each layer
         """
-
+        total_aerosols = len(self.aerosols)
         # Add in Rayleigh scattering
-        single_scattering_albedo = np.copy(self.tau_rayleigh)
+        single_scattering_albedo = self.tau_rayleigh
 
         # Add in the single scattering albedo of each aerosol
-        for i in range(len(self.columns)):
-            scattering_ratio = self.columns[i].aerosol.scattering_coeff
-            optical_depths = self.columns[i].calculate_aerosol_optical_depths(self.z_midpoints, self.N)
-            single_scattering_albedo += scattering_ratio * optical_depths
+        for i in range(total_aerosols):
+            scattering = self.aerosols[i].scattering_ratio * self.aerosols[i].optical_depth
+            single_scattering_albedo += scattering
 
+        # Finally, we need to divide the added optical depths by each layer's optical depth. But we also need to
+        # account for the fact that the optical depth can be 0
         column_optical_depth = self.calculate_column_optical_depth()
+        column_optical_depth = np.where(column_optical_depth == 0, np.inf, column_optical_depth)
         return single_scattering_albedo / column_optical_depth
 
+    def calculate_polynomial_moments(self):
+        """ Calculate the polynomial moments for the atmosphere
 
-atm = Atmosphere('/home/kyle/repos/pyRT_DISORT/planets/mars/aux/mars_atm.npy')
-atm.add_rayleigh_co2_optical_depth(np.array([1, 2, 5, 15, 24, 49]))
-dust = Aerosol(128, 'emp', 1, np.array([1, 2, 5, 15, 24, 49]), g=0.5,
-               aerosol_file='/home/kyle/repos/pyRT_DISORT/planets/mars/aux/dust.npy',
-               legendre_file='/home/kyle/repos/pyRT_DISORT/planets/mars/aux/legendre_coeff_dust.npy')
-c = Column(dust, 10, 0.5, 1)
-atm.add_column(c)
-ods = atm.calculate_single_scattering_albedo()
+        Returns
+        -------
+        polynomial_moments: np.ndarray
+            A 2D array of the polynomial moments
+        """
+        total_aerosols = len(self.aerosols)
 
+        # Get info I'll need
+        rayleigh_moments = make_rayleigh_phase_function(len(self.aerosols[0].legendre_coefficients))
+
+        # Start by adding in the Rayleigh moments
+        polynomial_moments = np.outer(rayleigh_moments, self.tau_rayleigh)
+
+        # Add in the moments for each aerosol
+        for i in range(total_aerosols):
+            scattering = self.aerosols[i].scattering_ratio * self.aerosols[i].optical_depth
+            polynomial_moments += scattering * np.outer(self.aerosols[i].legendre_coefficients, self.aerosols[i].optical_depth)
+
+        column_optical_depth = self.calculate_column_optical_depth()
+        single_scattering_albedo = self.calculate_single_scattering_albedo()
+        scaling = column_optical_depth * single_scattering_albedo
+        scaling = np.where(scaling == 0, np.mean(scaling), scaling)
+        return polynomial_moments / scaling#[:, np.newaxis]

@@ -1,6 +1,6 @@
 # An example file for Mike
 
-from generic.atmosphere import Atmosphere
+from atmosphere import Atmosphere
 from planets.mars.mars_atmosphere import AtmosphericDust
 
 # For now I'm just passing files in where necessary

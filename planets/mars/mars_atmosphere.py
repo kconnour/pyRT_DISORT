@@ -2,7 +2,7 @@
 import numpy as np
 
 # Local imports
-from generic.atmosphere import Atmosphere
+from atmosphere import Atmosphere
 from planets.mars.mars_aerosols import MarsDust
 
 

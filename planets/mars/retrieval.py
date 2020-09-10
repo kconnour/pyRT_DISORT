@@ -7,7 +7,7 @@ from generic.observation import Observation
 import disort
 from planets.mars.map import Albedo
 from generic.output import Output
-from generic.atmosphere import Atmosphere
+from atmosphere import Atmosphere
 from planets.mars.mars_atmosphere import DustAtmosphere
 
 # Read in the atmosphere and define variables   NOTE: I should have an option to read in OR create an atm

@@ -17,7 +17,7 @@ def rayleigh_co2(wavelength):
     number_density = 2.5475605 * 10**19
 
     # Everyone uses cm for some reason... convert microns to cm
-    wavelength *= 10**-4
+    wavelength = wavelength * 10**-4
 
     # Get the king factor from Ityaksov et al
     king_factor = 1.14 + (25.3*10**(-12) / wavelength**2)
