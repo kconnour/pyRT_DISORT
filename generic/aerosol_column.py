@@ -72,11 +72,3 @@ class Column:
             self.column_optical_depth / dust_scaling
         return tau_aerosol
 
-
-dust = Aerosol('/home/kyle/repos/pyRT_DISORT/planets/mars/aux/dust.npy', '', np.array([1, 2, 8, 9]), 9.3)
-c = Column(dust, 10, 0.5, 1)
-z = np.linspace(0, 100, num=14)
-n = np.linspace(10**23, 10**26, num=14)
-
-asdf = c.calculate_aerosol_optical_depths(z, n)
-print(asdf.shape)
