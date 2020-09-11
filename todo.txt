@@ -1,9 +1,7 @@
 Fixes:
 
 - Classes
---- Atmosphere has n = #/volume and is shorthand for "number". Need a consistent fix
---- There's a serious pointer problem with numpy arrays
---- Finish ModelAtmosphere + get it to run without errors...
+--- Update docstrings for consistency. Add things like output array shape, z_layer --> altitude_layer, etc for consistency
 --- Fix Observation properties. They should be all defined in the constructor
 --- Make an output array class that defines arrays of 0s for DISORT
 --- Make a Conrol class for PRNT, stuff like that
@@ -22,6 +20,7 @@ Fixes:
 
 - Bugs
 --- PMOM doesn't seem right if the first coefficient is supposed to be 1
+--- "Input variable PMOM in error"
 --- tau_rayleigh isn't quite correct... I think
 
 

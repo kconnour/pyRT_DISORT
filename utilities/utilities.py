@@ -15,8 +15,8 @@ def turn_npy_to_csv(file, headers):
 
 
 # An example
-file = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/mars_atm.csv'
-turn_csv_to_npy(file)
+#file = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/mars_atm.csv'
+#turn_csv_to_npy(file)
 
 # Another example: modify a .npy file and save it
 '''ice = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/ice.npy'
