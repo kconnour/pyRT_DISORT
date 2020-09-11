@@ -8,49 +8,49 @@ class Atmosphere:
 
         self.atm_file = atmosphere_file
         # Read in as much of the atmosphere as possible
-        self.z_boundaries, self.P_boundaries, self.T_boundaries, self.n_boundaries, self.N_boundaries = \
-            self.read_atmosphere()
-        self.number_boundaries = len(self.z_boundaries)
+        self.altitude_boundaries, self.pressure_boundaries, self.temperature_boundaries, \
+            self.number_density_boundaries = self.read_atmosphere()
+        self.n_boundaries = len(self.altitude_boundaries)
         self.n_layers = self.n_boundaries - 1
 
         # If no z is provided, make the altitude and pressure grid at constant altitude
-        if np.all(self.z_boundaries == 0) and not constant_pressure:
-            self.number_boundaries = number_boundaries
+        if np.all(self.altitude_boundaries == 0) and not constant_pressure:
+            self.n_boundaries = number_boundaries
             self.n_layers = self.n_boundaries - 1
             self._z_bottom = z_bottom
             self._z_top = z_top
             self._H = scale_height
-            self.z_boundaries = self.make_constant_altitude_boundaries()
-            self.P_boundaries = self.make_pressure_profile(self.z_boundaries) * p_surface
+            self.altitude_boundaries = self.make_constant_altitude_boundaries()
+            self.pressure_boundaries = self.make_pressure_profile(self.altitude_boundaries) * p_surface
 
         # Otherwise make the altitudes and pressures at constant pressure levels
-        elif np.all(self.z_boundaries == 0) and constant_pressure:
-            self.number_boundaries = number_boundaries
+        elif np.all(self.altitude_boundaries == 0) and constant_pressure:
+            self.n_boundaries = number_boundaries
             self.n_layers = self.n_boundaries - 1
             self._z_bottom = z_bottom
             self._z_top = z_top
             self._H = scale_height
-            self.z_boundaries, unscaled_pressures = self.make_constant_pressure_boundaries()
-            self.P_boundaries = unscaled_pressures * p_surface
+            self.altitude_boundaries, unscaled_pressures = self.make_constant_pressure_boundaries()
+            self.pressure_boundaries = unscaled_pressures * p_surface
 
         # If temperature isn't provided, make it here
-        if np.all(self.T_boundaries == 0):
+        if np.all(self.temperature_boundaries == 0):
             self._T_bottom = bottom_temperature
             self._T_top = top_temperature
-            self.T_boundaries = self.make_constant_temperature_boundaries()
+            self.temperature_boundaries = self.make_constant_temperature_boundaries()
 
         # Make the midpoint z, P, and T values
-        self.z_layer = self.calculate_midpoints(self.z_boundaries)
-        self.P_layer = self.calculate_midpoints(self.P_boundaries)
-        self.T_layer = self.calculate_midpoints(self.T_boundaries)
+        self.altitude_layers = self.calculate_midpoints(self.altitude_boundaries)
+        self.pressure_layers = self.calculate_midpoints(self.pressure_boundaries)
+        self.temperature_layers = self.calculate_midpoints(self.temperature_boundaries)
 
-        # If number density isn't provided, make it here
-        if np.all(self.n_boundaries == 0):
-            self.n_boundaries = self.calculate_number_density(self.z_boundaries)
+        # If number density isn't provided, make it here. Assume the ideal gas law always
+        if np.all(self.number_density_boundaries == 0):
+            self.number_density_boundaries = self.calculate_number_density(self.altitude_boundaries)
+            self.number_density_layers = self.calculate_number_density(self.altitude_layers)
 
-        # I could get the midpoint, but I want to ensure the equation of state is always satisfied
-        self.n_layer = self.calculate_number_density(self.z_layer)
-        self.N_layer = self.calculate_column_density()
+        # And finally, make the column density in the layers
+        self.column_density_layers = self.calculate_column_density()
 
     def read_atmosphere(self):
         """ Read in equation of state variables from atmosphere_file
@@ -73,8 +73,7 @@ class Atmosphere:
         pressures = atmosphere[:, 1]
         temperatures = atmosphere[:, 2]
         number_density = atmosphere[:, 3]
-        column_density = atmosphere[:, 4]
-        return altitudes, pressures, temperatures, number_density, column_density
+        return altitudes, pressures, temperatures, number_density
 
     def make_constant_altitude_boundaries(self):
         """ Make the boundaries for constant altitude layers
@@ -84,7 +83,7 @@ class Atmosphere:
         altitudes: np.ndarray
             An array of equally spaced boundaries of the altitudes
         """
-        altitudes = np.linspace(self._z_bottom, self._z_top, num=self.n_layers + 1)
+        altitudes = np.linspace(self._z_bottom, self._z_top, num=self.n_layers+1)
         return altitudes
 
     def make_constant_pressure_boundaries(self):
@@ -98,7 +97,7 @@ class Atmosphere:
         """
         top_pressure = self.make_pressure_profile(self._z_top)
         bottom_pressure = self.make_pressure_profile(self._z_bottom)
-        fractional_pressures = np.linspace(bottom_pressure, top_pressure, num=self.n_layers + 1, endpoint=True)
+        fractional_pressures = np.linspace(bottom_pressure, top_pressure, num=self.n_layers+1, endpoint=True)
         boundaries = -self._H * np.log(fractional_pressures)
         return boundaries, fractional_pressures
 
@@ -126,7 +125,7 @@ class Atmosphere:
         temperatures: np.ndarray
             An array of equally spaced boundaries of the temperatures
         """
-        temperatures = np.linspace(self._T_bottom, self._T_top, num=self.n_layers + 1)
+        temperatures = np.linspace(self._T_bottom, self._T_top, num=self.n_layers+1)
         return temperatures
 
     @staticmethod
@@ -155,8 +154,8 @@ class Atmosphere:
         number_density: np.ndarray
             The number density at the input altitudes
         """
-        interpolated_pressure = np.interp(altitudes, self.z_boundaries, self.P_boundaries)
-        interpolated_temperature = np.interp(altitudes, self.z_boundaries, self.T_boundaries)
+        interpolated_pressure = np.interp(altitudes, self.altitude_boundaries, self.pressure_boundaries)
+        interpolated_temperature = np.interp(altitudes, self.altitude_boundaries, self.temperature_boundaries)
         number_density = interpolated_pressure / interpolated_temperature / Boltzmann
         return number_density
 
@@ -168,7 +167,6 @@ class Atmosphere:
         column_density: np.ndarray
             The column density of each layer
         """
-        n_bound = np.copy(self.n_boundaries)
-        print(n_bound)
-        column_density = self.calculate_midpoints(n_bound) * np.diff(self.z_boundaries) * 1000
+        number_density_midpoints = self.calculate_midpoints(self.number_density_boundaries)
+        column_density = number_density_midpoints * np.diff(self.altitude_boundaries) * 1000
         return column_density
