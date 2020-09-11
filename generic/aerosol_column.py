@@ -4,7 +4,7 @@ from generic.aerosol import Aerosol
 
 class Column:
     def __init__(self, aerosol, aerosol_scale_height, conrath_nu, column_optical_depth):
-        """ Make a column of aerosols
+        """ Initialize the class
 
         Parameters
         ----------
@@ -21,10 +21,10 @@ class Column:
         self.H = aerosol_scale_height
         self.nu = conrath_nu
         self.column_optical_depth = column_optical_depth
-        self.check_input()
+        self.check_conrath_parameters()
 
-    def check_input(self):
-        """ Check that the input Conrath parameters don't suck
+    def check_conrath_parameters(self):
+        """ Check that the Conrath parameters don't suck
 
         Returns
         -------
@@ -64,10 +64,19 @@ class Column:
         Returns
         -------
         tau_aerosol: np.ndarray
-            The optical depths in each layer
+            The optical depths in each layer of shape (n_layers, n_wavelengths)
         """
         vertical_mixing_ratio = self.make_conrath_profile(z_layer)
         dust_scaling = np.sum(N * vertical_mixing_ratio)
-        tau_aerosol = np.outer(N * vertical_mixing_ratio, self.aerosol.calculate_wavelength_scaling()) * \
+        tau_aerosol = np.outer(N * vertical_mixing_ratio, self.aerosol.extinction_ratio) * \
             self.column_optical_depth / dust_scaling
         return tau_aerosol
+
+
+dust = Aerosol('/home/kyle/repos/pyRT_DISORT/planets/mars/aux/dust.npy', '', np.array([1, 2, 8, 9]), 9.3)
+c = Column(dust, 10, 0.5, 1)
+z = np.linspace(0, 100, num=14)
+n = np.linspace(10**23, 10**26, num=14)
+
+asdf = c.calculate_aerosol_optical_depths(z, n)
+print(asdf.shape)

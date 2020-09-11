@@ -8,8 +8,8 @@ Things to start fixing:
 --- I need a phase function class to clean up Aerosol. It might be best to assume a dust.npy-type file will always
     be provided
 - Bug testing
+--- Atmosphere suffers from numpy array pointer problems
 --- PMOM doesn't seem right if the first coefficient is supposed to be 1
---- Computers generally hate integrating large numbers, and I think I have a problem with the Gaussian quadrature
 --- tau_rayleigh isn't quite correct
 --- Figure out what are DISORT's output variables. Then remake the .so file
 --- If tau_rayleigh isn't added and no columns are added, SSA will be 0... not a matrix. It'd be better to define it as
