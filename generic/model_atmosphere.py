@@ -1,3 +1,16 @@
+# 3rd-party imports
+import numpy as np
+
+# Local imports
+
+
+class ModelAtmosphere:
+    def __init__(self, atmosphere):
+        self.atmosphere = atmosphere
+        self.columns = []
+
+    def add_column(self, column):
+        self.columns.append(column)
 
 
 
