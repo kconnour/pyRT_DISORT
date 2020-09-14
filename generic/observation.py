@@ -123,7 +123,7 @@ class Observation:
         integrated_flux: float
             The integrated flux
         """
-        solar_spec = np.load(self.solar_flux, allow_pickle=True)
+        solar_spec = np.load(self.solar_flux_file, allow_pickle=True)
         wavelengths = solar_spec[:, 0]
         fluxes = solar_spec[:, 1]
         interp_fluxes = np.interp(np.array([self.short_wavelength, self.long_wavelength]), wavelengths, fluxes)

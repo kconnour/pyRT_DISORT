@@ -1,20 +1,17 @@
 Fixes:
 
 - Classes
---- Make an output array class that defines arrays of 0s for DISORT
---- Make a Conrol class for PRNT, stuff like that
 --- See if there's a better way than duck typing a PhaseFunction class
---- Column class should be updated to include a the ODs for that aerosol (I think... have to make sure it matches the z values in atmosphere)
---- ModelAtmosphere should be updated to include dtauc, ssalb, and/or pmom file
+--- ModelAtmosphere should be updated to include a possible dtauc, ssalb, and/or pmom file
 
 - Design
 --- If tau_rayleigh isn't added and no columns are added, SSA will be 0... not a matrix. It'd be better to define it as
-    a matrix, then add in Rayleigh, columns, etc.
---- Figure out what are DISORT's output variables. Then remake the .so file
+    a matrix, then add in Rayleigh, columns, etc. so I could do a calculation with just Rayleigh scattering
+--- Right now model.calculate_moments is a mess. Currently it requires a column to exist and is dependent on the 0th column
+--- Remake the .so file with the output class variables all being output
 --- Force all aerosols to have the same n_moments and wavelengths?
---- Right now model.calculate_moments is a mess. I should be able to do RT on an atmosphere with just rayleigh scattering.
-    Currently it requires a column to exist and is dependent on the 0th column
---- "generic" seems like a poor folder name for the main routines
+--- "generic" seems like a poor folder name for the main routines. It might be nice to make "model" and miscellaneous
+    folder for Control, Output, etc.
 
 - Assumptions
 --- The empirical phase function is wavelength independent. I know this is wrong... but it's all I have for now
@@ -36,7 +33,7 @@ Things to add/test:
 --- Make a good installation
 --- Add test cases for just Rayleigh scattering
 --- Get dtauc/ssalb/pmom from disort_multi + compare to mine
---- Add Hapke phase function
+--- Add Hapke surface phase function
 --- Solver
 --- Gas---I presume ozone shouldn't use any of the aerosol column methods
 --- I generally do linear interpolation but it'd be nice if the user could specify fancier interpolations
