@@ -4,7 +4,7 @@ import scipy.interpolate.interpolate as interpolate
 
 class Observation:
     def __init__(self, short_wavelength, long_wavelength, solar_zenith_angle, emission_angle, phase_angle, latitude,
-                 longitude, altitude_map_path, solar_flux_map_path):
+                 longitude, altitude_map_path, solar_flux_file_path):
         """ Initialize the class
 
         Parameters
@@ -25,7 +25,7 @@ class Observation:
             The pixel longitude (in degrees east). Note The convention is 0--360, not -180 -- +180
         altitude_map_path: str
             The Unix-like path to the .npy file containing the MOLA map of altitudes
-        solar_flux_map_path: str
+        solar_flux_file_path: str
             The Unix-like path the the .npy file containing the solar flux
         """
         self.short_wavelength = short_wavelength
@@ -36,11 +36,17 @@ class Observation:
         self.latitude = latitude
         self.longitude = longitude
         self.phi0 = 0
+        self.map_path = altitude_map_path
+        self.solar_flux_file = solar_flux_file_path
+
+        # Ensure the object knows everything it ought to know
         self.low_wavenumber = self.wavelength_to_wavenumber(self.long_wavelength)
         self.high_wavenumber = self.wavelength_to_wavenumber(self.short_wavelength)
-        self.map_path = altitude_map_path
+        self.mu = self.calculate_mu()
+        self.mu0 = self.calculate_mu0()
+        self.phi = self.calculate_phi()
         self.altitude = self.get_altitude()
-        self.solar_flux = solar_flux_map_path
+        self.solar_flux = self.calculate_solar_flux()
 
     def get_altitude(self):
         map_array = np.load(self.map_path)
@@ -107,12 +113,6 @@ class Observation:
         """
         cm_wavelength = wavelength * 10**-7
         return 1 / cm_wavelength
-
-    def calculate_low_wavenumber(self):
-        return self.wavelength_to_wavenumber(self.long_wavelength)
-
-    def calculate_high_wavenumber(self):
-        return self.wavelength_to_wavenumber(self.short_wavelength)
 
     def calculate_solar_flux(self):
         """Calculate the incident solar flux between the input wavelengths. Note this is NOT corrected

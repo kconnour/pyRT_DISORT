@@ -1,8 +1,6 @@
 Fixes:
 
 - Classes
---- Update docstrings for consistency. Add things like output array shape, z_layer --> altitude_layer, etc for consistency
---- Fix Observation properties. They should be all defined in the constructor
 --- Make an output array class that defines arrays of 0s for DISORT
 --- Make a Conrol class for PRNT, stuff like that
 --- See if there's a better way than duck typing a PhaseFunction class
@@ -29,18 +27,15 @@ Fixes:
 --- "Input variable PMOM in error"
 --- tau_rayleigh isn't quite correct... I think
 
-- Generic
---- Try a Rayleigh only test case
---- Get dtauc/ssalb/pmom from disort_multi + compare to mine
-
 Questions:
 --- What are the 2 additional columns in ice?
 
 
-Things to add:
+Things to add/test:
 --- Unit tests
 --- Make a good installation
 --- Add test cases for just Rayleigh scattering
+--- Get dtauc/ssalb/pmom from disort_multi + compare to mine
 --- Add Hapke phase function
 --- Solver
 --- Gas---I presume ozone shouldn't use any of the aerosol column methods
