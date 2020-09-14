@@ -2,8 +2,10 @@
 import numpy as np
 
 # Local imports
-from utilities.rayleigh_co2 import rayleigh_co2
+from generic.atmosphere import Atmosphere
+from generic.aerosol_column import Column
 from generic.phase_function import RayleighPhaseFunction
+from utilities.rayleigh_co2 import rayleigh_co2
 
 
 class ModelAtmosphere:
@@ -11,6 +13,8 @@ class ModelAtmosphere:
         self.atmosphere = atmosphere
         self.columns = []
         self.tau_rayleigh = 0
+
+        assert isinstance(self.atmosphere, Atmosphere), 'atmosphere needs to be an instance of Atmosphere'
 
     def add_column(self, column):
         """ Add a column to the atmosphere
@@ -24,6 +28,7 @@ class ModelAtmosphere:
         -------
         None
         """
+        assert isinstance(column, Column), 'Try adding a Column instead.'
         self.columns.append(column)
 
     def add_rayleigh_co2_optical_depths(self, wavelength):
@@ -50,7 +55,8 @@ class ModelAtmosphere:
 
         Returns
         -------
-
+        tau_rayleigh_co2: np.ndarray(n_layers, n_wavelengths)
+            The Rayleigh optical depths in each layer at each wavelength
         """
         tau_rayleigh_co2 = np.outer(self.atmosphere.column_density_layers, rayleigh_co2(wavelength))
         return tau_rayleigh_co2
@@ -58,9 +64,14 @@ class ModelAtmosphere:
     def calculate_column_optical_depths(self, optical_depth_minimum=10**-7):
         """ Calculate the optical depth of each layer in a column
 
+        Parameters
+        ----------
+        optical_depth_minimum: float, optional
+            The minimum optical depth allowable in each grid point. Default is 10**-7
+
         Returns
         -------
-        column_optical_depths: np.ndarray
+        column_optical_depths: np.ndarray (n_layers, n_wavelengths)
             The optical depths in each layer
         """
         # Add in the Rayleigh scattering contribution to the column optical depths
@@ -81,7 +92,7 @@ class ModelAtmosphere:
 
         Returns
         -------
-        single_scattering_albedo: np.ndarray
+        single_scattering_albedo: np.ndarray (n_layers, n_wavelengths)
             The SSAs in each layer
         """
 
@@ -103,7 +114,7 @@ class ModelAtmosphere:
 
         Returns
         -------
-        polynomial_moments: np.ndarray
+        polynomial_moments: np.ndarray (n_moments, n_layers, n_wavelengths)
             An array of the polynomial moments
         """
         # Get info I'll need

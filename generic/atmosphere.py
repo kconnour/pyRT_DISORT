@@ -1,3 +1,4 @@
+# 3rd-party imports
 import numpy as np
 from scipy.constants import Boltzmann
 
@@ -65,8 +66,6 @@ class Atmosphere:
             The temperatures from atmosphere_file
         number_density: np.ndarray
             The number density from atmosphere_file
-        column_density: np.ndarray
-            The column density from atmosphere_file
         """
         atmosphere = np.load(self.atm_file, allow_pickle=True)
         altitudes = atmosphere[:, 0]

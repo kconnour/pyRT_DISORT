@@ -10,6 +10,3 @@ Wavelengths are in microns
 Everything else is in mks units
 
 The solar spectrum values are at 1AU
-
-Assumptions:
---- in generic/aerosol I assume the dust.npy or ice.npy have 5 or 7 columns, specified in the proper order

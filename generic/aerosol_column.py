@@ -1,4 +1,7 @@
+# 3rd-party imports
 import numpy as np
+
+# Local imports
 from generic.aerosol import Aerosol
 
 
@@ -23,6 +26,8 @@ class Column:
         self.column_optical_depth = column_optical_depth
         self.check_conrath_parameters()
 
+        assert isinstance(self.aerosol, Aerosol), 'aerosol needs to be an instance of Aerosol.'
+
     def check_conrath_parameters(self):
         """ Check that the Conrath parameters don't suck
 
@@ -39,36 +44,42 @@ class Column:
         elif self.nu < 0:
             raise SystemExit('Bad Conrath nu parameter: it cannot be negative. Fix...')
 
-    def make_conrath_profile(self, z_layer):
+    def make_conrath_profile(self, altitude_layer):
         """Calculate the vertical dust distribution assuming a Conrath profile, i.e.
         q(z) / q(0) = exp( nu * (1 - exp(z / H)))
         where q is the mass mixing ratio
 
         Parameters
         ----------
-        z_layer: np.ndarray
+        altitude_layer: np.ndarray
             The altitudes of each layer's midpoint
 
         Returns
         -------
-        fractional_mixing_ratio: np.ndarray
+        fractional_mixing_ratio: np.ndarray (len(altitude_layer))
             The fraction of the mass mixing ratio at the midpoint altitudes
         """
 
-        fractional_mixing_ratio = np.exp(self.nu * (1 - np.exp(z_layer / self.H)))
+        fractional_mixing_ratio = np.exp(self.nu * (1 - np.exp(altitude_layer / self.H)))
         return fractional_mixing_ratio
 
-    def calculate_aerosol_optical_depths(self, z_layer, N):
+    def calculate_aerosol_optical_depths(self, altitude_layer, column_density_layers):
         """ Make the optical depths within each layer
+
+        Parameters
+        ----------
+        altitude_layer: np.ndarray (len(n_layers))
+            The altitudes to create the profile for
+        column_density_layers: np.ndarray (len(n_layers))
+            The column density if each of the layers
 
         Returns
         -------
-        tau_aerosol: np.ndarray
-            The optical depths in each layer of shape (n_layers, n_wavelengths)
+        tau_aerosol: np.ndarray (n_layers, n_wavelengths)
+            The optical depths in each layer at each wavelength
         """
-        vertical_mixing_ratio = self.make_conrath_profile(z_layer)
-        dust_scaling = np.sum(N * vertical_mixing_ratio)
-        tau_aerosol = np.outer(N * vertical_mixing_ratio, self.aerosol.extinction_ratio) * \
+        vertical_mixing_ratio = self.make_conrath_profile(altitude_layer)
+        dust_scaling = np.sum(column_density_layers * vertical_mixing_ratio)
+        tau_aerosol = np.outer(column_density_layers * vertical_mixing_ratio, self.aerosol.extinction_ratio) * \
             self.column_optical_depth / dust_scaling
         return tau_aerosol
-

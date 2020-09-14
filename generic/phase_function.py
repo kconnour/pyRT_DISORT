@@ -1,3 +1,4 @@
+# 3rd-party imports
 import numpy as np
 
 
@@ -10,11 +11,11 @@ class EmpiricalPhaseFunction:
         return np.load(self.legendre_file, allow_pickle=True)
 
     def update_phase_function(self):
-        """ Make an array of empirical phase function moments of length n_moments
+        """ Make an array of empirical phase function moments
 
         Returns
         -------
-        moments: np.ndarray
+        moments: np.ndarray (n_moments)
             A truncated array of moments, or the array of empirical moments with 0s appended
         """
         phase_function_coefficients = self.get_phase_function()
@@ -38,7 +39,7 @@ class EmpiricalPhaseFunction:
 
         Returns
         -------
-        empirical_phase_function: np.ndarray
+        empirical_phase_function: np.ndarray (n_moments, n_layers, n_wavelengths)
             An array of the empirical coefficients
         """
         phase_function = self.update_phase_function()
@@ -64,7 +65,7 @@ class HenyeyGreensteinPhaseFunction:
 
         Returns
         -------
-        coefficients: np.ndarray
+        coefficients: np.ndarray (n_moments)
             The coefficients for this g
         """
         orders = np.linspace(0, self.n_moments-1, num=self.n_moments)
@@ -83,7 +84,7 @@ class HenyeyGreensteinPhaseFunction:
 
         Returns
         -------
-        hg_phase_function: np.ndarray
+        hg_phase_function: np.ndarray (n_moments, n_layers, n_wavelengths)
             An array of HG coefficients
         """
         hg_phase_function = np.zeros((self.n_moments, n_layers, len(g_values)))
@@ -110,7 +111,7 @@ class RayleighPhaseFunction:
 
         Returns
         -------
-        rayleigh_phase_function: np.ndarray
+        rayleigh_phase_function: np.ndarray (n_moments, n_layers, n_wavelengths)
             An array of the Rayleigh coefficients
         """
         rayleigh_phase_function = np.zeros((self.n_moments, n_layers, n_wavelengths))

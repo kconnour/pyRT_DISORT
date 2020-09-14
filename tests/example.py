@@ -30,7 +30,7 @@ dust_column = Column(dust, 10, 0.5, 1)   # 10=scale height, 0.5=Conrath nu, 1 = 
 
 # Once I make columns this way, I can add them to the model
 model.add_rayleigh_co2_optical_depths(wavelengths)
-model.add_column(dust_column)
+model.add_column('')
 
 # After I've added Rayleigh scattering and all the columns I want, it can get the "big 3" arrays
 optical_depths = model.calculate_column_optical_depths()
@@ -41,6 +41,8 @@ polynomial_moments = model.calculate_polynomial_moments()
 #print(polynomial_moments.shape)    # n_moments x n_layers x n_wavelengths
 # Or I can access anything that went into the model
 temperatures = model.atmosphere.temperature_boundaries
+
+raise SystemExit(12)
 
 # DISORT cannot natively handle the wavelength dimension, so reduce those here for testing
 optical_depths = optical_depths[:, 0]

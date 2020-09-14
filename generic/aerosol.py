@@ -1,3 +1,4 @@
+# 3rd-party imports
 import numpy as np
 
 
@@ -83,7 +84,7 @@ class Aerosol:
 
         Returns
         -------
-        extinction_ratio: np.ndarray
+        extinction_ratio: np.ndarray (len(wavelengths))
             The ratios between C_extinction at wavelengths and the reference wavelength
         """
         reference_c_ext = np.interp(np.array([self.wave_ref]), self.wavs, self.c_ext)
@@ -96,7 +97,7 @@ class Aerosol:
 
         Returns
         -------
-        single_scattering_albedo: np.ndarray
+        single_scattering_albedo: np.ndarray (len(wavelengths))
             The single_scattering_albedo at the input wavelengths
         """
         interpolated_extinction = np.interp(self.wavelengths, self.wavs, self.c_ext)
@@ -109,7 +110,7 @@ class Aerosol:
 
         Returns
         -------
-        interpolated_g: np.ndarray
+        interpolated_g: np.ndarray (len(wavelengths))
             The interpolated asymmetry parameter
         """
         interpolated_g = np.interp(self.wavelengths, self.wavs, self.g)
