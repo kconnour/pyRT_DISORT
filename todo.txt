@@ -2,11 +2,10 @@ Fixes:
 
 - Classes
 --- See if there's a better way than duck typing a PhaseFunction class
+--- It'd be nice to have a Rayleigh class but it may have a duck typing issue too
 --- ModelAtmosphere should be updated to include a possible dtauc, ssalb, and/or pmom file
 
 - Design
---- If tau_rayleigh isn't added and no columns are added, SSA will be 0... not a matrix. It'd be better to define it as
-    a matrix, then add in Rayleigh, columns, etc. so I could do a calculation with just Rayleigh scattering
 --- Right now model.calculate_moments is a mess. Currently it requires a column to exist and is dependent on the 0th column
 --- Remake the .so file with the output class variables all being output
 --- Force all aerosols to have the same n_moments and wavelengths?

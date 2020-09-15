@@ -13,6 +13,7 @@ from generic.size import Size
 from generic.unsure import Unsure
 from generic.control import Control
 from generic.boundary_conditions import BoundaryConditions
+from utilities.rayleigh_co2 import calculate_rayleigh_co2_optical_depths
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Make the model atmsophere
@@ -24,7 +25,7 @@ polyfile = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/legendre_coeff_dust.np
 
 # Make an atmosphere and add it to the model
 atm = Atmosphere(atmfile)
-model = ModelAtmosphere(atm)
+model = ModelAtmosphere(atm, 2)
 
 # Now the atmosphere doesn't have anything in it... create a column of dust
 # First, make a phase function
@@ -36,13 +37,24 @@ dust = Aerosol(dustfile, phase, wavelengths, 9.3)   # 9.3 is the reference wavel
 dust_column = Column(dust, 10, 0.5, 1)   # 10=scale height, 0.5=Conrath nu, 1 = column optical depth
 
 # Once I make columns this way, I can add them to the model
-model.add_rayleigh_co2_optical_depths(wavelengths)
 model.add_column(dust_column)
+
+# Add in Rayleigh stuff
+#co2_OD = calculate_rayleigh_co2_optical_depths(wavelengths, atm.column_density_layers)
+#model.add_rayleigh_constituent(co2_OD)
+#total_rayleigh = model.calculate_rayleigh_optical_depths()
 
 # After I've added Rayleigh scattering and all the columns I want, it can get the "big 3" arrays
 optical_depths = model.calculate_column_optical_depths()
 ssa = model.calculate_single_scattering_albedos()
 polynomial_moments = model.calculate_polynomial_moments()
+
+print(optical_depths)
+
+print(ssa)
+
+raise SystemExit(9)
+
 #print(optical_depths.shape)        # n_layers x n_wavelengths
 #print(ssa.shape)                   # n_layers x n_wavelengths
 #print(polynomial_moments.shape)    # n_moments x n_layers x n_wavelengths

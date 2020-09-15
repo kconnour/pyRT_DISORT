@@ -1,6 +1,27 @@
 import numpy as np
 
 
+def calculate_rayleigh_co2_optical_depths(wavelengths, column_density_layers):
+    """ Calculate the Rayleigh CO2 optical depth at a given wavelength
+
+    Parameters
+    ----------
+    wavelengths: (n_wavelengths)
+        The wavelengths of the observation
+    column_density_layers: np.ndarray (n_layers)
+        The column densities in each layer
+
+    Returns
+    -------
+    tau_rayleigh_co2: np.ndarray(n_layers, n_wavelengths)
+        The Rayleigh optical depths in each layer at each wavelength
+    """
+
+    cross_section = calculate_molecular_cross_section(wavelengths)
+    tau_rayleigh_co2 = np.outer(column_density_layers, cross_section)
+    return tau_rayleigh_co2
+
+
 def rayleigh_co2(wavelength):
     """ Get the Rayleigh scattering cross section for pure CO2. Taken from the paper:
     Sneep and Ubachs 2005, JQSRT, 92, 293-310.  Note: in their equation 4, 1.1427e6 SHOULD BE 1.1427e3.
