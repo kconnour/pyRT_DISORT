@@ -22,7 +22,6 @@ Fixes:
 - Bugs
 --- PMOM doesn't seem right if the first coefficient is supposed to be 1
 --- "Input variable PMOM in error"
---- tau_rayleigh isn't quite correct... I think
 
 Questions:
 --- What are the 2 additional columns in ice?

@@ -34,3 +34,71 @@ def rayleigh_co2(wavelength):
     # cross_section is in cm**2 so convert to m**2
     cross_section /= 10**4
     return cross_section
+
+
+def calculate_molecular_cross_section(wavelengths):
+    """ Calculate the molecular cross section (m**2 / molecule)
+
+    Parameters
+    ----------
+    wavelengths: np.ndarray (n_wavelengths)
+        The wavelengths
+
+    Returns
+    -------
+    cross_section: np.ndarray (n_layers, n_wavelengths)
+        The molecular cross section in each grid point, in m**2 / molecule
+    """
+    # It'll be much easier at the end if I deal with multi-dimensional arrays from the get-go
+    # Make an array (n_layers, n_wavelengths) and convert microns to 1/cm
+    wavenumbers = 1 / (wavelengths * 10 ** -4)
+    # Make an array (n_layers, n_wavelengths) convert molecules/m**3 to molecules/cm**3
+    number_density = 25.47 * 10**18  # molecules / cm**3
+
+    king_factor = 1.1364 + 25.3 * 10 ** -12 * wavenumbers ** 2
+    index_of_refraction = co2_index_of_refraction(wavenumbers)
+
+    cross_section = scattering_cross_section(wavenumbers, number_density, king_factor, index_of_refraction) * 10**-4
+    return cross_section
+
+
+def co2_index_of_refraction(wavenumbers):
+    """ Calculate the index of refraction for CO2 using equation 13 and changing the coefficient to 10**3
+
+    Parameters
+    ----------
+    wavenumbers: np.ndarray (n_layers, n_wavelengths)
+        The wavenumbers
+
+    Returns
+    -------
+    n: np.ndarray (n_layers, n_wavelengths)
+        The indices of refraction in each grid point
+    """
+    n = 1 + 1.1427*10**3 * (5799.25 / (128908.9**2 - wavenumbers**2) + 120.05 / (89223.8**2 - wavenumbers**2) +
+                            5.3334 / (75037.5**2 - wavenumbers**2) + 4.3244 / (67837.7**2 - wavenumbers**2) +
+                            0.1218145*10**-4 / (2418.136**2 - wavenumbers**2))
+    return n
+
+
+def scattering_cross_section(wavenumbers, number_density, king_factor, index_of_refraction):
+    """ Calculate the scattering cross section using equation 2
+
+    Parameters
+    ----------
+    wavenumbers: np.ndarray (n_layers, n_wavelengths)
+        The wavenumbers
+    number_density: float
+        The number densities at which this was calculated
+    king_factor: np.ndarray (n_layers, n_wavelengths)
+        The King factor
+    index_of_refraction: np.ndarray (n_layers, n_wavelengths)
+        The indices of refraction
+
+    Returns
+    -------
+    np.ndarray (n_layers, n_wavelengths) in cm**2 / molecule
+    """
+    coefficient = 24 * np.pi**3 * wavenumbers**4 / number_density**2
+    middle_term = ((index_of_refraction**2 - 1) / (index_of_refraction**2 + 2))**2
+    return coefficient * middle_term * king_factor

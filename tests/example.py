@@ -28,7 +28,7 @@ model = ModelAtmosphere(atm)
 
 # Now the atmosphere doesn't have anything in it... create a column of dust
 # First, make a phase function
-wavelengths = np.array([1, 2, 8, 9.3])    # Suppose you observe at these 4 wavelengths
+wavelengths = np.array([1, 2])    # Suppose you observe at these 2 wavelengths
 phase = EmpiricalPhaseFunction(polyfile, 128)  # 128 moments
 # Then pass that phase function to Aerosol. Aerosol only keeps track of the aerosol's properties (c_ext, c_sca, g, etc.)
 dust = Aerosol(dustfile, phase, wavelengths, 9.3)   # 9.3 is the reference wavelength

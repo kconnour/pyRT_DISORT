@@ -5,7 +5,7 @@ import numpy as np
 from generic.atmosphere import Atmosphere
 from generic.aerosol_column import Column
 from generic.phase_function import RayleighPhaseFunction
-from utilities.rayleigh_co2 import rayleigh_co2
+from utilities.rayleigh_co2 import calculate_molecular_cross_section
 
 
 class ModelAtmosphere:
@@ -45,20 +45,22 @@ class ModelAtmosphere:
         """
         self.tau_rayleigh += self.calculate_rayleigh_co2_optical_depths(wavelength)
 
-    def calculate_rayleigh_co2_optical_depths(self, wavelength):
+    def calculate_rayleigh_co2_optical_depths(self, wavelengths):
         """ Calculate the Rayleigh CO2 optical depth at a given wavelength
 
         Parameters
         ----------
-        wavelength:
-            The wavelength of the observation
+        wavelengths:
+            The wavelengths of the observation
 
         Returns
         -------
         tau_rayleigh_co2: np.ndarray(n_layers, n_wavelengths)
             The Rayleigh optical depths in each layer at each wavelength
         """
-        tau_rayleigh_co2 = np.outer(self.atmosphere.column_density_layers, rayleigh_co2(wavelength))
+
+        cross_section = calculate_molecular_cross_section(wavelengths)
+        tau_rayleigh_co2 = np.outer(self.atmosphere.column_density_layers, cross_section)
         return tau_rayleigh_co2
 
     def calculate_column_optical_depths(self, optical_depth_minimum=10**-7):
