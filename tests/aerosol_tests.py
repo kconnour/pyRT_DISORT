@@ -2,11 +2,11 @@
 import numpy as np
 
 # Local imports
-from generic.aerosol import Aerosol
+from preprocessing.model.aerosol import Aerosol
 
 
 def test_asymmetry():
-    dust_file = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/dust.npy'
+    dust_file = '/preprocessing/planets/mars/aux/dust.npy'
     # Make wavelengths outside the range in the file
     unsupported_wavelengths = np.array([0.19, 4, 6, 250])
     unsupported_dust = Aerosol(dust_file, '', unsupported_wavelengths, 9.3)

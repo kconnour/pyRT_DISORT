@@ -4,7 +4,7 @@ import numpy as np
 # Local imports
 from preprocessing.model.atmosphere import Atmosphere
 from preprocessing.model.aerosol_column import Column
-from generic.phase_function import RayleighPhaseFunction
+from preprocessing.model.phase_function import RayleighPhaseFunction
 
 
 class ModelAtmosphere:

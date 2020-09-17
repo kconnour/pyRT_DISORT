@@ -4,8 +4,6 @@ Fixes:
 --- Fix n_moments + n_wavelengths in pmom. I had to change code structure to accommodate no column
 --- Right now model.calculate_moments is a mess. Currently it requires a column to exist and is dependent on the 0th column
 --- Force all aerosols to have the same n_moments and wavelengths?
---- "generic" seems like a poor folder name for the main routines. It might be nice to make "model" and miscellaneous
-    folder for Control, Output, etc.
 --- UU outputs a bunch of junk 0s in addition to "good" values---fix that
 --- I should consider just updating tau_rayleigh everytime a rayleigh component is added so the user never needs
     to remember to compute total tau rayleigh. Though, as written, that's not efficient
@@ -19,17 +17,13 @@ Fixes:
 --- ice.npy / dust.npy have the columns specified in the correct order
 --- mars_atm.npy has the columns specified in the correct order
 
-- Bugs
---- Flip the atmosphere
---- In Atmosphere, the linspaces need flipped to accommodate the new convention of layer0 = TOA
-
 Questions:
 --- I must have some confusion about nlayers... if I have 15 boundaries, I have 14 layers so I thought dtauc, and ssalb
     should be of length 14 but his are 15. His are also reversed compared to mine
 --- Do moments go from 0--127 or 1--128? Just checking when dividing my (2k+1)
 --- What are the "requirements" on PMOM? I think it just breaks if any value is >1
---- In disort_multi, if there's only Rayleigh scattering, ssalb = 0.99, not 1. Shouldn't it be 1? However, if it is 1
-    it breaks PMOM
+--- In disort_multi, if there's only Rayleigh scattering, ssalb = 0.99, not 1. Shouldn't it be 1? See line 1714 of
+    disort_multi if tau_ice = tau_dust = tau_ozone = 0
 --- How to specify layers besides reading them in from marsatm.inp? He uses 40-->; I use 15
 --- What are the 2 additional columns in ice?
 --- Where would I add Type 1 or 2 ice?
@@ -40,7 +34,6 @@ Questions:
 Things to add/test:
 --- Unit tests
 --- Make a good installation
---- Get dtauc/ssalb/pmom from disort_multi + compare to mine
 --- Add Hapke surface phase function
 --- Solver
 --- Gas---I presume ozone shouldn't use any of the aerosol column methods

@@ -2,7 +2,7 @@
 import numpy as np
 
 # Local imports
-from generic.aerosol import Aerosol
+from preprocessing.model.aerosol import Aerosol
 
 
 class Column:

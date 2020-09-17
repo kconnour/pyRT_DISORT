@@ -1,3 +1,3 @@
 import numpy as np
 
-new = np.load('/home/kyle/repos/pyRT_DISORT/planets/mars/aux/disortMultiPseudoMatch.npy')
+new = np.load('/preprocessing/planets/mars/aux/disortMultiPseudoMatch.npy')

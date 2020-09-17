@@ -4,7 +4,6 @@ transfer code.
 Dependencies
 ============
 - numpy
-- pandas
 - scipy
 
 Install
@@ -19,3 +18,13 @@ disort
 - Move the newly created .so file to python's site-packages, or update PYTHONPATH. Congratulations!
 You can now import disort
 - Now that disort can run, install this repo using wheel
+
+Conventions
+===========
+The physical units follow the following conventions:
+- Altitudes are in km
+- Wavelengths are in microns
+- Wavenumbers are in 1/cm
+- Everything else is in MKS units
+
+If you mess with the solar spectrum, its values are at 1AU

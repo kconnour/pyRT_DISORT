@@ -3,10 +3,10 @@ import numpy as np
 
 # Local imports
 #from planets.mars.mars_aerosols import MarsDust
-from generic.observation import Observation
+from preprocessing.observation import Observation
 import disort
 from preprocessing.planets.mars.map import Albedo
-from generic.output import Output
+from preprocessing.controller.output import Output
 from atmosphere import Atmosphere
 from preprocessing.planets.mars.mars_atmosphere import DustAtmosphere
 

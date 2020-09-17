@@ -2,11 +2,11 @@
 import numpy as np
 
 # Local imports
-from generic.phase_function import EmpiricalPhaseFunction, HenyeyGreensteinPhaseFunction, RayleighPhaseFunction
+from preprocessing.model.phase_function import EmpiricalPhaseFunction, HenyeyGreensteinPhaseFunction, RayleighPhaseFunction
 
 
 def test_empirical():
-    legendre_file = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/legendre_coeff_dust.npy'
+    legendre_file = '/preprocessing/planets/mars/aux/legendre_coeff_dust.npy'
     n_moments = 95
     n_layers = 20
     n_wavelengths = 100

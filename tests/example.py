@@ -1,19 +1,18 @@
 import disort
 
 import numpy as np
-from generic.model_atmosphere import ModelAtmosphere
-from generic.atmosphere import Atmosphere
-from generic.aerosol import Aerosol
-from generic.aerosol_column import Column
-from generic.observation import Observation
-from generic.output import Output
-from planets.mars.map import Albedo
-from generic.phase_function import EmpiricalPhaseFunction
-from generic.size import Size
-from generic.unsure import Unsure
-from generic.control import Control
-from generic.boundary_conditions import BoundaryConditions
-from utilities.rayleigh_co2 import calculate_rayleigh_co2_optical_depths
+from preprocessing.model.model_atmosphere import ModelAtmosphere
+from preprocessing.model.atmosphere import Atmosphere
+from preprocessing.model.aerosol import Aerosol
+from preprocessing.model.aerosol_column import Column
+from preprocessing.observation import Observation
+from preprocessing.controller.output import Output
+from preprocessing.model.phase_function import EmpiricalPhaseFunction
+from preprocessing.controller.size import Size
+from preprocessing.controller.unsure import Unsure
+from preprocessing.controller.control import Control
+from preprocessing.model.boundary_conditions import BoundaryConditions
+from preprocessing.utilities.rayleigh_co2 import calculate_rayleigh_co2_optical_depths
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Make the model atmsophere

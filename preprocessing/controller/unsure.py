@@ -2,7 +2,7 @@
 import numpy as np
 
 # Local imports
-from generic.size import Size
+from preprocessing.controller.size import Size
 
 
 class Unsure:
