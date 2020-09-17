@@ -43,14 +43,12 @@ class EmpiricalPhaseFunction:
             An array of the empirical coefficients
         """
         phase_function = self.update_phase_function()
-        print(phase_function)
         empirical_phase_function = np.zeros((self.n_moments, n_layers, n_wavelengths))
         normalization = np.linspace(0, self.n_moments-1, num=self.n_moments) * 2 + 1
         for i in range(n_layers):
             for j in range(n_wavelengths):
                 empirical_phase_function[:, i, j] = phase_function / normalization
 
-        print(np.amax(empirical_phase_function[1:, :, :]))
         return empirical_phase_function
 
 

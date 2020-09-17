@@ -167,5 +167,5 @@ class Atmosphere:
             The column density of each layer
         """
         number_density_midpoints = self.calculate_midpoints(self.number_density_boundaries)
-        column_density = number_density_midpoints * np.diff(self.altitude_boundaries) * 1000
+        column_density = number_density_midpoints * np.abs(np.diff(self.altitude_boundaries)) * 1000
         return column_density

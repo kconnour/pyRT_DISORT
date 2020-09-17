@@ -38,5 +38,5 @@ print(ice[:, 0])'''
 #p = np.pad(atm, ((0, 0), (0, 1)), mode='constant', constant_values=0)
 #np.save('/home/kyle/repos/pyRT_DISORT/planets/mars/aux/marsatmNew.npy', p)
 
-file = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/legendre_coeff_dust.csv'
+file = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/disortMultiPseudoMatch.csv'
 turn_csv_to_npy(file)

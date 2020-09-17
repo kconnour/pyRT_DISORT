@@ -1,16 +1,17 @@
 Fixes:
 
-- Classes
---- See if there's a better way than duck typing a PhaseFunction class
---- It'd be nice to have a Rayleigh class but it may have a duck typing issue too
---- ModelAtmosphere should be updated to include a possible dtauc, ssalb, and/or pmom file
-
 - Design
+--- Fix n_moments + n_wavelengths in pmom. I had to change code structure to accommodate no column
 --- Right now model.calculate_moments is a mess. Currently it requires a column to exist and is dependent on the 0th column
 --- Force all aerosols to have the same n_moments and wavelengths?
 --- "generic" seems like a poor folder name for the main routines. It might be nice to make "model" and miscellaneous
     folder for Control, Output, etc.
---- UU outputs a bunch of junk 0s
+--- UU outputs a bunch of junk 0s in addition to "good" values---fix that
+--- I should consider just updating tau_rayleigh everytime a rayleigh component is added so the user never needs
+    to remember to compute total tau rayleigh. Though, as written, that's not efficient
+--- See if there's a better way than duck typing a PhaseFunction class
+--- It'd be nice to have a Rayleigh class but it may have a duck typing issue too
+--- ModelAtmosphere should be updated to include a possible dtauc, ssalb, and/or pmom file
 
 - Assumptions
 --- The empirical phase function is wavelength independent. I know this is wrong... but it's all I have for now
@@ -19,9 +20,8 @@ Fixes:
 --- mars_atm.npy has the columns specified in the correct order
 
 - Bugs
---- legendre_ice is surely wrong if it didn't get the first value as 1
---- PMOM doesn't seem right if the first coefficient is supposed to be 1
---- "Input variable PMOM in error"
+--- Flip the atmosphere
+--- In Atmosphere, the linspaces need flipped to accommodate the new convention of layer0 = TOA
 
 Questions:
 --- I must have some confusion about nlayers... if I have 15 boundaries, I have 14 layers so I thought dtauc, and ssalb
@@ -46,8 +46,3 @@ Things to add/test:
 --- Gas---I presume ozone shouldn't use any of the aerosol column methods
 --- I generally do linear interpolation but it'd be nice if the user could specify fancier interpolations
 --- Mike does post-DISORT processing, multiplying UU by scaling. I should copy that for all disort-multi outputs
-
-Rayleigh test case:
---- Fix n_moments + n_wavelengths in pmom. I had to change code structure to accommodate no column
---- Fix all the "Design" issues
---- Test 1 dust column

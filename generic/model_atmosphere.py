@@ -103,7 +103,8 @@ class ModelAtmosphere:
             single_scattering_albedos += ssa * aerosol_column_optical_depths
 
         total_column_optical_depths = self.calculate_column_optical_depths()
-        return single_scattering_albedos / total_column_optical_depths
+        column_single_scattering_albedos = single_scattering_albedos / total_column_optical_depths
+        return column_single_scattering_albedos
 
     def calculate_polynomial_moments(self):
         """ Calculate the polynomial moments for the atmosphere
@@ -115,7 +116,7 @@ class ModelAtmosphere:
         """
         # Get info I'll need
         #n_moments = self.columns[0].aerosol.phase_function.n_moments
-        n_moments = 128   # Just for now! Fix later
+        n_moments = 129   # Just for now! Fix later
         n_wavelengths = 2   # Just for now! Fix later
         n_layers = self.atmosphere.n_layers
         #n_wavelengths = len(self.columns[0].aerosol.wavelengths)

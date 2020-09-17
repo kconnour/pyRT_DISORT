@@ -20,26 +20,30 @@ from utilities.rayleigh_co2 import calculate_rayleigh_co2_optical_depths
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Define the absolute paths to some files I'll need
 atmfile = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/disortMultiPseudoMatch.npy'
-#atmfile = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/marsatmNew.npy'
 dustfile = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/dust.npy'
-polyfile = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/legendre_coeff_dust.npy'
+icefile = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/ice.npy'
+dust_polyfile = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/legendre_coeff_dust.npy'
+ice_polyfile = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/legendre_coeff_h2o_ice.npy'
 
-wavelengths = np.array([9.3, 11])    # Suppose you observe at these 2 wavelengths
+wavelengths = np.array([12.1, 11])    # Suppose you observe at these 2 wavelengths
 
 # Make an atmosphere and add it to the model
 atm = Atmosphere(atmfile)
 model = ModelAtmosphere(atm, len(wavelengths))
 
 # Now the atmosphere doesn't have anything in it... create a column of dust
-# First, make a phase function
-phase = EmpiricalPhaseFunction(polyfile, 128)  # 128 moments
-# Then pass that phase function to Aerosol. Aerosol only keeps track of the aerosol's properties (c_ext, c_sca, g, etc.)
+phase = EmpiricalPhaseFunction(dust_polyfile, 129)  # 129 moments
 dust = Aerosol(dustfile, phase, wavelengths, 9.3)   # 9.3 is the reference wavelength
-# Next, make a column of aerosols
-dust_column = Column(dust, 10, 0.5, 1)   # 10=scale height, 0.5=Conrath nu, 1 = column optical depth
+dust_column = Column(dust, 10, 0.5, 3)   # 10=scale height, 0.5=Conrath nu, 1 = column optical depth
+
+# Make some ice
+ice_phase = EmpiricalPhaseFunction(ice_polyfile, 129)
+ice = Aerosol(icefile, ice_phase, wavelengths, 12.1)
+ice_column = Column(ice, 10, 0.5, 0.5)
 
 # Once I make columns this way, I can add them to the model
-model.add_column(dust_column)
+#model.add_column(dust_column)
+#model.add_column(ice_column)
 
 # Add in Rayleigh stuff
 co2_OD = calculate_rayleigh_co2_optical_depths(wavelengths, atm.column_density_layers)
@@ -51,16 +55,12 @@ optical_depths = model.calculate_column_optical_depths()
 ssa = model.calculate_single_scattering_albedos()
 polynomial_moments = model.calculate_polynomial_moments()
 
-#print(optical_depths.shape)        # n_layers x n_wavelengths
-#print(ssa.shape)                   # n_layers x n_wavelengths
-#print(polynomial_moments.shape)    # n_moments x n_layers x n_wavelengths
 # Or I can access anything that went into the model
 temperatures = model.atmosphere.temperature_boundaries
 
 # DISORT cannot natively handle the wavelength dimension, so reduce those here for testing
 optical_depths = optical_depths[:, 0]
 ssa = ssa[:, 0]
-ssa = np.where(ssa == 1, 0.99, ssa)
 polynomial_moments = polynomial_moments[:, :, 0]
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -169,4 +169,4 @@ rfldir, rfldn, flup, dfdt, uavg, uu, albmed, trnmed = disort.disort(usrang, usrt
                                                                     mean_intensity,
                                intensity, albedo_medium, transmissivity_medium)
 
-print(uu)
+print(uu)   # shape: (1, 81, 1)
