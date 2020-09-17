@@ -60,14 +60,12 @@ trnmed = np.zeros(6)
 print(disort.disort.__doc__)
 
 # Run disort, putting DFDT, UAVG, and UU in a, b, and c, respectively
-a, b, c = disort.disort(usrang, usrtau, ibcnd, onlyfl, prnt, plank, lamber, deltamplus, do_pseudo_sphere, dtauc, ssalb,
+rfldir, rfldn, flup, dfdt, uavg, uu, albmed, trnmed = disort.disort(usrang, usrtau, ibcnd, onlyfl, prnt, plank, lamber, deltamplus, do_pseudo_sphere, dtauc, ssalb,
                         pmom, temper, wvnmlo, wvnmhi, utau, umu0, phi0, umu, phi, fbeam, fisot, albedo, btemp, ttemp,
                         temis, earth_radius, h_lyr, rhoq, rhou, rho_accurate, bemst, emust, accur, header, rfldir,
                         rfldn, flup, dfdt, uavg, uu, albmed, trnmed)
 
-print(a)
-print(b)
-print(c)
+print(uu)
 
 # If I put in the inputs in the same order as the example, it fails
 '''output = disort1.disort(nlyr, nmom, nstr, numu, nphi, ntau, usrang, usrtau, ibcnd, onlyfl, prnt, plank, lamber, deltamplus,

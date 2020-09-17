@@ -14,6 +14,7 @@ def turn_npy_to_csv(file, headers):
     pd.DataFrame(array).to_csv('{}.csv'.format(path), header=headers, index=False)
 
 
+
 # An example
 #file = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/mars_atm.csv'
 #turn_csv_to_npy(file)
@@ -28,3 +29,14 @@ print(ice[:, 0])'''
 # Take a .npy file and turn it into a .csv
 #dust = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/dust.npy'
 #turn_npy_to_csv(dust, ['wavelength (microns)', 'c_extinction', 'c_scattering', 'kappa', 'g'])
+
+#file = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/marsatm.inp'
+#atm = np.genfromtxt(file, skip_header=3)
+#atm[:, 1] = atm[:, 1] / 100
+
+#atm = np.load('/home/kyle/repos/pyRT_DISORT/planets/mars/aux/marsatmNew.npy')
+#p = np.pad(atm, ((0, 0), (0, 1)), mode='constant', constant_values=0)
+#np.save('/home/kyle/repos/pyRT_DISORT/planets/mars/aux/marsatmNew.npy', p)
+
+file = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/legendre_coeff_dust.csv'
+turn_csv_to_npy(file)

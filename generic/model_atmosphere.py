@@ -56,7 +56,6 @@ class ModelAtmosphere:
 
         total_tau_rayleigh = sum(self.rayleigh_optical_depths)
         self.tau_rayleigh = total_tau_rayleigh
-        return total_tau_rayleigh
 
     def calculate_column_optical_depths(self, optical_depth_minimum=10**-7):
         """ Calculate the optical depth of each layer in a column
@@ -115,9 +114,11 @@ class ModelAtmosphere:
             An array of the polynomial moments
         """
         # Get info I'll need
-        n_moments = self.columns[0].aerosol.phase_function.n_moments
+        #n_moments = self.columns[0].aerosol.phase_function.n_moments
+        n_moments = 128   # Just for now! Fix later
+        n_wavelengths = 2   # Just for now! Fix later
         n_layers = self.atmosphere.n_layers
-        n_wavelengths = len(self.columns[0].aerosol.wavelengths)
+        #n_wavelengths = len(self.columns[0].aerosol.wavelengths)
         rayleigh = RayleighPhaseFunction(n_moments)
         rayleigh_moments = rayleigh.make_phase_function(n_layers, n_wavelengths)
         tau_rayleigh = np.copy(self.tau_rayleigh)

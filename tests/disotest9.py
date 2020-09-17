@@ -60,12 +60,11 @@ trnmed = np.zeros(4)
 print(disort.disort.__doc__)
 
 # Run disort
-dfdt, uavg, uu = disort.disort(usrang, usrtau, ibcnd, onlyfl, prnt, plank, lamber, deltamplus, do_pseudo_sphere, dtauc,
+rfldir, rfldn, flup, dfdt, uavg, uu, albmed, trnmed = disort.disort(usrang, usrtau, ibcnd, onlyfl, prnt, plank, lamber,
+                                                                    deltamplus, do_pseudo_sphere, dtauc,
                                ssalb, pmom, temper, wvnmlo, wvnmhi, utau, umu0, phi0, umu, phi, fbeam, fisot, albedo,
                                btemp, ttemp, temis, earth_radius, h_lyr, rhoq, rhou, rho_accurate, bemst, emust, accur,
                                header, rfldir, rfldn, flup, dfdt, uavg, uu, albmed, trnmed, maxcly=nlyr, maxmom=nmom,
                                maxcmu=nstr, maxumu=numu, maxphi=nphi, maxulv=ntau)
 
-print(dfdt)
-print(uavg)
 print(uu)

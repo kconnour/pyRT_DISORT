@@ -7,10 +7,10 @@ Fixes:
 
 - Design
 --- Right now model.calculate_moments is a mess. Currently it requires a column to exist and is dependent on the 0th column
---- Remake the .so file with the output class variables all being output
 --- Force all aerosols to have the same n_moments and wavelengths?
 --- "generic" seems like a poor folder name for the main routines. It might be nice to make "model" and miscellaneous
     folder for Control, Output, etc.
+--- UU outputs a bunch of junk 0s
 
 - Assumptions
 --- The empirical phase function is wavelength independent. I know this is wrong... but it's all I have for now
@@ -19,19 +19,35 @@ Fixes:
 --- mars_atm.npy has the columns specified in the correct order
 
 - Bugs
+--- legendre_ice is surely wrong if it didn't get the first value as 1
 --- PMOM doesn't seem right if the first coefficient is supposed to be 1
 --- "Input variable PMOM in error"
 
 Questions:
+--- I must have some confusion about nlayers... if I have 15 boundaries, I have 14 layers so I thought dtauc, and ssalb
+    should be of length 14 but his are 15. His are also reversed compared to mine
+--- Do moments go from 0--127 or 1--128? Just checking when dividing my (2k+1)
+--- What are the "requirements" on PMOM? I think it just breaks if any value is >1
+--- In disort_multi, if there's only Rayleigh scattering, ssalb = 0.99, not 1. Shouldn't it be 1? However, if it is 1
+    it breaks PMOM
+--- How to specify layers besides reading them in from marsatm.inp? He uses 40-->; I use 15
 --- What are the 2 additional columns in ice?
-
+--- Where would I add Type 1 or 2 ice?
+--- Where would I add effective radius?
+--- What are pivot pressures/altitudes/temperatures?
+--- How important is corr-k?
 
 Things to add/test:
 --- Unit tests
 --- Make a good installation
---- Add test cases for just Rayleigh scattering
 --- Get dtauc/ssalb/pmom from disort_multi + compare to mine
 --- Add Hapke surface phase function
 --- Solver
 --- Gas---I presume ozone shouldn't use any of the aerosol column methods
 --- I generally do linear interpolation but it'd be nice if the user could specify fancier interpolations
+--- Mike does post-DISORT processing, multiplying UU by scaling. I should copy that for all disort-multi outputs
+
+Rayleigh test case:
+--- Fix n_moments + n_wavelengths in pmom. I had to change code structure to accommodate no column
+--- Fix all the "Design" issues
+--- Test 1 dust column

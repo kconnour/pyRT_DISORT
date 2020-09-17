@@ -91,7 +91,7 @@ class Observation:
             d_phi = np.pi
 
         else:
-            temp_var = (np.cos(np.deg2rad(self.phase)) - self.calculate_mu0()*self.calculate_mu0()) / \
+            temp_var = (np.cos(np.deg2rad(self.phase)) - self.mu * self.mu0) / \
                        (sin_emission_angle * sin_solar_zenith_angle)
             # Trap the round-off case for arc cosine
             if np.abs(temp_var) > 1:

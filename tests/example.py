@@ -19,17 +19,19 @@ from utilities.rayleigh_co2 import calculate_rayleigh_co2_optical_depths
 # Make the model atmsophere
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Define the absolute paths to some files I'll need
-atmfile = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/mars_atm.npy'
+atmfile = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/disortMultiPseudoMatch.npy'
+#atmfile = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/marsatmNew.npy'
 dustfile = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/dust.npy'
 polyfile = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/legendre_coeff_dust.npy'
 
+wavelengths = np.array([9.3, 11])    # Suppose you observe at these 2 wavelengths
+
 # Make an atmosphere and add it to the model
 atm = Atmosphere(atmfile)
-model = ModelAtmosphere(atm, 2)
+model = ModelAtmosphere(atm, len(wavelengths))
 
 # Now the atmosphere doesn't have anything in it... create a column of dust
 # First, make a phase function
-wavelengths = np.array([1, 2])    # Suppose you observe at these 2 wavelengths
 phase = EmpiricalPhaseFunction(polyfile, 128)  # 128 moments
 # Then pass that phase function to Aerosol. Aerosol only keeps track of the aerosol's properties (c_ext, c_sca, g, etc.)
 dust = Aerosol(dustfile, phase, wavelengths, 9.3)   # 9.3 is the reference wavelength
@@ -40,20 +42,14 @@ dust_column = Column(dust, 10, 0.5, 1)   # 10=scale height, 0.5=Conrath nu, 1 = 
 model.add_column(dust_column)
 
 # Add in Rayleigh stuff
-#co2_OD = calculate_rayleigh_co2_optical_depths(wavelengths, atm.column_density_layers)
-#model.add_rayleigh_constituent(co2_OD)
-#total_rayleigh = model.calculate_rayleigh_optical_depths()
+co2_OD = calculate_rayleigh_co2_optical_depths(wavelengths, atm.column_density_layers)
+model.add_rayleigh_constituent(co2_OD)
+model.calculate_rayleigh_optical_depths()
 
 # After I've added Rayleigh scattering and all the columns I want, it can get the "big 3" arrays
 optical_depths = model.calculate_column_optical_depths()
 ssa = model.calculate_single_scattering_albedos()
 polynomial_moments = model.calculate_polynomial_moments()
-
-print(optical_depths)
-
-print(ssa)
-
-raise SystemExit(9)
 
 #print(optical_depths.shape)        # n_layers x n_wavelengths
 #print(ssa.shape)                   # n_layers x n_wavelengths
@@ -64,6 +60,7 @@ temperatures = model.atmosphere.temperature_boundaries
 # DISORT cannot natively handle the wavelength dimension, so reduce those here for testing
 optical_depths = optical_depths[:, 0]
 ssa = ssa[:, 0]
+ssa = np.where(ssa == 1, 0.99, ssa)
 polynomial_moments = polynomial_moments[:, :, 0]
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -92,16 +89,16 @@ umu = np.array([obs.mu])
 
 n_layers = model.atmosphere.n_layers
 n_moments = 128
-n_cmu = 4   # I'm unsure about this variable...
+n_streams = 64
 n_umu = 1
 n_phi = 1
-n_user_levels = 20
-size = Size(n_layers, n_moments, n_cmu, n_umu, n_phi, n_user_levels)
+n_user_levels = 81
+size = Size(n_layers, n_moments, n_streams, n_umu, n_phi, n_user_levels)
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Make the control class
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-control = Control()
+control = Control(print_variables=np.array([True, True, True, True, True]))
 usrtau = control.user_optical_depths
 usrang = control.user_angles
 onlyfl = control.only_fluxes
@@ -156,15 +153,20 @@ transmissivity_medium = output.make_transmissivity_medium()
 utau = np.zeros(n_user_levels)
 # Get albedo (it probably shouldn't go here though...)
 albedo_map = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/albedo_map.npy'
-albedo = Albedo(albedo_map, obs.latitude, obs.longitude).interpolate_albedo()
+albedo = 0.5  #Albedo(albedo_map, obs.latitude, obs.longitude).interpolate_albedo()
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Run the model
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-dfdt, uavg, uu = disort.disort(usrang, usrtau, ibcnd, onlyfl, prnt, plank, lamber, deltamplus, do_pseudo_sphere, optical_depths,
-                               ssa, polynomial_moments, temperatures, low_wavenumber, high_wavenumber, utau, umu0, phi0, umu, phi, fbeam, fisot, albedo,
-                               surface_temp, top_temp, top_emissivity, planet_radius, h_lyr, rhoq, rhou, rho_accurate, bemst, emust, accur,
-                               header, direct_beam_flux, diffuse_down_flux, diffuse_up_flux, flux_divergence, mean_intensity,
+
+rfldir, rfldn, flup, dfdt, uavg, uu, albmed, trnmed = disort.disort(usrang, usrtau, ibcnd, onlyfl, prnt, plank, lamber,
+                                                                    deltamplus, do_pseudo_sphere, optical_depths,
+                               ssa, polynomial_moments, temperatures, low_wavenumber, high_wavenumber, utau, umu0, phi0,
+                                                                    umu, phi, fbeam, fisot, albedo,
+                               surface_temp, top_temp, top_emissivity, planet_radius, h_lyr, rhoq, rhou, rho_accurate,
+                                                                    bemst, emust, accur,
+                               header, direct_beam_flux, diffuse_down_flux, diffuse_up_flux, flux_divergence,
+                                                                    mean_intensity,
                                intensity, albedo_medium, transmissivity_medium)
 
 print(uu)
