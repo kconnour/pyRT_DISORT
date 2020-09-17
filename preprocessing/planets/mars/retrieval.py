@@ -5,14 +5,14 @@ import numpy as np
 #from planets.mars.mars_aerosols import MarsDust
 from generic.observation import Observation
 import disort
-from planets.mars.map import Albedo
+from preprocessing.planets.mars.map import Albedo
 from generic.output import Output
 from atmosphere import Atmosphere
-from planets.mars.mars_atmosphere import DustAtmosphere
+from preprocessing.planets.mars.mars_atmosphere import DustAtmosphere
 
 # Read in the atmosphere and define variables   NOTE: I should have an option to read in OR create an atm
-mars_atm_file = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/mars_atm.npy'
-dust_file = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/dust.npy'
+mars_atm_file = '/preprocessing/planets/mars/aux/mars_atm.npy'
+dust_file = '/preprocessing/planets/mars/aux/dust.npy'
 atmosphere = Atmosphere(mars_atm_file)
 n_boundaries = len(atmosphere.z)
 n_layers = n_boundaries - 1
@@ -51,7 +51,7 @@ deltamplus = False
 header = 'myHeader'
 
 # Get the phase function moments
-dust_phsfn_file = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/legendre_coeff_dust.npy'
+dust_phsfn_file = '/preprocessing/planets/mars/aux/legendre_coeff_dust.npy'
 poly_dust_phase_moments = np.load(dust_phsfn_file, allow_pickle=True)
 n_moments = len(poly_dust_phase_moments)
 # I NEED TO MAKE A 2D GRID OF PMOM ``````````````````````````````````````````````````````

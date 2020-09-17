@@ -3,7 +3,7 @@ import numpy as np
 
 # Local imports
 from atmosphere import Atmosphere
-from planets.mars.mars_aerosols import MarsDust
+from preprocessing.planets.mars.mars_aerosols import MarsDust
 
 
 class AtmosphericDust(Atmosphere):
