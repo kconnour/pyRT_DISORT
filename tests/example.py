@@ -42,8 +42,8 @@ ice = Aerosol(icefile, ice_phase, wavelengths, 12.1)
 ice_column = Column(ice, 10, 0.5, 0.5)
 
 # Once I make columns this way, I can add them to the model
-#model.add_column(dust_column)
-#model.add_column(ice_column)
+model.add_column(dust_column)
+model.add_column(ice_column)
 
 # Add in Rayleigh stuff
 co2_OD = calculate_rayleigh_co2_optical_depths(wavelengths, atm.column_density_layers)
