@@ -1,15 +1,12 @@
 Fixes:
 
 - Design
---- Fix n_moments + n_wavelengths in pmom. I had to change code structure to accommodate no column
---- Right now model.calculate_moments is a mess. Currently it requires a column to exist and is dependent on the 0th column
---- Force all aerosols to have the same n_moments and wavelengths?
---- UU outputs a bunch of junk 0s in addition to "good" values---fix that
---- I should consider just updating tau_rayleigh everytime a rayleigh component is added so the user never needs
-    to remember to compute total tau rayleigh. Though, as written, that's not efficient
+--- UU outputs a bunch of junk 0s in addition to "good" values---fix that?
 --- See if there's a better way than duck typing a PhaseFunction class
 --- It'd be nice to have a Rayleigh class but it may have a duck typing issue too
 --- ModelAtmosphere should be updated to include a possible dtauc, ssalb, and/or pmom file
+--- I need to update HG to take n_moments as an input
+--- With the compute_model method, I'm doing redundant computations... speed things up
 
 - Assumptions
 --- The empirical phase function is wavelength independent. I know this is wrong... but it's all I have for now
@@ -34,7 +31,7 @@ Questions:
 Things to add/test:
 --- Unit tests
 --- Make a good installation
---- Add Hapke surface phase function
+--- Add Hapke surface phase function (already defined in BDREF.f, I just need BRDF_TYPE=1)
 --- Solver
 --- Gas---I presume ozone shouldn't use any of the aerosol column methods
 --- I generally do linear interpolation but it'd be nice if the user could specify fancier interpolations

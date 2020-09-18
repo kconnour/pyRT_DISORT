@@ -8,11 +8,16 @@ from preprocessing.model.phase_function import RayleighPhaseFunction
 
 
 class ModelAtmosphere:
-    def __init__(self, atmosphere, n_wavelengths):
+    def __init__(self, atmosphere, n_wavelengths, n_moments):
         self.atmosphere = atmosphere
+        self.n_wavelengths = n_wavelengths
+        self.n_moments = n_moments
         self.columns = []
         self.rayleigh_optical_depths = []
         self.tau_rayleigh = np.zeros((atmosphere.n_layers, n_wavelengths))
+        self.total_optical_depths = np.nan
+        self.total_single_scattering_albedo = np.nan
+        self.polynomial_moments = np.nan
 
         assert isinstance(self.atmosphere, Atmosphere), 'atmosphere needs to be an instance of Atmosphere'
 
@@ -45,6 +50,28 @@ class ModelAtmosphere:
         """
         self.rayleigh_optical_depths.append(constituent)
 
+    def compute_model(self, optical_depth_minimum=10**-7):
+        """ Compute all the relevant quantities for this model atmosphere
+
+        Returns
+        -------
+        None
+        """
+        self.check_wavelengths()
+        self.tau_rayleigh = self.calculate_rayleigh_optical_depths()
+        self.total_optical_depths = self.calculate_column_optical_depths(optical_depth_minimum)
+        self.total_single_scattering_albedo = self.calculate_single_scattering_albedos()
+        self.polynomial_moments = self.calculate_polynomial_moments()
+
+    def check_wavelengths(self):
+        for col in range(len(self.columns)):
+            wavelengths = self.columns[col].aerosol.wavelengths
+            if not col:
+                old_wavelengths = wavelengths
+            else:
+                if not np.array_equal(old_wavelengths, wavelengths):
+                    raise SystemExit('The wavelengths of the aerosols don\'t match. Exiting...')
+
     def calculate_rayleigh_optical_depths(self):
         """ Calculate the Rayleigh optical depths
 
@@ -53,9 +80,8 @@ class ModelAtmosphere:
         total_tau_rayleigh: np.ndarray(n_layers, n_wavelengths)
             The summed optical depths
         """
-
         total_tau_rayleigh = sum(self.rayleigh_optical_depths)
-        self.tau_rayleigh = total_tau_rayleigh
+        return total_tau_rayleigh
 
     def calculate_column_optical_depths(self, optical_depth_minimum=10**-7):
         """ Calculate the optical depth of each layer in a column
@@ -114,14 +140,10 @@ class ModelAtmosphere:
         polynomial_moments: np.ndarray (n_moments, n_layers, n_wavelengths)
             An array of the polynomial moments
         """
-        # Get info I'll need
-        #n_moments = self.columns[0].aerosol.phase_function.n_moments
-        n_moments = 129   # Just for now! Fix later
-        n_wavelengths = 2   # Just for now! Fix later
+
         n_layers = self.atmosphere.n_layers
-        #n_wavelengths = len(self.columns[0].aerosol.wavelengths)
-        rayleigh = RayleighPhaseFunction(n_moments)
-        rayleigh_moments = rayleigh.make_phase_function(n_layers, n_wavelengths)
+        rayleigh = RayleighPhaseFunction(self.n_moments)
+        rayleigh_moments = rayleigh.make_phase_function(n_layers, self.n_wavelengths)
         tau_rayleigh = np.copy(self.tau_rayleigh)
     
         # Add in the Rayleigh scattering contribution to the polynomial moments
@@ -132,7 +154,8 @@ class ModelAtmosphere:
             ssa = self.columns[i].aerosol.single_scattering_albedo
             aerosol_column_optical_depths = self.columns[i].calculate_aerosol_optical_depths(
                 self.atmosphere.altitude_layers, self.atmosphere.column_density_layers)
-            aerosol_moments = self.columns[i].aerosol.phase_function.make_phase_function(n_layers, n_wavelengths)
+            aerosol_moments = self.columns[i].aerosol.phase_function.make_phase_function(n_layers, self.n_wavelengths,
+                                                                                         self.n_moments)
             polynomial_moments += ssa * aerosol_column_optical_depths * aerosol_moments
 
         total_column_optical_depths = self.calculate_column_optical_depths()

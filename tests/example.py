@@ -15,52 +15,63 @@ from preprocessing.model.boundary_conditions import BoundaryConditions
 from preprocessing.utilities.rayleigh_co2 import calculate_rayleigh_co2_optical_depths
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Make the model atmsophere
+# Make the model atmosphere
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Define the absolute paths to some files I'll need
-atmfile = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/disortMultiPseudoMatch.npy'
-dustfile = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/dust.npy'
-icefile = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/ice.npy'
-dust_polyfile = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/legendre_coeff_dust.npy'
-ice_polyfile = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/legendre_coeff_h2o_ice.npy'
+atmfile = '/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/disortMultiPseudoMatch.npy'
+dustfile = '/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/dust.npy'
+icefile = '/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/ice.npy'
+dust_polyfile = '/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/legendre_coeff_dust.npy'
+ice_polyfile = '/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/legendre_coeff_h2o_ice.npy'
 
-wavelengths = np.array([12.1, 11])    # Suppose you observe at these 2 wavelengths
+wavelengths = np.array([9.3, 11])    # Suppose you observe at these 2 wavelengths
+n_moments = 128
 
 # Make an atmosphere and add it to the model
 atm = Atmosphere(atmfile)
-model = ModelAtmosphere(atm, len(wavelengths))
+model = ModelAtmosphere(atm, len(wavelengths), n_moments)
 
 # Now the atmosphere doesn't have anything in it... create a column of dust
-phase = EmpiricalPhaseFunction(dust_polyfile, 129)  # 129 moments
+phase = EmpiricalPhaseFunction(dust_polyfile)
 dust = Aerosol(dustfile, phase, wavelengths, 9.3)   # 9.3 is the reference wavelength
-dust_column = Column(dust, 10, 0.5, 3)   # 10=scale height, 0.5=Conrath nu, 1 = column optical depth
+dust_column = Column(dust, 10, 0.5, 1)   # 10=scale height, 0.5=Conrath nu, 1 = column optical depth
 
 # Make some ice
-ice_phase = EmpiricalPhaseFunction(ice_polyfile, 129)
+ice_phase = EmpiricalPhaseFunction(ice_polyfile)
 ice = Aerosol(icefile, ice_phase, wavelengths, 12.1)
 ice_column = Column(ice, 10, 0.5, 0.5)
 
 # Once I make columns this way, I can add them to the model
 model.add_column(dust_column)
-model.add_column(ice_column)
+#model.add_column(ice_column)
 
 # Add in Rayleigh stuff
 co2_OD = calculate_rayleigh_co2_optical_depths(wavelengths, atm.column_density_layers)
 model.add_rayleigh_constituent(co2_OD)
-model.calculate_rayleigh_optical_depths()
+
+# Now that the everything's in the model, compute everything
+model.compute_model()
+
+# The model now knows everything, so these are examples but unnecessary---except for removing the wavelength dimension
+optical_depths = model.total_optical_depths[:, 0]
+ssa = model.total_single_scattering_albedo[:, 0]
+polynomial_moments = model.polynomial_moments[:, :, 0]
 
 # After I've added Rayleigh scattering and all the columns I want, it can get the "big 3" arrays
-optical_depths = model.calculate_column_optical_depths()
-ssa = model.calculate_single_scattering_albedos()
-polynomial_moments = model.calculate_polynomial_moments()
+#model.calculate_rayleigh_optical_depths()
+#optical_depths = model.calculate_column_optical_depths()
+#ssa = model.calculate_single_scattering_albedos()
+#polynomial_moments = model.calculate_polynomial_moments()
 
 # Or I can access anything that went into the model
 temperatures = model.atmosphere.temperature_boundaries
 
 # DISORT cannot natively handle the wavelength dimension, so reduce those here for testing
-optical_depths = optical_depths[:, 0]
-ssa = ssa[:, 0]
-polynomial_moments = polynomial_moments[:, :, 0]
+#optical_depths = optical_depths[:, 0]
+#ssa = ssa[:, 0]
+#polynomial_moments = polynomial_moments[:, :, 0]
+print(optical_depths)
+print(ssa)
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Make a fake observation
@@ -72,8 +83,8 @@ emission_angle = 40
 phase_angle = 20
 latitude = 10
 longitude = 30
-altitude_map = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/altitude_map.npy'
-solar_spec = '/home/kyle/repos/pyRT_DISORT/aux/solar_spectrum.npy'
+altitude_map = '/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/altitude_map.npy'
+solar_spec = '/home/kyle/repos/pyRT_DISORT/preprocessing/aux/solar_spectrum.npy'
 obs = Observation(short_wav, long_wav, sza, emission_angle, phase_angle, latitude, longitude, altitude_map, solar_spec)
 phi = np.array([obs.phi])
 low_wavenumber = obs.low_wavenumber
@@ -87,8 +98,7 @@ umu = np.array([obs.mu])
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 n_layers = model.atmosphere.n_layers
-n_moments = 128
-n_streams = 64
+n_streams = 16
 n_umu = 1
 n_phi = 1
 n_user_levels = 81
@@ -151,7 +161,7 @@ transmissivity_medium = output.make_transmissivity_medium()
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 utau = np.zeros(n_user_levels)
 # Get albedo (it probably shouldn't go here though...)
-albedo_map = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/albedo_map.npy'
+albedo_map = '/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/albedo_map.npy'
 albedo = 0.5  #Albedo(albedo_map, obs.latitude, obs.longitude).interpolate_albedo()
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

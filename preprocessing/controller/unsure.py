@@ -19,11 +19,11 @@ class Unsure:
 
     def make_rhoq(self):
         # Make the variable "rhoq"
-        return np.zeros((int(0.5*self.size.n_cmu), int(0.5*self.size.n_cmu+1), self.size.n_cmu))
+        return np.zeros((int(0.5*self.size.n_streams), int(0.5*self.size.n_streams+1), self.size.n_streams))
 
     def make_rhou(self):
         # Make the variable "rhou"
-        return np.zeros((self.size.n_umu, int(0.5*self.size.n_cmu+1), self.size.n_cmu))
+        return np.zeros((self.size.n_umu, int(0.5*self.size.n_streams+1), self.size.n_streams))
 
     def make_rho_accurate(self):
         # Make the variable "rho_accurate"
@@ -31,7 +31,7 @@ class Unsure:
 
     def make_bemst(self):
         # Make the variable "bemst"
-        return np.zeros(int(0.5*self.size.n_cmu))
+        return np.zeros(int(0.5*self.size.n_streams))
 
     def make_emust(self):
         # Make the variable "emust"

@@ -3,14 +3,13 @@ import numpy as np
 
 
 class EmpiricalPhaseFunction:
-    def __init__(self, legendre_coefficients_file, n_moments):
+    def __init__(self, legendre_coefficients_file):
         self.legendre_file = legendre_coefficients_file
-        self.n_moments = n_moments
 
     def get_phase_function(self):
         return np.load(self.legendre_file, allow_pickle=True)
 
-    def update_phase_function(self):
+    def update_phase_function(self, n_moments):
         """ Make an array of empirical phase function moments
 
         Returns
@@ -19,15 +18,15 @@ class EmpiricalPhaseFunction:
             A truncated array of moments, or the array of empirical moments with 0s appended
         """
         phase_function_coefficients = self.get_phase_function()
-        if len(phase_function_coefficients) < self.n_moments:
-            moments = np.zeros(self.n_moments)
+        if len(phase_function_coefficients) < n_moments:
+            moments = np.zeros(n_moments)
             moments[: len(phase_function_coefficients)] = phase_function_coefficients
             return moments
         else:
-            moments = phase_function_coefficients[: self.n_moments]
+            moments = phase_function_coefficients[:n_moments]
             return moments
 
-    def make_phase_function(self, n_layers, n_wavelengths):
+    def make_phase_function(self, n_layers, n_wavelengths, n_moments):
         """ Make an empirical phase function
 
         Parameters
@@ -36,15 +35,17 @@ class EmpiricalPhaseFunction:
             The number of atmospheric layers
         n_wavelengths: int
             The number of wavelengths
+        n_moments: int
+            The number of Legendre phase function moments
 
         Returns
         -------
         empirical_phase_function: np.ndarray (n_moments, n_layers, n_wavelengths)
             An array of the empirical coefficients
         """
-        phase_function = self.update_phase_function()
-        empirical_phase_function = np.zeros((self.n_moments, n_layers, n_wavelengths))
-        normalization = np.linspace(0, self.n_moments-1, num=self.n_moments) * 2 + 1
+        phase_function = self.update_phase_function(n_moments)
+        empirical_phase_function = np.zeros((n_moments, n_layers, n_wavelengths))
+        normalization = np.linspace(0, n_moments-1, num=n_moments) * 2 + 1
         for i in range(n_layers):
             for j in range(n_wavelengths):
                 empirical_phase_function[:, i, j] = phase_function / normalization
