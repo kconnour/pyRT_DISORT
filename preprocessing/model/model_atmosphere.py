@@ -8,10 +8,11 @@ from preprocessing.model.phase_function import RayleighPhaseFunction
 
 
 class ModelAtmosphere:
-    def __init__(self, atmosphere, n_wavelengths, n_moments):
+    def __init__(self, atmosphere, n_wavelengths, n_moments, n_radii):
         self.atmosphere = atmosphere
         self.n_wavelengths = n_wavelengths
         self.n_moments = n_moments
+        self.n_radii = n_radii
         self.columns = []
         self.rayleigh_optical_depths = []
         self.tau_rayleigh = np.zeros((atmosphere.n_layers, n_wavelengths))
@@ -143,7 +144,7 @@ class ModelAtmosphere:
 
         n_layers = self.atmosphere.n_layers
         rayleigh = RayleighPhaseFunction(self.n_moments)
-        rayleigh_moments = rayleigh.make_phase_function(n_layers, self.n_wavelengths)
+        rayleigh_moments = np.moveaxis(rayleigh.make_phase_function(n_layers, self.n_wavelengths, self.n_radii), -1, 0)
         tau_rayleigh = np.copy(self.tau_rayleigh)
     
         # Add in the Rayleigh scattering contribution to the polynomial moments
@@ -154,10 +155,11 @@ class ModelAtmosphere:
             ssa = self.columns[i].aerosol.single_scattering_albedo
             aerosol_column_optical_depths = self.columns[i].calculate_aerosol_optical_depths(
                 self.atmosphere.altitude_layers, self.atmosphere.column_density_layers)
-            aerosol_moments = self.columns[i].aerosol.phase_function.make_phase_function(n_layers, self.n_wavelengths,
-                                                                                         self.n_moments)
+            aerosol_moments = self.columns[i].aerosol.phase_function.make_phase_function(n_layers, self.n_moments)
+            aerosol_moments = np.moveaxis(aerosol_moments, -1, 0)
+
             polynomial_moments += ssa * aerosol_column_optical_depths * aerosol_moments
 
         total_column_optical_depths = self.calculate_column_optical_depths()
         total_single_scattering_albedos = self.calculate_single_scattering_albedos()
-        return polynomial_moments / (total_column_optical_depths * total_single_scattering_albedos)
+        return np.moveaxis(polynomial_moments / (total_column_optical_depths * total_single_scattering_albedos), 0, -1)

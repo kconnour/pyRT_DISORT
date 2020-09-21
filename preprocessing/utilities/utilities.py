@@ -14,6 +14,31 @@ def turn_npy_to_csv(file, headers):
     pd.DataFrame(array).to_csv('{}.csv'.format(path), header=headers, index=False)
 
 
+def turn_tmqphsfn_to_npy(file_path):
+    """ Turn a tmq_mod1_r###v030_#####.dat.coef to a numpy array
+
+    Parameters
+    ----------
+    file_path: str
+        The Unix-like path to the file
+
+    Returns
+    -------
+    np.ndarray
+        The coefficients stored in a numpy array
+    """
+    coeff = []
+    f = open(file_path)
+    lines = f.readlines()[1:]
+    for line in lines:
+        a = np.fromstring(line.strip(), sep=' ')
+        coeff.append(a)
+
+    # This unravels a list and stores it as an array
+    return np.array([co for all_coeff in coeff for co in all_coeff])
+
+
+
 
 # An example
 #file = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/mars_atm.csv'
@@ -38,5 +63,7 @@ print(ice[:, 0])'''
 #p = np.pad(atm, ((0, 0), (0, 1)), mode='constant', constant_values=0)
 #np.save('/home/kyle/repos/pyRT_DISORT/planets/mars/aux/marsatmNew.npy', p)
 
-file = '/planets/mars/aux/disortMultiPseudoMatch.csv'
-turn_csv_to_npy(file)
+#file = '/home/kyle/disort_multi/aerosol_ice.dat'
+#a = np.genfromtxt(file, skip_header=3)
+#np.save('/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/ice.npy', a)
+#turn_npy_to_csv('/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/ice.npy', ['Wavelengths (microns)', 'C_extinction', 'C_scattering', 'kappa', 'g', 'Pmax', 'Thetmax'])

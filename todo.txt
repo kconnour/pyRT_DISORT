@@ -9,15 +9,11 @@ Fixes:
 --- With the compute_model method, I'm doing redundant computations... speed things up
 
 - Assumptions
---- The empirical phase function is wavelength independent. I know this is wrong... but it's all I have for now
 --- Every aerosol will have a dust.npy-type file
 --- ice.npy / dust.npy have the columns specified in the correct order
 --- mars_atm.npy has the columns specified in the correct order
 
 Questions:
---- I must have some confusion about nlayers... if I have 15 boundaries, I have 14 layers so I thought dtauc, and ssalb
-    should be of length 14 but his are 15. His are also reversed compared to mine
---- Do moments go from 0--127 or 1--128? Just checking when dividing my (2k+1)
 --- What are the "requirements" on PMOM? I think it just breaks if any value is >1
 --- In disort_multi, if there's only Rayleigh scattering, ssalb = 0.99, not 1. Shouldn't it be 1? See line 1714 of
     disort_multi if tau_ice = tau_dust = tau_ozone = 0
@@ -26,9 +22,15 @@ Questions:
 --- Where would I add Type 1 or 2 ice?
 --- Where would I add effective radius?
 --- What are pivot pressures/altitudes/temperatures?
---- How important is corr-k?
+--- How important is corr-k for prioritization?
+
+Bugs:
+--- dust.csv + dust.npy (and presumably ice...) don't match aerosol_<>.dat in disort_multi. They got copied wrong
+--- Now that I added r_eff, the HG phase function doesn't have the correct shape
 
 Things to add/test:
+--- Specify layers independent of mars_atm.inp
+--- Wavelength dependent phase function
 --- Unit tests
 --- Make a good installation
 --- Add Hapke surface phase function (already defined in BDREF.f, I just need BRDF_TYPE=1)

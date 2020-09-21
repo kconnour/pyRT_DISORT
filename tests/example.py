@@ -21,25 +21,27 @@ from preprocessing.utilities.rayleigh_co2 import calculate_rayleigh_co2_optical_
 atmfile = '/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/disortMultiPseudoMatch.npy'
 dustfile = '/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/dust.npy'
 icefile = '/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/ice.npy'
-dust_polyfile = '/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/legendre_coeff_dust.npy'
-ice_polyfile = '/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/legendre_coeff_h2o_ice.npy'
+dust_polyfile = '/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/phase_functions.npy'
 
 wavelengths = np.array([9.3, 11])    # Suppose you observe at these 2 wavelengths
+radii = np.array([1, 1.5, 1.75])     # Suppose you consider these effective radii
 n_moments = 128
+effective_radius = np.array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.9, 1, 1.5, 2, 2.5, 3])
+all_wavelengths = np.load('/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/dust.npy')[:, 0]
 
 # Make an atmosphere and add it to the model
 atm = Atmosphere(atmfile)
-model = ModelAtmosphere(atm, len(wavelengths), n_moments)
+model = ModelAtmosphere(atm, len(wavelengths), n_moments, len(radii))
 
 # Now the atmosphere doesn't have anything in it... create a column of dust
-phase = EmpiricalPhaseFunction(dust_polyfile)
+phase = EmpiricalPhaseFunction(dust_polyfile, all_wavelengths, effective_radius, wavelengths, radii)
 dust = Aerosol(dustfile, phase, wavelengths, 9.3)   # 9.3 is the reference wavelength
 dust_column = Column(dust, 10, 0.5, 1)   # 10=scale height, 0.5=Conrath nu, 1 = column optical depth
 
 # Make some ice
-ice_phase = EmpiricalPhaseFunction(ice_polyfile)
-ice = Aerosol(icefile, ice_phase, wavelengths, 12.1)
-ice_column = Column(ice, 10, 0.5, 0.5)
+#ice_phase = EmpiricalPhaseFunction(ice_polyfile)
+#ice = Aerosol(icefile, ice_phase, wavelengths, 12.1)
+#ice_column = Column(ice, 10, 0.5, 0.5)
 
 # Once I make columns this way, I can add them to the model
 model.add_column(dust_column)
@@ -55,23 +57,10 @@ model.compute_model()
 # The model now knows everything, so these are examples but unnecessary---except for removing the wavelength dimension
 optical_depths = model.total_optical_depths[:, 0]
 ssa = model.total_single_scattering_albedo[:, 0]
-polynomial_moments = model.polynomial_moments[:, :, 0]
-
-# After I've added Rayleigh scattering and all the columns I want, it can get the "big 3" arrays
-#model.calculate_rayleigh_optical_depths()
-#optical_depths = model.calculate_column_optical_depths()
-#ssa = model.calculate_single_scattering_albedos()
-#polynomial_moments = model.calculate_polynomial_moments()
+polynomial_moments = model.polynomial_moments[:, :, 0, 0]
 
 # Or I can access anything that went into the model
 temperatures = model.atmosphere.temperature_boundaries
-
-# DISORT cannot natively handle the wavelength dimension, so reduce those here for testing
-#optical_depths = optical_depths[:, 0]
-#ssa = ssa[:, 0]
-#polynomial_moments = polynomial_moments[:, :, 0]
-print(optical_depths)
-print(ssa)
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Make a fake observation
