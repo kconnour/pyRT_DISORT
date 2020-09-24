@@ -19,13 +19,10 @@ Questions:
     disort_multi if tau_ice = tau_dust = tau_ozone = 0
 --- How to specify layers besides reading them in from marsatm.inp? He uses 40-->; I use 15
 --- What are the 2 additional columns in ice?
---- Where would I add Type 1 or 2 ice?
---- Where would I add effective radius?
 --- What are pivot pressures/altitudes/temperatures?
 --- How important is corr-k for prioritization?
 
 Bugs:
---- dust.csv + dust.npy (and presumably ice...) don't match aerosol_<>.dat in disort_multi. They got copied wrong
 --- Now that I added r_eff, the HG phase function doesn't have the correct shape
 
 Things to add/test:

@@ -52,8 +52,8 @@ np.save('/home/kyle/repos/pyRT_DISORT/planets/mars/aux/ice.npy', ice)
 print(ice[:, 0])'''
 
 # Take a .npy file and turn it into a .csv
-#dust = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/dust.npy'
-#turn_npy_to_csv(dust, ['wavelength (microns)', 'c_extinction', 'c_scattering', 'kappa', 'g'])
+dust = '/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/mars_atm.npy'
+turn_npy_to_csv(dust, ['Altitude (km)', 'Pressure (Pascal)', 'Temperature (K)', 'Number density (particles / m^3)'])
 
 #file = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/marsatm.inp'
 #atm = np.genfromtxt(file, skip_header=3)
