@@ -12,7 +12,7 @@ from preprocessing.controller.size import Size
 from preprocessing.controller.unsure import Unsure
 from preprocessing.controller.control import Control
 from preprocessing.model.boundary_conditions import BoundaryConditions
-from preprocessing.utilities.rayleigh_co2 import calculate_rayleigh_co2_optical_depths
+from preprocessing.model.rayleigh import RayleighCo2
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Make the model atmosphere
@@ -31,30 +31,33 @@ dust = Aerosol(dustfile, wavs, 9.3)     # wavelength reference
 # Make a column of that aerosol
 lay = Layers(atm)
 dust_column = Column(dust, lay, 10, 0.5, np.array([1, 1.2, 1.4]), np.array([0.3, 0.5, 0.2]))  # column r, column OD
-#dust_column = Column(dust, lay, 10, 0.5, np.array([1]), np.array([1]))
 
 # Make the phase function
 e = EmpiricalPhaseFunction(phase, phase_radii, phase_wavs)
 n_moments = 65
 nn = NearestNeighborPhaseFunction(e, dust_column, n_moments)    # 128 moments
 
-#print(np.amax(nn.aerosol_phase_function))
+# Make Rayleigh stuff
+#rco2 = RayleighCo2(wavs, lay, n_moments)
+#print(rco2.tau_rayleigh_co2)
+#rayleigh_info = (rco2.tau_rayleigh_co2, rco2.tau_rayleigh_co2, rco2.phase_function)
 
 # Make the model
 model = ModelAtmosphere()
-dust_info = (dust_column.optical_depths, dust_column.single_scattering_albedos, nn.aerosol_phase_function)
+dust_info = (dust_column.hyperspectral_total_optical_depths, dust_column.hyperspectral_scattering_optical_depths,
+             nn.layered_hyperspectral_nearest_neighbor_phase_functions)
 model.add_constituent(dust_info)
 
 # Once everything is in the model, compute the model. Then, slice off the wavelength dimension
 model.compute_model()
-optical_depths = model.total_optical_depths[:, 0]
-ssa = model.total_single_scattering_albedos[:, 0]
-polynomial_moments = model.total_polynomial_moments[:, :, 0]
+optical_depths = model.hyperspectral_total_optical_depths[:, 1]
+ssa = model.hyperspectral_total_single_scattering_albedos[:, 1]
+polynomial_moments = model.hyperspectral_legendre_moments[:, :, 1]
 
-#print(np.amax(optical_depths))
-#print(np.amax(ssa))
-#print(np.amax(polynomial_moments))
-#raise SystemExit(2)
+print(np.amax(optical_depths))
+print(np.amax(ssa))
+print(np.amax(polynomial_moments))
+raise SystemExit(2)
 
 # Get a miscellaneous variable that I'll need later
 temperatures = lay.temperature_boundaries

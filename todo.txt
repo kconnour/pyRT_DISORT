@@ -1,14 +1,9 @@
-Fixes:
-
-- Design
+Design
 --- UU outputs a bunch of junk 0s in addition to "good" values---fix that?
---- See if there's a better way than duck typing a PhaseFunction class
---- It'd be nice to have a Rayleigh class but it may have a duck typing issue too
---- ModelAtmosphere should be updated to include a possible dtauc, ssalb, and/or pmom file
---- I need to update HG to take n_moments as an input
---- With the compute_model method, I'm doing redundant computations... speed things up
+--- Specify layers independent of mars_atm.inp?
+--- Make a good installation
 
-- Assumptions
+Assumptions
 --- Every aerosol will have a dust.npy-type file
 --- ice.npy / dust.npy have the columns specified in the correct order
 --- mars_atm.npy has the columns specified in the correct order
@@ -17,21 +12,29 @@ Questions:
 --- What are the "requirements" on PMOM? I think it just breaks if any value is >1
 --- In disort_multi, if there's only Rayleigh scattering, ssalb = 0.99, not 1. Shouldn't it be 1? See line 1714 of
     disort_multi if tau_ice = tau_dust = tau_ozone = 0
---- How to specify layers besides reading them in from marsatm.inp? He uses 40-->; I use 15
 --- What are the 2 additional columns in ice?
 --- What are pivot pressures/altitudes/temperatures?
 --- How important is corr-k for prioritization?
+--- Should PMOM_aerosol have a layer dependence? Right now I make it constant in the layers
+--- Are all the phase functions I have for dust? Where is 0.8 microns?
 
 Bugs:
 --- Now that I added r_eff, the HG phase function doesn't have the correct shape
 
-Things to add/test:
---- Specify layers independent of mars_atm.inp
---- Wavelength dependent phase function
+Additions:
+--- Rayleigh
+--- Add InterpPhaseFunction
+--- Add HGPhaseFunction
 --- Unit tests
---- Make a good installation
 --- Add Hapke surface phase function (already defined in BDREF.f, I just need BRDF_TYPE=1)
 --- Solver
 --- Gas---I presume ozone shouldn't use any of the aerosol column methods
 --- I generally do linear interpolation but it'd be nice if the user could specify fancier interpolations
 --- Mike does post-DISORT processing, multiplying UU by scaling. I should copy that for all disort-multi outputs
+
+Test:
+--- Make sure if I have 100 particle sizes, things don't go haywire...
+
+Fix:
+--- nearest_neighbor_phase_function doesn't slice efficiently... consider np.take()
+--- In EmpiricalPhaseFunction, "legendre_moments" might be better than "phase_function" since they're not phase functions

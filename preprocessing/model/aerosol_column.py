@@ -7,7 +7,7 @@ from preprocessing.model.atmosphere import Layers
 
 
 class Column:
-    def __init__(self, aerosol, layers, aerosol_scale_height, conrath_nu, effective_radii,
+    def __init__(self, aerosol, layers, aerosol_scale_height, conrath_nu, particle_sizes,
                  column_integrated_optical_depths):
         """ Initialize the class
 
@@ -21,32 +21,35 @@ class Column:
             The scale height of the aerosol
         conrath_nu: float
             The Conrath nu parameter
-        effective_radii: np.ndarray
+        particle_sizes: np.ndarray
             The effective radii of this aerosol
-        column_optical_depths: np.ndarray
+        column_integrated_optical_depths: np.ndarray
             The column-integrated optical depth at the effective radii
         """
         self.aerosol = aerosol
         self.layers = layers
         self.H = aerosol_scale_height
         self.nu = conrath_nu
-        self.effective_radii = effective_radii
+        self.particle_sizes = particle_sizes
         self.column_integrated_optical_depths = column_integrated_optical_depths
 
         assert isinstance(self.aerosol, Aerosol), 'aerosol needs to be an instance of Aerosol.'
         assert isinstance(self.layers, Layers), 'layers needs to be an instance of Layers.'
+        assert isinstance(self.H, (int, float)), 'aerosol_scale_height needs to be an int or float.'
+        assert isinstance(self.nu, (int, float)), 'conratu_nu needs to be an int or float.'
         self.check_conrath_parameters_do_not_suck()
-        assert isinstance(self.effective_radii, np.ndarray), 'effective_radii needs to be a numpy array'
-        assert isinstance(self.column_integrated_optical_depths, np.ndarray), 'column_optical_depths needs to be a numpy array'
-        assert len(self.effective_radii) == len(self.column_integrated_optical_depths), 'effective_radii need to be of len(ODs)'
+        assert isinstance(self.particle_sizes, np.ndarray), 'particle_sizes needs to be a numpy array.'
+        assert isinstance(self.column_integrated_optical_depths, np.ndarray), \
+            'column_integrated_optical_depths needs to be a numpy array'
+        assert len(self.particle_sizes) == len(self.column_integrated_optical_depths), \
+            'particle_sizes and column_integrated_optical_depths need to be the same length.'
 
-        # Make hidden arrays
-        self.optical_depths_with_size = self.calculate_optical_depths()
-        self.single_scattering_albedos_with_size = self.calculate_single_scattering_albedos()
-
-        # Make the normal arrays
-        self.optical_depths = self.reduce_optical_depths_size_dim()
-        self.single_scattering_albedos = self.reduce_single_scattering_albedos_size_dim()
+        self.multisize_hyperspectral_total_optical_depths = \
+            self.calculate_multisize_hyperspectral_total_optical_depths()
+        self.multisize_hyperspectral_scattering_optical_depths = \
+            self.calculate_multisize_hyperspectral_scattering_optical_depths()
+        self.hyperspectral_total_optical_depths = self.reduce_total_optical_depths_size_dim()
+        self.hyperspectral_scattering_optical_depths = self.reduce_scattering_optical_depths_size_dim()
 
     def check_conrath_parameters_do_not_suck(self):
         if np.isnan(self.H):
@@ -72,29 +75,25 @@ class Column:
         fractional_mixing_ratio = np.exp(self.nu * (1 - np.exp(self.layers.altitude_layers / self.H)))
         return fractional_mixing_ratio
 
-    def calculate_optical_depths(self, optical_depth_minimum=10**-7):
-        """ Make the optical depths within each layer
-
-        Returns
-        -------
-        tau_aerosol: np.ndarray (n_layers, n_wavelengths)
-            The optical depths in each layer at each wavelength
-        """
+    def calculate_multisize_hyperspectral_total_optical_depths(self, optical_depth_minimum=10**-7):
         vertical_mixing_ratio = self.make_conrath_profile()
         dust_scaling = np.sum(self.layers.column_density_layers * vertical_mixing_ratio)
-        tau_aerosol = np.multiply.outer(np.outer(vertical_mixing_ratio * self.layers.column_density_layers,
-                                        self.column_integrated_optical_depths), self.aerosol.extinction_ratios) / dust_scaling
+        multisize_hyperspectral_total_optical_depths = np.multiply.outer(
+            np.outer(vertical_mixing_ratio * self.layers.column_density_layers, self.column_integrated_optical_depths),
+            self.aerosol.extinction_ratios) / dust_scaling
 
         # Make sure each grid point is at least optical_depth_minimum
-        return np.where(tau_aerosol < optical_depth_minimum, optical_depth_minimum, tau_aerosol)
+        return np.where(multisize_hyperspectral_total_optical_depths < optical_depth_minimum, optical_depth_minimum,
+                        multisize_hyperspectral_total_optical_depths)
 
-    def calculate_single_scattering_albedos(self):
-        return self.optical_depths_with_size * self.aerosol.single_scattering_albedos
+    def calculate_multisize_hyperspectral_scattering_optical_depths(self):
+        return self.multisize_hyperspectral_total_optical_depths * self.aerosol.hyperspectral_single_scattering_albedos
 
-    def reduce_optical_depths_size_dim(self):
+    def reduce_total_optical_depths_size_dim(self):
         # I'm assuming the total optical depth is just the sum over the size dimension
-        return np.sum(self.optical_depths_with_size, axis=1)
+        return np.sum(self.multisize_hyperspectral_total_optical_depths, axis=1)
 
-    def reduce_single_scattering_albedos_size_dim(self):
-        # I'm assuming the SSA is the weighted sum over the size dimension
-        return np.average(self.single_scattering_albedos_with_size, axis=1, weights=self.column_integrated_optical_depths)
+    def reduce_scattering_optical_depths_size_dim(self):
+        # I'm assuming the scattering OD is the weighted sum over the size dimension
+        return np.average(self.multisize_hyperspectral_scattering_optical_depths, axis=1,
+                          weights=self.column_integrated_optical_depths)

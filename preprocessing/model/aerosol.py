@@ -29,8 +29,8 @@ class Aerosol:
             self.p_max, self.theta_max = self.read_aerosol_file()
         self.inform_if_outside_wavelength_range()
         self.extinction_ratios = self.calculate_wavelength_extinction_ratios()
-        self.single_scattering_albedos = self.calculate_single_scattering_albedos()
-        self.asymmetry_parameters = self.calculate_asymmetry_parameters()
+        self.hyperspectral_single_scattering_albedos = self.calculate_hyperspectral_single_scattering_albedos()
+        self.hyperspectral_asymmetry_parameters = self.calculate_hyperspectral_asymmetry_parameters()
 
     def read_aerosol_file(self):
         aerosol_properties = np.load(self.aerosol_file, allow_pickle=True)
@@ -65,11 +65,11 @@ class Aerosol:
         wavelengths_c_ext = np.interp(self.wavelengths, self.wavelengths_quantities, self.c_extinction)
         return wavelengths_c_ext / reference_c_ext
 
-    def calculate_single_scattering_albedos(self):
+    def calculate_hyperspectral_single_scattering_albedos(self):
         # Calculate the single scattering albedo = C_scattering / C_extinction at the input wavelengths
         interpolated_extinction = np.interp(self.wavelengths, self.wavelengths_quantities, self.c_extinction)
         interpolated_scattering = np.interp(self.wavelengths, self.wavelengths_quantities, self.c_scattering)
         return interpolated_scattering / interpolated_extinction
 
-    def calculate_asymmetry_parameters(self):
+    def calculate_hyperspectral_asymmetry_parameters(self):
         return np.interp(self.wavelengths, self.wavelengths_quantities, self.g)
