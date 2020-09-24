@@ -22,6 +22,8 @@ Bugs:
 --- Now that I added r_eff, the HG phase function doesn't have the correct shape
 
 Additions:
+--- Add checks throughout to ensure the same wavelengths, moments, etc. are used. We don't want one aerosol observed
+    at different wavelenghts than another. Also ensure they CAN have different r_effective
 --- Rayleigh
 --- Add InterpPhaseFunction
 --- Add HGPhaseFunction
@@ -34,6 +36,7 @@ Additions:
 
 Test:
 --- Make sure if I have 100 particle sizes, things don't go haywire...
+--- Check that PMOM_Rayleigh is 0.1, not 0.1 / (2k+1)
 
 Fix:
 --- nearest_neighbor_phase_function doesn't slice efficiently... consider np.take()

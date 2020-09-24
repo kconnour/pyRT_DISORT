@@ -44,4 +44,4 @@ class Layers(Boundaries):
         return self.pressure_layers / (Boltzmann * self.temperature_layers)
 
     def calculate_column_density_layers(self):
-        return self.number_density_layers * np.diff(self.altitude_boundaries) * 1000
+        return self.number_density_layers * np.abs(np.diff(self.altitude_boundaries)) * 1000

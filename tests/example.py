@@ -38,15 +38,17 @@ n_moments = 65
 nn = NearestNeighborPhaseFunction(e, dust_column, n_moments)    # 128 moments
 
 # Make Rayleigh stuff
-#rco2 = RayleighCo2(wavs, lay, n_moments)
-#print(rco2.tau_rayleigh_co2)
-#rayleigh_info = (rco2.tau_rayleigh_co2, rco2.tau_rayleigh_co2, rco2.phase_function)
+rco2 = RayleighCo2(wavs, lay, n_moments)
+rayleigh_info = (rco2.hyperspectral_optical_depths, rco2.hyperspectral_optical_depths, rco2.hyperspectral_layered_phase_function)
 
 # Make the model
 model = ModelAtmosphere()
 dust_info = (dust_column.hyperspectral_total_optical_depths, dust_column.hyperspectral_scattering_optical_depths,
              nn.layered_hyperspectral_nearest_neighbor_phase_functions)
+
+# Add dust and Rayleigh scattering to the model
 model.add_constituent(dust_info)
+model.add_constituent(rayleigh_info)
 
 # Once everything is in the model, compute the model. Then, slice off the wavelength dimension
 model.compute_model()
@@ -54,10 +56,10 @@ optical_depths = model.hyperspectral_total_optical_depths[:, 1]
 ssa = model.hyperspectral_total_single_scattering_albedos[:, 1]
 polynomial_moments = model.hyperspectral_legendre_moments[:, :, 1]
 
-print(np.amax(optical_depths))
-print(np.amax(ssa))
-print(np.amax(polynomial_moments))
-raise SystemExit(2)
+#print(np.amax(optical_depths))
+#print(np.amax(ssa))
+#print(np.amax(polynomial_moments))
+#raise SystemExit(2)
 
 # Get a miscellaneous variable that I'll need later
 temperatures = lay.temperature_boundaries
