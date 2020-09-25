@@ -24,27 +24,28 @@ phase_wavs = '/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/phase_
 dustfile = '/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/dust.npy'
 atm = '/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/mars_atm.npy'
 
-# I make an aerosol that was observed at these wavelengths
-wavs = np.array([1, 9.3])
-dust = Aerosol(dustfile, wavs, 9.3)     # wavelength reference
+# Make an aerosol that was observed at these wavelengths
+wavs = np.array([0.15, 9.3])
+dust = Aerosol(dustfile, wavs, 9.3)     # 9.3 is the wavelength reference
 
 # Make a column of that aerosol
 lay = Layers(atm)
-dust_column = Column(dust, lay, 10, 0.5, np.array([1, 1.2, 1.4]), np.array([0.3, 0.5, 0.2]))  # column r, column OD
+# 10 = scale heigh, 0.5 = Conrath nu, then you can input an array of r_effective and an array of the column ODs at those r_effective. I throw an error if the lengths don't match
+dust_column = Column(dust, lay, 10, 0.5, np.array([1]), np.array([0.8]))  # here, use r_eff = 1 micron and its column OD = 0.8. Just a test case
 
 # Make the phase function
 e = EmpiricalPhaseFunction(phase, phase_radii, phase_wavs)
 n_moments = 65
-nn = NearestNeighborPhaseFunction(e, dust_column, n_moments)    # 128 moments
+nn = NearestNeighborPhaseFunction(e, dust_column, n_moments) # You can use more moments than you have coefficients for, it'll just add 0s to the end
 
 # Make Rayleigh stuff
 rco2 = RayleighCo2(wavs, lay, n_moments)
-rayleigh_info = (rco2.hyperspectral_optical_depths, rco2.hyperspectral_optical_depths, rco2.hyperspectral_layered_phase_function)
 
 # Make the model
 model = ModelAtmosphere()
 dust_info = (dust_column.hyperspectral_total_optical_depths, dust_column.hyperspectral_scattering_optical_depths,
              nn.layered_hyperspectral_nearest_neighbor_phase_functions)
+rayleigh_info = (rco2.hyperspectral_optical_depths, rco2.hyperspectral_optical_depths, rco2.hyperspectral_layered_phase_function)
 
 # Add dust and Rayleigh scattering to the model
 model.add_constituent(dust_info)
@@ -56,10 +57,35 @@ optical_depths = model.hyperspectral_total_optical_depths[:, 1]
 ssa = model.hyperspectral_total_single_scattering_albedos[:, 1]
 polynomial_moments = model.hyperspectral_legendre_moments[:, :, 1]
 
-#print(np.amax(optical_depths))
-#print(np.amax(ssa))
-#print(np.amax(polynomial_moments))
-#raise SystemExit(2)
+# Test case 0: Only Rayleigh scattering. Just comment out line 51: model.add_constituent(dust_info) and 88: raise SystemExit
+# All I'll say is that at many wavelengths UU matched disort_multi to at least 3 decimal places
+
+# Test case 1.1: Rayleigh scattering is negligible (such as at 9.3 microns) so dust should dominate the ODs
+#print(rco2.hyperspectral_optical_depths[:, 1])
+#print(dust_column.hyperspectral_total_optical_depths[:, 1])
+#print(model.hyperspectral_total_optical_depths[:, 1])
+
+# Test case 1.2: Rayleigh scattering is negligible (such as at 9.3 microns) so dust should dominate the SSAs
+#print(model.hyperspectral_total_single_scattering_albedos[:, 1])
+#print(dust.hyperspectral_single_scattering_albedos[1])
+
+# Test case 2.1: Rayleigh scattering is significant (such as at 150 nm) so dust + Rayleigh should contribute to the ODs
+#print(rco2.hyperspectral_optical_depths[:, 0])
+#print(dust_column.hyperspectral_total_optical_depths[:, 0])
+#print(model.hyperspectral_total_optical_depths[:, 0])
+
+# Test case 2.2: Rayleigh scattering is significant (such as at 150 nm) so the SSA should be somewhat greater than the dust SSA
+#print(rco2.hyperspectral_optical_depths[:, 0])     # Rayleigh OD is 100% scattering OD
+#print(dust_column.hyperspectral_scattering_optical_depths[:, 0])    # Get the scattering portion of the dust OD
+#print(model.hyperspectral_total_single_scattering_albedos[:, 0])    # Where Rayleigh OD dominates, SSA=1
+#print(dust.hyperspectral_single_scattering_albedos[0])   # Rayleigh SSA=1 so this number should always be less than the column SSA
+
+# Test case 3: dust + Rayleigh
+# Comment out the SystemExit on line 88. My UU[0] = 0.06378016. disort_multi gives 0.0637801662
+# I'm running ./disort_multi -dust_conrath 0.5, 10 -dust_phsfn 98 < testInput.txt
+# dust_phsfn98.dat contain the 65 moments at reff = 1 micron and wavelength = 9.3 microns
+# testInput.txt is: 9.3, 0.5, 10, 30, 50, 40, 20, 0.8, 0, 0
+raise SystemExit(2)
 
 # Get a miscellaneous variable that I'll need later
 temperatures = lay.temperature_boundaries

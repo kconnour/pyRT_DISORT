@@ -19,12 +19,11 @@ Questions:
 --- Are all the phase functions I have for dust? Where is 0.8 microns?
 
 Bugs:
---- Now that I added r_eff, the HG phase function doesn't have the correct shape
+--- None known!
 
 Additions:
 --- Add checks throughout to ensure the same wavelengths, moments, etc. are used. We don't want one aerosol observed
     at different wavelenghts than another. Also ensure they CAN have different r_effective
---- Rayleigh
 --- Add InterpPhaseFunction
 --- Add HGPhaseFunction
 --- Unit tests
