@@ -2180,9 +2180,14 @@ c     .. Array Arguments ..
      &          UMU( MAXUMU ), UTAU( MAXULV ),
      &          UU( MAXUMU, MAXULV, MAXPHI )
 c >>> Start Kyle's hack
-Cf2py intent(in, out) UU
+Cf2py intent(in, out) RFLDIR
+Cf2py intent(in, out) RFLDN
+Cf2py intent(in, out) FLUP
 Cf2py intent(in, out) DFDT
 Cf2py intent(in, out) UAVG
+Cf2py intent(in, out) UU
+Cf2py intent(in, out) ALBMED
+Cf2py intent(in, out) TRNMED
 c >>> end Kyle's hack
 
 c     ..

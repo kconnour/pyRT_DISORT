@@ -11,7 +11,7 @@ from preprocessing.model.phase_function import EmpiricalPhaseFunction, NearestNe
 from preprocessing.controller.size import Size
 from preprocessing.controller.unsure import Unsure
 from preprocessing.controller.control import Control
-from preprocessing.model.boundary_conditions import BoundaryConditions
+from preprocessing.model.boundary_conditions import BoundaryConditions, Hapke
 from preprocessing.model.rayleigh import RayleighCo2
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -25,7 +25,7 @@ dustfile = '/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/dust.npy
 atm = '/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/mars_atm.npy'
 
 # Make an aerosol that was observed at these wavelengths
-wavs = np.array([0.15, 9.3])
+wavs = np.array([1, 9.3])
 dust = Aerosol(dustfile, wavs, 9.3)     # 9.3 is the wavelength reference
 
 # Make a column of that aerosol
@@ -85,7 +85,7 @@ polynomial_moments = model.hyperspectral_legendre_moments[:, :, 1]
 # I'm running ./disort_multi -dust_conrath 0.5, 10 -dust_phsfn 98 < testInput.txt
 # dust_phsfn98.dat contain the 65 moments at reff = 1 micron and wavelength = 9.3 microns
 # testInput.txt is: 9.3, 0.5, 10, 30, 50, 40, 20, 0.8, 0, 0
-raise SystemExit(2)
+#raise SystemExit(2)
 
 # Get a miscellaneous variable that I'll need later
 temperatures = lay.temperature_boundaries
@@ -117,7 +117,7 @@ umu = np.array([obs.mu])
 n_layers = lay.n_layers
 n_streams = 16
 n_umu = 1
-n_phi = 1
+n_phi = len(phi)
 n_user_levels = 81
 size = Size(n_layers, n_moments, n_streams, n_umu, n_phi, n_user_levels)
 
@@ -138,7 +138,7 @@ deltamplus = control.delta_m_plus
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Make the boundary conditions class
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-boundary = BoundaryConditions(bottom_temperature=270, top_emissivity=1)
+boundary = BoundaryConditions(bottom_temperature=270, top_emissivity=1, lambertian_bottom_boundary=True)
 ibcnd = boundary.ibcnd
 fbeam = boundary.beam_flux
 fisot = boundary.fisot
@@ -180,6 +180,8 @@ utau = np.zeros(n_user_levels)
 # Get albedo (it probably shouldn't go here though...)
 albedo_map = '/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/albedo_map.npy'
 albedo = 0.5  #Albedo(albedo_map, obs.latitude, obs.longitude).interpolate_albedo()
+#hapke = Hapke(size, obs, uns, control, boundary, albedo)
+#hapke.call_disobrdf()
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Run the model
@@ -195,4 +197,4 @@ rfldir, rfldn, flup, dfdt, uavg, uu, albmed, trnmed = disort.disort(usrang, usrt
                                                                     mean_intensity,
                                intensity, albedo_medium, transmissivity_medium)
 
-print(uu)   # shape: (1, 81, 1)
+print(uu[0, :15, 0])   # shape: (1, 81, 1)

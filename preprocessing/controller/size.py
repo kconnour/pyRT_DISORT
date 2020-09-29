@@ -2,7 +2,7 @@ class Size:
     def __init__(self, n_layers, n_moments, n_streams, n_umu, n_phi, n_user_levels):
         self.n_layers = n_layers
         self.n_moments = n_moments
-        self.n_streams = n_streams
+        self.n_streams = n_streams     # number of computational polar angles; NSTR = MAXCMU
         self.n_umu = n_umu
         self.n_phi = n_phi
         self.n_user_levels = n_user_levels

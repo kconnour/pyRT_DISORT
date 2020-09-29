@@ -1,10 +1,13 @@
-import numpy as np
-from scipy.constants import Boltzmann
+from disort import disort
+from disort import disobrdf
 
-phsfn = np.load('/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/phase_functions.npy')
-p = np.moveaxis(phsfn, -1, 0)
-print(p.shape)
-np.save('/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/phase_functions.npy', p)
+print(disort.__doc__)
+print(disobrdf.__doc__)
+
+#phsfn = np.load('/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/phase_functions.npy')
+#p = np.moveaxis(phsfn, -1, 0)
+#print(p.shape)
+#np.save('/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/phase_functions.npy', p)
 
 '''
 # This allows multiplication of oddly sized arrays

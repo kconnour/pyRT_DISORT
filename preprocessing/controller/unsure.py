@@ -31,8 +31,10 @@ class Unsure:
 
     def make_bemst(self):
         # Make the variable "bemst"
+        # In DISOBRDF.f it's called the directional emissivity at quadrature angles
         return np.zeros(int(0.5*self.size.n_streams))
 
     def make_emust(self):
         # Make the variable "emust"
+        # In DISOBRDF.f it's called the directional emissivity at user angles
         return np.zeros(self.size.n_umu)

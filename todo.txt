@@ -7,11 +7,10 @@ Assumptions
 --- Every aerosol will have a dust.npy-type file
 --- ice.npy / dust.npy have the columns specified in the correct order
 --- mars_atm.npy has the columns specified in the correct order
+--- Every aerosol will either be HG or use a 3D phase function file
 
 Questions:
 --- What are the "requirements" on PMOM? I think it just breaks if any value is >1
---- In disort_multi, if there's only Rayleigh scattering, ssalb = 0.99, not 1. Shouldn't it be 1? See line 1714 of
-    disort_multi if tau_ice = tau_dust = tau_ozone = 0
 --- What are the 2 additional columns in ice?
 --- What are pivot pressures/altitudes/temperatures?
 --- How important is corr-k for prioritization?
@@ -40,3 +39,16 @@ Test:
 Fix:
 --- nearest_neighbor_phase_function doesn't slice efficiently... consider np.take()
 --- In EmpiricalPhaseFunction, "legendre_moments" might be better than "phase_function" since they're not phase functions
+--- Remove old phase functions + generally unnecessary aux files
+
+Work on next:
+--- Better installation
+--- numba?
+--- Add HG
+--- Add InterpPhaseFunction
+--- Add Hapke from BDREF.f
+--- Fix strings to f strings
+--- raise SystemExit might be better to raise ValueError('myMessage') or something
+--- Unit tests!!
+--- Postprocessing
+--- Parallelize over wavelength?

@@ -44,7 +44,12 @@ class NearestNeighborPhaseFunction:
                                                       self.aerosol_phase_function.wavelengths)
         all_phase_functions = self.aerosol_phase_function.phase_functions
 
-        # I'm not sure why I cannot do this on one line...
+        # This solution reads awfully
+        # https://stackoverflow.com/questions/35607818/index-a-2d-numpy-array-with-2-lists-of-indices
+        #moments_inds = np.linspace(0, self.n_moments-1, num=self.n_moments, dtype=int)
+        #nearest_neighbor_phase_functions = all_phase_functions[np.ix_(moments_inds, radius_indices, wavelength_indices)]
+
+        # This solution reads cleaner but I'm not sure why I cannot do this on one line...
         nearest_neighbor_phase_functions = all_phase_functions[:, radius_indices, :]
         nearest_neighbor_phase_functions = nearest_neighbor_phase_functions[:, :, wavelength_indices]
         return nearest_neighbor_phase_functions
