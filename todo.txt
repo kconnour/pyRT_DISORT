@@ -26,7 +26,7 @@ Additions:
 --- Add InterpPhaseFunction
 --- Add HGPhaseFunction
 --- Unit tests
---- Add Hapke surface phase function (already defined in BDREF.f, I just need BRDF_TYPE=1)
+--- Add Hapke surface phase function
 --- Solver
 --- Gas---I presume ozone shouldn't use any of the aerosol column methods
 --- I generally do linear interpolation but it'd be nice if the user could specify fancier interpolations
@@ -42,11 +42,13 @@ Fix:
 --- Remove old phase functions + generally unnecessary aux files
 
 Work on next:
+--- gitignore pycache
+--- Documentation
+--- Hapke
 --- Better installation
 --- numba?
 --- Add HG
 --- Add InterpPhaseFunction
---- Add Hapke from BDREF.f
 --- Fix strings to f strings
 --- raise SystemExit might be better to raise ValueError('myMessage') or something
 --- Unit tests!!

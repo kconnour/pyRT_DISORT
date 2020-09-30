@@ -1,4 +1,5 @@
 import disort
+import os
 
 import numpy as np
 from preprocessing.model.model_atmosphere import ModelAtmosphere
@@ -11,18 +12,22 @@ from preprocessing.model.phase_function import EmpiricalPhaseFunction, NearestNe
 from preprocessing.controller.size import Size
 from preprocessing.controller.unsure import Unsure
 from preprocessing.controller.control import Control
-from preprocessing.model.boundary_conditions import BoundaryConditions, Hapke
+from preprocessing.model.boundary_conditions import BoundaryConditions
 from preprocessing.model.rayleigh import RayleighCo2
+from data.get_data import get_data_path
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Make the model atmosphere
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Define some files I'll need
-phase = '/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/phase_functions.npy'
-phase_radii = '/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/phase_function_radii.npy'
-phase_wavs = '/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/phase_function_wavelengths.npy'
-dustfile = '/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/dust.npy'
-atm = '/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/mars_atm.npy'
+
+phase = os.path.join(get_data_path(), 'planets/mars/aux/phase_functions.npy')
+phase_radii = os.path.join(get_data_path(), 'planets/mars/aux/phase_function_radii.npy')
+phase_wavs = os.path.join(get_data_path(), 'planets/mars/aux/phase_function_wavelengths.npy')
+dustfile = os.path.join(get_data_path(), 'planets/mars/aux/dust.npy')
+atm = os.path.join(get_data_path(), 'planets/mars/aux/mars_atm.npy')
+altitude_map = os.path.join(get_data_path(), 'planets/mars/aux/altitude_map.npy')
+solar_spec = os.path.join(get_data_path(), 'aux/solar_spectrum.npy')
 
 # Make an aerosol that was observed at these wavelengths
 wavs = np.array([1, 9.3])
@@ -100,8 +105,6 @@ emission_angle = 40
 phase_angle = 20
 latitude = 10
 longitude = 30
-altitude_map = '/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/altitude_map.npy'
-solar_spec = '/home/kyle/repos/pyRT_DISORT/preprocessing/aux/solar_spectrum.npy'
 obs = Observation(short_wav, long_wav, sza, emission_angle, phase_angle, latitude, longitude, altitude_map, solar_spec)
 phi = np.array([obs.phi])
 low_wavenumber = obs.low_wavenumber

@@ -42,7 +42,7 @@ def find_all(pattern, path):
 
 
 effective_radius = np.array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.9, 1, 1.5, 2, 2.5, 3])
-wavelengths = np.load('/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/dust.npy')[:, 0]
+wavelengths = np.load('/planets/mars/aux/dust.npy')[:, 0]
 
 phsfns = np.zeros((len(effective_radius), len(wavelengths), 65))
 
@@ -55,6 +55,6 @@ for counter, r in enumerate(effective_radius):
     for fcounter, file in enumerate(files):
         phsfns[counter, fcounter, :] = turn_tmqphsfn_to_npy(file)
 
-np.save('/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/phase_functions.npy', phsfns)
+np.save('/planets/mars/aux/phase_functions.npy', phsfns)
 
 

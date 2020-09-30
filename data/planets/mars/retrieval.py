@@ -5,10 +5,10 @@ import numpy as np
 #from planets.mars.mars_aerosols import MarsDust
 from preprocessing.observation import Observation
 import disort
-from preprocessing.planets.mars.map import Albedo
+from data.planets.mars.map import Albedo
 from preprocessing.controller.output import Output
 from atmosphere import Atmosphere
-from preprocessing.planets.mars.mars_atmosphere import DustAtmosphere
+from data.planets.mars.mars_atmosphere import DustAtmosphere
 
 # Read in the atmosphere and define variables   NOTE: I should have an option to read in OR create an atm
 mars_atm_file = '/preprocessing/planets/mars/aux/mars_atm.npy'
