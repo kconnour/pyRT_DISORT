@@ -28,6 +28,7 @@ dustfile = os.path.join(get_data_path(), 'planets/mars/aux/dust.npy')
 atm = os.path.join(get_data_path(), 'planets/mars/aux/mars_atm.npy')
 altitude_map = os.path.join(get_data_path(), 'planets/mars/aux/altitude_map.npy')
 solar_spec = os.path.join(get_data_path(), 'aux/solar_spectrum.npy')
+albedo_map = os.path.join(get_data_path(), 'planets/mars/aux/albedo_map.npy')
 
 # Make an aerosol that was observed at these wavelengths
 wavs = np.array([1, 9.3])
@@ -181,7 +182,6 @@ transmissivity_medium = output.make_transmissivity_medium()
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 utau = np.zeros(n_user_levels)
 # Get albedo (it probably shouldn't go here though...)
-albedo_map = '/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/albedo_map.npy'
 albedo = 0.5  #Albedo(albedo_map, obs.latitude, obs.longitude).interpolate_albedo()
 #hapke = Hapke(size, obs, uns, control, boundary, albedo)
 #hapke.call_disobrdf()
