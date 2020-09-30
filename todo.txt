@@ -42,9 +42,9 @@ Fix:
 --- Remove old phase functions + generally unnecessary aux files
 
 Work on next:
---- gitignore pycache
 --- Documentation
 --- Hapke
+--- Squash non-master branches
 --- Better installation
 --- numba?
 --- Add HG
