@@ -2,7 +2,7 @@
 import numpy as np
 
 # Local imports
-from preprocessing.model.aerosol_column import Column
+#from preprocessing.model.aerosol_column import Column
 
 
 class EmpiricalPhaseFunction:

@@ -1,4 +1,4 @@
-import disort
+'''import disort
 import os
 
 import numpy as np
@@ -200,4 +200,4 @@ rfldir, rfldn, flup, dfdt, uavg, uu, albmed, trnmed = disort.disort(usrang, usrt
                                                                     mean_intensity,
                                intensity, albedo_medium, transmissivity_medium)
 
-print(uu[0, :15, 0])   # shape: (1, 81, 1)
+print(uu[0, :15, 0])   # shape: (1, 81, 1)'''

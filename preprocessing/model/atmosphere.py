@@ -1,6 +1,6 @@
 # 3rd-party imports
 import numpy as np
-from scipy.constants import Boltzmann
+#from scipy.constants import Boltzmann
 
 
 class Boundaries:

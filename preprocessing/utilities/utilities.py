@@ -1,4 +1,4 @@
-import pandas as pd
+#import pandas as pd
 import numpy as np
 
 
@@ -36,34 +36,3 @@ def turn_tmqphsfn_to_npy(file_path):
 
     # This unravels a list and stores it as an array
     return np.array([co for all_coeff in coeff for co in all_coeff])
-
-
-
-
-# An example
-#file = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/mars_atm.csv'
-#turn_csv_to_npy(file)
-
-# Another example: modify a .npy file and save it
-'''ice = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/ice.npy'
-ice = np.load(ice, allow_pickle=True)
-ice[:, 0] = ice[:, 0] / 1000
-np.save('/home/kyle/repos/pyRT_DISORT/planets/mars/aux/ice.npy', ice)
-print(ice[:, 0])'''
-
-# Take a .npy file and turn it into a .csv
-dust = '/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/mars_atm.npy'
-turn_npy_to_csv(dust, ['Altitude (km)', 'Pressure (Pascal)', 'Temperature (K)', 'Number density (particles / m^3)'])
-
-#file = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/marsatm.inp'
-#atm = np.genfromtxt(file, skip_header=3)
-#atm[:, 1] = atm[:, 1] / 100
-
-#atm = np.load('/home/kyle/repos/pyRT_DISORT/planets/mars/aux/marsatmNew.npy')
-#p = np.pad(atm, ((0, 0), (0, 1)), mode='constant', constant_values=0)
-#np.save('/home/kyle/repos/pyRT_DISORT/planets/mars/aux/marsatmNew.npy', p)
-
-#file = '/home/kyle/disort_multi/aerosol_ice.dat'
-#a = np.genfromtxt(file, skip_header=3)
-#np.save('/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/ice.npy', a)
-#turn_npy_to_csv('/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/ice.npy', ['Wavelengths (microns)', 'C_extinction', 'C_scattering', 'kappa', 'g', 'Pmax', 'Thetmax'])

@@ -3,7 +3,7 @@ from scipy.constants import Boltzmann
 import numpy as np
 
 # Local imports
-from layer import Atmosphere, Layers
+from preprocessing.model.atmosphere import Layers
 
 
 class WaterVaporProfile(object):
@@ -103,10 +103,3 @@ class WaterVaporProfile(object):
                 return
 
         return f_water
-
-
-marsatm = '/home/kyle/repos/pyRT_DISORT/planets/mars/aux/mars_atm.npy'
-lay = Layers(15, 10, 10, 10, marsatm)
-z, P, T = lay.read_atmosphere()
-prof = WaterVaporProfile(z, T, P, 1, 10**6)
-print(prof.make_water_profile())

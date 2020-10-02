@@ -1,12 +1,12 @@
 import numpy as np
-from disort import disobrdf
+'''from disort import disobrdf
 
 # Local imports
 from preprocessing.controller.size import Size
 from preprocessing.observation import Observation
 from preprocessing.controller.unsure import Unsure
 from preprocessing.controller.control import Control
-from preprocessing.model.boundary_conditions import BoundaryConditions
+from preprocessing.model.boundary_conditions import BoundaryConditions'''
 
 
 # This calls disobrdf... which seems broken

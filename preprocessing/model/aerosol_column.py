@@ -2,8 +2,8 @@
 import numpy as np
 
 # Local imports
-from preprocessing.model.aerosol import Aerosol
-from preprocessing.model.atmosphere import Layers
+#from preprocessing.model.aerosol import Aerosol
+#from preprocessing.model.atmosphere import Layers
 
 
 class Column:
