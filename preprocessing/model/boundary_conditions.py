@@ -3,10 +3,10 @@ import numpy as np
 
 
 class BoundaryConditions:
+    """Make a class to hold the quantities DISORT needs for boundary conditions."""
     def __init__(self, ibcnd=0, beam_flux=np.pi, fisot=0, lambertian_bottom_boundary=True, albedo=0,
                  plank=False, bottom_temperature=0, top_temperature=0, top_emissivity=1):
 
-        # Check for errors first
         assert isinstance(lambertian_bottom_boundary, bool), 'lambertian_bottom_boundary must be a boolean'
         assert isinstance(plank, bool), 'plank must be a boolean'
 

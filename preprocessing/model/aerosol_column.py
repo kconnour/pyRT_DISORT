@@ -2,11 +2,14 @@
 import numpy as np
 
 # Local imports
-#from preprocessing.model.aerosol import Aerosol
-#from preprocessing.model.atmosphere import Layers
+from preprocessing.model.aerosol import Aerosol
+from preprocessing.model.atmosphere import Layers
 
 
 class Column:
+    """Create an aerosol column to hold the aerosol's properties in each layer. Right now it constructs a column
+    using Conrath parameters. Will be extended to allow user input vertical distributions. Note that these methods
+    maybe ought to be completely private, since you'll only interact with the class properties."""
     def __init__(self, aerosol, layers, aerosol_scale_height, conrath_nu, particle_sizes,
                  column_integrated_optical_depths):
         """ Initialize the class
@@ -37,7 +40,7 @@ class Column:
         assert isinstance(self.layers, Layers), 'layers needs to be an instance of Layers.'
         assert isinstance(self.H, (int, float)), 'aerosol_scale_height needs to be an int or float.'
         assert isinstance(self.nu, (int, float)), 'conratu_nu needs to be an int or float.'
-        self.check_conrath_parameters_do_not_suck()
+        self.__check_conrath_parameters_do_not_suck()
         assert isinstance(self.particle_sizes, np.ndarray), 'particle_sizes needs to be a numpy array.'
         assert isinstance(self.column_integrated_optical_depths, np.ndarray), \
             'column_integrated_optical_depths needs to be a numpy array'
@@ -51,7 +54,7 @@ class Column:
         self.hyperspectral_total_optical_depths = self.reduce_total_optical_depths_size_dim()
         self.hyperspectral_scattering_optical_depths = self.reduce_scattering_optical_depths_size_dim()
 
-    def check_conrath_parameters_do_not_suck(self):
+    def __check_conrath_parameters_do_not_suck(self):
         if np.isnan(self.H):
             print('You wily bastard, you input a nan as the Conrath dust scale height. Fix that.')
         elif np.isnan(self.nu):
@@ -76,6 +79,18 @@ class Column:
         return fractional_mixing_ratio
 
     def calculate_multisize_hyperspectral_total_optical_depths(self, optical_depth_minimum=10**-7):
+        """Calculate the total optical depths for this aerosol in each layer at each wavelength and particle size.
+        The user can interact with this if desired, but it's primarily tracked for simplicity calculating PMOM
+
+        Parameters
+        ----------
+        optical_depth_minimum: float
+            The minimum optical depth in a grid point
+
+        Returns
+        -------
+        np.ndarray of optical depths
+        """
         vertical_mixing_ratio = self.make_conrath_profile()
         dust_scaling = np.sum(self.layers.column_density_layers * vertical_mixing_ratio)
         multisize_hyperspectral_total_optical_depths = np.multiply.outer(
@@ -87,13 +102,31 @@ class Column:
                         multisize_hyperspectral_total_optical_depths)
 
     def calculate_multisize_hyperspectral_scattering_optical_depths(self):
+        """Calculate the scattering optical depths for this aerosol in each layer at each wavelength and particle size.
+        The user can interact with this if desired, but it's primarily tracked for simplicity calculating the single
+        scattering albedos
+
+        Returns
+        -------
+        np.ndarray of scattering optical depths
+        """
         return self.multisize_hyperspectral_total_optical_depths * self.aerosol.hyperspectral_single_scattering_albedos
 
     def reduce_total_optical_depths_size_dim(self):
-        # I'm assuming the total optical depth is just the sum over the size dimension
+        """Take the multisize, hyperspectral array of optical depths and sum over the size dimension
+
+        Returns
+        -------
+        2D np.ndarray of total optical depths
+        """
         return np.sum(self.multisize_hyperspectral_total_optical_depths, axis=1)
 
     def reduce_scattering_optical_depths_size_dim(self):
-        # I'm assuming the scattering OD is the weighted sum over the size dimension
+        """Take the multisize, hyperspectral array of scattering optical depths and do a weighted sum over its size dim
+
+        Returns
+        -------
+        2D np.ndarray of scattering optical depths
+        """
         return np.average(self.multisize_hyperspectral_scattering_optical_depths, axis=1,
                           weights=self.column_integrated_optical_depths)
