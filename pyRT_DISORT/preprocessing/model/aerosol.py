@@ -28,19 +28,13 @@ class Aerosol:
 
         # Make sure the aerosol knows its properties
         self.wavelengths_quantities, self.c_extinction, self.c_scattering, self.kappa, self.g, \
-            self.p_max, self.theta_max = self.read_aerosol_file()
+            self.p_max, self.theta_max = self.__read_aerosol_file()
         self.__inform_if_outside_wavelength_range()
-        self.extinction_ratios = self.calculate_wavelength_extinction_ratios()
-        self.hyperspectral_single_scattering_albedos = self.calculate_hyperspectral_single_scattering_albedos()
-        self.hyperspectral_asymmetry_parameters = self.calculate_hyperspectral_asymmetry_parameters()
+        self.extinction_ratios = self.__calculate_wavelength_extinction_ratios()
+        self.hyperspectral_single_scattering_albedos = self.__calculate_hyperspectral_single_scattering_albedos()
+        self.hyperspectral_asymmetry_parameters = self.__calculate_hyperspectral_asymmetry_parameters()
 
-    def read_aerosol_file(self):
-        """ Read in the columns from the aerosol properties file
-
-        Returns
-        -------
-        np.ndarrays of each of the columns
-        """
+    def __read_aerosol_file(self):
         aerosol_properties = np.load(self.aerosol_file, allow_pickle=True)
         wavelengths = aerosol_properties[:, 0]
         c_extinction = aerosol_properties[:, 1]
@@ -67,34 +61,15 @@ class Aerosol:
                   'wavelength in the file. Using properties from that wavelength.'
                   .format(too_long, self.wavelengths_quantities[-1]))
 
-    def calculate_wavelength_extinction_ratios(self):
-        """ Calculate the wavelength scaling between the input wavelengths and reference wavelength so that all
-        aerosol properties can be properly scaled.
-
-        Returns
-        -------
-        np.ndarray of c_extinction / c_reference_extinction
-        """
+    def __calculate_wavelength_extinction_ratios(self):
         reference_c_ext = np.interp(self.reference_wavelength, self.wavelengths_quantities, self.c_extinction)
         wavelengths_c_ext = np.interp(self.wavelengths, self.wavelengths_quantities, self.c_extinction)
         return wavelengths_c_ext / reference_c_ext
 
-    def calculate_hyperspectral_single_scattering_albedos(self):
-        """ Calculate the single scattering albedos at each of the input wavelengths
-
-        Returns
-        -------
-        np.ndarray of c_scattering / c_extinction
-        """
+    def __calculate_hyperspectral_single_scattering_albedos(self):
         interpolated_extinction = np.interp(self.wavelengths, self.wavelengths_quantities, self.c_extinction)
         interpolated_scattering = np.interp(self.wavelengths, self.wavelengths_quantities, self.c_scattering)
         return interpolated_scattering / interpolated_extinction
 
-    def calculate_hyperspectral_asymmetry_parameters(self):
-        """Calculate the HG asymmetry parameters at each of the input wavelengths
-
-        Returns
-        -------
-        np.ndarray of the asymmetry parameters
-        """
+    def __calculate_hyperspectral_asymmetry_parameters(self):
         return np.interp(self.wavelengths, self.wavelengths_quantities, self.g)

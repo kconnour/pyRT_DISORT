@@ -2,18 +2,18 @@ import disort
 import os
 
 import numpy as np
-from preprocessing.model.model_atmosphere import ModelAtmosphere
-from preprocessing.model.aerosol import Aerosol
-from preprocessing.model.atmosphere import Layers
-from preprocessing.model.aerosol_column import Column
-from preprocessing.observation import Observation
-from preprocessing.controller.output import Output
-from preprocessing.model.phase_function import EmpiricalPhaseFunction, NearestNeighborPhaseFunction
-from preprocessing.controller.size import Size
-from preprocessing.controller.unsure import Unsure
-from preprocessing.controller.control import Control
-from preprocessing.model.boundary_conditions import BoundaryConditions
-from preprocessing.model.rayleigh import RayleighCo2
+from pyRT_DISORT.preprocessing.model.model_atmosphere import ModelAtmosphere
+from pyRT_DISORT.preprocessing.model.aerosol import Aerosol
+from pyRT_DISORT.preprocessing.model.atmosphere import Layers
+from pyRT_DISORT.preprocessing.model.aerosol_column import Column
+from pyRT_DISORT.preprocessing.observation import Observation
+from pyRT_DISORT.preprocessing.controller.output import Output
+from pyRT_DISORT.preprocessing.model.phase_function import EmpiricalPhaseFunction, NearestNeighborPhaseFunction
+from pyRT_DISORT.preprocessing.controller.size import Size
+from pyRT_DISORT.preprocessing.controller.unsure import Unsure
+from pyRT_DISORT.preprocessing.controller.control import Control
+from pyRT_DISORT.preprocessing.model.boundary_conditions import BoundaryConditions
+from pyRT_DISORT.preprocessing.model.rayleigh import RayleighCo2
 from data.get_data import get_data_path
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

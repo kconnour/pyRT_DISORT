@@ -1,4 +1,4 @@
-'''import disort
+import disort
 import numpy as np
 
 # Perform DISORT'S built-in test 1 by populating every variable
@@ -66,9 +66,3 @@ rfldir, rfldn, flup, dfdt, uavg, uu, albmed, trnmed = disort.disort(usrang, usrt
                         rfldn, flup, dfdt, uavg, uu, albmed, trnmed)
 
 print(uu)
-
-# If I put in the inputs in the same order as the example, it fails
-output = disort1.disort(nlyr, nmom, nstr, numu, nphi, ntau, usrang, usrtau, ibcnd, onlyfl, prnt, plank, lamber, deltamplus,
-                        do_pseudo_sphere, dtauc, ssalb, pmom, temper, wvnmlo, wvnmhi, utau, umu0, phi0, umu, phi,
-                        fbeam, fisot, albedo, btemp, ttemp, temis, earth_radius, h_lyr, rhoq, rhou, rho_accurate, bemst,
-                        emust, accur, header, rfldir, rfldn, flup, dfdt, uavg, uu, albmed, trnmed)'''

@@ -1,4 +1,4 @@
-'''import disort
+import disort
 import numpy as np
 
 # Perform DISORT'S built-in test 1 by populating every variable
@@ -67,4 +67,4 @@ rfldir, rfldn, flup, dfdt, uavg, uu, albmed, trnmed = disort.disort(usrang, usrt
                                header, rfldir, rfldn, flup, dfdt, uavg, uu, albmed, trnmed, maxcly=nlyr, maxmom=nmom,
                                maxcmu=nstr, maxumu=numu, maxphi=nphi, maxulv=ntau)
 
-print(uu)'''
+print(uu)

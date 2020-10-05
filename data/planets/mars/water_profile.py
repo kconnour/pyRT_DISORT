@@ -3,7 +3,6 @@ from scipy.constants import Boltzmann
 import numpy as np
 
 # Local imports
-from preprocessing.model.atmosphere import Layers
 
 
 class WaterVaporProfile(object):

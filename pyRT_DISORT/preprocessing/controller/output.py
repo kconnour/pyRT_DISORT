@@ -2,7 +2,7 @@
 import numpy as np
 
 # Local imports
-from preprocessing.controller.size import Size
+from pyRT_DISORT.preprocessing.controller.size import Size
 
 
 class Output:

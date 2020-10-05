@@ -1,3 +1,5 @@
 # Editor backup files
 .idea/
 __pycache__/
+build
+pyRT_DISORT.egg-info

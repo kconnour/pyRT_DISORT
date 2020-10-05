@@ -1,0 +1,15 @@
+I tried two methods to auto-document this project. Both require a number of pre-requisites (... or at least I didn't
+figure out another solution)
+
+--- a python installation
+--- pdoc3 or Sphinx installation. As far as I can tell, these use your computer's default python
+--- The code it'll document needs to be an importable module. So every subdirectory needs to have __init__.py
+--- Ex. in pyRT_DISORT I run <python setup.py build> and it creates a build folder of an importable module. I then
+    move pyRT_DISORT (2 folders deep in the build folder) to ~/.local/lib/python3.8/site-packages
+
+1. pdoc3
+--- To use pdoc3 just do <pdoc --html <path to pyRT_DISORT>. It will create an html folder in the current directory
+
+2. Sphinx
+--- To use Sphinx just do <sphinx-apidoc -o . <path to pyRT_DISORT>>. Then do <make html> and it will create index.html
+    in _build/html

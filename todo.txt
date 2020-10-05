@@ -13,7 +13,6 @@ Questions:
 --- What are the "requirements" on PMOM? I think it just breaks if any value is >1
 --- What are the 2 additional columns in ice?
 --- What are pivot pressures/altitudes/temperatures?
---- How important is corr-k for prioritization?
 --- Should PMOM_aerosol have a layer dependence? Right now I make it constant in the layers
 --- Are all the phase functions I have for dust? Where is 0.8 microns?
 
@@ -37,7 +36,6 @@ Test:
 --- Check that PMOM_Rayleigh is 0.1, not 0.1 / (2k+1)
 
 Fix:
---- nearest_neighbor_phase_function doesn't slice efficiently... consider np.take()
 --- In EmpiricalPhaseFunction, "legendre_moments" might be better than "phase_function" since they're not phase functions
 --- Remove old phase functions + generally unnecessary aux files
 
@@ -55,4 +53,7 @@ Work on next:
 --- Postprocessing
 --- Parallelize over wavelength?
 
-thing
+pdoc3:
+--- __pycache__ problem
+--- Local import problem
+--- Make directory structure

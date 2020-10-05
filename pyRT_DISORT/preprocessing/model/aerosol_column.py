@@ -2,14 +2,13 @@
 import numpy as np
 
 # Local imports
-from preprocessing.model.aerosol import Aerosol
-from preprocessing.model.atmosphere import Layers
+from pyRT_DISORT.preprocessing.model.aerosol import Aerosol
+from pyRT_DISORT.preprocessing.model.atmosphere import Layers
 
 
 class Column:
     """Create an aerosol column to hold the aerosol's properties in each layer. Right now it constructs a column
-    using Conrath parameters. Will be extended to allow user input vertical distributions. Note that these methods
-    maybe ought to be completely private, since you'll only interact with the class properties."""
+    using Conrath parameters. Will be extended to allow user input vertical distributions. """
     def __init__(self, aerosol, layers, aerosol_scale_height, conrath_nu, particle_sizes,
                  column_integrated_optical_depths):
         """ Initialize the class
@@ -48,11 +47,11 @@ class Column:
             'particle_sizes and column_integrated_optical_depths need to be the same length.'
 
         self.multisize_hyperspectral_total_optical_depths = \
-            self.calculate_multisize_hyperspectral_total_optical_depths()
+            self.__calculate_multisize_hyperspectral_total_optical_depths()
         self.multisize_hyperspectral_scattering_optical_depths = \
-            self.calculate_multisize_hyperspectral_scattering_optical_depths()
-        self.hyperspectral_total_optical_depths = self.reduce_total_optical_depths_size_dim()
-        self.hyperspectral_scattering_optical_depths = self.reduce_scattering_optical_depths_size_dim()
+            self.__calculate_multisize_hyperspectral_scattering_optical_depths()
+        self.hyperspectral_total_optical_depths = self.__reduce_total_optical_depths_size_dim()
+        self.hyperspectral_scattering_optical_depths = self.__reduce_scattering_optical_depths_size_dim()
 
     def __check_conrath_parameters_do_not_suck(self):
         if np.isnan(self.H):
@@ -64,7 +63,7 @@ class Column:
         elif self.nu < 0:
             raise SystemExit('Bad Conrath nu parameter: it cannot be negative. Fix...')
 
-    def make_conrath_profile(self):
+    def __make_conrath_profile(self):
         """Calculate the vertical dust distribution assuming a Conrath profile, i.e.
         q(z) / q(0) = exp( nu * (1 - exp(z / H)))
         where q is the mass mixing ratio
@@ -78,20 +77,8 @@ class Column:
         fractional_mixing_ratio = np.exp(self.nu * (1 - np.exp(self.layers.altitude_layers / self.H)))
         return fractional_mixing_ratio
 
-    def calculate_multisize_hyperspectral_total_optical_depths(self, optical_depth_minimum=10**-7):
-        """Calculate the total optical depths for this aerosol in each layer at each wavelength and particle size.
-        The user can interact with this if desired, but it's primarily tracked for simplicity calculating PMOM
-
-        Parameters
-        ----------
-        optical_depth_minimum: float
-            The minimum optical depth in a grid point
-
-        Returns
-        -------
-        np.ndarray of optical depths
-        """
-        vertical_mixing_ratio = self.make_conrath_profile()
+    def __calculate_multisize_hyperspectral_total_optical_depths(self, optical_depth_minimum=10**-7):
+        vertical_mixing_ratio = self.__make_conrath_profile()
         dust_scaling = np.sum(self.layers.column_density_layers * vertical_mixing_ratio)
         multisize_hyperspectral_total_optical_depths = np.multiply.outer(
             np.outer(vertical_mixing_ratio * self.layers.column_density_layers, self.column_integrated_optical_depths),
@@ -101,32 +88,12 @@ class Column:
         return np.where(multisize_hyperspectral_total_optical_depths < optical_depth_minimum, optical_depth_minimum,
                         multisize_hyperspectral_total_optical_depths)
 
-    def calculate_multisize_hyperspectral_scattering_optical_depths(self):
-        """Calculate the scattering optical depths for this aerosol in each layer at each wavelength and particle size.
-        The user can interact with this if desired, but it's primarily tracked for simplicity calculating the single
-        scattering albedos
-
-        Returns
-        -------
-        np.ndarray of scattering optical depths
-        """
+    def __calculate_multisize_hyperspectral_scattering_optical_depths(self):
         return self.multisize_hyperspectral_total_optical_depths * self.aerosol.hyperspectral_single_scattering_albedos
 
-    def reduce_total_optical_depths_size_dim(self):
-        """Take the multisize, hyperspectral array of optical depths and sum over the size dimension
-
-        Returns
-        -------
-        2D np.ndarray of total optical depths
-        """
+    def __reduce_total_optical_depths_size_dim(self):
         return np.sum(self.multisize_hyperspectral_total_optical_depths, axis=1)
 
-    def reduce_scattering_optical_depths_size_dim(self):
-        """Take the multisize, hyperspectral array of scattering optical depths and do a weighted sum over its size dim
-
-        Returns
-        -------
-        2D np.ndarray of scattering optical depths
-        """
+    def __reduce_scattering_optical_depths_size_dim(self):
         return np.average(self.multisize_hyperspectral_scattering_optical_depths, axis=1,
                           weights=self.column_integrated_optical_depths)
