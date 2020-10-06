@@ -42,7 +42,6 @@ Fix:
 Work on next:
 --- Documentation
 --- Hapke
---- Squash non-master branches
 --- Better installation
 --- numba?
 --- Add HG
@@ -52,8 +51,3 @@ Work on next:
 --- Unit tests!!
 --- Postprocessing
 --- Parallelize over wavelength?
-
-pdoc3:
---- __pycache__ problem
---- Local import problem
---- Make directory structure
