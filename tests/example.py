@@ -15,6 +15,7 @@ from pyRT_DISORT.preprocessing.controller.control import Control
 from pyRT_DISORT.preprocessing.model.boundary_conditions import BoundaryConditions
 from pyRT_DISORT.preprocessing.model.rayleigh import RayleighCo2
 from data.get_data import get_data_path
+from pyRT_DISORT.preprocessing.model.surface import Hapke
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Make the model atmosphere
@@ -142,7 +143,7 @@ deltamplus = control.delta_m_plus
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Make the boundary conditions class
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-boundary = BoundaryConditions(bottom_temperature=270, top_emissivity=1, lambertian_bottom_boundary=True)
+boundary = BoundaryConditions(bottom_temperature=270, top_emissivity=1, lambertian_bottom_boundary=False)
 ibcnd = boundary.ibcnd
 fbeam = boundary.beam_flux
 fisot = boundary.fisot
@@ -157,11 +158,6 @@ top_emissivity = boundary.top_emissivity
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 uns = Unsure(size)
 h_lyr = uns.make_h_lyr()
-rhoq = uns.make_rhoq()
-rhou = uns.make_rhou()
-rho_accurate = uns.make_rho_accurate()
-bemst = uns.make_bemst()
-emust = uns.make_emust()
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Make the output arrays
@@ -183,8 +179,8 @@ transmissivity_medium = output.make_transmissivity_medium()
 utau = np.zeros(n_user_levels)
 # Get albedo (it probably shouldn't go here though...)
 albedo = 0.5  #Albedo(albedo_map, obs.latitude, obs.longitude).interpolate_albedo()
-#hapke = Hapke(size, obs, uns, control, boundary, albedo)
-#hapke.call_disobrdf()
+hapke = Hapke(size, obs, control, boundary, albedo)
+
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Run the model
@@ -194,8 +190,8 @@ rfldir, rfldn, flup, dfdt, uavg, uu, albmed, trnmed = disort.disort(usrang, usrt
                                                                     deltamplus, do_pseudo_sphere, optical_depths,
                                ssa, polynomial_moments, temperatures, low_wavenumber, high_wavenumber, utau, umu0, phi0,
                                                                     umu, phi, fbeam, fisot, albedo,
-                               surface_temp, top_temp, top_emissivity, planet_radius, h_lyr, rhoq, rhou, rho_accurate,
-                                                                    bemst, emust, accur,
+                               surface_temp, top_temp, top_emissivity, planet_radius, h_lyr, hapke.rhoq, hapke.rhou, hapke.rho_accurate,
+                                                                    hapke.bemst, hapke.emust, accur,
                                header, direct_beam_flux, diffuse_down_flux, diffuse_up_flux, flux_divergence,
                                                                     mean_intensity,
                                intensity, albedo_medium, transmissivity_medium)

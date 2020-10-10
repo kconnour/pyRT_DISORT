@@ -731,10 +731,6 @@ IF( DOPROB(6) )  THEN
       ALBEDO    = 0.5         
       HEADER = TITLE(1:LENTIT) // '; Bottom Albedo = 0.5 lambert'   
 
-!c Kyle comment
-      PRINT *, EMUST
-      PRINT *, '~~~~~'
-
     ELSE IF ( ICAS.EQ.4 ) THEN
 !c                                   ** Use non-isotropic reflection       
       NTAU = 3 

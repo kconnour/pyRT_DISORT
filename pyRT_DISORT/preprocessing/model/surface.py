@@ -1,28 +1,25 @@
+# 3rd-party imports
 import numpy as np
 from disort import disobrdf
 
 # Local imports
 from pyRT_DISORT.preprocessing.controller.size import Size
 from pyRT_DISORT.preprocessing.observation import Observation
-from pyRT_DISORT.preprocessing.controller.unsure import Unsure
 from pyRT_DISORT.preprocessing.controller.control import Control
 from pyRT_DISORT.preprocessing.model.boundary_conditions import BoundaryConditions
 
 
-# This calls disobrdf... which seems broken
 class Hapke:
-    def __init__(self, size, observation, unsure, control, boundary_conditions, albedo, b0=1, hh=0.06, w=0.6,
+    def __init__(self, size, observation, control, boundary_conditions, albedo, b0=1, hh=0.06, w=0.6,
                  n_mug=200, debug=False):
         assert isinstance(size, Size), 'size needs to be an instance of Size.'
         assert isinstance(observation, Observation)
-        assert isinstance(unsure, Unsure)
         assert isinstance(control, Control)
         assert isinstance(boundary_conditions, BoundaryConditions)
 
         self.brdf_type = 1    # The "Hapke" integer used in DISORT
         self.size = size
         self.observation = observation
-        self.unsure = unsure
         self.control = control
         self.boundary_conditions = boundary_conditions
         self.albedo = albedo
@@ -32,31 +29,45 @@ class Hapke:
         self.n_mug = n_mug    # No idea...
         self.brdf_argument = np.array([self.b0, self.hh, self.w, 0])
         self.debug = debug
+        self.rhoq = self.__make_rhoq()
+        self.rhou = self.__make_rhou()
+        self.bemst = self.__make_bemst()
+        self.emust = self.__make_emust()
+        self.rho_accurate = self.__make_rho_accurate()
+        self.__call_disobrdf()
 
-    def call_disobrdf(self):
-        rhou = np.zeros((16, 9, 16))
-        disobrdf(self.control.user_angles, self.observation.mu, self.boundary_conditions.beam_flux,
+    def __make_rhoq(self):
+        # Make the variable "rhoq"
+        return np.zeros((int(0.5*self.size.n_streams), int(0.5*self.size.n_streams+1), self.size.n_streams))
+
+    def __make_rhou(self):
+        # Make the variable "rhou"
+        return np.zeros((self.size.n_streams, int(0.5*self.size.n_streams+1), self.size.n_streams))
+
+    def __make_bemst(self):
+        # Make the variable "bemst"
+        # In DISOBRDF.f it's called the directional emissivity at quadrature angles
+        return np.zeros(int(0.5*self.size.n_streams))
+
+    def __make_emust(self):
+        # Make the variable "emust"
+        # In DISOBRDF.f it's called the directional emissivity at user angles
+        return np.zeros(self.size.n_umu)
+
+    def __make_rho_accurate(self):
+        # Make the variable "rho_accurate"
+        return np.zeros((self.size.n_umu, self.size.n_phi))
+
+    def __call_disobrdf(self):
+        rhoq, rhou, emust, bemst, rho_accurate = disobrdf(self.control.user_angles, self.observation.mu,
+                                                          self.boundary_conditions.beam_flux,
                  self.observation.mu0, self.boundary_conditions.lambertian, self.albedo, self.control.only_fluxes,
-                 self.unsure.make_rhoq(), rhou, self.unsure.make_emust(), self.unsure.make_bemst(),
-                 self.debug, self.observation.phi, self.observation.phi0, self.unsure.make_rho_accurate(),
+                 self.rhoq, self.rhou, self.emust, self.bemst,
+                 self.debug, self.observation.phi, self.observation.phi0, self.rho_accurate,
                  self.brdf_type, self.brdf_argument, self.n_mug, nstr=self.size.n_streams, numu=self.size.n_umu,
                  nphi=self.size.n_phi)
-
-
-class MyHapke:
-    def __init__(self, b0, w, h):
-        self.b0 = b0
-        self.w = w
-        self.h = h
-        self.gamma = np.sqrt(1 - w)
-        self.r0 = (1 - self.gamma) / (1 + self.gamma)
-
-    def B_function(self, g):
-        # This is equation 8.90 in Theory of Reflectance and Emittance Spectroscopy
-        return (self.b0 * self.h) / (self.h + np.tan(g/2))
-
-    def H_function(self, x):
-        # This is the second line of equation 8.57 in Theory of Reflectance and Emittance Spectroscopy
-        par = 1 - 0.5*self.r0 - self.r0*x
-        log = np.log((1+x)/x)
-        return 1 / (1 - ((1 - self.gamma) * x * (self.r0 + par * log)))
+        self.rhoq = rhoq
+        self.rhou = rhou
+        self.emust = emust
+        self.bemst = bemst
+        self.rho_accurate = rho_accurate

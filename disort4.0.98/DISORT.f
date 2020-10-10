@@ -433,7 +433,7 @@ c     .. Local Arrays ..
 c     ..
 c     .. Version 3 .. 
       REAL      RHOQ(MAXCMU/2, 0:MAXCMU/2, 0:(MAXCMU-1)), 
-     &          RHOU(MAXUMU,   0:MAXCMU/2, 0:(MAXCMU-1)),
+     &          RHOU(MAXCMU,   0:MAXCMU/2, 0:(MAXCMU-1)),
      &          EMUST(MAXUMU), BEMST(MAXCMU/2)
       REAL      UMU0DI, UMU0SQ, DENOM
       REAL      RHO_ACCURATE(MAXUMU,MAXPHI)  
