@@ -1,8 +1,6 @@
 # 3rd-party imports
 import numpy as np
-#from disort import disobrdf
-#from disortHapkeHG import disobrdf
-from disortHapkeHGRoughness import disobrdf
+from disort import disobrdf
 
 # Local imports
 from pyRT_DISORT.preprocessing.controller.size import Size

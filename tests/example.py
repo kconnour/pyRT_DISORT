@@ -1,6 +1,5 @@
 import disort
 import os
-import disortHapkeHGRoughness
 
 import numpy as np
 from pyRT_DISORT.preprocessing.model.model_atmosphere import ModelAtmosphere
@@ -89,11 +88,10 @@ polynomial_moments = model.hyperspectral_legendre_moments[:, :, 1]
 #print(dust.hyperspectral_single_scattering_albedos[0])   # Rayleigh SSA=1 so this number should always be less than the column SSA
 
 # Test case 3: dust + Rayleigh
-# Comment out the SystemExit on line 88. My UU[0] = 0.06378016. disort_multi gives 0.0637801662
-# I'm running ./disort_multi -dust_conrath 0.5, 10 -dust_phsfn 98 -use_hg2 -NSTR 16 < testInput.txt
+# I'm running ./disort_multi -dust_conrath 0.5, 10 -dust_phsfn 98 -use_hg2_thetabar -NSTR 16 < testInput.txt
 # dust_phsfn98.dat contain the 65 moments at reff = 1 micron and wavelength = 9.3 microns
 # testInput.txt is: 9.3, 0.5, 10, 30, 50, 40, 20, 0.8, 0, 0
-#raise SystemExit(2)
+#                   0.12, 0.75, 0.9, 1, 0.04, 85.9437
 
 # Get a miscellaneous variable that I'll need later
 temperatures = lay.temperature_boundaries
@@ -180,6 +178,9 @@ transmissivity_medium = output.make_transmissivity_medium()
 utau = np.zeros(n_user_levels)
 # Get albedo (it probably shouldn't go here though...)
 albedo = 0.5  #Albedo(albedo_map, obs.latitude, obs.longitude).interpolate_albedo()
+
+# Choose which Hapke surface to use: the default 3 parameter one that comes with DISORT, a 2-lobed HG without roughness,
+# or a 2-lobed HG with roughness. The purpose of these classes is to make the rhou, rhoq, bemst, emust, ... arrays
 #hapke = Hapke(size, obs, control, boundary, albedo)
 #hapke = HapkeHG2(size, obs, control, boundary, albedo, w=0.12, asym=0.75, frac=0.9, b0=1, hh=0.04, n_mug=200)
 hapke = HapkeHG2Roughness(size, obs, control, boundary, albedo, w=0.12, asym=0.75, frac=0.9, b0=1, hh=0.04, n_mug=200, roughness=1.5)
@@ -188,7 +189,7 @@ hapke = HapkeHG2Roughness(size, obs, control, boundary, albedo, w=0.12, asym=0.7
 # Run the model
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-rfldir, rfldn, flup, dfdt, uavg, uu, albmed, trnmed = disortHapkeHGRoughness.disort(usrang, usrtau, ibcnd, onlyfl, prnt, plank, lamber,
+rfldir, rfldn, flup, dfdt, uavg, uu, albmed, trnmed = disort.disort(usrang, usrtau, ibcnd, onlyfl, prnt, plank, lamber,
                                                                     deltamplus, do_pseudo_sphere, optical_depths,
                                ssa, polynomial_moments, temperatures, low_wavenumber, high_wavenumber, utau, umu0, phi0,
                                                                     umu, phi, fbeam, fisot, albedo,
