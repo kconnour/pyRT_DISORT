@@ -1,0 +1,9 @@
+Things I changed about DISORT to modify our needs:
+
+--- in DISORT.f I added f2py code to inform it what the output variables should be. It does not modify the DISORT code
+--- in DISORT.f I modified RHOU's 1st dimension to be MAXCMU instead of MAXUMU. This changes how DISORT works
+--- in DISOBRDF.f I added f2py code to inform it what the output variables should be. It does not modify the DISOBRDF code
+--- In BDREF.f I added a 5th possible IREF value and its associated function
+--- in BDREF.f I added a line REAL ASYM, FRAC
+--- in DISOBRDF.f I changed REAL BRDF_ARG(4) to REAL BRDF_ARG(5)
+--- in BDREF.f I changed BRDF_ARG(5) in the 1st line of code

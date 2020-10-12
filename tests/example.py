@@ -1,5 +1,6 @@
 import disort
 import os
+import disortHapkeHG
 
 import numpy as np
 from pyRT_DISORT.preprocessing.model.model_atmosphere import ModelAtmosphere
@@ -15,7 +16,7 @@ from pyRT_DISORT.preprocessing.controller.control import Control
 from pyRT_DISORT.preprocessing.model.boundary_conditions import BoundaryConditions
 from pyRT_DISORT.preprocessing.model.rayleigh import RayleighCo2
 from data.get_data import get_data_path
-from pyRT_DISORT.preprocessing.model.surface import Hapke
+from pyRT_DISORT.preprocessing.model.surface import Hapke, HapkeHG2
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Make the model atmosphere
@@ -89,7 +90,7 @@ polynomial_moments = model.hyperspectral_legendre_moments[:, :, 1]
 
 # Test case 3: dust + Rayleigh
 # Comment out the SystemExit on line 88. My UU[0] = 0.06378016. disort_multi gives 0.0637801662
-# I'm running ./disort_multi -dust_conrath 0.5, 10 -dust_phsfn 98 < testInput.txt
+# I'm running ./disort_multi -dust_conrath 0.5, 10 -dust_phsfn 98 -use_hg2 -NSTR 16 < testInput.txt
 # dust_phsfn98.dat contain the 65 moments at reff = 1 micron and wavelength = 9.3 microns
 # testInput.txt is: 9.3, 0.5, 10, 30, 50, 40, 20, 0.8, 0, 0
 #raise SystemExit(2)
@@ -179,14 +180,15 @@ transmissivity_medium = output.make_transmissivity_medium()
 utau = np.zeros(n_user_levels)
 # Get albedo (it probably shouldn't go here though...)
 albedo = 0.5  #Albedo(albedo_map, obs.latitude, obs.longitude).interpolate_albedo()
-hapke = Hapke(size, obs, control, boundary, albedo)
+#hapke = Hapke(size, obs, control, boundary, albedo)
+hapke = HapkeHG2(size, obs, control, boundary, albedo, w=0.12, asym=0.75, frac=0.9, b0=1, hh=0.04, n_mug=200)
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Run the model
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-rfldir, rfldn, flup, dfdt, uavg, uu, albmed, trnmed = disort.disort(usrang, usrtau, ibcnd, onlyfl, prnt, plank, lamber,
+rfldir, rfldn, flup, dfdt, uavg, uu, albmed, trnmed = disortHapkeHG.disort(usrang, usrtau, ibcnd, onlyfl, prnt, plank, lamber,
                                                                     deltamplus, do_pseudo_sphere, optical_depths,
                                ssa, polynomial_moments, temperatures, low_wavenumber, high_wavenumber, utau, umu0, phi0,
                                                                     umu, phi, fbeam, fisot, albedo,

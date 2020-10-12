@@ -376,7 +376,6 @@ c     .. Array Arguments ..
      &          TEMPER( 0:MAXCLY ), TRNMED( MAXUMU ), UAVG( MAXULV ),
      &          UMU( MAXUMU ), UTAU( MAXULV ),
      &          UU( MAXUMU, MAXULV, MAXPHI )
-c >>> Start Kyle's hack
 Cf2py intent(in, out) RFLDIR
 Cf2py intent(in, out) RFLDN
 Cf2py intent(in, out) FLUP
@@ -385,8 +384,6 @@ Cf2py intent(in, out) UAVG
 Cf2py intent(in, out) UU
 Cf2py intent(in, out) ALBMED
 Cf2py intent(in, out) TRNMED
-c >>> end Kyle's hack
-
 c     ..
 c     .. Local Scalars ..
       LOGICAL   COMPAR, CORINT, DELTAM, LYRCUT, PASS1 
@@ -432,6 +429,7 @@ c     .. Local Arrays ..
 
 c     ..
 c     .. Version 3 .. 
+c     For pyRT_DISORT I modified the shape of RHOU
       REAL      RHOQ(MAXCMU/2, 0:MAXCMU/2, 0:(MAXCMU-1)), 
      &          RHOU(MAXCMU,   0:MAXCMU/2, 0:(MAXCMU-1)),
      &          EMUST(MAXUMU), BEMST(MAXCMU/2)

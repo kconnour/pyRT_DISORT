@@ -57,7 +57,7 @@ c
 c   Called by- DREF, SURFAC
 c +-------------------------------------------------------------------+
 c     .. Scalar Arguments ..
-      REAL      DPHI, MU, MUP, BRDF_ARG(4)
+      REAL      DPHI, MU, MUP, BRDF_ARG(5)
       INTEGER   BRDF_TYPE
 c     ..
 c     .. Local Scalars ..
@@ -68,6 +68,8 @@ c     .. Local Scalars ..
       REAL      RHO0, KAPPA, G  
       REAL      K_ISO, K_VOL, K_GEO, ALPHA0 
       LOGICAL   DO_SHADOW
+c     Additions for pyRT_DISORT
+      REAL      ASYM, FRAC
 c     ..
 c     .. External Subroutines ..
       EXTERNAL  ERRMSG
@@ -151,6 +153,19 @@ c     ** 4. Ross-Li BRDF
         IF(BDREF .LT. 0.00) THEN
           BDREF = 0.00
         ENDIF
+
+c     ** 5. Hapke + HG2 BRDF
+      ELSEIF ( IREF.EQ.5 ) THEN
+
+        B0 = BRDF_ARG(1) !1.0
+        HH = BRDF_ARG(2) !0.06
+        W  = BRDF_ARG(3) !0.6
+        ASYM = BRDF_ARG(4)
+        FRAC = BRDF_ARG(5)
+
+        CALL BRDF_HAPKE_HG2(MUP, MU, DPHI,
+     &                  B0, HH, W, ASYM, FRAC, PI,
+     &                  BDREF)
 
       ELSE
 
@@ -470,6 +485,51 @@ c +--------------------------------------------------------------------
       TERM2 = ERFC( MU/SQRT(SIGMA_SQ) )
 
       SHADOW_ETA = 0.5*(TERM1 - TERM2)
+
+      END
+c - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+c Start pyRT_DISORT additions
+c Hapke + HG2 surface
+c +--------------------------------------------------------------------
+      SUBROUTINE BRDF_HAPKE_HG2 ( MUP, MU, DPHI,
+     &                        B0, HH, W, ASYM, FRAC, PI,
+     &                        BRDF )
+
+c +--------------------------------------------------------------------
+
+c +--------------------------------------------------------------------
+      IMPLICIT NONE
+      REAL MUP, MU, DPHI
+      REAL B0, HH, W, PI
+      REAL BRDF
+      REAL CALPHA, ALPHA, P, B, H0, GAMMA, H
+      REAL ASYM, FRAC
+      REAL CTHETA, THETA, FORWARD, BACKWARD, PSI
+
+      CALPHA = MU * MUP - (1.-MU**2)**.5 * (1.-MUP**2)**.5
+     &         * COS( DPHI )
+
+      ALPHA = ACOS( CALPHA )
+
+      B     = B0 * HH / ( HH + TAN( ALPHA/2.) )
+
+      GAMMA = SQRT( 1. - W )
+      H0   = ( 1. + 2.*MUP ) / ( 1. + 2.*MUP * GAMMA )
+      H    = ( 1. + 2.*MU ) / ( 1. + 2.*MU * GAMMA )
+      
+
+      FORWARD = (1. - ASYM**2.) / (1. + 2. * ASYM * COS(ALPHA) + 
+     &           ASYM**2.)**1.5
+      BACKWARD = (1. - ASYM**2.) / (1. - 2. * ASYM * COS(ALPHA) + 
+     &           ASYM**2.)**1.5
+      
+      P = FRAC * FORWARD + (1-FRAC)*BACKWARD
+      
+c     ** Version 3: add factor PI
+      BRDF = W / (4.*PI) / (MU+MUP) * ( (1.+B)* P + H0 * H - 1.0 )
+      
+c      BRDF = W / 4. / (MU+MUP) * ( (1.+B)* P + H0 * H - 1.0 )
 
       END
 c - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

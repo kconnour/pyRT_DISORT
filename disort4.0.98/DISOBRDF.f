@@ -80,7 +80,7 @@ c     .. Scalar Arguments ..
 c     ..
 c     .. Array Arguments ..
       REAL      UMU(NUMU)
-      REAL      BRDF_ARG(4)
+      REAL      BRDF_ARG(5)
 
 c     ..
 c     .. Local Scalars ..
@@ -98,13 +98,11 @@ c     .. Local Arrays ..
       REAL      BDR_BEAM_ANALYTIC(NUMU,NPHI), DPHI
       REAL      GMU(NMUG), GWT(NMUG), COSMP(0:NSTR-1,NMUG/2) 
       
-c >>> Start Kyle's hack
 Cf2py intent(in, out) RHOQ
 Cf2py intent(in, out) RHOU
 Cf2py intent(in, out) EMUST
 Cf2py intent(in, out) BEMST
 Cf2py intent(in, out) BDR_BEAM_ANALYTIC
-c >>> end Kyle's hack
 
 c     ..
 c     .. External Functions ..
