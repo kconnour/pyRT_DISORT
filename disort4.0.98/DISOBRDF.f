@@ -80,7 +80,7 @@ c     .. Scalar Arguments ..
 c     ..
 c     .. Array Arguments ..
       REAL      UMU(NUMU)
-      REAL      BRDF_ARG(5)
+      REAL      BRDF_ARG(6)
 
 c     ..
 c     .. Local Scalars ..

@@ -1,6 +1,6 @@
 import disort
 import os
-import disortHapkeHG
+import disortHapkeHGRoughness
 
 import numpy as np
 from pyRT_DISORT.preprocessing.model.model_atmosphere import ModelAtmosphere
@@ -16,7 +16,7 @@ from pyRT_DISORT.preprocessing.controller.control import Control
 from pyRT_DISORT.preprocessing.model.boundary_conditions import BoundaryConditions
 from pyRT_DISORT.preprocessing.model.rayleigh import RayleighCo2
 from data.get_data import get_data_path
-from pyRT_DISORT.preprocessing.model.surface import Hapke, HapkeHG2
+from pyRT_DISORT.preprocessing.model.surface import Hapke, HapkeHG2, HapkeHG2Roughness
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Make the model atmosphere
@@ -181,14 +181,14 @@ utau = np.zeros(n_user_levels)
 # Get albedo (it probably shouldn't go here though...)
 albedo = 0.5  #Albedo(albedo_map, obs.latitude, obs.longitude).interpolate_albedo()
 #hapke = Hapke(size, obs, control, boundary, albedo)
-hapke = HapkeHG2(size, obs, control, boundary, albedo, w=0.12, asym=0.75, frac=0.9, b0=1, hh=0.04, n_mug=200)
-
+#hapke = HapkeHG2(size, obs, control, boundary, albedo, w=0.12, asym=0.75, frac=0.9, b0=1, hh=0.04, n_mug=200)
+hapke = HapkeHG2Roughness(size, obs, control, boundary, albedo, w=0.12, asym=0.75, frac=0.9, b0=1, hh=0.04, n_mug=200, roughness=1.5)
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Run the model
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-rfldir, rfldn, flup, dfdt, uavg, uu, albmed, trnmed = disortHapkeHG.disort(usrang, usrtau, ibcnd, onlyfl, prnt, plank, lamber,
+rfldir, rfldn, flup, dfdt, uavg, uu, albmed, trnmed = disortHapkeHGRoughness.disort(usrang, usrtau, ibcnd, onlyfl, prnt, plank, lamber,
                                                                     deltamplus, do_pseudo_sphere, optical_depths,
                                ssa, polynomial_moments, temperatures, low_wavenumber, high_wavenumber, utau, umu0, phi0,
                                                                     umu, phi, fbeam, fisot, albedo,

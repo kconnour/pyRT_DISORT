@@ -57,7 +57,7 @@ c
 c   Called by- DREF, SURFAC
 c +-------------------------------------------------------------------+
 c     .. Scalar Arguments ..
-      REAL      DPHI, MU, MUP, BRDF_ARG(5)
+      REAL      DPHI, MU, MUP, BRDF_ARG(6)
       INTEGER   BRDF_TYPE
 c     ..
 c     .. Local Scalars ..
@@ -69,7 +69,7 @@ c     .. Local Scalars ..
       REAL      K_ISO, K_VOL, K_GEO, ALPHA0 
       LOGICAL   DO_SHADOW
 c     Additions for pyRT_DISORT
-      REAL      ASYM, FRAC
+      REAL      ASYM, FRAC, ROUGHNESS
 c     ..
 c     .. External Subroutines ..
       EXTERNAL  ERRMSG
@@ -165,6 +165,20 @@ c     ** 5. Hapke + HG2 BRDF
 
         CALL BRDF_HAPKE_HG2(MUP, MU, DPHI,
      &                  B0, HH, W, ASYM, FRAC, PI,
+     &                  BDREF)
+
+c     ** 6. Hapke + HG2 with roughness
+      ELSEIF ( IREF.EQ.6 ) THEN
+
+        B0 = BRDF_ARG(1) !1.0
+        HH = BRDF_ARG(2) !0.06
+        W  = BRDF_ARG(3) !0.6
+        ASYM = BRDF_ARG(4)
+        FRAC = BRDF_ARG(5)
+        ROUGHNESS = BRDF_ARG(6)
+
+        CALL BRDF_HAPKE_HG2_ROUGHNESS(MUP, MU, DPHI,
+     &                  B0, HH, W, ASYM, FRAC, ROUGHNESS, PI,
      &                  BDREF)
 
       ELSE
@@ -533,3 +547,930 @@ c      BRDF = W / 4. / (MU+MUP) * ( (1.+B)* P + H0 * H - 1.0 )
 
       END
 c - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+c Just copy Mike's code/logic here
+c +--------------------------------------------------------------------
+      SUBROUTINE BRDF_HAPKE_HG2_ROUGHNESS ( MUP, MU, DPHI,
+     &                        B0, HH, W, ASYM, FRAC, ROUGHNESS, PI,
+     &                        BRDF )
+
+c +--------------------------------------------------------------------
+
+c +--------------------------------------------------------------------
+      IMPLICIT NONE
+      REAL MUP, MU, DPHI
+      REAL B0, HH, W, PI
+      REAL BRDF, P, B
+      REAL ASYM, FRAC, ROUGHNESS
+      REAL CALPHA, ALPHA, FORWARD, BACKWARD, i, e, hapke_emue
+      REAL H_function
+      REAL hapke_imue, imue, emue, H_imue, H_emue, S, S_function
+      LOGICAL flag
+
+      CALPHA = MU * MUP - (1.-MU**2)**.5 * (1.-MUP**2)**.5
+     &         * COS( DPHI )
+
+      ALPHA = ACOS( CALPHA )      
+      
+      FORWARD = (1. - ASYM**2.) / (1. + 2. * ASYM * COS(ALPHA) + 
+     &           ASYM**2.)**1.5
+      BACKWARD = (1. - ASYM**2.) / (1. - 2. * ASYM * COS(ALPHA) + 
+     &           ASYM**2.)**1.5
+      P = FRAC * FORWARD + (1-FRAC)*BACKWARD
+      B     = B0 * HH / ( HH + TAN( ALPHA/2.) )    
+      
+      flag = .false.
+      i = ACOS(MU)
+      e = ACOS(MUP)
+      imue = Hapke_imue(i, e, ALPHA, ROUGHNESS)
+      emue = Hapke_emue(i, e, ALPHA, ROUGHNESS)
+      H_imue = H_function(imue, w, flag)
+      H_emue = H_function(emue, w, flag)
+      S = S_function(i, e, ALPHA, ROUGHNESS)
+
+      BRDF = W / (4.*PI * MU) * (imue / (imue + emue)) *
+     &         ((1.0 + B) * p + H_imue * H_emue - 1.0) * S
+      
+      END
+c - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+c subroutines written by Frank Seelos, ported from f90 to f77 by M.
+c Wolff (that fiend!)
+c
+c history:
+c 2005/07/27 (mjw):  changed "END FUNCTION" syntax to just "END"
+c
+
+
+      REAL FUNCTION H_function(x, w, H_approx)
+
+cFUNCTION: 
+c	H_function
+c
+cCALLED BY:
+c	HapkeBDREF
+c
+cCALLS:
+c	Hapke_gamma
+c	Hapke_r0 (conditionally)
+c
+cINPUT PARAMETERS:
+c	x : the cosine of either the incidence or emission angle depending on the calling 
+c		circumstance
+c	w : single scattering albedo
+c
+cPURPOSE:
+c	H_function is an approximation to Chandreskehar H-function which is fundamental to the 
+c	calculation of the bidirectional reflectance of a semiinfinite medium of isotropic scatterers.
+c
+cREFERENCE:
+c	Hapke (1993); Eqn. 8.55; p. 212
+
+
+      IMPLICIT NONE
+      REAL Hapke_gamma
+      REAL Hapke_r0
+      LOGICAL H_approx
+
+      REAL x, w
+      REAL gamma, r0
+
+      gamma = Hapke_gamma(w)	
+
+
+      if (H_approx .EQV. .FALSE.) then
+         H_function = (1.0 + 2.0 * x) / (1.0 + 2.0 * x * gamma)
+      else
+         r0 = Hapke_r0(gamma)
+         H_function  = 1.0 / (1.0 - (1.0 - gamma) * x * 
+     &     (r0 + (1.0 - 0.5 * r0 - r0 * x) * alog((1.0 + x) / x)))
+
+      end if
+
+      RETURN
+      END
+
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c
+
+
+      REAL FUNCTION B_function(g, h, B_approx)
+
+cFUNCTION: 
+c	B_function
+c
+cCALLED BY:
+c	HapkeBDREF
+c
+cCALLS:
+c	NONE
+c
+cINPUT PARAMETERS:
+c	g : phase angle
+c	h : compaction parameter
+c
+cPURPOSE:
+c	The opposition effect function (B_function) calculates the effect of shadow hiding on the
+c	bidirectional reflectance function
+c
+cREFERENCE:
+c	Hapke (1993); Eqn. 8.81; p. 224
+
+
+      IMPLICIT NONE
+
+      REAL  pi
+
+      REAL  Hapke_y, ERF
+      REAL  y
+	
+
+
+      REAL  g, h
+      LOGICAL  B_approx
+
+      pi = 2.0 * asin(1.0)
+
+c	write (*,*), 'B_approx_flag: ', B_approx_flag
+
+      if (B_approx .EQV. .FALSE.) then 
+         B_function = 1.0 / (1.0 + 1.0 / h * tan(g / 2.0))
+      else
+         y = Hapke_y(g, h)
+         B_function = sqrt((4.0 * pi) / y) * exp(1.0 / y) *
+     &        (ERF(sqrt(4.0 / y)) - ERF(sqrt(1.0 / y))) +
+     &        exp(-3.0 / y) - 1.0
+      endif
+
+      
+      RETURN
+      END
+
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c
+
+
+      REAL FUNCTION S_function(i, e, psi, theta_bar)
+
+cFUNCTION: 
+c	S_function
+c
+cCALLED BY:
+c	HapkeBDREF
+c
+cCALLS:
+c	Hapke_mue0
+c	Hapke_imue
+c	Hapke_emue
+c	Hapke_chi
+c	Hapke_fpsi
+c
+cINPUT PARAMETERS:
+c	i : incidence angle
+c	e : emission angle
+c	psi : difference in azimuth angle between incident and emergent rays
+c	theta_bar : macroscopic roughness parameter (mean slope angle)
+c
+cPURPOSE:
+c	The shadowing function (S_function) calculates the effect of macroscopic 
+c	roughness on the bidirectional reflectance function
+c
+cREFERENCE:
+c	Hapke (1993); Eqn. 12.50 & 12.54; p. 345
+
+
+      IMPLICIT NONE
+
+      REAL Hapke_mue0, Hapke_imue, Hapke_emue, Hapke_chi, Hapke_fpsi
+      REAL  i, e, psi, theta_bar
+      REAL imu, emu, imue0, emue0, imue, emue, S
+      
+      imu = cos(i)
+      emu = cos(e)
+      
+      imue0 = Hapke_mue0(i, theta_bar)
+      emue0 = Hapke_mue0(e, theta_bar)
+      
+      imue = Hapke_imue(i, e, psi, theta_bar)
+      emue = Hapke_emue(i, e, psi, theta_bar)
+      
+      if (i .le. e) then 
+         S = (emue / emue0) * (imu / imue0) * 
+     &        (Hapke_chi(theta_bar) / (1.0 - Hapke_fpsi(psi) + 
+     &        Hapke_fpsi(psi) * Hapke_chi(theta_bar) * (imu / imue0)))
+
+      else
+         S = (emue / emue0) * (imu / imue0) * 
+     &        (Hapke_chi(theta_bar) / (1.0 - Hapke_fpsi(psi) + 
+     &        Hapke_fpsi(psi) * Hapke_chi(theta_bar) * (emu / emue0)))
+
+      endif
+
+      S_function = S
+
+      RETURN
+
+      END
+
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c
+
+
+      REAL FUNCTION Hapke_imue(i, e, psi, theta_bar)
+
+cFUNCTION: 
+c	Hapke_imue
+c
+cCALLED BY:
+c	S_function
+c
+cCALLS:
+c	Hapke_chi
+c	Hapke_E1
+c	Hapke_E2
+c
+cINPUT PARAMETERS:
+c	i : incidence angle
+c	e : emission angle
+c	psi : difference in azimuth angle between incident and emergent rays
+c	theta_bar : macroscopic roughness parameter (mean slope angle)
+c
+cPURPOSE:
+c	Hapke_imue is the cosine of the effective incidence angle when theta_bar NE 0.0
+c
+cREFERENCE:
+c	Hapke (1993); Eqn. 12.46 & 12.52; p. 344 & 345
+
+
+      IMPLICIT NONE
+
+      REAL  pi
+      REAL Hapke_chi, Hapke_E1, Hapke_E2
+      REAL  i, e, psi, theta_bar
+      REAL imue
+
+      pi = 2.0 * asin(1.0)
+
+
+      if (i .le. e) then 
+
+c		write (*,*), 'IMUE'
+c		write (*,*), i, e, psi, theta_bar
+c		write (*,*), Hapke_chi(theta_bar)
+c		write (*,*), Hapke_E1(e, theta_bar), Hapke_E1(i, theta_bar)
+c		write (*,*), Hapke_E2(e, theta_bar), Hapke_E2(i, theta_bar) 
+c		write (*,*)
+
+
+         imue = Hapke_chi(theta_bar) * (cos(i) + sin(i) * 
+     &        tan(theta_bar) *	((cos(psi) * Hapke_E2(e, theta_bar) 
+     &        + (sin(psi/2.0))**2.0 * Hapke_E2(i, theta_bar)) /
+     &        (2.0 - Hapke_E1(e, theta_bar) - (psi/pi) * 
+     &        Hapke_E1(i, theta_bar))))
+      else
+
+         imue = Hapke_chi(theta_bar) * (cos(i) + sin(i) * 
+     &        tan(theta_bar) * ((Hapke_E2(i, theta_bar) -
+     &        (sin(psi/2.0))**2.0 * Hapke_E2(e, theta_bar)) /
+     &        (2.0 - Hapke_E1(i, theta_bar) - (psi/pi) *
+     &        Hapke_E1(e, theta_bar))))
+      endif
+
+
+      Hapke_imue = imue
+
+      RETURN
+
+      END
+
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c
+
+
+      REAL FUNCTION Hapke_emue(i, e, psi, theta_bar)
+
+cFUNCTION: 
+c	Hapke_emue
+c
+cCALLED BY:
+c	S_function
+c
+cCALLS:
+c	Hapke_chi
+c	Hapke_E1
+c	Hapke_E2
+c
+cINPUT PARAMETERS:
+c	i : incidence angle
+c	e : emission angle
+c	psi : difference in azimuth angle between incident and emergent rays
+c	theta_bar : macroscopic roughness parameter (mean slope angle)
+c
+cPURPOSE:
+c	Hapke_emue is the cosine of the effective emission angle when theta_bar NE 0.0
+c
+cREFERENCE:
+c	Hapke (1993); Eqn. 12.47 & 12.53; p. 344 & 345
+
+
+      IMPLICIT NONE
+
+      REAL pi
+      REAL Hapke_chi, Hapke_E1, Hapke_E2
+      REAL  i, e, psi, theta_bar
+      REAL  emue
+
+      pi = 2.0 * asin(1.0)
+
+      if (i .le. e) then 
+         emue = Hapke_chi(theta_bar) * (cos(e) + sin(e) *
+     &        tan(theta_bar) * ((Hapke_E2(e, theta_bar) -
+     &        (sin(psi/2.0))**2.0 * Hapke_E2(i, theta_bar)) /
+     &        (2.0 - Hapke_E1(e, theta_bar) - (psi/pi) *
+     &        Hapke_E1(i, theta_bar))))
+      else
+         emue = Hapke_chi(theta_bar) * (cos(e) + sin(e) *
+     &        tan(theta_bar) * ((cos(psi) * Hapke_E2(i, theta_bar) +
+     &        (sin(psi/2.0))**2.0 * Hapke_E2(e, theta_bar)) /
+     &        (2.0 - Hapke_E1(i, theta_bar) - (psi/pi) *
+     &        Hapke_E1(e, theta_bar))))
+
+      endif
+
+      Hapke_emue = emue
+
+      RETURN
+      END
+
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c
+
+
+      REAL FUNCTION Hapke_mue0(theta, theta_bar)
+
+cFUNCTION: 
+c	Hapke_mue0
+c
+cCALLED BY:
+c	S_function
+c
+cCALLS:
+c	Hapke_chi
+c	Hapke_E1
+c	Hapke_E2
+c
+cINPUT PARAMETERS:
+c	theta : incidence or emission angle (i or e) depending on calling circumstance
+c	theta_bar : macroscopic roughness parameter (mean slope angle)
+c
+cPURPOSE:
+c	Hapke_mue0 is the cosine of the effective incidence or emission angle when psi EQ 0.0
+c
+cREFERENCE:
+c	Hapke (1993); Eqn. 12.48 & 12.49; p. 344
+
+
+      IMPLICIT NONE
+      REAL Hapke_chi, Hapke_E1, Hapke_E2
+      REAL  theta, theta_bar
+	
+      Hapke_mue0 = Hapke_chi(theta_bar) * (cos(theta) + sin(theta)
+     &     * tan(theta_bar) * Hapke_E2(theta, theta_bar) /
+     &     (2.0 - Hapke_E1(theta, theta_bar)))
+
+      RETURN
+      END
+
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c
+
+
+      REAL FUNCTION Hapke_y(g, h)
+
+      IMPLICIT NONE
+
+      REAL  g, h
+	
+      Hapke_y = tan(g/2.0) / h
+      RETURN
+
+      END
+
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c
+
+
+      REAL FUNCTION Hapke_r0(gamma)
+
+cFUNCTION: 
+c	Hapke_r0
+c
+cCALLED BY:
+c	H_function (conditionally)
+c
+cCALLS:
+c	NONE
+c
+cINPUT PARAMETERS:
+c	gamma : albedo factor
+c
+cPURPOSE:
+c	Hapke_r0 (diffusive reflectance) is used in the more exact approximation to the 
+c	Chandreskehar H-function	
+c
+cREFERENCE:
+c	Hapke (1993); Eqn. 8.25; p. 196
+
+
+      IMPLICIT NONE
+
+      REAL  gamma
+	
+      Hapke_r0 = (1.0 - gamma) / (1.0 + gamma)
+
+      RETURN
+
+      END
+
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c
+
+
+      REAL FUNCTION Hapke_gamma(w)
+
+cFUNCTION: 
+c	Hapke_gamma
+c
+cCALLED BY:
+c	H_function
+c	B_function
+c
+cCALLS:
+c	NONE
+c
+cINPUT PARAMETERS:
+c	w : single scattering albedo
+c
+cPURPOSE:
+c	Hapke_gamma (albedo factor) is a component in the calculation of the Chandrasekhar
+c	H-functions and the contribution of the opposition effect
+c
+cREFERENCE:
+c	Hapke (1993); Eqn. 8.22b; p. 195
+
+
+      IMPLICIT NONE
+
+      REAL  w
+		
+      Hapke_gamma = sqrt(1.0 - w)
+
+      RETURN
+
+      END
+
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c
+
+
+      REAL FUNCTION Hapke_chi(theta_bar)
+
+cFUNCTION: 
+c	Hapke_chi
+c
+cCALLED BY:
+c	S_function
+c	Hapke_imue
+c	Hapke_emue
+c	Hapke_mue0
+c
+cCALLS:
+c	NONE
+c
+cINPUT PARAMETERS:
+c	theta_bar : macroscopic roughness parameter (mean slope angle)
+c
+cPURPOSE:
+c	Hapke_chi is a component in the calculation of the shadowing function and the 
+c	cosines of the effective incidence and emission angles when theta_bar NE 0.0
+c
+cREFERENCE:
+c	Hapke (1993); Eqn. 12.45a; p. 344
+
+
+      IMPLICIT NONE
+      
+      REAL  pi 
+        
+      REAL  theta_bar
+	
+      pi = 2.0 * asin(1.0)
+
+
+      Hapke_chi = 1.0 / sqrt(1.0 + pi * tan(theta_bar)**2.0)
+      
+      RETURN
+
+      END
+
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c
+
+
+      REAL FUNCTION Hapke_fpsi(psi)
+
+cFUNCTION: 
+c	Hapke_fpsi
+c
+cCALLED BY:
+c	S_function
+c
+cCALLS:
+c	NONE
+c
+cINPUT PARAMETERS:
+c	psi : difference in azimuth angle between incident and emergent rays
+c
+cPURPOSE:
+c	Hapke_fpsi is a component in the calculation of the shadowing function when theta_bar NE 0.0
+c
+cREFERENCE:
+c	Hapke (1993); Eqn. 12.51; p. 345
+
+
+      IMPLICIT NONE
+      REAL pi
+      REAL  psi
+	
+      pi = 2.0 * asin(1.0)
+
+
+      if (psi .eq. pi) then 
+         Hapke_fpsi = 0.0
+      else 
+         Hapke_fpsi = exp(-2.0 * tan(psi / 2.0))
+      endif
+
+      RETURN
+
+      END
+
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c
+
+
+      REAL FUNCTION Hapke_E1(x, theta_bar)
+
+cFUNCTION: 
+c	Hapke_E1
+c
+cCALLED BY:
+c	Hapke_imue
+c	Hapke_emue
+c	Hapke_mue0
+c
+cCALLS:
+c	NONE
+c
+cINPUT PARAMETERS:
+c	x : incidence or emission angle (i or e) depending on input geometry
+c	theta_bar : macroscopic roughness parameter (mean slope angle)
+c
+cPURPOSE:
+c	Hapke_E1 is a component in the calculation of the cosines of the effective incidence
+c	and emission angles when theta_bar NE 0.0
+c
+cREFERENCE:
+c	Hapke (1993); Eqn. 12.45b; p. 344
+
+
+      IMPLICIT NONE
+      REAL  pi
+      REAL  x, theta_bar
+
+      pi = 2.0 * asin(1.0)
+
+      if (x .eq. 0.0) then
+         Hapke_E1 = 0.0
+      else 
+         Hapke_E1 = exp(-2.0 / pi * 1.0/tan(theta_bar) * 1.0/tan(x))
+      endif
+
+      RETURN
+      END
+
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c
+
+
+      REAL FUNCTION Hapke_E2(x, theta_bar)
+
+cFUNCTION: 
+c	Hapke_E2
+c
+cCALLED BY:
+c	Hapke_imue
+c	Hapke_emue
+c	Hapke_mue0
+c
+cCALLS:
+c	NONE
+c
+cINPUT PARAMETERS:
+c	x : incidence or emission angle (i or e) depending on input geometry
+c	theta_bar : macroscopic roughness parameter (mean slope angle)
+c
+cPURPOSE:
+c	Hapke_E2 is a component in the calculation of the cosines of the effective incidence
+c	and emission angles when theta_bar NE 0.0
+c
+cREFERENCE:
+c	Hapke (1993); Eqn. 12.45c; p. 344
+
+
+      IMPLICIT NONE
+      REAL  pi
+
+      REAL x, theta_bar
+      pi = 2.0 * asin(1.0)
+
+      if (x .eq. 0.0) then 
+         Hapke_E2 = 0.0
+      else
+         Hapke_E2 = exp(-1.0 / pi * (1.0/tan(theta_bar))**2.0 *
+     &        (1.0/tan(x))**2.0)
+      endif
+
+      RETURN
+      END
+
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c 
+
+      REAL FUNCTION phf_isotropic()
+c
+cFUNCTION: 
+c	phf_isotropic 
+c
+cCALLED BY:
+c	HapkeBDREFPhaseFunctions
+c
+cCALLS:
+c	NONE
+c
+cINPUT PARAMETERS:
+c	NONE
+c
+cPURPOSE:
+c	Isotropic phase function
+c
+cREFERENCE:
+
+      IMPLICIT NONE
+
+      phf_isotropic = 1.0
+
+      RETURN
+      END
+
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c
+
+
+      REAL FUNCTION phf_aniso_neg(g)
+c
+cFUNCTION: 
+c	phf_aniso_neg
+c
+cCALLED BY:
+c	HapkeBDREFPhaseFunctions
+c
+cCALLS:
+c	NONE
+c
+cINPUT PARAMETERS:
+c	g : phase angle
+c
+cPURPOSE:
+c	Calculate anisotropic phase function [1 - cos(g)]
+c
+cREFERENCE:
+c	Hapke (1993); p. 214
+
+      IMPLICIT NONE
+      
+      REAL g
+
+      phf_aniso_neg = 1.0 - cos(g)
+
+      RETURN
+
+      END
+
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c
+
+
+      REAL FUNCTION phf_aniso_pos(g)
+c
+cFUNCTION: 
+c	phf_aniso_pos
+c
+cCALLED BY:
+c	HapkeBDREFPhaseFunctions
+c
+cCALLS:
+c	NONE
+c
+cINPUT PARAMETERS:
+c	g : phase angle
+c
+cPURPOSE:
+c	Calculate anisotropic phase function [1 + cos(g)]
+c
+cREFERENCE:
+c	Hapke (1993); p. 214
+
+      IMPLICIT NONE
+
+      REAL g
+
+      phf_aniso_pos = 1.0 + cos(g)
+
+      RETURN
+
+      END
+      
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c
+
+      REAL FUNCTION phf_rayleigh(g)
+c
+cFUNCTION: 
+c	phf_rayleigh
+c
+cCALLED BY:
+c	HapkeBDREFPhaseFunctions
+c
+cCALLS:
+c	NONE
+c
+cINPUT PARAMETERS:
+c	g : phase angle
+c
+cPURPOSE:
+c	Calculate Rayleigh phase function
+c
+cREFERENCE:
+c	
+
+      IMPLICIT NONE
+
+      REAL g
+
+      phf_rayleigh = (3.0/4.0) * (1.0 + (cos(g))**2.0)
+
+      RETURN
+
+      END
+
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c
+
+
+      REAL FUNCTION phf_hg1(g, a)
+c
+cFUNCTION: 
+c	phf_hg1
+c
+cCALLED BY:
+c	HapkeBDREFPhaseFunctions
+c
+cCALLS:
+c	NONE
+c
+cINPUT PARAMETERS:
+c	g : phase angle (radians)
+c	a : asymmetry parameter [-1,1];  
+c		Negative is back; Positive is forward.
+c
+cPURPOSE:
+c	Calculate one parameter Henyey-Greenstein phase function
+c
+cREFERENCE:
+c
+
+      IMPLICIT NONE
+
+      REAL g, a
+
+      phf_hg1 = (1.0 - a**2.0) / ((1.0 + 2.0 * a * cos(g) 
+     $     + a**2.0)**1.5)
+
+      RETURN
+
+      END
+
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c
+
+
+      REAL FUNCTION phf_hg2(g, a, f)
+c
+cFUNCTION: 
+c	phf_hg2
+c
+cCALLED BY:
+c	HapkeBDREFPhaseFunctions
+c
+cCALLS:
+c	NONE
+c
+cINPUT PARAMETERS:
+c	g : phase angle (radians)
+c	a : asymmetry parameter [0,1]
+c	f : forward fraction [0,1]
+c
+cPURPOSE:
+c	Calculate two parameter Henyey-Greenstein phase function
+c
+cREFERENCE:
+c
+
+      IMPLICIT NONE
+
+      REAL g, a, f
+      REAL forward, backward
+      REAL phf_hg1
+
+      forward = phf_hg1(g, a)
+      backward = phf_hg1(g, -1.0 * a)
+
+      phf_hg2 = f * forward + (1.0 - f) * backward
+
+      RETURN
+      END
+
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c
+
+
+      REAL FUNCTION phf_hg3(g, af, ab, f)
+c
+cFUNCTION: 
+c	phf_hg3
+c
+cCALLED BY:
+c	HapkeBDREFPhaseFunctions
+c
+cCALLS:
+c	NONE
+c
+cINPUT PARAMETERS:
+c	g  : phase_angle (radians)
+c	af : forward asymmetry parameter [0,1]
+c	ab : backward asymmetry parameter [-1,0]
+c	f  : forward fraction [0,1]
+c
+cPURPOSE:
+c	Calculate three parameter Henyey-Greenstein phase function
+c
+cREFERENCE:
+c
+
+      IMPLICIT NONE
+
+      REAL g, af, ab, f
+      REAL phf_hg1
+      REAL forward, backward
+
+      forward = phf_hg1(g, af)
+      backward = phf_hg1(g, ab)
+
+      phf_hg3 = f * forward + (1.0 - f) * backward
+
+      RETURN
+      END
+
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c
+c---------------------------------------------------------------------------c

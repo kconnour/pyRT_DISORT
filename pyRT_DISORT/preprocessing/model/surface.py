@@ -1,7 +1,8 @@
 # 3rd-party imports
 import numpy as np
 #from disort import disobrdf
-from disortHapkeHG import disobrdf
+#from disortHapkeHG import disobrdf
+from disortHapkeHGRoughness import disobrdf
 
 # Local imports
 from pyRT_DISORT.preprocessing.controller.size import Size
@@ -29,7 +30,7 @@ class Hapke:
         self.hh = hh          # Angular width parameter of oppposition effect
         self.w = w            # Single scattering albedo in Hapke model
         self.n_mug = n_mug    # No idea...
-        self.brdf_argument = np.array([self.b0, self.hh, self.w, 0, 0])
+        self.brdf_argument = np.array([self.b0, self.hh, self.w, 0, 0, 0])
         self.debug = debug
         self.rhoq = self.__make_rhoq()
         self.rhou = self.__make_rhou()
@@ -100,7 +101,7 @@ class HapkeHG2:
         self.asym = asym
         self.frac = frac
         self.n_mug = n_mug    # My guess: the number of expansion coefficients
-        self.brdf_argument = np.array([self.b0, self.hh, self.w, self.asym, self.frac])
+        self.brdf_argument = np.array([self.b0, self.hh, self.w, self.asym, self.frac, 0])
         self.debug = debug
         self.rhoq = self.__make_rhoq()
         self.rhou = self.__make_rhou()
@@ -178,7 +179,7 @@ class HapkeHG2Roughness:
         assert 0 <= asym <= 1, 'The asymmetry parameter needs to be in [0, 1]'
         assert 0 <= frac <= 1, 'The forward scattering fraction needs to  be in [0, 1]'
 
-        self.brdf_type = 5    # The "Hapke" integer used in DISORT
+        self.brdf_type = 6    # The "Hapke" integer used in DISORT
         self.size = size
         self.observation = observation
         self.control = control
@@ -191,7 +192,7 @@ class HapkeHG2Roughness:
         self.frac = frac
         self.roughness = roughness
         self.n_mug = n_mug    # My guess: the number of expansion coefficients
-        self.brdf_argument = np.array([self.b0, self.hh, self.w, self.asym, self.frac])
+        self.brdf_argument = np.array([self.b0, self.hh, self.w, self.asym, self.frac, self.roughness])
         self.debug = debug
         self.rhoq = self.__make_rhoq()
         self.rhou = self.__make_rhou()
