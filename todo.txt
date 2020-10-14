@@ -14,7 +14,6 @@ Questions:
 --- What are the 2 additional columns in ice?
 --- What are pivot pressures/altitudes/temperatures?
 --- Should PMOM_aerosol have a layer dependence? Right now I make it constant in the layers
---- Are all the phase functions I have for dust? Where is 0.8 microns?
 
 Bugs:
 --- None known!
@@ -25,7 +24,6 @@ Additions:
 --- Add InterpPhaseFunction
 --- Add HGPhaseFunction
 --- Unit tests
---- Add Hapke surface phase function
 --- Solver
 --- Gas---I presume ozone shouldn't use any of the aerosol column methods
 --- I generally do linear interpolation but it'd be nice if the user could specify fancier interpolations
@@ -33,21 +31,26 @@ Additions:
 
 Test:
 --- Make sure if I have 100 particle sizes, things don't go haywire...
---- Check that PMOM_Rayleigh is 0.1, not 0.1 / (2k+1)
 
 Fix:
 --- In EmpiricalPhaseFunction, "legendre_moments" might be better than "phase_function" since they're not phase functions
 --- Remove old phase functions + generally unnecessary aux files
 
 Work on next:
+--- Better installation (see scipy since I know they make a .so file)
 --- Documentation
---- Hapke
---- Better installation
---- numba?
+--- 1D phase function
+--- Vertical profile (from GCM) injection
+--- Ask for ice PMOM
 --- Add HG
 --- Add InterpPhaseFunction
 --- Fix strings to f strings
---- raise SystemExit might be better to raise ValueError('myMessage') or something
---- Unit tests!!
+--- assert() might be better to raise ValueError('myMessage') or something
+--- Move all the asserts in __init__ into a function... since they just check the inputs are good
+--- Add ozone
+--- numba?
+--- Unit tests
 --- Postprocessing
 --- Parallelize over wavelength?
+--- Correlated k
+--- T-matrix?
