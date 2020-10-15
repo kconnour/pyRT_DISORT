@@ -3,3 +3,4 @@
 __pycache__/
 build
 pyRT_DISORT.egg-info
+*.so

@@ -4,18 +4,14 @@ transfer code.
 Dependencies
 ============
 - numpy
-- scipy
 
 Install
 =======
-Note that I've only tested this on Ubuntu. In the future I hope to automate this but for now...
+Note that I've only tested this on Ubuntu.
 - Install gfortran. On Ubunutu it's simple: sudo apt-get install gfortran
-- cd disort4.0.98 within this project
-- Run python -m numpy.f2py -c BDREF.f DISOBRDF.f DISORT.f ERRPACK.f LAPACK.f LINPAK.f RDI1MACH.f -m 
-disort
-- Move the newly created .so file to python's site-packages, or update PYTHONPATH. Congratulations!
-You can now import disort
-- Now that disort can run, install this repo using wheel
+- Clone this repo from Github.
+- cd into the cloned repo and run: pip install -e .  This will build the disort.so file 
+  and make the rest of the module importable.
 
 Conventions
 ===========

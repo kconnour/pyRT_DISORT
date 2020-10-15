@@ -1,3 +1,9 @@
+import os
+import sys
+
+print(sys.executable)
+print(os.path.dirname(os.path.realpath(__file__)))
+
 from disort import disort
 from disort import disobrdf
 
