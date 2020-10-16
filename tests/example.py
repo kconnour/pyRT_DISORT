@@ -14,8 +14,8 @@ from pyRT_DISORT.preprocessing.controller.unsure import Unsure
 from pyRT_DISORT.preprocessing.controller.control import Control
 from pyRT_DISORT.preprocessing.model.boundary_conditions import BoundaryConditions
 from pyRT_DISORT.preprocessing.model.rayleigh import RayleighCo2
-from data.get_data import get_data_path
-from pyRT_DISORT.preprocessing.model.surface import Hapke, HapkeHG2, HapkeHG2Roughness
+from pyRT_DISORT.data.get_data import get_data_path
+from pyRT_DISORT.preprocessing.model.surface import HapkeHG2Roughness
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Make the model atmosphere
