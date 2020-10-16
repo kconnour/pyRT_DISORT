@@ -27,12 +27,5 @@ def setup_pyRT_DISORT():
     )
 
 
-def cleanup():
-    repository_path = os.path.dirname(os.path.realpath(__file__))
-    os.chdir(os.path.join(repository_path, 'disort4.0.98/'))
-    os.system('rm disort.cpython*.so')
-
-
 compile_disort()
 setup_pyRT_DISORT()
-cleanup()
