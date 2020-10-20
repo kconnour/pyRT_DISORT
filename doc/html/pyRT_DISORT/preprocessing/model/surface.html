@@ -26,31 +26,29 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">import numpy as np
+<pre><code class="python"># 3rd-party imports
+import numpy as np
 from disort import disobrdf
 
 # Local imports
 from pyRT_DISORT.preprocessing.controller.size import Size
 from pyRT_DISORT.preprocessing.observation import Observation
-from pyRT_DISORT.preprocessing.controller.unsure import Unsure
 from pyRT_DISORT.preprocessing.controller.control import Control
 from pyRT_DISORT.preprocessing.model.boundary_conditions import BoundaryConditions
 
 
-# This calls disobrdf... which seems broken
 class Hapke:
-    def __init__(self, size, observation, unsure, control, boundary_conditions, albedo, b0=1, hh=0.06, w=0.6,
+    &#34;&#34;&#34;Construct a class to make a Hapke surface phase function as defined in default DISORT&#34;&#34;&#34;
+    def __init__(self, size, observation, control, boundary_conditions, albedo, b0=1, hh=0.06, w=0.6,
                  n_mug=200, debug=False):
         assert isinstance(size, Size), &#39;size needs to be an instance of Size.&#39;
         assert isinstance(observation, Observation)
-        assert isinstance(unsure, Unsure)
         assert isinstance(control, Control)
         assert isinstance(boundary_conditions, BoundaryConditions)
 
         self.brdf_type = 1    # The &#34;Hapke&#34; integer used in DISORT
         self.size = size
         self.observation = observation
-        self.unsure = unsure
         self.control = control
         self.boundary_conditions = boundary_conditions
         self.albedo = albedo
@@ -58,36 +56,212 @@ class Hapke:
         self.hh = hh          # Angular width parameter of oppposition effect
         self.w = w            # Single scattering albedo in Hapke model
         self.n_mug = n_mug    # No idea...
-        self.brdf_argument = np.array([self.b0, self.hh, self.w, 0])
+        self.brdf_argument = np.array([self.b0, self.hh, self.w, 0, 0, 0])
         self.debug = debug
+        self.rhoq = self.__make_rhoq()
+        self.rhou = self.__make_rhou()
+        self.bemst = self.__make_bemst()
+        self.emust = self.__make_emust()
+        self.rho_accurate = self.__make_rho_accurate()
+        self.__call_disobrdf()
 
-    def call_disobrdf(self):
-        rhou = np.zeros((16, 9, 16))
-        disobrdf(self.control.user_angles, self.observation.mu, self.boundary_conditions.beam_flux,
+    def __make_rhoq(self):
+        # Make the variable &#34;rhoq&#34;
+        return np.zeros((int(0.5*self.size.n_streams), int(0.5*self.size.n_streams+1), self.size.n_streams))
+
+    def __make_rhou(self):
+        # Make the variable &#34;rhou&#34;
+        return np.zeros((self.size.n_streams, int(0.5*self.size.n_streams+1), self.size.n_streams))
+
+    def __make_bemst(self):
+        # Make the variable &#34;bemst&#34;
+        # In DISOBRDF.f it&#39;s called the directional emissivity at quadrature angles
+        return np.zeros(int(0.5*self.size.n_streams))
+
+    def __make_emust(self):
+        # Make the variable &#34;emust&#34;
+        # In DISOBRDF.f it&#39;s called the directional emissivity at user angles
+        return np.zeros(self.size.n_umu)
+
+    def __make_rho_accurate(self):
+        # Make the variable &#34;rho_accurate&#34;
+        return np.zeros((self.size.n_umu, self.size.n_phi))
+
+    def __call_disobrdf(self):
+        rhoq, rhou, emust, bemst, rho_accurate = disobrdf(self.control.user_angles, self.observation.mu,
+                                                          self.boundary_conditions.beam_flux,
                  self.observation.mu0, self.boundary_conditions.lambertian, self.albedo, self.control.only_fluxes,
-                 self.unsure.make_rhoq(), rhou, self.unsure.make_emust(), self.unsure.make_bemst(),
-                 self.debug, self.observation.phi, self.observation.phi0, self.unsure.make_rho_accurate(),
+                 self.rhoq, self.rhou, self.emust, self.bemst,
+                 self.debug, self.observation.phi, self.observation.phi0, self.rho_accurate,
                  self.brdf_type, self.brdf_argument, self.n_mug, nstr=self.size.n_streams, numu=self.size.n_umu,
                  nphi=self.size.n_phi)
+        self.rhoq = rhoq
+        self.rhou = rhou
+        self.emust = emust
+        self.bemst = bemst
+        self.rho_accurate = rho_accurate
 
 
-class MyHapke:
-    def __init__(self, b0, w, h):
-        self.b0 = b0
-        self.w = w
-        self.h = h
-        self.gamma = np.sqrt(1 - w)
-        self.r0 = (1 - self.gamma) / (1 + self.gamma)
+class HapkeHG2:
+    &#34;&#34;&#34; Construct the arrays to make a Hapke surface with 2-lobed Henyey-Greenstein phase function&#34;&#34;&#34;
+    def __init__(self, size, observation, control, boundary_conditions, albedo, b0=1, hh=0.06, w=0.6, asym=0.5,
+                 frac=0.5, n_mug=200, debug=False):
+        assert isinstance(size, Size), &#39;size needs to be an instance of Size.&#39;
+        assert isinstance(observation, Observation), &#39;observation needs to be an instance of Observation.&#39;
+        assert isinstance(control, Control), &#39;control needs to be an instance of Control.&#39;
+        assert isinstance(boundary_conditions, BoundaryConditions), \
+            &#39;boundary_conditions nees to be an instance of BoundaryConditions&#39;
 
-    def B_function(self, g):
-        # This is equation 8.90 in Theory of Reflectance and Emittance Spectroscopy
-        return (self.b0 * self.h) / (self.h + np.tan(g/2))
+        assert 0 &lt;= asym &lt;= 1, &#39;The asymmetry parameter needs to be in [0, 1]&#39;
+        assert 0 &lt;= frac &lt;= 1, &#39;The forward scattering fraction needs to  be in [0, 1]&#39;
 
-    def H_function(self, x):
-        # This is the second line of equation 8.57 in Theory of Reflectance and Emittance Spectroscopy
-        par = 1 - 0.5*self.r0 - self.r0*x
-        log = np.log((1+x)/x)
-        return 1 / (1 - ((1 - self.gamma) * x * (self.r0 + par * log)))</code></pre>
+        self.brdf_type = 5    # The &#34;Hapke&#34; integer used in DISORT
+        self.size = size
+        self.observation = observation
+        self.control = control
+        self.boundary_conditions = boundary_conditions
+        self.albedo = albedo
+        self.b0 = b0          # Hapke&#39;s B0 factor for finite particle size
+        self.hh = hh          # Angular width parameter of oppposition effect
+        self.w = w            # Single scattering albedo in Hapke model
+        self.asym = asym
+        self.frac = frac
+        self.n_mug = n_mug    # My guess: the number of expansion coefficients
+        self.brdf_argument = np.array([self.b0, self.hh, self.w, self.asym, self.frac, 0])
+        self.debug = debug
+        self.rhoq = self.__make_rhoq()
+        self.rhou = self.__make_rhou()
+        self.bemst = self.__make_bemst()
+        self.emust = self.__make_emust()
+        self.rho_accurate = self.__make_rho_accurate()
+        self.__call_disobrdf()
+
+    def __make_rhoq(self):
+        # Make the variable &#34;rhoq&#34;
+        return np.zeros((int(0.5*self.size.n_streams), int(0.5*self.size.n_streams+1), self.size.n_streams))
+
+    def __make_rhou(self):
+        # Make the variable &#34;rhou&#34;
+        return np.zeros((self.size.n_streams, int(0.5*self.size.n_streams+1), self.size.n_streams))
+
+    def __make_bemst(self):
+        # Make the variable &#34;bemst&#34;
+        # In DISOBRDF.f it&#39;s called the directional emissivity at quadrature angles
+        return np.zeros(int(0.5*self.size.n_streams))
+
+    def __make_emust(self):
+        # Make the variable &#34;emust&#34;
+        # In DISOBRDF.f it&#39;s called the directional emissivity at user angles
+        return np.zeros(self.size.n_umu)
+
+    def __make_rho_accurate(self):
+        # Make the variable &#34;rho_accurate&#34;
+        return np.zeros((self.size.n_umu, self.size.n_phi))
+
+    def __call_disobrdf(self):
+        rhoq, rhou, emust, bemst, rho_accurate = disobrdf(self.control.user_angles, self.observation.mu,
+                                                          self.boundary_conditions.beam_flux,
+                 self.observation.mu0, self.boundary_conditions.lambertian, self.albedo, self.control.only_fluxes,
+                 self.rhoq, self.rhou, self.emust, self.bemst,
+                 self.debug, self.observation.phi, self.observation.phi0, self.rho_accurate,
+                 self.brdf_type, self.brdf_argument, self.n_mug, nstr=self.size.n_streams, numu=self.size.n_umu,
+                 nphi=self.size.n_phi)
+        self.rhoq = rhoq
+        self.rhou = rhou
+        self.emust = emust
+        self.bemst = bemst
+        self.rho_accurate = rho_accurate
+
+
+class HapkeHG2Roughness:
+    &#34;&#34;&#34; Construct the arrays to make a Hapke surface with 2-lobed Henyey-Greenstein phase function and roughness&#34;&#34;&#34;
+    def __init__(self, size, observation, control, boundary_conditions, albedo, b0=1, hh=0.06, w=0.6, asym=0.5,
+                 frac=0.5, roughness=0.5, n_mug=200, debug=False):
+        &#34;&#34;&#34;
+
+        Parameters
+        ----------
+        size
+        observation
+        control
+        boundary_conditions
+        albedo
+        b0
+        hh
+        w
+        asym
+        frac
+        roughness: float
+            The roughness parameter in radians
+        n_mug
+        debug
+        &#34;&#34;&#34;
+        assert isinstance(size, Size), &#39;size needs to be an instance of Size.&#39;
+        assert isinstance(observation, Observation), &#39;observation needs to be an instance of Observation.&#39;
+        assert isinstance(control, Control), &#39;control needs to be an instance of Control.&#39;
+        assert isinstance(boundary_conditions, BoundaryConditions), \
+            &#39;boundary_conditions nees to be an instance of BoundaryConditions&#39;
+
+        assert 0 &lt;= asym &lt;= 1, &#39;The asymmetry parameter needs to be in [0, 1]&#39;
+        assert 0 &lt;= frac &lt;= 1, &#39;The forward scattering fraction needs to  be in [0, 1]&#39;
+
+        self.brdf_type = 6    # The &#34;Hapke&#34; integer used in DISORT
+        self.size = size
+        self.observation = observation
+        self.control = control
+        self.boundary_conditions = boundary_conditions
+        self.albedo = albedo
+        self.b0 = b0          # Hapke&#39;s B0 factor for finite particle size
+        self.hh = hh          # Angular width parameter of oppposition effect
+        self.w = w            # Single scattering albedo in Hapke model
+        self.asym = asym
+        self.frac = frac
+        self.roughness = roughness
+        self.n_mug = n_mug    # My guess: the number of expansion coefficients
+        self.brdf_argument = np.array([self.b0, self.hh, self.w, self.asym, self.frac, self.roughness])
+        self.debug = debug
+        self.rhoq = self.__make_rhoq()
+        self.rhou = self.__make_rhou()
+        self.bemst = self.__make_bemst()
+        self.emust = self.__make_emust()
+        self.rho_accurate = self.__make_rho_accurate()
+        self.__call_disobrdf()
+
+    def __make_rhoq(self):
+        # Make the variable &#34;rhoq&#34;
+        return np.zeros((int(0.5*self.size.n_streams), int(0.5*self.size.n_streams+1), self.size.n_streams))
+
+    def __make_rhou(self):
+        # Make the variable &#34;rhou&#34;
+        return np.zeros((self.size.n_streams, int(0.5*self.size.n_streams+1), self.size.n_streams))
+
+    def __make_bemst(self):
+        # Make the variable &#34;bemst&#34;
+        # In DISOBRDF.f it&#39;s called the directional emissivity at quadrature angles
+        return np.zeros(int(0.5*self.size.n_streams))
+
+    def __make_emust(self):
+        # Make the variable &#34;emust&#34;
+        # In DISOBRDF.f it&#39;s called the directional emissivity at user angles
+        return np.zeros(self.size.n_umu)
+
+    def __make_rho_accurate(self):
+        # Make the variable &#34;rho_accurate&#34;
+        return np.zeros((self.size.n_umu, self.size.n_phi))
+
+    def __call_disobrdf(self):
+        rhoq, rhou, emust, bemst, rho_accurate = disobrdf(self.control.user_angles, self.observation.mu,
+                                                          self.boundary_conditions.beam_flux,
+                 self.observation.mu0, self.boundary_conditions.lambertian, self.albedo, self.control.only_fluxes,
+                 self.rhoq, self.rhou, self.emust, self.bemst,
+                 self.debug, self.observation.phi, self.observation.phi0, self.rho_accurate,
+                 self.brdf_type, self.brdf_argument, self.n_mug, nstr=self.size.n_streams, numu=self.size.n_umu,
+                 nphi=self.size.n_phi)
+        self.rhoq = rhoq
+        self.rhou = rhou
+        self.emust = emust
+        self.bemst = bemst
+        self.rho_accurate = rho_accurate</code></pre>
 </details>
 </section>
 <section>
@@ -101,27 +275,26 @@ class MyHapke:
 <dl>
 <dt id="pyRT_DISORT.preprocessing.model.surface.Hapke"><code class="flex name class">
 <span>class <span class="ident">Hapke</span></span>
-<span>(</span><span>size, observation, unsure, control, boundary_conditions, albedo, b0=1, hh=0.06, w=0.6, n_mug=200, debug=False)</span>
+<span>(</span><span>size, observation, control, boundary_conditions, albedo, b0=1, hh=0.06, w=0.6, n_mug=200, debug=False)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Construct a class to make a Hapke surface phase function as defined in default DISORT</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Hapke:
-    def __init__(self, size, observation, unsure, control, boundary_conditions, albedo, b0=1, hh=0.06, w=0.6,
+    &#34;&#34;&#34;Construct a class to make a Hapke surface phase function as defined in default DISORT&#34;&#34;&#34;
+    def __init__(self, size, observation, control, boundary_conditions, albedo, b0=1, hh=0.06, w=0.6,
                  n_mug=200, debug=False):
         assert isinstance(size, Size), &#39;size needs to be an instance of Size.&#39;
         assert isinstance(observation, Observation)
-        assert isinstance(unsure, Unsure)
         assert isinstance(control, Control)
         assert isinstance(boundary_conditions, BoundaryConditions)
 
         self.brdf_type = 1    # The &#34;Hapke&#34; integer used in DISORT
         self.size = size
         self.observation = observation
-        self.unsure = unsure
         self.control = control
         self.boundary_conditions = boundary_conditions
         self.albedo = albedo
@@ -129,102 +302,262 @@ class MyHapke:
         self.hh = hh          # Angular width parameter of oppposition effect
         self.w = w            # Single scattering albedo in Hapke model
         self.n_mug = n_mug    # No idea...
-        self.brdf_argument = np.array([self.b0, self.hh, self.w, 0])
+        self.brdf_argument = np.array([self.b0, self.hh, self.w, 0, 0, 0])
         self.debug = debug
+        self.rhoq = self.__make_rhoq()
+        self.rhou = self.__make_rhou()
+        self.bemst = self.__make_bemst()
+        self.emust = self.__make_emust()
+        self.rho_accurate = self.__make_rho_accurate()
+        self.__call_disobrdf()
 
-    def call_disobrdf(self):
-        rhou = np.zeros((16, 9, 16))
-        disobrdf(self.control.user_angles, self.observation.mu, self.boundary_conditions.beam_flux,
+    def __make_rhoq(self):
+        # Make the variable &#34;rhoq&#34;
+        return np.zeros((int(0.5*self.size.n_streams), int(0.5*self.size.n_streams+1), self.size.n_streams))
+
+    def __make_rhou(self):
+        # Make the variable &#34;rhou&#34;
+        return np.zeros((self.size.n_streams, int(0.5*self.size.n_streams+1), self.size.n_streams))
+
+    def __make_bemst(self):
+        # Make the variable &#34;bemst&#34;
+        # In DISOBRDF.f it&#39;s called the directional emissivity at quadrature angles
+        return np.zeros(int(0.5*self.size.n_streams))
+
+    def __make_emust(self):
+        # Make the variable &#34;emust&#34;
+        # In DISOBRDF.f it&#39;s called the directional emissivity at user angles
+        return np.zeros(self.size.n_umu)
+
+    def __make_rho_accurate(self):
+        # Make the variable &#34;rho_accurate&#34;
+        return np.zeros((self.size.n_umu, self.size.n_phi))
+
+    def __call_disobrdf(self):
+        rhoq, rhou, emust, bemst, rho_accurate = disobrdf(self.control.user_angles, self.observation.mu,
+                                                          self.boundary_conditions.beam_flux,
                  self.observation.mu0, self.boundary_conditions.lambertian, self.albedo, self.control.only_fluxes,
-                 self.unsure.make_rhoq(), rhou, self.unsure.make_emust(), self.unsure.make_bemst(),
-                 self.debug, self.observation.phi, self.observation.phi0, self.unsure.make_rho_accurate(),
+                 self.rhoq, self.rhou, self.emust, self.bemst,
+                 self.debug, self.observation.phi, self.observation.phi0, self.rho_accurate,
                  self.brdf_type, self.brdf_argument, self.n_mug, nstr=self.size.n_streams, numu=self.size.n_umu,
-                 nphi=self.size.n_phi)</code></pre>
+                 nphi=self.size.n_phi)
+        self.rhoq = rhoq
+        self.rhou = rhou
+        self.emust = emust
+        self.bemst = bemst
+        self.rho_accurate = rho_accurate</code></pre>
 </details>
-<h3>Methods</h3>
-<dl>
-<dt id="pyRT_DISORT.preprocessing.model.surface.Hapke.call_disobrdf"><code class="name flex">
-<span>def <span class="ident">call_disobrdf</span></span>(<span>self)</span>
+</dd>
+<dt id="pyRT_DISORT.preprocessing.model.surface.HapkeHG2"><code class="flex name class">
+<span>class <span class="ident">HapkeHG2</span></span>
+<span>(</span><span>size, observation, control, boundary_conditions, albedo, b0=1, hh=0.06, w=0.6, asym=0.5, frac=0.5, n_mug=200, debug=False)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Construct the arrays to make a Hapke surface with 2-lobed Henyey-Greenstein phase function</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def call_disobrdf(self):
-    rhou = np.zeros((16, 9, 16))
-    disobrdf(self.control.user_angles, self.observation.mu, self.boundary_conditions.beam_flux,
-             self.observation.mu0, self.boundary_conditions.lambertian, self.albedo, self.control.only_fluxes,
-             self.unsure.make_rhoq(), rhou, self.unsure.make_emust(), self.unsure.make_bemst(),
-             self.debug, self.observation.phi, self.observation.phi0, self.unsure.make_rho_accurate(),
-             self.brdf_type, self.brdf_argument, self.n_mug, nstr=self.size.n_streams, numu=self.size.n_umu,
-             nphi=self.size.n_phi)</code></pre>
-</details>
-</dd>
-</dl>
-</dd>
-<dt id="pyRT_DISORT.preprocessing.model.surface.MyHapke"><code class="flex name class">
-<span>class <span class="ident">MyHapke</span></span>
-<span>(</span><span>b0, w, h)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">class MyHapke:
-    def __init__(self, b0, w, h):
-        self.b0 = b0
-        self.w = w
-        self.h = h
-        self.gamma = np.sqrt(1 - w)
-        self.r0 = (1 - self.gamma) / (1 + self.gamma)
+<pre><code class="python">class HapkeHG2:
+    &#34;&#34;&#34; Construct the arrays to make a Hapke surface with 2-lobed Henyey-Greenstein phase function&#34;&#34;&#34;
+    def __init__(self, size, observation, control, boundary_conditions, albedo, b0=1, hh=0.06, w=0.6, asym=0.5,
+                 frac=0.5, n_mug=200, debug=False):
+        assert isinstance(size, Size), &#39;size needs to be an instance of Size.&#39;
+        assert isinstance(observation, Observation), &#39;observation needs to be an instance of Observation.&#39;
+        assert isinstance(control, Control), &#39;control needs to be an instance of Control.&#39;
+        assert isinstance(boundary_conditions, BoundaryConditions), \
+            &#39;boundary_conditions nees to be an instance of BoundaryConditions&#39;
 
-    def B_function(self, g):
-        # This is equation 8.90 in Theory of Reflectance and Emittance Spectroscopy
-        return (self.b0 * self.h) / (self.h + np.tan(g/2))
+        assert 0 &lt;= asym &lt;= 1, &#39;The asymmetry parameter needs to be in [0, 1]&#39;
+        assert 0 &lt;= frac &lt;= 1, &#39;The forward scattering fraction needs to  be in [0, 1]&#39;
 
-    def H_function(self, x):
-        # This is the second line of equation 8.57 in Theory of Reflectance and Emittance Spectroscopy
-        par = 1 - 0.5*self.r0 - self.r0*x
-        log = np.log((1+x)/x)
-        return 1 / (1 - ((1 - self.gamma) * x * (self.r0 + par * log)))</code></pre>
+        self.brdf_type = 5    # The &#34;Hapke&#34; integer used in DISORT
+        self.size = size
+        self.observation = observation
+        self.control = control
+        self.boundary_conditions = boundary_conditions
+        self.albedo = albedo
+        self.b0 = b0          # Hapke&#39;s B0 factor for finite particle size
+        self.hh = hh          # Angular width parameter of oppposition effect
+        self.w = w            # Single scattering albedo in Hapke model
+        self.asym = asym
+        self.frac = frac
+        self.n_mug = n_mug    # My guess: the number of expansion coefficients
+        self.brdf_argument = np.array([self.b0, self.hh, self.w, self.asym, self.frac, 0])
+        self.debug = debug
+        self.rhoq = self.__make_rhoq()
+        self.rhou = self.__make_rhou()
+        self.bemst = self.__make_bemst()
+        self.emust = self.__make_emust()
+        self.rho_accurate = self.__make_rho_accurate()
+        self.__call_disobrdf()
+
+    def __make_rhoq(self):
+        # Make the variable &#34;rhoq&#34;
+        return np.zeros((int(0.5*self.size.n_streams), int(0.5*self.size.n_streams+1), self.size.n_streams))
+
+    def __make_rhou(self):
+        # Make the variable &#34;rhou&#34;
+        return np.zeros((self.size.n_streams, int(0.5*self.size.n_streams+1), self.size.n_streams))
+
+    def __make_bemst(self):
+        # Make the variable &#34;bemst&#34;
+        # In DISOBRDF.f it&#39;s called the directional emissivity at quadrature angles
+        return np.zeros(int(0.5*self.size.n_streams))
+
+    def __make_emust(self):
+        # Make the variable &#34;emust&#34;
+        # In DISOBRDF.f it&#39;s called the directional emissivity at user angles
+        return np.zeros(self.size.n_umu)
+
+    def __make_rho_accurate(self):
+        # Make the variable &#34;rho_accurate&#34;
+        return np.zeros((self.size.n_umu, self.size.n_phi))
+
+    def __call_disobrdf(self):
+        rhoq, rhou, emust, bemst, rho_accurate = disobrdf(self.control.user_angles, self.observation.mu,
+                                                          self.boundary_conditions.beam_flux,
+                 self.observation.mu0, self.boundary_conditions.lambertian, self.albedo, self.control.only_fluxes,
+                 self.rhoq, self.rhou, self.emust, self.bemst,
+                 self.debug, self.observation.phi, self.observation.phi0, self.rho_accurate,
+                 self.brdf_type, self.brdf_argument, self.n_mug, nstr=self.size.n_streams, numu=self.size.n_umu,
+                 nphi=self.size.n_phi)
+        self.rhoq = rhoq
+        self.rhou = rhou
+        self.emust = emust
+        self.bemst = bemst
+        self.rho_accurate = rho_accurate</code></pre>
 </details>
-<h3>Methods</h3>
+</dd>
+<dt id="pyRT_DISORT.preprocessing.model.surface.HapkeHG2Roughness"><code class="flex name class">
+<span>class <span class="ident">HapkeHG2Roughness</span></span>
+<span>(</span><span>size, observation, control, boundary_conditions, albedo, b0=1, hh=0.06, w=0.6, asym=0.5, frac=0.5, roughness=0.5, n_mug=200, debug=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Construct the arrays to make a Hapke surface with 2-lobed Henyey-Greenstein phase function and roughness</p>
+<h2 id="parameters">Parameters</h2>
 <dl>
-<dt id="pyRT_DISORT.preprocessing.model.surface.MyHapke.B_function"><code class="name flex">
-<span>def <span class="ident">B_function</span></span>(<span>self, g)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
+<dt><strong><code>size</code></strong></dt>
+<dd>&nbsp;</dd>
+<dt><strong><code>observation</code></strong></dt>
+<dd>&nbsp;</dd>
+<dt><strong><code>control</code></strong></dt>
+<dd>&nbsp;</dd>
+<dt><strong><code>boundary_conditions</code></strong></dt>
+<dd>&nbsp;</dd>
+<dt><strong><code>albedo</code></strong></dt>
+<dd>&nbsp;</dd>
+<dt><strong><code>b0</code></strong></dt>
+<dd>&nbsp;</dd>
+<dt><strong><code>hh</code></strong></dt>
+<dd>&nbsp;</dd>
+<dt><strong><code>w</code></strong></dt>
+<dd>&nbsp;</dd>
+<dt><strong><code>asym</code></strong></dt>
+<dd>&nbsp;</dd>
+<dt><strong><code>frac</code></strong></dt>
+<dd>&nbsp;</dd>
+<dt><strong><code>roughness</code></strong> :&ensp;<code>float</code></dt>
+<dd>The roughness parameter in radians</dd>
+<dt><strong><code>n_mug</code></strong></dt>
+<dd>&nbsp;</dd>
+<dt><strong><code>debug</code></strong></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def B_function(self, g):
-    # This is equation 8.90 in Theory of Reflectance and Emittance Spectroscopy
-    return (self.b0 * self.h) / (self.h + np.tan(g/2))</code></pre>
+<pre><code class="python">class HapkeHG2Roughness:
+    &#34;&#34;&#34; Construct the arrays to make a Hapke surface with 2-lobed Henyey-Greenstein phase function and roughness&#34;&#34;&#34;
+    def __init__(self, size, observation, control, boundary_conditions, albedo, b0=1, hh=0.06, w=0.6, asym=0.5,
+                 frac=0.5, roughness=0.5, n_mug=200, debug=False):
+        &#34;&#34;&#34;
+
+        Parameters
+        ----------
+        size
+        observation
+        control
+        boundary_conditions
+        albedo
+        b0
+        hh
+        w
+        asym
+        frac
+        roughness: float
+            The roughness parameter in radians
+        n_mug
+        debug
+        &#34;&#34;&#34;
+        assert isinstance(size, Size), &#39;size needs to be an instance of Size.&#39;
+        assert isinstance(observation, Observation), &#39;observation needs to be an instance of Observation.&#39;
+        assert isinstance(control, Control), &#39;control needs to be an instance of Control.&#39;
+        assert isinstance(boundary_conditions, BoundaryConditions), \
+            &#39;boundary_conditions nees to be an instance of BoundaryConditions&#39;
+
+        assert 0 &lt;= asym &lt;= 1, &#39;The asymmetry parameter needs to be in [0, 1]&#39;
+        assert 0 &lt;= frac &lt;= 1, &#39;The forward scattering fraction needs to  be in [0, 1]&#39;
+
+        self.brdf_type = 6    # The &#34;Hapke&#34; integer used in DISORT
+        self.size = size
+        self.observation = observation
+        self.control = control
+        self.boundary_conditions = boundary_conditions
+        self.albedo = albedo
+        self.b0 = b0          # Hapke&#39;s B0 factor for finite particle size
+        self.hh = hh          # Angular width parameter of oppposition effect
+        self.w = w            # Single scattering albedo in Hapke model
+        self.asym = asym
+        self.frac = frac
+        self.roughness = roughness
+        self.n_mug = n_mug    # My guess: the number of expansion coefficients
+        self.brdf_argument = np.array([self.b0, self.hh, self.w, self.asym, self.frac, self.roughness])
+        self.debug = debug
+        self.rhoq = self.__make_rhoq()
+        self.rhou = self.__make_rhou()
+        self.bemst = self.__make_bemst()
+        self.emust = self.__make_emust()
+        self.rho_accurate = self.__make_rho_accurate()
+        self.__call_disobrdf()
+
+    def __make_rhoq(self):
+        # Make the variable &#34;rhoq&#34;
+        return np.zeros((int(0.5*self.size.n_streams), int(0.5*self.size.n_streams+1), self.size.n_streams))
+
+    def __make_rhou(self):
+        # Make the variable &#34;rhou&#34;
+        return np.zeros((self.size.n_streams, int(0.5*self.size.n_streams+1), self.size.n_streams))
+
+    def __make_bemst(self):
+        # Make the variable &#34;bemst&#34;
+        # In DISOBRDF.f it&#39;s called the directional emissivity at quadrature angles
+        return np.zeros(int(0.5*self.size.n_streams))
+
+    def __make_emust(self):
+        # Make the variable &#34;emust&#34;
+        # In DISOBRDF.f it&#39;s called the directional emissivity at user angles
+        return np.zeros(self.size.n_umu)
+
+    def __make_rho_accurate(self):
+        # Make the variable &#34;rho_accurate&#34;
+        return np.zeros((self.size.n_umu, self.size.n_phi))
+
+    def __call_disobrdf(self):
+        rhoq, rhou, emust, bemst, rho_accurate = disobrdf(self.control.user_angles, self.observation.mu,
+                                                          self.boundary_conditions.beam_flux,
+                 self.observation.mu0, self.boundary_conditions.lambertian, self.albedo, self.control.only_fluxes,
+                 self.rhoq, self.rhou, self.emust, self.bemst,
+                 self.debug, self.observation.phi, self.observation.phi0, self.rho_accurate,
+                 self.brdf_type, self.brdf_argument, self.n_mug, nstr=self.size.n_streams, numu=self.size.n_umu,
+                 nphi=self.size.n_phi)
+        self.rhoq = rhoq
+        self.rhou = rhou
+        self.emust = emust
+        self.bemst = bemst
+        self.rho_accurate = rho_accurate</code></pre>
 </details>
-</dd>
-<dt id="pyRT_DISORT.preprocessing.model.surface.MyHapke.H_function"><code class="name flex">
-<span>def <span class="ident">H_function</span></span>(<span>self, x)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def H_function(self, x):
-    # This is the second line of equation 8.57 in Theory of Reflectance and Emittance Spectroscopy
-    par = 1 - 0.5*self.r0 - self.r0*x
-    log = np.log((1+x)/x)
-    return 1 / (1 - ((1 - self.gamma) * x * (self.r0 + par * log)))</code></pre>
-</details>
-</dd>
-</dl>
 </dd>
 </dl>
 </section>
@@ -244,16 +577,12 @@ class MyHapke:
 <ul>
 <li>
 <h4><code><a title="pyRT_DISORT.preprocessing.model.surface.Hapke" href="#pyRT_DISORT.preprocessing.model.surface.Hapke">Hapke</a></code></h4>
-<ul class="">
-<li><code><a title="pyRT_DISORT.preprocessing.model.surface.Hapke.call_disobrdf" href="#pyRT_DISORT.preprocessing.model.surface.Hapke.call_disobrdf">call_disobrdf</a></code></li>
-</ul>
 </li>
 <li>
-<h4><code><a title="pyRT_DISORT.preprocessing.model.surface.MyHapke" href="#pyRT_DISORT.preprocessing.model.surface.MyHapke">MyHapke</a></code></h4>
-<ul class="">
-<li><code><a title="pyRT_DISORT.preprocessing.model.surface.MyHapke.B_function" href="#pyRT_DISORT.preprocessing.model.surface.MyHapke.B_function">B_function</a></code></li>
-<li><code><a title="pyRT_DISORT.preprocessing.model.surface.MyHapke.H_function" href="#pyRT_DISORT.preprocessing.model.surface.MyHapke.H_function">H_function</a></code></li>
-</ul>
+<h4><code><a title="pyRT_DISORT.preprocessing.model.surface.HapkeHG2" href="#pyRT_DISORT.preprocessing.model.surface.HapkeHG2">HapkeHG2</a></code></h4>
+</li>
+<li>
+<h4><code><a title="pyRT_DISORT.preprocessing.model.surface.HapkeHG2Roughness" href="#pyRT_DISORT.preprocessing.model.surface.HapkeHG2Roughness">HapkeHG2Roughness</a></code></h4>
 </li>
 </ul>
 </li>

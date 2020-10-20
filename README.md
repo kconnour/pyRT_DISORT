@@ -4,13 +4,14 @@ transfer code.
 Dependencies
 ============
 - numpy
+- pdoc3
 
 Install
 =======
 Note that I've only tested this on Ubuntu.
 - Install gfortran. On Ubunutu it's simple: sudo apt-get install gfortran
 - Clone this repo from Github.
-- cd into the cloned repo and run: pip install -e .  This will build the disort.so file 
+- cd into the cloned repo and run: pip install .  This will build the disort.so file 
   and make the rest of the module importable.
 
 Conventions
