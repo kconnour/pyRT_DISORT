@@ -16,15 +16,15 @@ class Column:
         Parameters
         ----------
         aerosol: Aerosol
-            An aerosol object
+            The aerosol for which this class will construct a column
         layers: Layers
-            A Layer object
+            The equations of state in each of the layers in the plane parallel atmosphere
         aerosol_scale_height: float
-            The scale height of the aerosol
+            The scale height of the aerosol [km]
         conrath_nu: float
             The Conrath nu parameter
         particle_sizes: np.ndarray
-            The effective radii of this aerosol
+            The effective radii of this aerosol [microns]
         column_integrated_optical_depths: np.ndarray
             The column-integrated optical depth at the effective radii
         """
@@ -34,7 +34,16 @@ class Column:
         self.nu = conrath_nu
         self.particle_sizes = particle_sizes
         self.column_integrated_optical_depths = column_integrated_optical_depths
+        self.__check_input_types()
 
+        self.multisize_hyperspectral_total_optical_depths = \
+            self.__calculate_multisize_hyperspectral_total_optical_depths()
+        self.multisize_hyperspectral_scattering_optical_depths = \
+            self.__calculate_multisize_hyperspectral_scattering_optical_depths()
+        self.hyperspectral_total_optical_depths = self.__reduce_total_optical_depths_size_dim()
+        self.hyperspectral_scattering_optical_depths = self.__reduce_scattering_optical_depths_size_dim()
+
+    def __check_input_types(self):
         assert isinstance(self.aerosol, Aerosol), 'aerosol needs to be an instance of Aerosol.'
         assert isinstance(self.layers, Layers), 'layers needs to be an instance of Layers.'
         assert isinstance(self.H, (int, float)), 'aerosol_scale_height needs to be an int or float.'
@@ -45,13 +54,6 @@ class Column:
             'column_integrated_optical_depths needs to be a numpy array'
         assert len(self.particle_sizes) == len(self.column_integrated_optical_depths), \
             'particle_sizes and column_integrated_optical_depths need to be the same length.'
-
-        self.multisize_hyperspectral_total_optical_depths = \
-            self.__calculate_multisize_hyperspectral_total_optical_depths()
-        self.multisize_hyperspectral_scattering_optical_depths = \
-            self.__calculate_multisize_hyperspectral_scattering_optical_depths()
-        self.hyperspectral_total_optical_depths = self.__reduce_total_optical_depths_size_dim()
-        self.hyperspectral_scattering_optical_depths = self.__reduce_scattering_optical_depths_size_dim()
 
     def __check_conrath_parameters_do_not_suck(self):
         if np.isnan(self.H):

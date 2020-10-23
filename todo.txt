@@ -1,7 +1,6 @@
 Design
 --- UU outputs a bunch of junk 0s in addition to "good" values---fix that?
 --- Specify layers independent of mars_atm.inp?
---- Make a good installation
 
 Assumptions
 --- Every aerosol will have a dust.npy-type file
@@ -10,24 +9,8 @@ Assumptions
 --- Every aerosol will either be HG or use a 3D phase function file
 
 Questions:
---- What are the "requirements" on PMOM? I think it just breaks if any value is >1
 --- What are the 2 additional columns in ice?
 --- What are pivot pressures/altitudes/temperatures?
---- Should PMOM_aerosol have a layer dependence? Right now I make it constant in the layers
-
-Bugs:
---- None known!
-
-Additions:
---- Add checks throughout to ensure the same wavelengths, moments, etc. are used. We don't want one aerosol observed
-    at different wavelenghts than another. Also ensure they CAN have different r_effective
---- Add InterpPhaseFunction
---- Add HGPhaseFunction
---- Unit tests
---- Solver
---- Gas---I presume ozone shouldn't use any of the aerosol column methods
---- I generally do linear interpolation but it'd be nice if the user could specify fancier interpolations
---- Mike does post-DISORT processing, multiplying UU by scaling. I should copy that for all disort-multi outputs
 
 Test:
 --- Make sure if I have 100 particle sizes, things don't go haywire...
@@ -37,20 +20,23 @@ Fix:
 --- Remove old phase functions + generally unnecessary aux files
 
 Work on next:
---- Better installation (see scipy since I know they make a .so file)
---- Documentation
---- 1D phase function
---- Vertical profile (from GCM) injection
---- Ask for ice PMOM
+--- phase_function naming conventions
+--- There's a bug where if iceOD is too low, it breaks PMOM_total... I think this is a 10^-7 issue when adding many constituents
+--- Vertical profile (from GCM) injection. Then compare ice to disort_multi
+--- Check that the model_atmosphere takes care of aerosols with different n_moments?
+--- Add InterpPhaseFunction. Then update HHEPF to take either 'nn' or 'interpolated' or something like that
 --- Add HG
---- Add InterpPhaseFunction
+--- Ask for ice PMOM
+--- Add ozone
 --- Fix strings to f strings
 --- assert() might be better to raise ValueError('myMessage') or something
 --- Move all the asserts in __init__ into a function... since they just check the inputs are good
---- Add ozone
+--- Solver
+--- Parallelize over wavelength
 --- numba?
+--- Add checks throughout to ensure the same wavelengths, moments, etc. are used. We don't want one aerosol observed
+    at different wavelenghts than another. Also ensure they CAN have different r_effective
 --- Unit tests
 --- Postprocessing
---- Parallelize over wavelength?
 --- Correlated k
 --- T-matrix?
