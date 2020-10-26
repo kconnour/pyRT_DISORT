@@ -79,16 +79,14 @@ class Column:
         fractional_mixing_ratio = np.exp(self.nu * (1 - np.exp(self.layers.altitude_layers / self.H)))
         return fractional_mixing_ratio
 
-    def __calculate_multisize_hyperspectral_total_optical_depths(self, optical_depth_minimum=10**-7):
+    def __calculate_multisize_hyperspectral_total_optical_depths(self):
         vertical_mixing_ratio = self.__make_conrath_profile()
         dust_scaling = np.sum(self.layers.column_density_layers * vertical_mixing_ratio)
         multisize_hyperspectral_total_optical_depths = np.multiply.outer(
             np.outer(vertical_mixing_ratio * self.layers.column_density_layers, self.column_integrated_optical_depths),
             self.aerosol.extinction_ratios) / dust_scaling
 
-        # Make sure each grid point is at least optical_depth_minimum
-        return np.where(multisize_hyperspectral_total_optical_depths < optical_depth_minimum, optical_depth_minimum,
-                        multisize_hyperspectral_total_optical_depths)
+        return multisize_hyperspectral_total_optical_depths
 
     def __calculate_multisize_hyperspectral_scattering_optical_depths(self):
         return self.multisize_hyperspectral_total_optical_depths * self.aerosol.hyperspectral_single_scattering_albedos

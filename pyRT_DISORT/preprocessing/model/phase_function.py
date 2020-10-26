@@ -84,6 +84,7 @@ class NearestNeighborEmpiricalPhaseFunctions:
 
 class ResizedPhaseFunctions:
     def __init__(self, phase_functions, n_moments):
+        # This line works ONLY because both EPF and NNEPF have the get_phase_function() methods
         self.phase_functions = phase_functions.get_phase_function()
         self.n_moments = n_moments
         self.__assert_inputs_are_good()
@@ -92,7 +93,6 @@ class ResizedPhaseFunctions:
         self.normalized_phase_function = self.__normalize_phase_functions()
 
     def __assert_inputs_are_good(self):
-        #assert isinstance(self.phase_functions, (EmpiricalPhaseFunctions, NearestNeighborEmpiricalPhaseFunctions))
         assert isinstance(self.n_moments, int), 'n_moments needs to be an int'
 
     def __match_n_moments(self):

@@ -20,13 +20,13 @@ Fix:
 --- Remove old phase functions + generally unnecessary aux files
 
 Work on next:
---- phase_function naming conventions
---- There's a bug where if iceOD is too low, it breaks PMOM_total... I think this is a 10^-7 issue when adding many constituents
 --- Vertical profile (from GCM) injection. Then compare ice to disort_multi
 --- Check that the model_atmosphere takes care of aerosols with different n_moments?
 --- Add InterpPhaseFunction. Then update HHEPF to take either 'nn' or 'interpolated' or something like that
 --- Add HG
---- Ask for ice PMOM
+--- Get ice PMOM (if it exists)
+--- Cleanup all phase_function stuff: better naming conventions, public methods to get parameters?, assert things
+    can be EPF or HG
 --- Add ozone
 --- Fix strings to f strings
 --- assert() might be better to raise ValueError('myMessage') or something
