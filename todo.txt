@@ -27,6 +27,7 @@ Work on next:
 --- Get ice PMOM (if it exists)
 --- Cleanup all phase_function stuff: better naming conventions, public methods to get parameters?, assert things
     can be EPF or HG
+--- Ensure Column can accommodate different profiles for different particle sizes
 --- Add ozone
 --- Fix strings to f strings
 --- assert() might be better to raise ValueError('myMessage') or something

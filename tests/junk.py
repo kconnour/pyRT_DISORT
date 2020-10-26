@@ -1,26 +1,20 @@
-import os
-import sys
+import numpy as np
+from scipy.constants import Boltzmann
 
-print(sys.executable)
-print(os.path.dirname(os.path.realpath(__file__)))
+atmfile = '/home/kyle/disort_multi/marsatm.inp'
 
-from disort import disort
-from disort import disobrdf
+f = np.genfromtxt(atmfile, skip_header=3)
+newfile = np.zeros((f.shape[0], 4))
+newfile[:, :-1] = f
+newfile[:, 1] *= 100
 
-print(disort.__doc__)
-print(disobrdf.__doc__)
 
-#phsfn = np.load('/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/phase_functions.npy')
-#p = np.moveaxis(phsfn, -1, 0)
-#print(p.shape)
-#np.save('/home/kyle/repos/pyRT_DISORT/preprocessing/planets/mars/aux/phase_functions.npy', p)
+for i in range(f.shape[0]):
+    newfile[i, -1] = newfile[i, 1] / Boltzmann / newfile[i, 2]
 
-'''
-# This allows multiplication of oddly sized arrays
-a = np.zeros((14, 5, 2))
-b = np.ones((128, 5, 2))
-
-c = np.broadcast_to(a, (128, 14, 5, 2))
-d = np.broadcast_to(b[:, None, :, :], (128, 14, 5, 2))
-
-e = c*d'''
+newfile = np.flipud(newfile)
+print(newfile[:, 0])
+print(newfile[:, 1])
+print(newfile[:, 2])
+print(newfile[:, 3])
+np.save('/home/kyle/repos/pyRT_DISORT/pyRT_DISORT/data/planets/mars/aux/mars_atm_copy.npy', newfile)

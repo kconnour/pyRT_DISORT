@@ -9,7 +9,7 @@ import disort
 from pyRT_DISORT.preprocessing.model.model_atmosphere import ModelAtmosphere
 from pyRT_DISORT.preprocessing.model.aerosol import Aerosol
 from pyRT_DISORT.preprocessing.model.atmosphere import Layers
-from pyRT_DISORT.preprocessing.model.aerosol_column import Column
+from pyRT_DISORT.preprocessing.model.aerosol_column import Column, Conrath, GCMProfile
 from pyRT_DISORT.preprocessing.observation import Observation
 from pyRT_DISORT.preprocessing.controller.output import Output
 from pyRT_DISORT.preprocessing.model.phase_function import StaticEmpiricalPhaseFunction, HyperradialHyperspectralEmpiricalPhaseFunction
@@ -32,7 +32,8 @@ phase_wavs = os.path.join(get_data_path(), 'planets/mars/aux/phase_function_wave
 ice_coeff = os.path.join(get_data_path(), 'planets/mars/aux/legendre_coeff_h2o_ice.npy')
 dustfile = os.path.join(get_data_path(), 'planets/mars/aux/dust.npy')
 icefile = os.path.join(get_data_path(), 'planets/mars/aux/ice.npy')
-atm = os.path.join(get_data_path(), 'planets/mars/aux/mars_atm.npy')
+#atm = os.path.join(get_data_path(), 'planets/mars/aux/mars_atm.npy')
+atm = os.path.join(get_data_path(), 'planets/mars/aux/mars_atm_copy.npy')
 altitude_map = os.path.join(get_data_path(), 'planets/mars/aux/altitude_map.npy')
 solar_spec = os.path.join(get_data_path(), 'aux/solar_spectrum.npy')
 albedo_map = os.path.join(get_data_path(), 'planets/mars/aux/albedo_map.npy')
@@ -42,11 +43,16 @@ wavs = np.array([1, 9.3])
 dust = Aerosol(dustfile, wavs, 9.3)     # 9.3 is the wavelength reference
 ice = Aerosol(icefile, wavs, 12.1)
 
-# Make a column of that aerosol
+# Get the atmospheric layers
 lay = Layers(atm)
-# 10 = scale height, 0.5 = Conrath nu, then you can input an array of r_effective and an array of the column ODs at those r_effective. I throw an error if the lengths don't match
-dust_column = Column(dust, lay, 10, 0.5, np.array([1]), np.array([0.8]))  # here, use r_eff = 1 micron and its column OD = 0.8. Just a test case
-ice_column = Column(ice, lay, 10, 0.1, np.array([2]), np.array([0.2]))
+
+# Make a Conrath dust profile, then make a column of dust with that profile
+dust_conrath = Conrath(lay, 10, 0.5)   # 10 = scale height, 0.5 = Conrath nu
+dust_column = Column(dust, lay, dust_conrath, np.array([1]), np.array([0.8]))  # r_eff = 1, column OD = 0.8
+# Make a custom ice profile, then make a column of ice with that profile
+iceprof = np.where((25 < lay.altitude_layers) & (75 > lay.altitude_layers), 1, 0)   # This is a somewhat cryptic way of making a constant profile at altitudes between 25--75 km
+ice_profile = GCMProfile(lay, iceprof)
+ice_column = Column(ice, lay, ice_profile, np.array([2]), np.array([0.2]))
 
 # Make the phase functions. For dust I have phsfn(particle size, wavelengths) but for ice I just have a 1D array of moments
 n_moments = 200
@@ -64,9 +70,9 @@ ice_info = (ice_column.hyperspectral_total_optical_depths, ice_column.hyperspect
             ice_pf.phase_function)
 rayleigh_info = (rco2.hyperspectral_optical_depths, rco2.hyperspectral_optical_depths, rco2.hyperspectral_layered_phase_function)
 
-# Add dust and Rayleigh scattering to the model
+# Add dust and ice and Rayleigh scattering to the model
 model.add_constituent(dust_info)
-#model.add_constituent(ice_info)
+model.add_constituent(ice_info)
 model.add_constituent(rayleigh_info)
 
 # Once everything is in the model, compute the model. Then, slice off the wavelength dimension
@@ -105,7 +111,7 @@ polynomial_moments = model.hyperspectral_legendre_moments[:, :, 1]
 #                   0.12, 0.75, 0.9, 1, 0.04, 85.9437
 
 # Test case 4: dust + ice + Rayleigh
-# I'm running ./disort_multi -dust_conrath 0.5, 10 -dust_phsfn 98 -ice_phsfn 99 -use_hg2_thetabar -NSTR 16 < testInput.txt
+# I'm running ./disort_multi -dust_conrath 0.5, 10 -dust_phsfn 98 -ice_phsfn 99 -use_hg2_thetabar -NSTR 16 -zi_top 80 < testInput.txt
 # phsfn_98.dat contain the 65 moments at reff = 1 micron and wavelength = 9.3 microns
 # phsfn_99.dat contains the 128 moments I have for ice
 # testInput.txt is: 9.3, 0.5, 10, 30, 50, 40, 20, 0.8, 0.2, 0
