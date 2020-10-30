@@ -4,170 +4,211 @@ import numpy as np
 # Local imports
 from pyRT_DISORT.preprocessing.model.aerosol_column import Column
 
-# Note: by "phase functions" I usually mean the Legendre coefficients of the phase function
+
+class PhaseFunction:
+    def __init__(self, column):
+        self.column = column
+        self.__check_input()
+
+    def __check_input(self):
+        assert isinstance(self.column, Column), 'column must be an instance of Column'
+
+    def expand_dimensions(self, coefficients):
+        """ Expand the dimension of input coefficients to be (n_moments, n_sizes, n_wavelengths)
+
+        Parameters
+        ----------
+        coefficients: np.ndarray
+            A 1D, 2D, or 3D array of coefficients
+
+        Returns
+        -------
+        coefficients: np.ndarray
+            A 3D array of the coefficients
+        """
+        # Define particle_sizes and wavelengths here if they don't exist... not good practice
+        if np.ndim(coefficients) == 1:
+            self.particle_sizes = np.linspace(0, 0, num=len(self.column.particle_sizes))
+            self.wavelengths = np.linspace(0, 0, num=len(self.column.aerosol.wavelengths))
+            return np.broadcast_to(coefficients[:, None, None], (coefficients.shape[0], 1, 1))
+        elif np.ndim(coefficients) == 2:
+            if self.particle_sizes is not None:
+                self.wavelengths = np.linspace(0, 0, num=len(self.column.aerosol.wavelengths))
+                return np.broadcast_to(coefficients[:, :, None], (coefficients.shape[0], coefficients.shape[1], 1))
+            elif self.wavelengths is not None:
+                self.particle_sizes = np.linspace(0, 0, num=len(self.column.particle_sizes))
+                return np.broadcast_to(coefficients[:, None, :], (coefficients.shape[0], 1, coefficients.shape[1]))
+        elif np.ndim(coefficients) == 3:
+            return coefficients
+
+    @staticmethod
+    def normalize_coefficients(coefficients):
+        """ Normalize the coefficients (divide the k-th moment by 2k + 1)
+
+        Parameters
+        ----------
+        coefficients: np.ndarray
+            A 3D array of the coefficients
+
+        Returns
+        -------
+        np.ndarray of the normalized coefficients
+        """
+        n_moments = coefficients.shape[0]
+        normalization = np.linspace(0, n_moments-1, num=n_moments)*2 + 1
+        return (coefficients.T / normalization).T
+
+    def expand_layers(self, coefficients):
+        """ Expand coefficients to include a layer dimension
+
+        Parameters
+        ----------
+        coefficients: np.ndarray
+            A 3D numpy array of Legendre coefficients
+
+        Returns
+        -------
+        np.ndarray: 4D coefficients
+        """
+        return np.broadcast_to(coefficients[:, None, :, :], (coefficients.shape[0], self.column.layers.n_layers,
+                                                             coefficients.shape[1], coefficients.shape[2]))
+
+    def sum_over_size(self, coefficients):
+        """ Perform a weighted sum over the coefficients' size dimension
+
+        Parameters
+        ----------
+        coefficients: np.ndarray
+            A 3D array of Legendre coefficients
+
+        Returns
+        -------
+        np.ndarray: 3D coefficients
+        """
+        aerosol_polynomial_moments = coefficients * self.column.multisize_hyperspectral_scattering_optical_depths
+        return np.average(aerosol_polynomial_moments, axis=2, weights=self.column.column_integrated_optical_depths)
 
 
-class EmpiricalPhaseFunctions:
-    def __init__(self, phase_function_file, particle_sizes_file='', wavelengths_file=''):
+class HenyeyGreenstein(PhaseFunction):
+    """ Make a Henyey-Greenstein phase function"""
+    def __init__(self, column, asymmetry, n_moments=1000):
+        """ Initialize the class
+
+        Parameters
+        ----------
+        column: Column
+            An aerosol column
+        asymmetry: float
+            The Henyey-Greenstein asymmetry parameter
+        n_moments: int, optional
+            The number of moments to make a HG phase function for. Default is 1000
+        """
+        super().__init__(column)
+        self.asymmetry = asymmetry
+        self.n_moments = n_moments
+        self.__check_inputs()
+        self.coefficients = self.__expand_coefficients()
+
+    def __check_inputs(self):
+        assert 0 <= self.asymmetry <= 1, 'the asymmetry parameter must be in [0, 1]'
+        assert isinstance(self.n_moments, int), 'moments must be an int'
+
+    def __make_legendre_coefficients(self):
+        moments = np.linspace(0, self.n_moments - 1, num=self.n_moments)
+        return (2 * moments + 1) * self.asymmetry ** moments
+
+    def __expand_coefficients(self):
+        coefficients = self.__make_legendre_coefficients()
+        radial_spectral_coefficients = self.expand_dimensions(coefficients)
+        normalized_rs_coefficients = self.normalize_coefficients(radial_spectral_coefficients)
+        layered_coefficients = self.expand_layers(normalized_rs_coefficients)
+        return self.sum_over_size(layered_coefficients)
+
+
+class EmpiricalPhaseFunction(PhaseFunction):
+    """ Construct an empirical phase function"""
+    def __init__(self, column, phase_function_file, particle_sizes_file=None, wavelengths_file=None):
+        """ Initialize the class
+
+        Parameters
+        ----------
+        column: Column
+            An aerosol column
+        phase_function_file: str
+            The complete path of the phase function file
+        particle_sizes_file: str, optional
+            The complete path of the particle sizes corresponding to the phase_function_file. Default is None
+        wavelengths_file: str, optional
+            The complete path of the wavelengths corresponding to the phase_function_file. Default is None
+        """
+        super().__init__(column)
         self.phase_function_file = phase_function_file
         self.particle_sizes_file = particle_sizes_file
         self.wavelengths_file = wavelengths_file
-        self.__assert_inputs_are_good()
+        self.__check_inputs()
 
-        self.phase_functions = self.__read_in_files(self.phase_function_file)
+        self.empirical_coefficients = self.__read_in_files(self.phase_function_file)
         self.particle_sizes = self.__read_in_files(self.particle_sizes_file)
         self.wavelengths = self.__read_in_files(self.wavelengths_file)
-        self.__assert_arrays_are_good()
+        self.__check_shapes_match()
 
-    def __assert_inputs_are_good(self):
-        assert isinstance(self.phase_function_file, str), 'phase_function_file needs to be a string'
-        assert isinstance(self.particle_sizes_file, str), 'particle_size_files needs to be a string'
-        assert isinstance(self.wavelengths_file, str), 'wavelengths_file needs to be a string'
+        self.coefficients = self.__expand_coefficients()
+
+    def __check_inputs(self):
+        assert isinstance(self.phase_function_file, str), 'phase_function_file must be a string'
+        assert isinstance(self.particle_sizes_file, (str, type(None))), 'particle_sizes_file must be a string'
+        assert isinstance(self.wavelengths_file, (str, type(None))), 'wavelengths_file must be a string'
 
     @staticmethod
     def __read_in_files(file):
         if file:
             return np.load(file)
-        else:
-            return None
 
-    def __assert_arrays_are_good(self):
-        if np.ndim(self.phase_functions) == 2:
-            if not self.particle_sizes:
-                assert len(self.particle_sizes) == self.phase_functions.shape[1], \
-                    'The shape of radii doesn\'t match the phase function dimension.'
-            elif not self.wavelengths:
-                assert len(self.wavelengths) == self.phase_functions.shape[1], \
-                    'The shape of wavelengths doesn\'t match the phase function dimension.'
-        elif np.ndim(self.phase_functions) == 3:
-            assert len(self.particle_sizes) == self.phase_functions.shape[1], \
-                'The shape of radii doesn\'t match the phase function dimension.'
-            assert len(self.wavelengths) == self.phase_functions.shape[2], \
-                'The shape of wavelengths doesn\'t match the phase function dimension.'
+    def __check_shapes_match(self):
+        if np.ndim(self.empirical_coefficients) == 3:
+            if self.particle_sizes is None:
+                raise SystemExit('You need to include particle size info!')
+            elif self.wavelengths is None:
+                raise SystemExit('You need to include wavelength info!')
+            n_sizes = self.particle_sizes.shape[0]
+            n_wavelengths = self.wavelengths.shape[0]
+            if n_sizes != self.empirical_coefficients.shape[1]:
+                raise SystemExit('The size dimension provided doesn\'t match the phase function file')
+            elif n_wavelengths != self.empirical_coefficients.shape[2]:
+                raise SystemExit('The wavelength dimension provided doesn\'t match the phase function file')
+        elif np.ndim(self.empirical_coefficients) == 2:
+            if self.particle_sizes is None and self.wavelengths is None:
+                raise SystemExit('You included too little information... you need to specify one of particle_size or wavelengths')
+            elif self.particle_sizes is not None and self.wavelengths is not None:
+                raise SystemExit('You included too much information... you need to specify one of particle_size or wavelengths')
+            if self.particle_sizes is None:
+                n_wavelengths = self.wavelengths.shape[0]
+                if n_wavelengths != self.empirical_coefficients.shape[1]:
+                    raise SystemExit('The wavelength dimension provided doesn\'t match the phase function file')
+            elif self.wavelengths is None:
+                n_sizes = self.particle_sizes.shape[0]
+                if n_sizes != self.empirical_coefficients.shape[1]:
+                    raise SystemExit('The size dimension provided doesn\'t match the phase function file')
+        elif np.ndim(self.empirical_coefficients) == 1:
+            if self.particle_sizes is not None:
+                raise SystemExit('If you only have phase functions independent of particle sizes, don\'t include sizes')
+            elif self.wavelengths is not None:
+                raise SystemExit('If you only have phase functions independent of wavelengths, don\'t include wavelengths')
 
-    def get_phase_function(self):
-        return self.phase_functions
+    def __expand_coefficients(self):
+        radial_spectral_coefficients = self.expand_dimensions(self.empirical_coefficients)
+        nearest_neighbor_rs_coefficients = self.__get_nearest_neighbor_phase_functions(radial_spectral_coefficients)
+        normalized_rs_coefficients = self.normalize_coefficients(nearest_neighbor_rs_coefficients)
+        layered_coefficients = self.expand_layers(normalized_rs_coefficients)
+        return self.sum_over_size(layered_coefficients)
 
-
-class NearestNeighborEmpiricalPhaseFunctions:
-    def __init__(self, empirical_phase_function, column):
-        self.epf = empirical_phase_function
-        self.column = column
-        assert isinstance(self.epf, EmpiricalPhaseFunctions), 'input needs to be an instance of EmpiricalPhaseFunction'
-        assert isinstance(self.column, Column), 'column needs to be an instance of Column'
-        self.nearest_neighbor_phase_functions = self.__get_nearest_neighbor_phase_functions()
-
-    def __get_nearest_neighbor_phase_functions(self):
-        radius_indices = self.__get_nearest_indices(self.column.particle_sizes, self.epf.particle_sizes)
-        wavelength_indices = self.__get_nearest_indices(self.column.aerosol.wavelengths, self.epf.wavelengths)
-        all_phase_functions = self.epf.phase_functions
-
-        # This solution reads awfully
-        # https://stackoverflow.com/questions/35607818/index-a-2d-numpy-array-with-2-lists-of-indices
-        #moments_inds = np.linspace(0, self.n_moments-1, num=self.n_moments, dtype=int)
-        #nearest_neighbor_phase_functions = all_phase_functions[np.ix_(moments_inds, radius_indices, wavelength_indices)]
-
-        # This solution reads cleaner but I'm not sure why I cannot do this on one line...
-        nearest_neighbor_phase_functions = all_phase_functions[:, radius_indices, :]
-        nearest_neighbor_phase_functions = nearest_neighbor_phase_functions[:, :, wavelength_indices]
-        return nearest_neighbor_phase_functions
+    def __get_nearest_neighbor_phase_functions(self, coefficients):
+        radius_indices = self.__get_nearest_indices(self.column.particle_sizes, self.particle_sizes)
+        wavelength_indices = self.__get_nearest_indices(self.column.aerosol.wavelengths, self.wavelengths)
+        return coefficients[:, radius_indices, :][:, :, wavelength_indices]
 
     @staticmethod
     def __get_nearest_indices(values, array):
         diff = (values.reshape(1, -1) - array.reshape(-1, 1))
         indices = np.abs(diff).argmin(axis=0)
         return indices
-
-    def get_phase_function(self):
-        return self.nearest_neighbor_phase_functions
-
-
-class ResizedPhaseFunctions:
-    def __init__(self, phase_functions, n_moments):
-        # This line works ONLY because both EPF and NNEPF have the get_phase_function() methods
-        self.phase_functions = phase_functions.get_phase_function()
-        self.n_moments = n_moments
-        self.__assert_inputs_are_good()
-
-        self.__phase_function_matching_moments = self.__match_n_moments()
-        self.normalized_phase_function = self.__normalize_phase_functions()
-
-    def __assert_inputs_are_good(self):
-        assert isinstance(self.n_moments, int), 'n_moments needs to be an int'
-
-    def __match_n_moments(self):
-        if self.phase_functions.shape[0] < self.n_moments:
-            return self.__add_moments()
-        else:
-            return self.__trim_moments()
-
-    def __add_moments(self):
-        starting_inds = np.linspace(self.phase_functions.shape[0], self.phase_functions.shape[0],
-                                    num=self.n_moments - self.phase_functions.shape[0], dtype=int)
-        return np.insert(self.phase_functions, starting_inds, 0, axis=0)
-
-    def __trim_moments(self):
-        return self.phase_functions[:self.n_moments]
-
-    def __normalize_phase_functions(self):
-        # Divide the k-th moment by 2k+1
-        normalization = np.linspace(0, self.n_moments-1, num=self.n_moments)*2 + 1
-        return (self.__phase_function_matching_moments.T / normalization).T
-
-
-class StaticEmpiricalPhaseFunction:
-    def __init__(self, phase_function_file, column, n_moments, particle_sizes_file='', wavelengths_file=''):
-        self.phase_function_file = phase_function_file
-        self.column = column
-        self.n_moments = n_moments
-        self.particle_sizes_file = particle_sizes_file
-        self.wavelengths_file = wavelengths_file
-        self.__rn_phase_function = self.__resize_and_normalize()
-        self.__expanded_moments = self.__expand_layers()
-        self.phase_function = self.__get_scattering_moments()
-
-    def __resize_and_normalize(self):
-        static_phase_function = EmpiricalPhaseFunctions(self.phase_function_file,
-                                                        particle_sizes_file=self.particle_sizes_file,
-                                                        wavelengths_file=self.wavelengths_file)
-        resized_phase_function = ResizedPhaseFunctions(static_phase_function, self.n_moments)
-        return resized_phase_function.normalized_phase_function
-
-    def __expand_layers(self):
-        return np.broadcast_to(self.__rn_phase_function[:, None, None], (self.n_moments, self.column.layers.n_layers,
-                                                                      len(self.column.aerosol.wavelengths)))
-
-    def __get_scattering_moments(self):
-        return self.__expanded_moments * self.column.hyperspectral_scattering_optical_depths
-
-
-class HyperradialHyperspectralEmpiricalPhaseFunction:
-    def __init__(self, phase_function_file, column, n_moments, particle_sizes_file='', wavelengths_file=''):
-        self.phase_function_file = phase_function_file
-        self.column = column
-        self.n_moments = n_moments
-        self.particle_sizes_file = particle_sizes_file
-        self.wavelengths_file = wavelengths_file
-        self.__rn_phase_function = self.resize_and_normalize()
-        self.hyperspectral_hyperradial_expanded_pf = self.expand_layers()
-        self.hyperspectral_expanded_pf = self.__weighted_sum_over_size()
-
-    def resize_and_normalize(self):
-        static_phase_function = EmpiricalPhaseFunctions(self.phase_function_file,
-                                                        particle_sizes_file=self.particle_sizes_file,
-                                                        wavelengths_file=self.wavelengths_file)
-        nn_phase_function = NearestNeighborEmpiricalPhaseFunctions(static_phase_function, self.column)
-        resized_phase_function = ResizedPhaseFunctions(nn_phase_function, self.n_moments)
-        return resized_phase_function.normalized_phase_function
-
-    def expand_layers(self):
-        rnpf = self.__rn_phase_function
-        expanded_phase_function = np.broadcast_to(rnpf[:, None, :, :], (self.n_moments, self.column.layers.n_layers,
-                                                                        rnpf.shape[1], rnpf.shape[2]))
-        return expanded_phase_function
-
-    def __weighted_sum_over_size(self):
-        # Calculate C_sca / C_ext * tau_aerosol * PMOM_aerosol and weight its sum over size
-        aerosol_polynomial_moments = self.hyperspectral_hyperradial_expanded_pf * \
-                                     self.column.multisize_hyperspectral_scattering_optical_depths
-        return np.average(aerosol_polynomial_moments, axis=2, weights=self.column.column_integrated_optical_depths)

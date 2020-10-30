@@ -16,24 +16,24 @@ Test:
 --- Make sure if I have 100 particle sizes, things don't go haywire...
 
 Fix:
---- In EmpiricalPhaseFunction, "legendre_moments" might be better than "phase_function" since they're not phase functions
 --- Remove old phase functions + generally unnecessary aux files
 
 Work on next:
---- Vertical profile (from GCM) injection. Then compare ice to disort_multi
---- Check that the model_atmosphere takes care of aerosols with different n_moments?
---- Add InterpPhaseFunction. Then update HHEPF to take either 'nn' or 'interpolated' or something like that
---- Add HG
---- Get ice PMOM (if it exists)
---- Cleanup all phase_function stuff: better naming conventions, public methods to get parameters?, assert things
-    can be EPF or HG
+--- Remake documentation
+--- Email Mike about everything + update draft
+--- Make ice PMOM
+--- Add ability to directly input np array to phase_functions.py
+--- Thoroughly test __check_shapes_match()
+--- Add plain text phsfn reader
+--- Parallelize over wavelength / observations (pixels)
 --- Ensure Column can accommodate different profiles for different particle sizes
+--- OD cannot be 0 since weights sum to 0
 --- Add ozone
 --- Fix strings to f strings
+--- Fix defining self.wavelenghts / self.particle_sizes in PhaseFunction.expand_dimensions()
 --- assert() might be better to raise ValueError('myMessage') or something
 --- Move all the asserts in __init__ into a function... since they just check the inputs are good
 --- Solver
---- Parallelize over wavelength
 --- numba?
 --- Add checks throughout to ensure the same wavelengths, moments, etc. are used. We don't want one aerosol observed
     at different wavelenghts than another. Also ensure they CAN have different r_effective
@@ -41,3 +41,5 @@ Work on next:
 --- Postprocessing
 --- Correlated k
 --- T-matrix?
+--- Set a max_moments in phase_functions.py in case user doesn't believe all the moments they have
+--- Rewrite the test cases using my objects

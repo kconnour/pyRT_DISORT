@@ -77,9 +77,29 @@ class ModelAtmosphere:
                                                              self.hyperspectral_total_optical_depths
 
     def __calculate_hyperspectral_legendre_coefficients(self):
+        max_moments = self.__get_max_moments()
+        self.__match_moments(self.constituent_legendre_coefficients, max_moments)
         self.hyperspectral_legendre_moments = sum(self.constituent_legendre_coefficients) / \
                                               (self.hyperspectral_total_optical_depths *
-                                               self.hyperspectral_total_single_scattering_albedos)</code></pre>
+                                               self.hyperspectral_total_single_scattering_albedos)
+
+    def __get_max_moments(self):
+        max_moments = 0
+        for constituent in self.constituent_legendre_coefficients:
+            if constituent.shape[0] &gt; max_moments:
+                max_moments = constituent.shape[0]
+        return max_moments
+
+    def __match_moments(self, phase_functions, max_moments):
+        for counter, pf in enumerate(phase_functions):
+            if pf.shape[0] &lt; max_moments:
+                self.constituent_legendre_coefficients[counter] = self.__add_moments(pf, max_moments)
+
+    @staticmethod
+    def __add_moments(phase_function, max_moments):
+        starting_inds = np.linspace(phase_function.shape[0], phase_function.shape[0],
+                                    num=max_moments - phase_function.shape[0], dtype=int)
+        return np.insert(phase_function, starting_inds, 0, axis=0)</code></pre>
 </details>
 </section>
 <section>
@@ -147,9 +167,29 @@ class ModelAtmosphere:
                                                              self.hyperspectral_total_optical_depths
 
     def __calculate_hyperspectral_legendre_coefficients(self):
+        max_moments = self.__get_max_moments()
+        self.__match_moments(self.constituent_legendre_coefficients, max_moments)
         self.hyperspectral_legendre_moments = sum(self.constituent_legendre_coefficients) / \
                                               (self.hyperspectral_total_optical_depths *
-                                               self.hyperspectral_total_single_scattering_albedos)</code></pre>
+                                               self.hyperspectral_total_single_scattering_albedos)
+
+    def __get_max_moments(self):
+        max_moments = 0
+        for constituent in self.constituent_legendre_coefficients:
+            if constituent.shape[0] &gt; max_moments:
+                max_moments = constituent.shape[0]
+        return max_moments
+
+    def __match_moments(self, phase_functions, max_moments):
+        for counter, pf in enumerate(phase_functions):
+            if pf.shape[0] &lt; max_moments:
+                self.constituent_legendre_coefficients[counter] = self.__add_moments(pf, max_moments)
+
+    @staticmethod
+    def __add_moments(phase_function, max_moments):
+        starting_inds = np.linspace(phase_function.shape[0], phase_function.shape[0],
+                                    num=max_moments - phase_function.shape[0], dtype=int)
+        return np.insert(phase_function, starting_inds, 0, axis=0)</code></pre>
 </details>
 <h3>Methods</h3>
 <dl>

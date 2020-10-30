@@ -12,7 +12,7 @@ from pyRT_DISORT.preprocessing.model.atmosphere import Layers
 from pyRT_DISORT.preprocessing.model.aerosol_column import Column, Conrath, GCMProfile
 from pyRT_DISORT.preprocessing.observation import Observation
 from pyRT_DISORT.preprocessing.controller.output import Output
-from pyRT_DISORT.preprocessing.model.phase_function import StaticEmpiricalPhaseFunction, HyperradialHyperspectralEmpiricalPhaseFunction
+from pyRT_DISORT.preprocessing.model.phase_function import HenyeyGreenstein
 from pyRT_DISORT.preprocessing.controller.size import Size
 from pyRT_DISORT.preprocessing.controller.unsure import Unsure
 from pyRT_DISORT.preprocessing.controller.control import Control
@@ -20,21 +20,19 @@ from pyRT_DISORT.preprocessing.model.boundary_conditions import BoundaryConditio
 from pyRT_DISORT.preprocessing.model.rayleigh import RayleighCo2
 from pyRT_DISORT.data.get_data import get_data_path
 from pyRT_DISORT.preprocessing.model.surface import HapkeHG2Roughness
-from pyRT_DISORT.preprocessing.model.phsfn import PhaseFunction
-from pyRT_DISORT.preprocessing.model.phsfn1 import HenyeyGreenstein, EmpiricalPhaseFunction
+
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Make the model atmosphere
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Define some files I'll need
 
-phase = os.path.join(get_data_path(), 'planets/mars/aux/dust_phase_functions.npy')
-phase_radii = os.path.join(get_data_path(), 'planets/mars/aux/dust_phase_function_radii.npy')
-phase_wavs = os.path.join(get_data_path(), 'planets/mars/aux/dust_phase_function_wavelengths.npy')
+dust_phase = os.path.join(get_data_path(), 'planets/mars/aux/dust_phase_functions.npy')
+dust_phase_radii = os.path.join(get_data_path(), 'planets/mars/aux/dust_phase_function_radii.npy')
+dust_phase_wavs = os.path.join(get_data_path(), 'planets/mars/aux/dust_phase_function_wavelengths.npy')
 ice_coeff = os.path.join(get_data_path(), 'planets/mars/aux/legendre_coeff_h2o_ice.npy')
 dustfile = os.path.join(get_data_path(), 'planets/mars/aux/dust.npy')
 icefile = os.path.join(get_data_path(), 'planets/mars/aux/ice.npy')
-#atm = os.path.join(get_data_path(), 'planets/mars/aux/mars_atm.npy')
 atm = os.path.join(get_data_path(), 'planets/mars/aux/mars_atm_copy.npy')
 altitude_map = os.path.join(get_data_path(), 'planets/mars/aux/altitude_map.npy')
 solar_spec = os.path.join(get_data_path(), 'aux/solar_spectrum.npy')
@@ -50,57 +48,26 @@ lay = Layers(atm)
 
 # Make a Conrath dust profile, then make a column of dust with that profile
 dust_conrath = Conrath(lay, 10, 0.5)   # 10 = scale height, 0.5 = Conrath nu
-dust_column = Column(dust, lay, dust_conrath, np.array([1, 1.1, 1.2]), np.array([0.8, 0.2, 0.05]))  # r_eff = 1, column OD = 0.8
+dust_column = Column(dust, lay, dust_conrath, np.array([1]), np.array([0.8]))  # r_eff = 1, column OD = 0.8
 # Make a custom ice profile, then make a column of ice with that profile
 iceprof = np.where((25 < lay.altitude_layers) & (75 > lay.altitude_layers), 1, 0)   # This is a somewhat cryptic way of making a constant profile at altitudes between 25--75 km
 ice_profile = GCMProfile(lay, iceprof)
-ice_column = Column(ice, lay, ice_profile, np.array([2]), np.array([5]))
+ice_column = Column(ice, lay, ice_profile, np.array([2]), np.array([0.5]))
 
-# Make the phase functions. For dust I have phsfn(particle size, wavelengths) but for ice I just have a 1D array of moments
-n_moments = 20
-dust_hhpf = HyperradialHyperspectralEmpiricalPhaseFunction(phase, dust_column, n_moments, phase_radii, phase_wavs)
-ice_pf = StaticEmpiricalPhaseFunction(ice_coeff, ice_column, n_moments)
-
-# TEST: HG
-#hg = HenyeyGreenstein(dust_column, 0.5)
-#p = PhaseFunction('hg', dust_column, asymmetry=0.5, hg_moments=1000)
-
-# TEST: 1D phase function
-#ice_phase = PhaseFunction('epf', ice_column, phase_function_file=ice_coeff)
-#ice_new = EmpiricalPhaseFunction(ice_column, phase_function_file=ice_coeff)
-
-# Test 2D: phase function (incomplete)
-#p = PhaseFunction('epf', dust_column, phase_function_file=phase, wavelengths_file=dust_phase_wavs)
-
-# Test: 3D phase function
-dust_phase = PhaseFunction('epf', dust_column, phase_function_file=phase, particle_sizes_file=phase_radii, wavelengths_file=phase_wavs)
-dust_new = EmpiricalPhaseFunction(dust_column, phase_function_file=phase, particle_sizes_file=phase_radii, wavelengths_file=phase_wavs)
-
-print(dust_phase.final_thing.shape)
-print(dust_new.coefficients.shape)
-print(np.array_equal(dust_phase.final_thing, dust_new.coefficients))
-
-
-
-
-
-
-
-raise SystemExit(42)
+# Make the phase functions. For this test case it's just HG
+n_moments = 128
+dust_hg = HenyeyGreenstein(dust_column, 0.5, n_moments=n_moments)   # 0.5 = asymmetry parameter
+ice_hg = HenyeyGreenstein(ice_column, 0.2, n_moments=n_moments)
 
 # Make Rayleigh stuff
 rco2 = RayleighCo2(wavs, lay, n_moments)
 
 # Make the model
 model = ModelAtmosphere()
-#dust_info = (dust_column.hyperspectral_total_optical_depths, dust_column.hyperspectral_scattering_optical_depths,
-#             dust_hhpf.hyperspectral_expanded_pf)
 dust_info = (dust_column.hyperspectral_total_optical_depths, dust_column.hyperspectral_scattering_optical_depths,
-             dust_phase.final_thing)
-#ice_info = (ice_column.hyperspectral_total_optical_depths, ice_column.hyperspectral_scattering_optical_depths,
-#            ice_pf.phase_function)
+             dust_hg.coefficients)
 ice_info = (ice_column.hyperspectral_total_optical_depths, ice_column.hyperspectral_scattering_optical_depths,
-            ice_phase.final_thing)
+            ice_hg.coefficients)
 rayleigh_info = (rco2.hyperspectral_optical_depths, rco2.hyperspectral_optical_depths, rco2.hyperspectral_layered_phase_function)
 
 # Add dust and ice and Rayleigh scattering to the model
@@ -113,42 +80,6 @@ model.compute_model()
 optical_depths = model.hyperspectral_total_optical_depths[:, 1]
 ssa = model.hyperspectral_total_single_scattering_albedos[:, 1]
 polynomial_moments = model.hyperspectral_legendre_moments[:, :, 1]
-
-# Test case 0: Only Rayleigh scattering. Just comment out line 51: model.add_constituent(dust_info) and 88: raise SystemExit
-# All I'll say is that at many wavelengths UU matched disort_multi to at least 3 decimal places
-
-# Test case 1.1: Rayleigh scattering is negligible (such as at 9.3 microns) so dust should dominate the ODs
-#print(rco2.hyperspectral_optical_depths[:, 1])
-#print(dust_column.hyperspectral_total_optical_depths[:, 1])
-#print(model.hyperspectral_total_optical_depths[:, 1])
-
-# Test case 1.2: Rayleigh scattering is negligible (such as at 9.3 microns) so dust should dominate the SSAs
-#print(model.hyperspectral_total_single_scattering_albedos[:, 1])
-#print(dust.hyperspectral_single_scattering_albedos[1])
-
-# Test case 2.1: Rayleigh scattering is significant (such as at 150 nm) so dust + Rayleigh should contribute to the ODs
-#print(rco2.hyperspectral_optical_depths[:, 0])
-#print(dust_column.hyperspectral_total_optical_depths[:, 0])
-#print(model.hyperspectral_total_optical_depths[:, 0])
-
-# Test case 2.2: Rayleigh scattering is significant (such as at 150 nm) so the SSA should be somewhat greater than the dust SSA
-#print(rco2.hyperspectral_optical_depths[:, 0])     # Rayleigh OD is 100% scattering OD
-#print(dust_column.hyperspectral_scattering_optical_depths[:, 0])    # Get the scattering portion of the dust OD
-#print(model.hyperspectral_total_single_scattering_albedos[:, 0])    # Where Rayleigh OD dominates, SSA=1
-#print(dust.hyperspectral_single_scattering_albedos[0])   # Rayleigh SSA=1 so this number should always be less than the column SSA
-
-# Test case 3: dust + Rayleigh
-# I'm running ./disort_multi -dust_conrath 0.5, 10 -dust_phsfn 98 -use_hg2_thetabar -NSTR 16 -NMOM 128 < testInput.txt
-# phsfn_98.dat contain the 65 moments at reff = 1 micron and wavelength = 9.3 microns
-# testInput.txt is: 9.3, 0.5, 10, 30, 50, 40, 20, 0.8, 0, 0
-#                   0.12, 0.75, 0.9, 1, 0.04, 85.9437
-
-# Test case 4: dust + ice + Rayleigh
-# I'm running ./disort_multi -dust_conrath 0.5, 10 -dust_phsfn 98 -ice_phsfn 99 -use_hg2_thetabar -NSTR 16 -zi_top 75 -NMOM 128 < testInput.txt
-# phsfn_98.dat contain the 65 moments at reff = 1 micron and wavelength = 9.3 microns
-# phsfn_99.dat contains the 128 moments I have for ice
-# testInput.txt is: 9.3, 0.5, 10, 30, 50, 40, 20, 0.8, 0.2, 0
-#                   0.12, 0.75, 0.5, 1, 0.04, 28.6479
 
 # Get a miscellaneous variable that I'll need later
 temperatures = lay.temperature_boundaries
@@ -259,8 +190,8 @@ rfldir, rfldn, flup, dfdt, uavg, uu, albmed, trnmed = disort.disort(usrang, usrt
 print(uu[0, :15, 0])   # shape: (1, 81, 1)
 
 
-# I'm running ./disort_multi -dust_conrath 0.5, 10 -dust_phsfn 98 -ice_phsfn 99 -use_hg2_thetabar -NSTR 16 -zi_top 75 < testInput.txt
-# phsfn_98.dat contain the 65 moments at reff = 1 micron and wavelength = 9.3 microns
-# phsfn_99.dat contains the 128 moments I have for ice
-# testInput.txt is: 9.3, 0.5, 10, 30, 50, 40, 20, 0.8, 0.2, 0
+# This code gives: 0.02381533
+# disort_multi gives: 0.0236781761     (we differ by 0.6%)
+# I'm running ./disort_multi -dust_conrath 0.5, 10 -dust_hg 0.5 -ice_hg 0.2 -ice_phsfn 3 -use_hg2_thetabar -NSTR 16 -zi_top 75 -NMOM 128 < testInput.txt
+# testInput.txt is: 9.3, 0.5, 10, 30, 50, 40, 20, 0.8, 0.5, 0
 #                   0.12, 0.75, 0.5, 1, 0.04, 28.6479

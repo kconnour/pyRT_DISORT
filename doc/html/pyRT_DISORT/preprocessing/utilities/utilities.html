@@ -63,7 +63,14 @@ def turn_tmqphsfn_to_npy(file_path):
         coeff.append(a)
 
     # This unravels a list and stores it as an array
-    return np.array([co for all_coeff in coeff for co in all_coeff])</code></pre>
+    return np.array([co for all_coeff in coeff for co in all_coeff])
+
+
+short_wavs = [0.2, 0.255, 0.3, 0.336, 0.4, 0.5, 0.588, 0.6, 0.631, 0.7, 0.763, 0.8, 0.835, 0.9, 0.953]
+wavs = np.linspace(1, 50, num=(50-1)*10+1)
+wavs = np.concatenate((short_wavs, wavs))
+
+radii = np.array([1, 2, 5, 10, 15, 20, 30, 40, 50, 60, 80])</code></pre>
 </details>
 </section>
 <section>

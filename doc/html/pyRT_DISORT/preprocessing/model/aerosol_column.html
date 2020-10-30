@@ -37,42 +37,26 @@ from pyRT_DISORT.preprocessing.model.atmosphere import Layers
 class Column:
     &#34;&#34;&#34;Create an aerosol column to hold the aerosol&#39;s properties in each layer. Right now it constructs a column
     using Conrath parameters. Will be extended to allow user input vertical distributions. &#34;&#34;&#34;
-    def __init__(self, aerosol, layers, aerosol_scale_height, conrath_nu, particle_sizes,
-                 column_integrated_optical_depths):
+    def __init__(self, aerosol, layers, profile, particle_sizes, column_integrated_optical_depths):
         &#34;&#34;&#34; Initialize the class
 
         Parameters
         ----------
         aerosol: Aerosol
-            An aerosol object
+            The aerosol for which this class will construct a column
         layers: Layers
-            A Layer object
-        aerosol_scale_height: float
-            The scale height of the aerosol
-        conrath_nu: float
-            The Conrath nu parameter
+            The equations of state in each of the layers in the plane parallel atmosphere
         particle_sizes: np.ndarray
-            The effective radii of this aerosol
+            The effective radii of this aerosol [microns]
         column_integrated_optical_depths: np.ndarray
             The column-integrated optical depth at the effective radii
         &#34;&#34;&#34;
         self.aerosol = aerosol
         self.layers = layers
-        self.H = aerosol_scale_height
-        self.nu = conrath_nu
+        self.profile = profile
         self.particle_sizes = particle_sizes
         self.column_integrated_optical_depths = column_integrated_optical_depths
-
-        assert isinstance(self.aerosol, Aerosol), &#39;aerosol needs to be an instance of Aerosol.&#39;
-        assert isinstance(self.layers, Layers), &#39;layers needs to be an instance of Layers.&#39;
-        assert isinstance(self.H, (int, float)), &#39;aerosol_scale_height needs to be an int or float.&#39;
-        assert isinstance(self.nu, (int, float)), &#39;conratu_nu needs to be an int or float.&#39;
-        self.__check_conrath_parameters_do_not_suck()
-        assert isinstance(self.particle_sizes, np.ndarray), &#39;particle_sizes needs to be a numpy array.&#39;
-        assert isinstance(self.column_integrated_optical_depths, np.ndarray), \
-            &#39;column_integrated_optical_depths needs to be a numpy array&#39;
-        assert len(self.particle_sizes) == len(self.column_integrated_optical_depths), \
-            &#39;particle_sizes and column_integrated_optical_depths need to be the same length.&#39;
+        self.__check_input_types()
 
         self.multisize_hyperspectral_total_optical_depths = \
             self.__calculate_multisize_hyperspectral_total_optical_depths()
@@ -80,6 +64,51 @@ class Column:
             self.__calculate_multisize_hyperspectral_scattering_optical_depths()
         self.hyperspectral_total_optical_depths = self.__reduce_total_optical_depths_size_dim()
         self.hyperspectral_scattering_optical_depths = self.__reduce_scattering_optical_depths_size_dim()
+
+    def __check_input_types(self):
+        assert isinstance(self.aerosol, Aerosol), &#39;aerosol needs to be an instance of Aerosol.&#39;
+        assert isinstance(self.particle_sizes, np.ndarray), &#39;particle_sizes needs to be a numpy array.&#39;
+        assert isinstance(self.profile, (Conrath, GCMProfile)), &#39;profile needs to be Conrath or GCMProfile&#39;
+        assert isinstance(self.column_integrated_optical_depths, np.ndarray), \
+            &#39;column_integrated_optical_depths needs to be a numpy array&#39;
+        assert len(self.particle_sizes) == len(self.column_integrated_optical_depths), \
+            &#39;particle_sizes and column_integrated_optical_depths need to be the same length.&#39;
+
+    def __calculate_multisize_hyperspectral_total_optical_depths(self):
+        vertical_mixing_ratio = self.profile.get_profile()
+        dust_scaling = np.sum(self.layers.column_density_layers * vertical_mixing_ratio)
+        multisize_hyperspectral_total_optical_depths = np.multiply.outer(
+            np.outer(vertical_mixing_ratio * self.layers.column_density_layers, self.column_integrated_optical_depths),
+            self.aerosol.extinction_ratios) / dust_scaling
+
+        return multisize_hyperspectral_total_optical_depths
+
+    def __calculate_multisize_hyperspectral_scattering_optical_depths(self):
+        return self.multisize_hyperspectral_total_optical_depths * self.aerosol.hyperspectral_single_scattering_albedos
+
+    def __reduce_total_optical_depths_size_dim(self):
+        return np.sum(self.multisize_hyperspectral_total_optical_depths, axis=1)
+
+    def __reduce_scattering_optical_depths_size_dim(self):
+        return np.average(self.multisize_hyperspectral_scattering_optical_depths, axis=1,
+                          weights=self.column_integrated_optical_depths)
+
+
+class Conrath:
+    def __init__(self, layers, aerosol_scale_height, conrath_nu):
+        self.H = aerosol_scale_height
+        self.nu = conrath_nu
+        self.layers = layers
+
+        self.__check_input_types()
+        self.__check_conrath_parameters_do_not_suck()
+
+        self.vertical_profile = self.__make_conrath_profile()
+
+    def __check_input_types(self):
+        assert isinstance(self.H, (int, float)), &#39;aerosol_scale_height needs to be an int or float.&#39;
+        assert isinstance(self.nu, (int, float)), &#39;conratu_nu needs to be an int or float.&#39;
+        assert isinstance(self.layers, Layers), &#39;layers needs to be an instance of Layers.&#39;
 
     def __check_conrath_parameters_do_not_suck(self):
         if np.isnan(self.H):
@@ -105,26 +134,21 @@ class Column:
         fractional_mixing_ratio = np.exp(self.nu * (1 - np.exp(self.layers.altitude_layers / self.H)))
         return fractional_mixing_ratio
 
-    def __calculate_multisize_hyperspectral_total_optical_depths(self, optical_depth_minimum=10**-7):
-        vertical_mixing_ratio = self.__make_conrath_profile()
-        dust_scaling = np.sum(self.layers.column_density_layers * vertical_mixing_ratio)
-        multisize_hyperspectral_total_optical_depths = np.multiply.outer(
-            np.outer(vertical_mixing_ratio * self.layers.column_density_layers, self.column_integrated_optical_depths),
-            self.aerosol.extinction_ratios) / dust_scaling
+    def get_profile(self):
+        return self.vertical_profile
 
-        # Make sure each grid point is at least optical_depth_minimum
-        return np.where(multisize_hyperspectral_total_optical_depths &lt; optical_depth_minimum, optical_depth_minimum,
-                        multisize_hyperspectral_total_optical_depths)
 
-    def __calculate_multisize_hyperspectral_scattering_optical_depths(self):
-        return self.multisize_hyperspectral_total_optical_depths * self.aerosol.hyperspectral_single_scattering_albedos
+class GCMProfile:
+    def __init__(self, layers, profile):
+        self.layers = layers
+        self.profile = profile
 
-    def __reduce_total_optical_depths_size_dim(self):
-        return np.sum(self.multisize_hyperspectral_total_optical_depths, axis=1)
+    def __check_input_types(self):
+        assert isinstance(self.layers, Layers), &#39;layers needs to be an instance of Layers&#39;
+        assert isinstance(self.profile, np.ndarray), &#39;profiles needs to be a numpy array&#39;
 
-    def __reduce_scattering_optical_depths_size_dim(self):
-        return np.average(self.multisize_hyperspectral_scattering_optical_depths, axis=1,
-                          weights=self.column_integrated_optical_depths)</code></pre>
+    def get_profile(self):
+        return self.profile</code></pre>
 </details>
 </section>
 <section>
@@ -138,7 +162,7 @@ class Column:
 <dl>
 <dt id="pyRT_DISORT.preprocessing.model.aerosol_column.Column"><code class="flex name class">
 <span>class <span class="ident">Column</span></span>
-<span>(</span><span>aerosol, layers, aerosol_scale_height, conrath_nu, particle_sizes, column_integrated_optical_depths)</span>
+<span>(</span><span>aerosol, layers, profile, particle_sizes, column_integrated_optical_depths)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Create an aerosol column to hold the aerosol's properties in each layer. Right now it constructs a column
@@ -147,15 +171,11 @@ using Conrath parameters. Will be extended to allow user input vertical distribu
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>aerosol</code></strong> :&ensp;<code>Aerosol</code></dt>
-<dd>An aerosol object</dd>
+<dd>The aerosol for which this class will construct a column</dd>
 <dt><strong><code>layers</code></strong> :&ensp;<code>Layers</code></dt>
-<dd>A Layer object</dd>
-<dt><strong><code>aerosol_scale_height</code></strong> :&ensp;<code>float</code></dt>
-<dd>The scale height of the aerosol</dd>
-<dt><strong><code>conrath_nu</code></strong> :&ensp;<code>float</code></dt>
-<dd>The Conrath nu parameter</dd>
+<dd>The equations of state in each of the layers in the plane parallel atmosphere</dd>
 <dt><strong><code>particle_sizes</code></strong> :&ensp;<code>np.ndarray</code></dt>
-<dd>The effective radii of this aerosol</dd>
+<dd>The effective radii of this aerosol [microns]</dd>
 <dt><strong><code>column_integrated_optical_depths</code></strong> :&ensp;<code>np.ndarray</code></dt>
 <dd>The column-integrated optical depth at the effective radii</dd>
 </dl></div>
@@ -166,42 +186,26 @@ using Conrath parameters. Will be extended to allow user input vertical distribu
 <pre><code class="python">class Column:
     &#34;&#34;&#34;Create an aerosol column to hold the aerosol&#39;s properties in each layer. Right now it constructs a column
     using Conrath parameters. Will be extended to allow user input vertical distributions. &#34;&#34;&#34;
-    def __init__(self, aerosol, layers, aerosol_scale_height, conrath_nu, particle_sizes,
-                 column_integrated_optical_depths):
+    def __init__(self, aerosol, layers, profile, particle_sizes, column_integrated_optical_depths):
         &#34;&#34;&#34; Initialize the class
 
         Parameters
         ----------
         aerosol: Aerosol
-            An aerosol object
+            The aerosol for which this class will construct a column
         layers: Layers
-            A Layer object
-        aerosol_scale_height: float
-            The scale height of the aerosol
-        conrath_nu: float
-            The Conrath nu parameter
+            The equations of state in each of the layers in the plane parallel atmosphere
         particle_sizes: np.ndarray
-            The effective radii of this aerosol
+            The effective radii of this aerosol [microns]
         column_integrated_optical_depths: np.ndarray
             The column-integrated optical depth at the effective radii
         &#34;&#34;&#34;
         self.aerosol = aerosol
         self.layers = layers
-        self.H = aerosol_scale_height
-        self.nu = conrath_nu
+        self.profile = profile
         self.particle_sizes = particle_sizes
         self.column_integrated_optical_depths = column_integrated_optical_depths
-
-        assert isinstance(self.aerosol, Aerosol), &#39;aerosol needs to be an instance of Aerosol.&#39;
-        assert isinstance(self.layers, Layers), &#39;layers needs to be an instance of Layers.&#39;
-        assert isinstance(self.H, (int, float)), &#39;aerosol_scale_height needs to be an int or float.&#39;
-        assert isinstance(self.nu, (int, float)), &#39;conratu_nu needs to be an int or float.&#39;
-        self.__check_conrath_parameters_do_not_suck()
-        assert isinstance(self.particle_sizes, np.ndarray), &#39;particle_sizes needs to be a numpy array.&#39;
-        assert isinstance(self.column_integrated_optical_depths, np.ndarray), \
-            &#39;column_integrated_optical_depths needs to be a numpy array&#39;
-        assert len(self.particle_sizes) == len(self.column_integrated_optical_depths), \
-            &#39;particle_sizes and column_integrated_optical_depths need to be the same length.&#39;
+        self.__check_input_types()
 
         self.multisize_hyperspectral_total_optical_depths = \
             self.__calculate_multisize_hyperspectral_total_optical_depths()
@@ -209,6 +213,61 @@ using Conrath parameters. Will be extended to allow user input vertical distribu
             self.__calculate_multisize_hyperspectral_scattering_optical_depths()
         self.hyperspectral_total_optical_depths = self.__reduce_total_optical_depths_size_dim()
         self.hyperspectral_scattering_optical_depths = self.__reduce_scattering_optical_depths_size_dim()
+
+    def __check_input_types(self):
+        assert isinstance(self.aerosol, Aerosol), &#39;aerosol needs to be an instance of Aerosol.&#39;
+        assert isinstance(self.particle_sizes, np.ndarray), &#39;particle_sizes needs to be a numpy array.&#39;
+        assert isinstance(self.profile, (Conrath, GCMProfile)), &#39;profile needs to be Conrath or GCMProfile&#39;
+        assert isinstance(self.column_integrated_optical_depths, np.ndarray), \
+            &#39;column_integrated_optical_depths needs to be a numpy array&#39;
+        assert len(self.particle_sizes) == len(self.column_integrated_optical_depths), \
+            &#39;particle_sizes and column_integrated_optical_depths need to be the same length.&#39;
+
+    def __calculate_multisize_hyperspectral_total_optical_depths(self):
+        vertical_mixing_ratio = self.profile.get_profile()
+        dust_scaling = np.sum(self.layers.column_density_layers * vertical_mixing_ratio)
+        multisize_hyperspectral_total_optical_depths = np.multiply.outer(
+            np.outer(vertical_mixing_ratio * self.layers.column_density_layers, self.column_integrated_optical_depths),
+            self.aerosol.extinction_ratios) / dust_scaling
+
+        return multisize_hyperspectral_total_optical_depths
+
+    def __calculate_multisize_hyperspectral_scattering_optical_depths(self):
+        return self.multisize_hyperspectral_total_optical_depths * self.aerosol.hyperspectral_single_scattering_albedos
+
+    def __reduce_total_optical_depths_size_dim(self):
+        return np.sum(self.multisize_hyperspectral_total_optical_depths, axis=1)
+
+    def __reduce_scattering_optical_depths_size_dim(self):
+        return np.average(self.multisize_hyperspectral_scattering_optical_depths, axis=1,
+                          weights=self.column_integrated_optical_depths)</code></pre>
+</details>
+</dd>
+<dt id="pyRT_DISORT.preprocessing.model.aerosol_column.Conrath"><code class="flex name class">
+<span>class <span class="ident">Conrath</span></span>
+<span>(</span><span>layers, aerosol_scale_height, conrath_nu)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Conrath:
+    def __init__(self, layers, aerosol_scale_height, conrath_nu):
+        self.H = aerosol_scale_height
+        self.nu = conrath_nu
+        self.layers = layers
+
+        self.__check_input_types()
+        self.__check_conrath_parameters_do_not_suck()
+
+        self.vertical_profile = self.__make_conrath_profile()
+
+    def __check_input_types(self):
+        assert isinstance(self.H, (int, float)), &#39;aerosol_scale_height needs to be an int or float.&#39;
+        assert isinstance(self.nu, (int, float)), &#39;conratu_nu needs to be an int or float.&#39;
+        assert isinstance(self.layers, Layers), &#39;layers needs to be an instance of Layers.&#39;
 
     def __check_conrath_parameters_do_not_suck(self):
         if np.isnan(self.H):
@@ -234,27 +293,64 @@ using Conrath parameters. Will be extended to allow user input vertical distribu
         fractional_mixing_ratio = np.exp(self.nu * (1 - np.exp(self.layers.altitude_layers / self.H)))
         return fractional_mixing_ratio
 
-    def __calculate_multisize_hyperspectral_total_optical_depths(self, optical_depth_minimum=10**-7):
-        vertical_mixing_ratio = self.__make_conrath_profile()
-        dust_scaling = np.sum(self.layers.column_density_layers * vertical_mixing_ratio)
-        multisize_hyperspectral_total_optical_depths = np.multiply.outer(
-            np.outer(vertical_mixing_ratio * self.layers.column_density_layers, self.column_integrated_optical_depths),
-            self.aerosol.extinction_ratios) / dust_scaling
-
-        # Make sure each grid point is at least optical_depth_minimum
-        return np.where(multisize_hyperspectral_total_optical_depths &lt; optical_depth_minimum, optical_depth_minimum,
-                        multisize_hyperspectral_total_optical_depths)
-
-    def __calculate_multisize_hyperspectral_scattering_optical_depths(self):
-        return self.multisize_hyperspectral_total_optical_depths * self.aerosol.hyperspectral_single_scattering_albedos
-
-    def __reduce_total_optical_depths_size_dim(self):
-        return np.sum(self.multisize_hyperspectral_total_optical_depths, axis=1)
-
-    def __reduce_scattering_optical_depths_size_dim(self):
-        return np.average(self.multisize_hyperspectral_scattering_optical_depths, axis=1,
-                          weights=self.column_integrated_optical_depths)</code></pre>
+    def get_profile(self):
+        return self.vertical_profile</code></pre>
 </details>
+<h3>Methods</h3>
+<dl>
+<dt id="pyRT_DISORT.preprocessing.model.aerosol_column.Conrath.get_profile"><code class="name flex">
+<span>def <span class="ident">get_profile</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_profile(self):
+    return self.vertical_profile</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="pyRT_DISORT.preprocessing.model.aerosol_column.GCMProfile"><code class="flex name class">
+<span>class <span class="ident">GCMProfile</span></span>
+<span>(</span><span>layers, profile)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class GCMProfile:
+    def __init__(self, layers, profile):
+        self.layers = layers
+        self.profile = profile
+
+    def __check_input_types(self):
+        assert isinstance(self.layers, Layers), &#39;layers needs to be an instance of Layers&#39;
+        assert isinstance(self.profile, np.ndarray), &#39;profiles needs to be a numpy array&#39;
+
+    def get_profile(self):
+        return self.profile</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="pyRT_DISORT.preprocessing.model.aerosol_column.GCMProfile.get_profile"><code class="name flex">
+<span>def <span class="ident">get_profile</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_profile(self):
+    return self.profile</code></pre>
+</details>
+</dd>
+</dl>
 </dd>
 </dl>
 </section>
@@ -274,6 +370,18 @@ using Conrath parameters. Will be extended to allow user input vertical distribu
 <ul>
 <li>
 <h4><code><a title="pyRT_DISORT.preprocessing.model.aerosol_column.Column" href="#pyRT_DISORT.preprocessing.model.aerosol_column.Column">Column</a></code></h4>
+</li>
+<li>
+<h4><code><a title="pyRT_DISORT.preprocessing.model.aerosol_column.Conrath" href="#pyRT_DISORT.preprocessing.model.aerosol_column.Conrath">Conrath</a></code></h4>
+<ul class="">
+<li><code><a title="pyRT_DISORT.preprocessing.model.aerosol_column.Conrath.get_profile" href="#pyRT_DISORT.preprocessing.model.aerosol_column.Conrath.get_profile">get_profile</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="pyRT_DISORT.preprocessing.model.aerosol_column.GCMProfile" href="#pyRT_DISORT.preprocessing.model.aerosol_column.GCMProfile">GCMProfile</a></code></h4>
+<ul class="">
+<li><code><a title="pyRT_DISORT.preprocessing.model.aerosol_column.GCMProfile.get_profile" href="#pyRT_DISORT.preprocessing.model.aerosol_column.GCMProfile.get_profile">get_profile</a></code></li>
+</ul>
 </li>
 </ul>
 </li>
