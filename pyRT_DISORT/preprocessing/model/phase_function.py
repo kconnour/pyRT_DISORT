@@ -92,8 +92,7 @@ class PhaseFunction:
 class HenyeyGreenstein(PhaseFunction):
     """ Make a Henyey-Greenstein phase function"""
     def __init__(self, column, asymmetry, n_moments=1000):
-        """ Initialize the class
-
+        """
         Parameters
         ----------
         column: Column
@@ -127,42 +126,33 @@ class HenyeyGreenstein(PhaseFunction):
 
 class EmpiricalPhaseFunction(PhaseFunction):
     """ Construct an empirical phase function"""
-    def __init__(self, column, phase_function_file, particle_sizes_file=None, wavelengths_file=None):
+    def __init__(self, column, empirical_coefficients, particle_sizes=None, wavelengths=None):
         """ Initialize the class
 
         Parameters
         ----------
         column: Column
             An aerosol column
-        phase_function_file: str
-            The complete path of the phase function file
-        particle_sizes_file: str, optional
-            The complete path of the particle sizes corresponding to the phase_function_file. Default is None
-        wavelengths_file: str, optional
-            The complete path of the wavelengths corresponding to the phase_function_file. Default is None
+        empirical_coefficients: np.ndarray
+            A 1D, 2D, or 3D array of phase functions
+        particle_sizes: np.ndarray, optional
+            1D array of particle sizes corresponding to empirical_coefficients. Default is None
+        wavelengths: np.ndarray
+            1D array of wavelengths corresponding to empirical_coefficients Default is None
         """
         super().__init__(column)
-        self.phase_function_file = phase_function_file
-        self.particle_sizes_file = particle_sizes_file
-        self.wavelengths_file = wavelengths_file
+        self.empirical_coefficients = empirical_coefficients
+        self.particle_sizes = particle_sizes
+        self.wavelengths = wavelengths
         self.__check_inputs()
-
-        self.empirical_coefficients = self.__read_in_files(self.phase_function_file)
-        self.particle_sizes = self.__read_in_files(self.particle_sizes_file)
-        self.wavelengths = self.__read_in_files(self.wavelengths_file)
         self.__check_shapes_match()
 
         self.coefficients = self.__expand_coefficients()
 
     def __check_inputs(self):
-        assert isinstance(self.phase_function_file, str), 'phase_function_file must be a string'
-        assert isinstance(self.particle_sizes_file, (str, type(None))), 'particle_sizes_file must be a string'
-        assert isinstance(self.wavelengths_file, (str, type(None))), 'wavelengths_file must be a string'
-
-    @staticmethod
-    def __read_in_files(file):
-        if file:
-            return np.load(file)
+        assert isinstance(self.empirical_coefficients, np.ndarray), 'empirical_coefficients must be an array'
+        assert isinstance(self.particle_sizes, (np.ndarray, type(None))), 'particle_sizes must be an array'
+        assert isinstance(self.wavelengths, (np.ndarray, type(None))), 'wavelengths must be an array'
 
     def __check_shapes_match(self):
         if np.ndim(self.empirical_coefficients) == 3:

@@ -6,6 +6,8 @@ import numpy as np
 
 # Local imports
 import disort
+from pyRT_DISORT.data.get_data import get_data_path
+from pyRT_DISORT.preprocessing.utilities.utilities import ExternalFiles
 from pyRT_DISORT.preprocessing.model.model_atmosphere import ModelAtmosphere
 from pyRT_DISORT.preprocessing.model.aerosol import Aerosol
 from pyRT_DISORT.preprocessing.model.atmosphere import Layers
@@ -18,33 +20,31 @@ from pyRT_DISORT.preprocessing.controller.unsure import Unsure
 from pyRT_DISORT.preprocessing.controller.control import Control
 from pyRT_DISORT.preprocessing.model.boundary_conditions import BoundaryConditions
 from pyRT_DISORT.preprocessing.model.rayleigh import RayleighCo2
-from pyRT_DISORT.data.get_data import get_data_path
 from pyRT_DISORT.preprocessing.model.surface import HapkeHG2Roughness
-
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Make the model atmosphere
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Define some files I'll need
 
-dust_phase = os.path.join(get_data_path(), 'planets/mars/aux/dust_phase_functions.npy')
-dust_phase_radii = os.path.join(get_data_path(), 'planets/mars/aux/dust_phase_function_radii.npy')
-dust_phase_wavs = os.path.join(get_data_path(), 'planets/mars/aux/dust_phase_function_wavelengths.npy')
-ice_coeff = os.path.join(get_data_path(), 'planets/mars/aux/legendre_coeff_h2o_ice.npy')
-dustfile = os.path.join(get_data_path(), 'planets/mars/aux/dust.npy')
-icefile = os.path.join(get_data_path(), 'planets/mars/aux/ice.npy')
-atm = os.path.join(get_data_path(), 'planets/mars/aux/mars_atm_copy.npy')
-altitude_map = os.path.join(get_data_path(), 'planets/mars/aux/altitude_map.npy')
-solar_spec = os.path.join(get_data_path(), 'aux/solar_spectrum.npy')
-albedo_map = os.path.join(get_data_path(), 'planets/mars/aux/albedo_map.npy')
+dust_phase = ExternalFiles(os.path.join(get_data_path(), 'planets/mars/aux/dust_phase_functions.npy'))
+dust_phase_radii = ExternalFiles(os.path.join(get_data_path(), 'planets/mars/aux/dust_phase_function_radii.npy'))
+dust_phase_wavs = ExternalFiles(os.path.join(get_data_path(), 'planets/mars/aux/dust_phase_function_wavelengths.npy'))
+ice_coeff = ExternalFiles(os.path.join(get_data_path(), 'planets/mars/aux/legendre_coeff_h2o_ice.npy'))
+dustfile = ExternalFiles(os.path.join(get_data_path(), 'planets/mars/aux/dust.npy'))
+icefile = ExternalFiles(os.path.join(get_data_path(), 'planets/mars/aux/ice.npy'))
+atm = ExternalFiles(os.path.join(get_data_path(), 'planets/mars/aux/mars_atm_copy.npy'))
+altitude_map = ExternalFiles(os.path.join(get_data_path(), 'planets/mars/aux/altitude_map.npy'))
+solar_spec = ExternalFiles(os.path.join(get_data_path(), 'aux/solar_spectrum.npy'))
+albedo_map = ExternalFiles(os.path.join(get_data_path(), 'planets/mars/aux/albedo_map.npy'))
 
 # Make an aerosol that was observed at these wavelengths
 wavs = np.array([1, 9.3])
-dust = Aerosol(dustfile, wavs, 9.3)     # 9.3 is the wavelength reference
-ice = Aerosol(icefile, wavs, 12.1)
+dust = Aerosol(dustfile.array, wavs, 9.3)     # 9.3 is the wavelength reference
+ice = Aerosol(icefile.array, wavs, 12.1)
 
 # Get the atmospheric layers
-lay = Layers(atm)
+lay = Layers(atm.array)
 
 # Make a Conrath dust profile, then make a column of dust with that profile
 dust_conrath = Conrath(lay, 10, 0.5)   # 10 = scale height, 0.5 = Conrath nu
@@ -94,7 +94,7 @@ emission_angle = 40
 phase_angle = 20
 latitude = 10
 longitude = 30
-obs = Observation(short_wav, long_wav, sza, emission_angle, phase_angle, latitude, longitude, altitude_map, solar_spec)
+obs = Observation(short_wav, long_wav, sza, emission_angle, phase_angle, latitude, longitude, altitude_map.array, solar_spec.array)
 phi = np.array([obs.phi])
 low_wavenumber = obs.low_wavenumber
 high_wavenumber = obs.high_wavenumber

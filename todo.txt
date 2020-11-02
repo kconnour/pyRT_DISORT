@@ -19,12 +19,11 @@ Fix:
 --- Remove old phase functions + generally unnecessary aux files
 
 Work on next:
---- Remake documentation
---- Email Mike about everything + update draft
 --- Make ice PMOM
 --- Add ability to directly input np array to phase_functions.py
 --- Thoroughly test __check_shapes_match()
 --- Add plain text phsfn reader
+--- Combine radii + wavelengths into 1 phase function file
 --- Parallelize over wavelength / observations (pixels)
 --- Ensure Column can accommodate different profiles for different particle sizes
 --- OD cannot be 0 since weights sum to 0

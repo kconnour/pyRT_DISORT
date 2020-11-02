@@ -10,8 +10,8 @@ class Aerosol:
 
         Parameters
         ----------
-        aerosol_file: str
-            The complete path of the file containing the aerosol's properties
+        aerosol_file: np.ndarray
+            An array containing the aerosol's properties
         wavelengths: np.ndarray
             The wavelengths at which this aerosol was observed
         reference_wavelength: float
@@ -22,7 +22,7 @@ class Aerosol:
         self.wavelengths = wavelengths
         self.reference_wavelength = reference_wavelength
 
-        assert isinstance(self.aerosol_file, str), 'aerosol_file nees to be a string.'
+        assert isinstance(self.aerosol_file, np.ndarray), 'aerosol_file must be a numpy array.'
         assert isinstance(self.wavelengths, np.ndarray), 'wavelengths needs to be a numpy array.'
         assert isinstance(self.reference_wavelength, float), 'reference_wavelength needs to be a float.'
 
@@ -35,19 +35,18 @@ class Aerosol:
         self.hyperspectral_asymmetry_parameters = self.__calculate_hyperspectral_asymmetry_parameters()
 
     def __read_aerosol_file(self):
-        aerosol_properties = np.load(self.aerosol_file, allow_pickle=True)
-        wavelengths = aerosol_properties[:, 0]
-        c_extinction = aerosol_properties[:, 1]
-        c_scattering = aerosol_properties[:, 2]
-        kappa = aerosol_properties[:, 3]
-        g = aerosol_properties[:, 4]
+        wavelengths = self.aerosol_file[:, 0]
+        c_extinction = self.aerosol_file[:, 1]
+        c_scattering = self.aerosol_file[:, 2]
+        kappa = self.aerosol_file[:, 3]
+        g = self.aerosol_file[:, 4]
 
-        if aerosol_properties.shape[1] == 5:
+        if self.aerosol_file.shape[1] == 5:
             p_max = np.array([])
             theta_max = np.array([])
         else:
-            p_max = aerosol_properties[:, 5]
-            theta_max = aerosol_properties[:, 6]
+            p_max = self.aerosol_file[:, 5]
+            theta_max = self.aerosol_file[:, 6]
 
         return wavelengths, c_extinction, c_scattering, kappa, g, p_max, theta_max
 

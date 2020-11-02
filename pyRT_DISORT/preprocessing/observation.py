@@ -4,7 +4,7 @@ import scipy.interpolate.interpolate as interpolate
 
 class Observation:
     def __init__(self, short_wavelength, long_wavelength, solar_zenith_angle, emission_angle, phase_angle, latitude,
-                 longitude, altitude_map_path, solar_flux_file_path):
+                 longitude, altitude_map, solar_flux):
         """ Initialize the class
 
         Parameters
@@ -23,10 +23,10 @@ class Observation:
             The pixel latitude (in degrees)
         longitude: float
             The pixel longitude (in degrees east). Note The convention is 0--360, not -180 -- +180
-        altitude_map_path: str
-            The Unix-like path to the .npy file containing the MOLA map of altitudes
-        solar_flux_file_path: str
-            The Unix-like path the the .npy file containing the solar flux
+        altitude_map: np.ndarray
+            An array of the altitudes
+        solar_flux: np.ndarray
+            An array of solar fluxes
         """
         self.short_wavelength = short_wavelength
         self.long_wavelength = long_wavelength
@@ -36,8 +36,8 @@ class Observation:
         self.latitude = latitude
         self.longitude = longitude
         self.phi0 = 0
-        self.map_path = altitude_map_path
-        self.solar_flux_file = solar_flux_file_path
+        self.altitude_map = altitude_map
+        self.solar_flux = solar_flux
 
         # Ensure the object knows everything it ought to know
         self.low_wavenumber = self.wavelength_to_wavenumber(self.long_wavelength)
@@ -49,10 +49,9 @@ class Observation:
         self.solar_flux = self.calculate_solar_flux()
 
     def get_altitude(self):
-        map_array = np.load(self.map_path)
         latitudes = np.linspace(-90, 90, num=180, endpoint=True)
         longitudes = np.linspace(0, 360, num=360, endpoint=True)
-        interp = interpolate.RectBivariateSpline(latitudes, longitudes, map_array)
+        interp = interpolate.RectBivariateSpline(latitudes, longitudes, self.altitude_map)
         return interp(self.latitude, self.longitude)[0]
 
     def calculate_mu0(self):
@@ -123,9 +122,8 @@ class Observation:
         integrated_flux: float
             The integrated flux
         """
-        solar_spec = np.load(self.solar_flux_file, allow_pickle=True)
-        wavelengths = solar_spec[:, 0]
-        fluxes = solar_spec[:, 1]
+        wavelengths = self.solar_flux[:, 0]
+        fluxes = self.solar_flux[:, 1]
         interp_fluxes = np.interp(np.array([self.short_wavelength, self.long_wavelength]), wavelengths, fluxes)
         integrated_flux = np.mean(interp_fluxes) * (self.long_wavelength - self.short_wavelength)
         return integrated_flux
