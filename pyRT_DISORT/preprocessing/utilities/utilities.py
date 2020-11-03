@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+import glob
+import os
 
 
 class ExternalFiles:
@@ -142,18 +144,25 @@ class ExternalFiles:
         pd.DataFrame(self.array).to_csv('{}.csv'.format(absolute_path), header=headers, index=False)
 
 
-#folder = '/home/kyle/disort_multi/'
-#file = folder + 'ice_sphere_r010v010_forw_v2.dat'
-#file = folder + 'phsfn/tmq_mod1_r030v030_43000.coef'
-#f = ExternalFiles(file, header_lines=1, text1d=True)
-#print(f.array.shape)
+class MultipleExternalFiles:
+    """ Get the absolute paths of files matching a given pattern"""
+    def __init__(self, pattern, path):
+        """
+        Parameters
+        ----------
+        pattern: str
+            A regex pattern to match
+        path: str
+            The location of files to match the pattern to
+        """
+        self.pattern = pattern
+        self.path = path
+        self.files = self.__get_files()
 
+    def __check_inputs(self):
+        assert isinstance(self.pattern, str), 'pattern must a string'
+        assert isinstance(self.path, str), 'path must be a string'
 
-'''short_wavs = [0.2, 0.255, 0.3, 0.336, 0.4, 0.5, 0.588, 0.6, 0.631, 0.7, 0.763, 0.8, 0.835, 0.9, 0.953]
-wavs = np.linspace(1, 50, num=(50-1)*10+1)
-wavs = np.concatenate((short_wavs, wavs))
-
-radii = np.array([1, 2, 5, 10, 15, 20, 30, 40, 50, 60, 80])'''
-
-
-
+    def __get_files(self):
+        absolute_path = os.path.join(self.path, self.pattern)
+        return sorted(glob.glob(absolute_path))
