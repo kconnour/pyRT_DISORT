@@ -35,6 +35,7 @@ def setup_package(lib_name):
         python_requires='>=3.8',
         install_requires=[
             'numpy>=1.19.1',
+            'pandas>=1.1.1',
             'pdoc3>=0.9.1'
         ],
         # I have no clue why I need to go up a directory when I'm already in the correct directory

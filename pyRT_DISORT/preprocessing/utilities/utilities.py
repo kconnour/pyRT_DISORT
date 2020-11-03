@@ -4,7 +4,7 @@ import glob
 import os
 
 
-class ExternalFiles:
+class ExternalFile:
     """ Read in external files and turn them into numpy arrays to work with pyRT_DISORT functions"""
     def __init__(self, file_path, header_lines=0, text1d=True):
         """
