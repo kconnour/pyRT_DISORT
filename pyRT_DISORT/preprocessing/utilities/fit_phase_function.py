@@ -1,6 +1,7 @@
 # 3rd-party imports
 import numpy as np
 from scipy import integrate, interpolate
+from numba import jit
 
 
 class PhaseFunction:
@@ -23,11 +24,15 @@ class PhaseFunction:
             self.input_theta_radians = np.radians(self.input_theta_degrees)
         else:
             self.input_theta_radians = self.input_phase_function[:, 0]
+        # For numba...
+        #self.input_theta_degrees = self.input_phase_function[:, 0]
+        #self.input_theta_radians = np.radians(self.input_theta_degrees)
 
         self.mu = np.cos(self.input_theta_radians)
         self.phase_function = self.input_phase_function[:, 1]
         self.n_angles = len(self.mu)
 
+    @jit(forceobj=True)
     def create_legendre_coefficients(self, n_moments, n_samples):
         """ Create the Legendre coefficients for this phase function, forcing coefficients to be non-negative
 
@@ -43,8 +48,8 @@ class PhaseFunction:
         fit_coefficients: np.ndarray
             A 1D array of fitted coefficients of length n_moments
         """
-        self.__check_create_coefficient_inputs(n_moments, n_samples)
-        self.__check_samples_greater_than_moments(n_moments, n_samples)
+        #self.__check_create_coefficient_inputs(n_moments, n_samples)
+        #self.__check_samples_greater_than_moments(n_moments, n_samples)
 
         resampled_theta = self.__resample_angles(n_samples)
         norm_resampled_phase_function = self.__normalize_phase_function(self.__resample_phase_function(resampled_theta),
