@@ -1,14 +1,10 @@
 # 3rd-party imports
 import numpy as np
 from scipy import integrate, interpolate
-import time
-
-# Local imports
-from pyRT_DISORT.preprocessing.utilities.utilities import ExternalFile
 
 
 class PhaseFunction:
-    """ Do stuff with a phase function"""
+    """ Provide methods to work with phase functions"""
     def __init__(self, input_phase_function, degrees=True):
         """
         Parameters
@@ -33,7 +29,7 @@ class PhaseFunction:
         self.n_angles = len(self.mu)
 
     def create_legendre_coefficients(self, n_moments, n_samples):
-        """ Create the Legendre coefficients for this phase function
+        """ Create the Legendre coefficients for this phase function, forcing coefficients to be non-negative
 
         Parameters
         ----------
@@ -141,15 +137,3 @@ class PhaseFunction:
             print(f"Setting coefficients to zero starting with coefficient {first_negative_index}")
             coefficients[first_negative_index:] = 0
         return coefficients
-
-
-t0 = time.time()
-for i in range(10):
-    print(i)
-    file = ExternalFile('/home/kyle/Downloads/ice_shape001_r030_00321.dat', header_lines=3, text1d=False)
-    pf = PhaseFunction(file.array)
-    a = pf.create_legendre_coefficients(128, 361)
-
-t1 = time.time()
-print(t1 - t0)
-print(a)
