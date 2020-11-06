@@ -1,6 +1,5 @@
 import numpy as np
-import time
-from pyRT_DISORT.preprocessing.utilities.utilities import MultipleExternalFiles, ExternalFile
+from pyRT_DISORT.preprocessing.utilities.external_files import MultipleExternalFiles, ExternalFile
 
 # This example will read in the .phsfn files for ice within the folder /home/kyle/disort_multi/phsfn/
 # On my computer that folder contains .dat, .coef, and .phsfn files for dust along with just .phsfn files for ice

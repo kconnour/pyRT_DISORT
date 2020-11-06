@@ -7,14 +7,14 @@ import numpy as np
 # Local imports
 import disort
 from pyRT_DISORT.data.get_data import get_data_path
-from pyRT_DISORT.preprocessing.utilities.utilities import ExternalFiles
+from pyRT_DISORT.preprocessing.utilities.external_files import ExternalFile
 from pyRT_DISORT.preprocessing.model.model_atmosphere import ModelAtmosphere
 from pyRT_DISORT.preprocessing.model.aerosol import Aerosol
 from pyRT_DISORT.preprocessing.model.atmosphere import Layers
 from pyRT_DISORT.preprocessing.model.aerosol_column import Column, Conrath, GCMProfile
 from pyRT_DISORT.preprocessing.observation import Observation
 from pyRT_DISORT.preprocessing.controller.output import Output
-from pyRT_DISORT.preprocessing.model.phase_function import EmpiricalPhaseFunction
+from pyRT_DISORT.preprocessing.model.phase_function import HenyeyGreenstein
 from pyRT_DISORT.preprocessing.controller.size import Size
 from pyRT_DISORT.preprocessing.controller.unsure import Unsure
 from pyRT_DISORT.preprocessing.controller.control import Control
@@ -27,16 +27,16 @@ from pyRT_DISORT.preprocessing.model.surface import HapkeHG2Roughness
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Define some files I'll need
 
-dust_phase = ExternalFiles(os.path.join(get_data_path(), 'planets/mars/aux/dust_phase_functions.npy'))
-dust_phase_radii = ExternalFiles(os.path.join(get_data_path(), 'planets/mars/aux/dust_phase_function_radii.npy'))
-dust_phase_wavs = ExternalFiles(os.path.join(get_data_path(), 'planets/mars/aux/dust_phase_function_wavelengths.npy'))
-ice_coeff = ExternalFiles(os.path.join(get_data_path(), 'planets/mars/aux/legendre_coeff_h2o_ice.npy'))
-dustfile = ExternalFiles(os.path.join(get_data_path(), 'planets/mars/aux/dust.npy'))
-icefile = ExternalFiles(os.path.join(get_data_path(), 'planets/mars/aux/ice.npy'))
-atm = ExternalFiles(os.path.join(get_data_path(), 'planets/mars/aux/mars_atm_copy.npy'))
-altitude_map = ExternalFiles(os.path.join(get_data_path(), 'planets/mars/aux/altitude_map.npy'))
-solar_spec = ExternalFiles(os.path.join(get_data_path(), 'aux/solar_spectrum.npy'))
-albedo_map = ExternalFiles(os.path.join(get_data_path(), 'planets/mars/aux/albedo_map.npy'))
+dust_phase = ExternalFile(os.path.join(get_data_path(), 'planets/mars/aux/dust_phase_functions.npy'))
+dust_phase_radii = ExternalFile(os.path.join(get_data_path(), 'planets/mars/aux/dust_phase_function_radii.npy'))
+dust_phase_wavs = ExternalFile(os.path.join(get_data_path(), 'planets/mars/aux/dust_phase_function_wavelengths.npy'))
+ice_coeff = ExternalFile(os.path.join(get_data_path(), 'planets/mars/aux/legendre_coeff_h2o_ice.npy'))
+dustfile = ExternalFile(os.path.join(get_data_path(), 'planets/mars/aux/dust.npy'))
+icefile = ExternalFile(os.path.join(get_data_path(), 'planets/mars/aux/ice.npy'))
+atm = ExternalFile(os.path.join(get_data_path(), 'planets/mars/aux/mars_atm_copy.npy'))
+altitude_map = ExternalFile(os.path.join(get_data_path(), 'planets/mars/aux/altitude_map.npy'))
+solar_spec = ExternalFile(os.path.join(get_data_path(), 'aux/solar_spectrum.npy'))
+albedo_map = ExternalFile(os.path.join(get_data_path(), 'planets/mars/aux/albedo_map.npy'))
 
 # Make an aerosol that was observed at these wavelengths
 wavs = np.array([1, 9.3])
@@ -54,20 +54,24 @@ iceprof = np.where((25 < lay.altitude_layers) & (75 > lay.altitude_layers), 1, 0
 ice_profile = GCMProfile(lay, iceprof)
 ice_column = Column(ice, lay, ice_profile, np.array([2]), np.array([0.5]))
 
-# Make a 1D phase function for just ice
-ice_phase = EmpiricalPhaseFunction(ice_column, ice_coeff.array)
+# Make the phase functions. For this test case it's just HG
+n_moments = 128
+dust_hg = HenyeyGreenstein(dust_column, 0.5, n_moments=n_moments)   # 0.5 = asymmetry parameter
+ice_hg = HenyeyGreenstein(ice_column, 0.2, n_moments=n_moments)
 
 # Make Rayleigh stuff
-n_moments = 1000
 rco2 = RayleighCo2(wavs, lay, n_moments)
 
 # Make the model
 model = ModelAtmosphere()
+dust_info = (dust_column.hyperspectral_total_optical_depths, dust_column.hyperspectral_scattering_optical_depths,
+             dust_hg.coefficients)
 ice_info = (ice_column.hyperspectral_total_optical_depths, ice_column.hyperspectral_scattering_optical_depths,
-            ice_phase.coefficients)
+            ice_hg.coefficients)
 rayleigh_info = (rco2.hyperspectral_optical_depths, rco2.hyperspectral_optical_depths, rco2.hyperspectral_layered_phase_function)
 
-# Add ice and Rayleigh scattering to the model. Dust doesn't do anything since I'm not adding it to the model
+# Add dust and ice and Rayleigh scattering to the model
+model.add_constituent(dust_info)
 model.add_constituent(ice_info)
 model.add_constituent(rayleigh_info)
 
@@ -185,9 +189,9 @@ rfldir, rfldn, flup, dfdt, uavg, uu, albmed, trnmed = disort.disort(usrang, usrt
 
 print(uu[0, :15, 0])   # shape: (1, 81, 1)
 
-# This code gives: 0.05318587
-# disort_multi gives: 0.0527945943     (we differ by 0.7%)
-# I'm running ./disort_multi -ice_phsfn 99 -use_hg2_thetabar -NSTR 16 -zi_top 75 -NMOM 128 < testInput1d.txt
-# phsfn_99.dat includes 129 moments for water ice
-# testInput1d.txt is: 9.3, 0.5, 10, 30, 50, 40, 20, 0, 0.5, 0
-#                     0.12, 0.75, 0.5, 1, 0.04, 28.6479
+
+# This code gives: 0.02381533
+# disort_multi gives: 0.0236781761     (we differ by 0.6%)
+# I'm running ./disort_multi -dust_conrath 0.5, 10 -dust_hg 0.5 -ice_hg 0.2 -ice_phsfn 3 -use_hg2_thetabar -NSTR 16 -zi_top 75 -NMOM 128 < testInput.txt
+# testInput.txt is: 9.3, 0.5, 10, 30, 50, 40, 20, 0.8, 0.5, 0
+#                   0.12, 0.75, 0.5, 1, 0.04, 28.6479

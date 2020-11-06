@@ -7,7 +7,7 @@ import numpy as np
 # Local imports
 import disort
 from pyRT_DISORT.data.get_data import get_data_path
-from pyRT_DISORT.preprocessing.utilities.utilities import ExternalFiles
+from pyRT_DISORT.preprocessing.utilities.external_files import ExternalFile
 from pyRT_DISORT.preprocessing.model.model_atmosphere import ModelAtmosphere
 from pyRT_DISORT.preprocessing.model.aerosol import Aerosol
 from pyRT_DISORT.preprocessing.model.atmosphere import Layers
@@ -27,16 +27,16 @@ from pyRT_DISORT.preprocessing.model.surface import HapkeHG2Roughness
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Define some files I'll need
 
-dust_phase = ExternalFiles(os.path.join(get_data_path(), 'planets/mars/aux/dust_phase_functions.npy'))
-dust_phase_radii = ExternalFiles(os.path.join(get_data_path(), 'planets/mars/aux/dust_phase_function_radii.npy'))
-dust_phase_wavs = ExternalFiles(os.path.join(get_data_path(), 'planets/mars/aux/dust_phase_function_wavelengths.npy'))
-ice_coeff = ExternalFiles(os.path.join(get_data_path(), 'planets/mars/aux/legendre_coeff_h2o_ice.npy'))
-dustfile = ExternalFiles(os.path.join(get_data_path(), 'planets/mars/aux/dust.npy'))
-icefile = ExternalFiles(os.path.join(get_data_path(), 'planets/mars/aux/ice.npy'))
-atm = ExternalFiles(os.path.join(get_data_path(), 'planets/mars/aux/mars_atm_copy.npy'))
-altitude_map = ExternalFiles(os.path.join(get_data_path(), 'planets/mars/aux/altitude_map.npy'))
-solar_spec = ExternalFiles(os.path.join(get_data_path(), 'aux/solar_spectrum.npy'))
-albedo_map = ExternalFiles(os.path.join(get_data_path(), 'planets/mars/aux/albedo_map.npy'))
+dust_phase = ExternalFile(os.path.join(get_data_path(), 'planets/mars/aux/dust_phase_functions.npy'))
+dust_phase_radii = ExternalFile(os.path.join(get_data_path(), 'planets/mars/aux/dust_phase_function_radii.npy'))
+dust_phase_wavs = ExternalFile(os.path.join(get_data_path(), 'planets/mars/aux/dust_phase_function_wavelengths.npy'))
+ice_coeff = ExternalFile(os.path.join(get_data_path(), 'planets/mars/aux/legendre_coeff_h2o_ice.npy'))
+dustfile = ExternalFile(os.path.join(get_data_path(), 'planets/mars/aux/dust.npy'))
+icefile = ExternalFile(os.path.join(get_data_path(), 'planets/mars/aux/ice.npy'))
+atm = ExternalFile(os.path.join(get_data_path(), 'planets/mars/aux/mars_atm_copy.npy'))
+altitude_map = ExternalFile(os.path.join(get_data_path(), 'planets/mars/aux/altitude_map.npy'))
+solar_spec = ExternalFile(os.path.join(get_data_path(), 'aux/solar_spectrum.npy'))
+albedo_map = ExternalFile(os.path.join(get_data_path(), 'planets/mars/aux/albedo_map.npy'))
 
 # Make an aerosol that was observed at these wavelengths
 wavs = np.array([1, 9.3])
