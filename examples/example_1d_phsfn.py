@@ -14,7 +14,7 @@ from pyRT_DISORT.preprocessing.model.atmosphere import Layers
 from pyRT_DISORT.preprocessing.model.aerosol_column import Column, Conrath, GCMProfile
 from pyRT_DISORT.preprocessing.observation import Observation
 from pyRT_DISORT.preprocessing.controller.output import Output
-from pyRT_DISORT.preprocessing.model.phase_function import EmpiricalPhaseFunction
+from pyRT_DISORT.preprocessing.model.phase_function import TabularLegendreCoefficients
 from pyRT_DISORT.preprocessing.controller.size import Size
 from pyRT_DISORT.preprocessing.controller.unsure import Unsure
 from pyRT_DISORT.preprocessing.controller.control import Control
@@ -55,7 +55,7 @@ ice_profile = GCMProfile(lay, iceprof)
 ice_column = Column(ice, lay, ice_profile, np.array([2]), np.array([0.5]))
 
 # Make a 1D phase function for just ice
-ice_phase = EmpiricalPhaseFunction(ice_column, ice_coeff.array)
+ice_phase = TabularLegendreCoefficients(ice_column, ice_coeff.array)
 
 # Make Rayleigh stuff
 n_moments = 1000

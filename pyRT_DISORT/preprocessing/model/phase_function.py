@@ -5,7 +5,7 @@ import numpy as np
 from pyRT_DISORT.preprocessing.model.aerosol_column import Column
 
 
-class PhaseFunction:
+class LegendreCoefficientManipulation:
     def __init__(self, column):
         self.column = column
         self.__check_input()
@@ -89,7 +89,7 @@ class PhaseFunction:
         return np.average(aerosol_polynomial_moments, axis=2, weights=self.column.column_integrated_optical_depths)
 
 
-class HenyeyGreenstein(PhaseFunction):
+class HenyeyGreenstein(LegendreCoefficientManipulation):
     """ Make a Henyey-Greenstein phase function"""
     def __init__(self, column, asymmetry, n_moments=1000):
         """
@@ -124,7 +124,7 @@ class HenyeyGreenstein(PhaseFunction):
         return self.sum_over_size(layered_coefficients)
 
 
-class EmpiricalPhaseFunction(PhaseFunction):
+class TabularLegendreCoefficients(LegendreCoefficientManipulation):
     """ Construct an empirical phase function"""
     def __init__(self, column, empirical_coefficients, particle_sizes=None, wavelengths=None):
         """ Initialize the class

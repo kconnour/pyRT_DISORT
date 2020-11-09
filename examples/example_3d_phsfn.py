@@ -14,7 +14,7 @@ from pyRT_DISORT.preprocessing.model.atmosphere import Layers
 from pyRT_DISORT.preprocessing.model.aerosol_column import Column, Conrath, GCMProfile
 from pyRT_DISORT.preprocessing.observation import Observation
 from pyRT_DISORT.preprocessing.controller.output import Output
-from pyRT_DISORT.preprocessing.model.phase_function import EmpiricalPhaseFunction
+from pyRT_DISORT.preprocessing.model.phase_function import TabularLegendreCoefficients
 from pyRT_DISORT.preprocessing.controller.size import Size
 from pyRT_DISORT.preprocessing.controller.unsure import Unsure
 from pyRT_DISORT.preprocessing.controller.control import Control
@@ -56,8 +56,8 @@ ice_column = Column(ice, lay, ice_profile, np.array([2]), np.array([0.5]))
 
 # Use a 3D phase function for dust, and a 1D phase function for ice. Note that unlike before, they are free to have
 # any number of moments (ModelAtmosphere handles different moments at the very end)
-dust_phase = EmpiricalPhaseFunction(dust_column, dust_phase.array, particle_sizes=dust_phase_radii.array, wavelengths=dust_phase_wavs.array)
-ice_phase = EmpiricalPhaseFunction(ice_column, ice_coeff.array)
+dust_phase = TabularLegendreCoefficients(dust_column, dust_phase.array, particle_sizes=dust_phase_radii.array, wavelengths=dust_phase_wavs.array)
+ice_phase = TabularLegendreCoefficients(ice_column, ice_coeff.array)
 
 # Make Rayleigh stuff
 n_moments = 1000

@@ -1,24 +1,36 @@
 import numpy as np
-from scipy.constants import Boltzmann
 
-'''atmfile = '/home/kyle/disort_multi/marsatm.inp'
+from pyRT_DISORT.preprocessing.utilities.external_files import MultipleExternalFiles, ExternalFile
+from pyRT_DISORT.preprocessing.utilities.fit_phase_function import PhaseFunction
 
-f = np.genfromtxt(atmfile, skip_header=3)
-newfile = np.zeros((f.shape[0], 4))
-newfile[:, :-1] = f
-newfile[:, 1] *= 100
+# Read in the files
+f = MultipleExternalFiles('ice*.phsfn', '/home/kyle/disort_multi/phsfn')   # Change this to work with your system
+short_wavs = [0.2, 0.255, 0.3, 0.336, 0.4, 0.5, 0.588, 0.6, 0.631, 0.673, 0.7, 0.763, 0.8, 0.835, 0.9, 0.953]
+wavs = np.linspace(1, 50, num=(50-1)*10+1)
+wavs = np.concatenate((short_wavs, wavs))
+radii = np.array([1, 2, 5, 10, 15, 20, 30, 40, 50, 60, 80])
+junk_file = ExternalFile(f.files[0], header_lines=7, text1d=False)     # False since it's 2D
+ice_phsfns = np.zeros((junk_file.array.shape[0], junk_file.array.shape[1], len(radii), len(wavs)))  # shape: (181, 6, 11, 507)
 
+radius_index = 0
+for counter, file in enumerate(f.files):
+    ext_file = ExternalFile(file, header_lines=7, text1d=False)
+    ice_phsfns[:, :, radius_index, counter % len(wavs)] = ext_file.array
+    if ((counter + 1) % len(wavs)) == 0:
+        radius_index += 1
 
-for i in range(f.shape[0]):
-    newfile[i, -1] = newfile[i, 1] / Boltzmann / newfile[i, 2]
+print(ice_phsfns.shape)
+# Use the equation to make s12 into f11
+degrees = ice_phsfns[:, 0, 0, 0]
+f11 = ice_phsfns[:, 1, :, :]
 
-newfile = np.flipud(newfile)
-print(newfile[:, 0])
-print(newfile[:, 1])
-print(newfile[:, 2])
-print(newfile[:, 3])
-np.save('/home/kyle/repos/pyRT_DISORT/pyRT_DISORT/data/planets/mars/aux/mars_atm_copy.npy', newfile)'''
+a = np.zeros((128, 11, 507))
+for i in range(11):
+    print(i)
+    for j in range(507):
+        print(j)
+        ice_phase_function = np.column_stack((degrees, np.squeeze(f11[:, i, j])))
+        pf = PhaseFunction(ice_phase_function)
+        a[:, i, j] = pf.create_legendre_coefficients(n_moments=128, n_samples=361)
 
-
-ice = np.load('/home/kyle/ice_phsfns.npy')
-print(ice.shape)
+np.save('/home/kyle/ice_phase_function.npy', a)

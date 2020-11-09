@@ -19,24 +19,23 @@ Fix:
 --- Remove old phase functions + generally unnecessary aux files
 
 Work on next:
---- Make ice PMOM
---- Add ability to directly input np array to phase_functions.py
---- Thoroughly test __check_shapes_match()
---- Add plain text phsfn reader
---- Combine radii + wavelengths into 1 phase function file
 --- Parallelize over wavelength / observations (pixels)
+--- Make ice PMOM
 --- Ensure Column can accommodate different profiles for different particle sizes
 --- OD cannot be 0 since weights sum to 0
 --- Add ozone
+--- Unit tests
+--- What happens when phase functions are defined at different wavelengths? Like dust and ice at short wavs
+--- Add ability to directly input np array to phase_functions.py
+--- Thoroughly test __check_shapes_match()
+--- Combine radii + wavelengths into 1 phase function file
 --- Fix strings to f strings
 --- Fix defining self.wavelenghts / self.particle_sizes in PhaseFunction.expand_dimensions()
 --- assert() might be better to raise ValueError('myMessage') or something
 --- Move all the asserts in __init__ into a function... since they just check the inputs are good
 --- Solver
---- numba?
 --- Add checks throughout to ensure the same wavelengths, moments, etc. are used. We don't want one aerosol observed
     at different wavelenghts than another. Also ensure they CAN have different r_effective
---- Unit tests
 --- Postprocessing
 --- Correlated k
 --- T-matrix?
