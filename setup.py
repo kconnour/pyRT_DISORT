@@ -34,6 +34,7 @@ def setup_package(lib_name):
         include_package_data=True,
         python_requires='>=3.8',
         install_requires=[
+            'astropy>=4.1',
             'numba>=0.51.2',
             'numpy>=1.19.1',
             'pandas>=1.1.1',
