@@ -88,14 +88,12 @@ temperatures = lay.temperature_boundaries
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Make a fake observation
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-short_wav = 1    # microns
-long_wav = 1.1
-sza = 50
-emission_angle = 40
-phase_angle = 20
-latitude = 10
-longitude = 30
-obs = Observation(short_wav, long_wav, sza, emission_angle, phase_angle, latitude, longitude, altitude_map.array, solar_spec.array)
+short_wav = np.array([1])    # microns
+long_wav = np.array([1.1])
+sza = np.array([50])
+emission_angle = np.array([40])
+phase_angle = np.array([20])
+obs = Observation(short_wav, long_wav, sza, emission_angle, phase_angle)
 phi = np.array([obs.phi])
 low_wavenumber = obs.low_wavenumber
 high_wavenumber = obs.high_wavenumber
@@ -166,7 +164,7 @@ transmissivity_medium = output.make_transmissivity_medium()
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 utau = np.zeros(n_user_levels)
 # Get albedo (it probably shouldn't go here though...)
-albedo = 0.5  #Albedo(albedo_map, obs.latitude, obs.longitude).interpolate_albedo()
+albedo = 0.34  #Albedo(albedo_map, obs.latitude, obs.longitude).interpolate_albedo()
 
 # Choose which Hapke surface to use: the default 3 parameter one that comes with DISORT, a 2-lobed HG without roughness,
 # or a 2-lobed HG with roughness. The purpose of these classes is to make the rhou, rhoq, bemst, emust, ... arrays
@@ -195,5 +193,5 @@ print(uu[0, :15, 0])   # shape: (1, 81, 1)
 # I'm running ./disort_multi -dust_conrath 0.5, 10 -dust_phsfn 98 -ice_phsfn 99 -use_hg2_thetabar -NSTR 16 -zi_top 80 -NMOM 128 < testInput.txt
 # phsfn_98.dat contain the 65 moments at reff = 1 micron and wavelength = 9.3 microns
 # phsfn_99.dat contains the 128 moments I have for ice
-# testInput.txt is: 9.3, 0.5, 10, 30, 50, 40, 20, 0.8, 0.5, 0
+# testInput.txt is: 9.3, 0.34, 10, 30, 50, 40, 20, 0.8, 0.5, 0
 #                   0.12, 0.75, 0.5, 1, 0.04, 28.6479

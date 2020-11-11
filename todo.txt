@@ -33,7 +33,6 @@ Work on next:
 --- Fix defining self.wavelenghts / self.particle_sizes in PhaseFunction.expand_dimensions()
 --- assert() might be better to raise ValueError('myMessage') or something
 --- Move all the asserts in __init__ into a function... since they just check the inputs are good
---- Solver
 --- Add checks throughout to ensure the same wavelengths, moments, etc. are used. We don't want one aerosol observed
     at different wavelenghts than another. Also ensure they CAN have different r_effective
 --- Postprocessing

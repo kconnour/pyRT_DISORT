@@ -1,6 +1,6 @@
 import numpy as np
 
-from pyRT_DISORT.preprocessing.utilities.external_files import MultipleExternalFiles, ExternalFile
+'''from pyRT_DISORT.preprocessing.utilities.external_files import MultipleExternalFiles, ExternalFile
 from pyRT_DISORT.preprocessing.utilities.fit_phase_function import PhaseFunction
 
 # Read in the files
@@ -33,4 +33,10 @@ for i in range(11):
         pf = PhaseFunction(ice_phase_function)
         a[:, i, j] = pf.create_legendre_coefficients(n_moments=128, n_samples=361)
 
-np.save('/home/kyle/ice_phase_function.npy', a)
+np.save('/home/kyle/ice_phase_function.npy', a)'''
+
+
+dustfile = '/home/kyle/repos/pyRT_DISORT/pyRT_DISORT/data/planets/mars/aux/dust.npy'
+a = np.load(dustfile)
+print(a[:, 0])
+

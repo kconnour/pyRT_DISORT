@@ -52,7 +52,7 @@ class Aerosol:
 
     def __inform_if_outside_wavelength_range(self):
         if np.size((too_short := self.wavelengths[self.wavelengths < self.wavelengths_quantities[0]]) != 0):
-            print('The following input wavelengths: {} microns are shorter than {:.1f} microns---the shortest '
+            print('The following input wavelengths: {} microns are shorter than {:.3f} microns---the shortest '
                   'wavelength in the file. Using properties from that wavelength.'
                   .format(too_short, self.wavelengths_quantities[0]))
         if np.size((too_long := self.wavelengths[self.wavelengths > self.wavelengths_quantities[-1]]) != 0):

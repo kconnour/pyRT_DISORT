@@ -4,7 +4,7 @@ import numpy as np
 
 class Control:
     def __init__(self, user_optical_depths=False, user_angles=True, only_fluxes=False, accuracy=0,
-                 print_variables=np.array([True, False, False, False, True]), header='', do_pseudo_sphere=False,
+                 print_variables=np.array([False, False, False, False, False]), header='', do_pseudo_sphere=False,
                  planetary_radius=6371, delta_m_plus=False):
         self.user_optical_depths = user_optical_depths
         self.user_angles = user_angles

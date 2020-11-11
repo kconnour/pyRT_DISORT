@@ -83,14 +83,14 @@ temperatures = lay.temperature_boundaries
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Make a fake observation
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-short_wav = 1    # microns
-long_wav = 1.1
-sza = 50
-emission_angle = 40
-phase_angle = 20
+short_wav = np.array([1])    # microns
+long_wav = np.array([1.1])
+sza = np.array([50])
+emission_angle = np.array([40])
+phase_angle = np.array([20])
 latitude = 10
 longitude = 30
-obs = Observation(short_wav, long_wav, sza, emission_angle, phase_angle, latitude, longitude, altitude_map.array, solar_spec.array)
+obs = Observation(short_wav, long_wav, sza, emission_angle, phase_angle)
 phi = np.array([obs.phi])
 low_wavenumber = obs.low_wavenumber
 high_wavenumber = obs.high_wavenumber
@@ -172,6 +172,8 @@ hapke = HapkeHG2Roughness(size, obs, control, boundary, albedo, w=0.12, asym=0.7
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Run the model
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+print(intensity.shape)
 
 rfldir, rfldn, flup, dfdt, uavg, uu, albmed, trnmed = disort.disort(usrang, usrtau, ibcnd, onlyfl, prnt, plank, lamber,
                                                                     deltamplus, do_pseudo_sphere, optical_depths,
