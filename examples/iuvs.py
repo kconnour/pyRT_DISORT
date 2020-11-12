@@ -61,9 +61,9 @@ diff = np.diff(wavs)
 diff = np.concatenate((diff, np.array([diff[0]])))
 short_wavs = (wavs - diff/2)
 long_wavs = (wavs + diff/2)
-szas = hdulist['pixelgeometry'].data['pixel_solar_zenith_angle'][:5, :].flatten()
-emission_angles = hdulist['pixelgeometry'].data['pixel_emission_angle'][:5, :].flatten()
-phase_angles = hdulist['pixelgeometry'].data['pixel_phase_angle'][:5, :].flatten()
+szas = hdulist['pixelgeometry'].data['pixel_solar_zenith_angle'][:2, :].flatten()
+emission_angles = hdulist['pixelgeometry'].data['pixel_emission_angle'][:2, :].flatten()
+phase_angles = hdulist['pixelgeometry'].data['pixel_phase_angle'][:2, :].flatten()
 
 # Put the arrays into the Observation class
 obs = Observation(short_wavs, long_wavs, szas, emission_angles, phase_angles)
@@ -84,7 +84,6 @@ lay = Layers(atm.array)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Make the size of the arrays
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 n_layers = lay.n_layers
 n_moments = 1000
 n_streams = 16
@@ -170,9 +169,6 @@ rayleigh_info = (rco2.hyperspectral_optical_depths, rco2.hyperspectral_optical_d
 # These are all calculations I have to re-do for each time I try a new parameter
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#target = np.array([0.784799E-01, 0.753058E-01, 0.698393E-01, 0.654867E-01, 0.605224E-01, 0.572824E-01, 0.534369E-01,
-#                   0.496474E-01, 0.464914E-01, 0.427855E-01, 0.429494E-01, 0.457046E-01, 0.491979E-01, 0.495246E-01,
-#                   0.457136E-01, 0.433431E-01, 0.483898E-01, 0.504774E-01, 0.457426E-01])
 
 
 def myModel(guess, pixel):
@@ -217,10 +213,20 @@ def myModel(guess, pixel):
              hapke.bemst, hapke.emust, accur, header, direct_beam_flux, diffuse_down_flux,
              diffuse_up_flux, flux_divergence, mean_intensity, intensity[:, :, pixel], albedo_medium, transmissivity_medium)
         test_run[w] = uu[0, 0]   # Just the the TOA I/F value
-
-    #answer[pixel, :] = test_run
-    #return np.sum((answer - target)**2)
     return test_run
+
+
+def calculate_model_difference(guess, pixel):
+    # This is just a sample spectrum I took... each pixel should have its own
+    target = np.array([0.784799E-01, 0.753058E-01, 0.698393E-01, 0.654867E-01, 0.605224E-01, 0.572824E-01, 0.534369E-01,
+                       0.496474E-01, 0.464914E-01, 0.427855E-01, 0.429494E-01, 0.457046E-01, 0.491979E-01, 0.495246E-01,
+                       0.457136E-01, 0.433431E-01, 0.483898E-01, 0.504774E-01, 0.457426E-01])
+    test_run = myModel(guess, pixel)
+    return np.sum((test_run - target)**2)
+
+
+def do_optimization(guess, pixel):
+    return optimize.minimize(calculate_model_difference, np.array(guess), pixel, method='Nelder-Mead').x
 
 
 # Without this pool won't cooperate
@@ -228,14 +234,14 @@ if __name__ == '__main__':
     t0 = time.time()
     n_cpus = mp.cpu_count()
     pixel_inds = np.linspace(0, len(szas)-1, num=len(szas), dtype='int')
-    iterable = [[[0.8, 0.2], f] for f in pixel_inds]
+    iterable = [[[0.5, 0.2], f] for f in pixel_inds]
     with mp.get_context('spawn').Pool(n_cpus) as pool:
-        m = pool.starmap(myModel, iterable)
+        m = pool.starmap(do_optimization, iterable)
         pool.close()
         pool.join()
 
     answer = np.array(m)
-    #np.save('/home/kyle/parallel_test.npy', answer)
+    np.save('/home/kyle/parallel_test_solver.npy', answer)
     # Find parameters
     #res = optimize.minimize(myModel, np.array([1, 0.05]), method='BFGS', tol=10**-6)
     #print(res.x)
