@@ -1,6 +1,5 @@
 Design
 --- UU outputs a bunch of junk 0s in addition to "good" values---fix that?
---- Specify layers independent of mars_atm.inp?
 
 Assumptions
 --- Every aerosol will have a dust.npy-type file
@@ -9,7 +8,6 @@ Assumptions
 --- Every aerosol will either be HG or use a 3D phase function file
 
 Questions:
---- What are the 2 additional columns in ice?
 --- What are pivot pressures/altitudes/temperatures?
 
 Test:
@@ -20,23 +18,38 @@ Fix:
 
 Work on next:
 --- Parallelize over wavelength / observations (pixels)
+--- Add an efficient solver
 --- Make ice PMOM
 --- Ensure Column can accommodate different profiles for different particle sizes
---- OD cannot be 0 since weights sum to 0
+--- Ensure OD cannot be 0 since weights sum to 0
 --- Add ozone
 --- Unit tests
 --- What happens when phase functions are defined at different wavelengths? Like dust and ice at short wavs
---- Add ability to directly input np array to phase_functions.py
---- Thoroughly test __check_shapes_match()
+--- Thoroughly test __check_shapes_match() for 1D, 2D, and 3D phase functions
 --- Combine radii + wavelengths into 1 phase function file
---- Fix strings to f strings
---- Fix defining self.wavelenghts / self.particle_sizes in PhaseFunction.expand_dimensions()
+--- Change strings to f strings
+--- Fix defining self.wavelengths / self.particle_sizes in PhaseFunction.expand_dimensions()
 --- assert() might be better to raise ValueError('myMessage') or something
---- Move all the asserts in __init__ into a function... since they just check the inputs are good
+--- Move all the asserts in __init__ into a function since they just check the inputs are good
 --- Add checks throughout to ensure the same wavelengths, moments, etc. are used. We don't want one aerosol observed
     at different wavelenghts than another. Also ensure they CAN have different r_effective
 --- Postprocessing
---- Correlated k
+--- Correlated k?
 --- T-matrix?
 --- Set a max_moments in phase_functions.py in case user doesn't believe all the moments they have
---- Rewrite the test cases using my objects
+--- Rewrite the test cases using my classes
+
+Unresolved comments from the boss:
+--- Layers/Boundaries
+   - User should specify z vector that defines the boundaries of the layers. The input file is just the grid of EoS values
+   - Interpolate EoS values onto this vector
+   - Do integral in log(z) space
+   - Maybe don't store midpoint values of the arrays (T_midpoint, P_midpoint, etc.)
+   - the description of atmosphere array should be. "An array of the atmospheric state variables”. (i.e., P, temperature, number density, vertical coordinate) (minor wording change)
+--- Aerosol
+   - Remove theta_max and kappa
+   - “extinction_ratios” should simply become “extinction" and that your store the reference c_ext as an attribute (i.e., reference_extinction)
+   - please drop the “s” from _albedos, _parameters (i.e., ssa and g)
+   - please drop the “hyperspectral” text.  let’s go with single_scatteing_albedo and asymmetry_parameter
+   - Aerosol objects need to have an r_eff dimension in order to be analogous to the wavelength and reff dependence
+   - (from me) Is there a better way besides telling the user the columns in the input file must be in a specified order? 
