@@ -52,4 +52,6 @@ Unresolved comments from the boss:
    - please drop the “s” from _albedos, _parameters (i.e., ssa and g)
    - please drop the “hyperspectral” text.  let’s go with single_scatteing_albedo and asymmetry_parameter
    - Aerosol objects need to have an r_eff dimension in order to be analogous to the wavelength and reff dependence
-   - (from me) Is there a better way besides telling the user the columns in the input file must be in a specified order? 
+   - (from me) Is there a better way besides telling the user the columns in the input file must be in a specified order?
+--- Column
+   - The reference wavelength should be defined for each particle size. So change it from float --> np.ndarray

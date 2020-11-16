@@ -376,6 +376,15 @@ c     .. Array Arguments ..
      &          TEMPER( 0:MAXCLY ), TRNMED( MAXUMU ), UAVG( MAXULV ),
      &          UMU( MAXUMU ), UTAU( MAXULV ),
      &          UU( MAXUMU, MAXULV, MAXPHI )
+
+c     ..
+c     .. Local Scalars ..
+      LOGICAL   COMPAR, CORINT, DELTAM, LYRCUT, PASS1 
+      INTEGER   IQ, IU, J, KCONV, L, LC, LEV, LU, MAZIM, NAZ, NCOL,
+     &          NCOS, NCUT, NN
+      REAL      ANGCOS, AZERR, AZTERM, BPLANK, COSPHI, DELM0, DITHER,
+     &          DUM, PI, RPD, SGN, TPLANK
+
 Cf2py intent(in, out) RFLDIR
 Cf2py intent(in, out) RFLDN
 Cf2py intent(in, out) FLUP
@@ -384,13 +393,6 @@ Cf2py intent(in, out) UAVG
 Cf2py intent(in, out) UU
 Cf2py intent(in, out) ALBMED
 Cf2py intent(in, out) TRNMED
-c     ..
-c     .. Local Scalars ..
-      LOGICAL   COMPAR, CORINT, DELTAM, LYRCUT, PASS1 
-      INTEGER   IQ, IU, J, KCONV, L, LC, LEV, LU, MAZIM, NAZ, NCOL,
-     &          NCOS, NCUT, NN
-      REAL      ANGCOS, AZERR, AZTERM, BPLANK, COSPHI, DELM0, DITHER,
-     &          DUM, PI, RPD, SGN, TPLANK
 
 c     ..
 c     .. Local Arrays ..
@@ -429,7 +431,6 @@ c     .. Local Arrays ..
 
 c     ..
 c     .. Version 3 .. 
-c     For pyRT_DISORT I modified the shape of RHOU
       REAL      RHOQ(MAXCMU/2, 0:MAXCMU/2, 0:(MAXCMU-1)), 
      &          RHOU(MAXCMU,   0:MAXCMU/2, 0:(MAXCMU-1)),
      &          EMUST(MAXUMU), BEMST(MAXCMU/2)
@@ -1880,12 +1881,12 @@ c comment and upgrade pseudo spherical correction
 c            IF( FBEAM.GT.0.0 ) UUM( IQ, LU ) = ZINT +
 c     &                         ZZ( IQ, LYU )*EXP( -UTAUPR( LU )/UMU0 )
             IF( FBEAM.GT.0.0 ) THEN
-              UUM(IQ, LU) = 1.0
+              UUM(IQ, LU) = ZZ( IQ, LYU )
               DO LC = 1, LYU-1
                 UUM( IQ, LU ) = UUM( IQ, LU ) 
-     &             * ZZ( IQ, LYU )*EXP(-DTAUCP(LC)/UMU0L(LC))
+     &             * EXP(-DTAUCP(LC)/UMU0L(LC))
               ENDDO
-              UUM(IQ, LU) = ZINT + UUM(IQ, LU) * ZZ(IQ,LYU) 
+              UUM(IQ, LU) = ZINT + UUM(IQ, LU)
      &             * EXP( ( TAUCPR(LYU-1) - UTAUPR(LU) ) / UMU0L(LYU) )
             ENDIF
 

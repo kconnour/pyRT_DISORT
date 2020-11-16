@@ -153,7 +153,7 @@ c     ** 4. Ross-Li BRDF
         IF(BDREF .LT. 0.00) THEN
           BDREF = 0.00
         ENDIF
-
+        
 c     ** 5. Hapke + HG2 BRDF
       ELSEIF ( IREF.EQ.5 ) THEN
 

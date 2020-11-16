@@ -10,7 +10,7 @@ class SharedArray:
     def __init__(self, shape, dtype=np.float, mode='w+'):
         self.filename = 'tmp_mmap'
         self.tmp_dir = mkdtemp()
-        self.path = os.path.join(self.tmp_dir, 'myNewFile.dat')
+        self.path = os.path.join(self.tmp_dir, self.filename)
         self.array = np.memmap(self.path, shape=shape, dtype=dtype, mode=mode)
 
     def delete(self):

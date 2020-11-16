@@ -211,7 +211,7 @@ IF( DOPROB(1) )  THEN
     WRITE( HEADER,'(3A,F9.5,A,F5.2)') 'Test Case No. 1',ABC(ICAS), &
            ':  Isotropic Scattering, Ref. VH1, Table 12:  b =', &
            UTAU(2), ', a =', SSALB(1)
-
+  
     CALL DISORT( NLYR, NMOM, NSTR, NUMU, NPHI, NTAU,           &
                  USRANG, USRTAU, IBCND, ONLYFL, PRNT,          &
                  PLANK, LAMBER, DELTAMPLUS, DO_PSEUDO_SPHERE,  &          
@@ -749,20 +749,12 @@ IF( DOPROB(6) )  THEN
       NMUG        = 200; BRDF_TYPE   = 1 
       B0          = 1.;  HH          = 0.06; W           = 0.6
       BRDF_ARG(1) = B0;  BRDF_ARG(2) = HH;  BRDF_ARG(3) = W
-      
-!c     KYLE start
-      PRINT *, EMUST
-      PRINT *, '~~~~~'
 
       CALL DISOBRDF( NSTR, USRANG, NUMU, UMU,                     &
                      FBEAM, UMU0, LAMBER, ALBEDO, ONLYFL,         & 
                      RHOQ, RHOU, EMUST, BEMST, DEBUG,             &     
                      NPHI, PHI, PHI0, RHO_ACCURATE,               &
                      BRDF_TYPE, BRDF_ARG, NMUG )    
-      
-      PRINT *, EMUST
-      STOP 99
-!c     Kyle end
                       
       HEADER = TITLE(1:LENTIT) // '; Bottom Albedo = Non-Lambert'  
         
@@ -1096,8 +1088,7 @@ IF( DOPROB(7) )  THEN
       NMUG        = 200; BRDF_TYPE   = 1 
       B0          = 1.;  HH          = 0.06; W          = 0.6
       BRDF_ARG(1) = B0;  BRDF_ARG(2) = HH;  BRDF_ARG(3) = W  
-        
-        
+       
       CALL DISOBRDF( NSTR, USRANG, NUMU, UMU,                     &
                      FBEAM, UMU0, LAMBER, ALBEDO, ONLYFL,         & 
                      RHOQ, RHOU, EMUST, BEMST, DEBUG,             &     

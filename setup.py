@@ -6,19 +6,19 @@ import sys
 
 
 def compile_disort():
-    os.chdir(os.path.join(package_path, 'disort4.0.98/'))
+    os.chdir(os.path.join(package_path, 'disort4.0.99/'))
     os.system('{} -m numpy.f2py -c BDREF.f DISOBRDF.f DISORT.f ERRPACK.f LAPACK.f LINPAK.f RDI1MACH.f -m {}'.format(
         sys.executable, 'disort'))
 
 
 def get_library_name():
-    os.chdir(os.path.join(package_path, 'disort4.0.98/'))
+    os.chdir(os.path.join(package_path, 'disort4.0.99/'))
     disort_binary = glob.glob('*.so')[0]
     return disort_binary
 
 
 def move_library(lib_name):
-    os.rename(os.path.join(os.path.join(package_path, 'disort4.0.98/'), lib_name),
+    os.rename(os.path.join(os.path.join(package_path, 'disort4.0.99/'), lib_name),
               os.path.join(package_path, lib_name))
 
 
