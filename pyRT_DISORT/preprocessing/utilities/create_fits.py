@@ -2,7 +2,7 @@ from astropy.io import fits
 import numpy as np
 
 
-class Fits:
+class CreateFits:
     """Create a .fits file from numpy arrays"""
     def __init__(self, primary_hdu):
         """

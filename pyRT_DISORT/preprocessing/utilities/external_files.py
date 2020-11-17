@@ -1,3 +1,4 @@
+from astropy.io import fits
 import pandas as pd
 import numpy as np
 import glob
@@ -45,13 +46,15 @@ class ExternalFile:
             return self.__read_npy_file()
         elif self.extension == 'csv':
             return self.__csv_to_npy()
+        elif self.extension == 'fits':
+            return self.__read_fits_file()
         elif self.extension in ['txt', 'dat', 'coef', 'phsfn']:
             if self.text1d:
                 return self.__1dtext_to_npy()
             else:
                 return self.__2dtext_to_npy()
         else:
-            print('Unsure how to handle that extension... please use .npy, .csv, .txt, .dat, .coef, .phsfn')
+            print('Unsure how to handle that extension... please use .npy, .csv, .fits, .txt, .dat, .coef, .phsfn')
             return None
 
     def __read_npy_file(self):
@@ -59,6 +62,9 @@ class ExternalFile:
 
     def __csv_to_npy(self):
         return pd.read_csv(self.file_path).to_numpy()
+
+    def __read_fits_file(self):
+        return fits.open(self.file_path)
 
     def __get_absolute_path(self, new_filename):
         if new_filename.strip()[-1] == '/':
