@@ -1,4 +1,3 @@
-import atexit
 import glob
 import os
 import setuptools
