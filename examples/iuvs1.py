@@ -1,15 +1,15 @@
 # Parallelize finding the best fit parameters for IUVS data assuming just ice and dust
 
 # Built-in imports
-import ctypes
-import multiprocessing as mp
 import os
 import time
+from tempfile import mkdtemp
 
 # 3rd-party imports
 import numpy as np
 from astropy.io import fits
 from scipy import optimize
+import joblib
 
 # Local imports
 import disort
@@ -28,6 +28,7 @@ from pyRT_DISORT.preprocessing.controller.control import Control
 from pyRT_DISORT.preprocessing.model.boundary_conditions import BoundaryConditions
 from pyRT_DISORT.preprocessing.model.rayleigh import RayleighCo2
 from pyRT_DISORT.preprocessing.model.surface import HapkeHG2Roughness
+from pyRT_DISORT.preprocessing.utilities.shared_array import SharedArray
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -170,6 +171,21 @@ rayleigh_info = (rco2.hyperspectral_optical_depths, rco2.hyperspectral_optical_d
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+# THIS USES MULTIPROCESSING MODULE
+# Make an array in shared memory
+'''junkThing = np.zeros((len(szas), len(wavs)), dtype=np.float)
+shm = shared_memory.SharedMemory(name='shared_answer', create=True, size=junkThing.nbytes)
+answer = np.ndarray(junkThing.shape, dtype=junkThing.dtype, buffer=shm.buf)
+answer[:] = junkThing[:]'''
+
+# THIS USES JOBLIB MODULE
+#filename = os.path.join(mkdtemp(), 'myNewFile.dat')
+#answer = np.memmap(filename, dtype=np.float, shape=(len(szas), len(wavs)), mode='w+')
+
+# Use my code to create an array in shared memory
+sa = SharedArray((len(szas), len(wavs)))
+answer = sa.array
+
 
 def myModel(guess, pixel):
     dust_od = guess[0]
@@ -203,7 +219,8 @@ def myModel(guess, pixel):
     ssa = model.hyperspectral_total_single_scattering_albedos
     polynomial_moments = model.hyperspectral_legendre_moments
 
-    test_run = np.zeros(len(wavs))
+    #existing_shm = shared_memory.SharedMemory(name='shared_answer')
+    #shared_array = np.ndarray((len(szas), len(wavs)), dtype=np.float, buffer=existing_shm.buf)
     for w in range(len(wavs)):
         # The 0s here are just me testing this on a single pixel
         junk, junk, junk, junk, junk, uu, junk, junk = disort.disort(usrang, usrtau, ibcnd, onlyfl, prnt, plank,
@@ -212,8 +229,9 @@ def myModel(guess, pixel):
              surface_temp, top_temp, top_emissivity, planet_radius, h_lyr, hapke.rhoq, hapke.rhou, hapke.rho_accurate[:, pixel],
              hapke.bemst, hapke.emust, accur, header, direct_beam_flux, diffuse_down_flux,
              diffuse_up_flux, flux_divergence, mean_intensity, intensity[:, :, pixel], albedo_medium, transmissivity_medium)
-        test_run[w] = uu[0, 0]   # Just the the TOA I/F value
-    return test_run
+        # This is what I'd do for multiprocessing
+        #shared_array[pixel, w] = uu[0, 0]
+        answer[pixel, w] = uu[0, 0]
 
 
 def calculate_model_difference(guess, pixel):
@@ -232,24 +250,14 @@ def do_optimization(guess, pixel):
 # Without this pool won't cooperate
 if __name__ == '__main__':
     t0 = time.time()
-    n_cpus = 9  # mp.cpu_count()
+    n_cpus = 8  # mp.cpu_count()
     pixel_inds = np.linspace(0, len(szas)-1, num=len(szas), dtype='int')
-    iterable = [[[0.5, 0.2], f] for f in pixel_inds]
-    with mp.get_context('spawn').Pool(n_cpus) as pool:
-        #m = pool.starmap(do_optimization, iterable)
-        m = pool.starmap(myModel, iterable)
-        pool.close()
-        pool.join()
+    #iterable = [[[0.8, 0.2], f] for f in pixel_inds]
 
-    answer = np.array(m)
-    #np.save('/home/kyle/parallel_test_solver.npy', answer)
-    # Find parameters
-    #res = optimize.minimize(myModel, np.array([1, 0.05]), method='BFGS', tol=10**-6)
-    #print(res.x)
-    # ./disort_multi -dust_conrath 0.5, 10 -dust_phsfn 98 -ice_phsfn 99 -use_hg2_thetabar -NSTR 16 -zi_top 75 -NMOM 128 < testInput.txt
-
+    #m = joblib.Parallel(n_jobs=-2, prefer='processes')(joblib.delayed(myModel)([0.8, 0.2], f) for f in pixel_inds)
+    joblib.Parallel(n_jobs=-2, prefer='processes')(joblib.delayed(myModel)([0.8, 0.2], f) for f in pixel_inds)
+    print(np.amax(answer))
+    #np.save('/home/kyle/bestArray.npy', answer)
+    #sa.delete()
     t1 = time.time()
-    # Just do a model run
-    #solution = myModel([0.8, 0.2])
-    #print(solution)
     print(t1 - t0)

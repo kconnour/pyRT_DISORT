@@ -3,8 +3,8 @@ import numpy as np
 
 class CheckArray:
     def __init__(self, ndarray):
+        self.array_name = f'{ndarray=}'.split('=')[0]
         self.ndarray = ndarray
-        self.array_name = f'{self.ndarray=}'.split('=')[0]
 
     def check_object_is_array(self):
         if not isinstance(self.ndarray, np.ndarray):
@@ -12,15 +12,15 @@ class CheckArray:
 
     def check_ndarray_is_numeric(self):
         if not np.issubdtype(self.ndarray.dtype, np.number):
-            raise TypeError(f'{self.array_name} must contain only numbers')
+            raise ValueError(f'{self.array_name} must contain only numbers')
 
     def check_ndarray_is_finite(self):
         if not np.all(np.isfinite(self.ndarray)):
-            raise TypeError(f'{self.array_name} must contain all finite values')
+            raise ValueError(f'{self.array_name} must contain all finite values')
 
     def check_ndarray_is_positive(self):
         if not np.all(self.ndarray > 0):
-            raise TypeError(f'{self.array_name} must contain all positive values')
+            raise ValueError(f'{self.array_name} must contain all positive values')
 
     def check_ndarray_is_positive_finite(self):
         self.check_ndarray_is_finite()

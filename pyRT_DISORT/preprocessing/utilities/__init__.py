@@ -1,3 +1,4 @@
+from .array_checks import *
 from .create_fits import *
 from .external_files import *
 from .fit_phase_function import *
