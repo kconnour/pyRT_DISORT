@@ -14,12 +14,18 @@ class ParameterChecker(CheckArray):
     def __check_if_input_is_none(self):
         return True if self.ndarray is None else False
 
-    def check_parameters(self):
+    def check_parameters_are_array(self):
+        self.__check_parameters()
+
+    def check_parameters_are_array_or_none(self):
         if not self.nonetype:
-            self.check_object_is_array()
-            self.check_ndarray_is_numeric()
-            self.check_ndarray_is_positive_finite()
-            self.check_ndarray_is_1d()
+            self.__check_parameters()
+
+    def __check_parameters(self):
+        self.check_object_is_array()
+        self.check_ndarray_is_numeric()
+        self.check_ndarray_is_positive_finite()
+        self.check_ndarray_is_1d()
 
     def check_properties(self):
         self.check_ndarray_is_numeric()
@@ -104,9 +110,9 @@ class AerosolProperties:
 
     def __check_properties_and_grids(self):
         particle_size_checker = ParameterChecker(self.particle_size_grid)
-        particle_size_checker.check_parameters()
+        particle_size_checker.check_parameters_are_array_or_none()
         wavelength_checker = ParameterChecker(self.wavelength_grid)
-        wavelength_checker.check_parameters()
+        wavelength_checker.check_parameters_are_array_or_none()
         properties_checker = AerosolPropertiesChecker(self.aerosol_properties, self.particle_size_grid,
                                                       self.wavelength_grid)
         properties_checker.check_properties()
@@ -129,8 +135,8 @@ class AerosolProperties:
 
 class Aerosol(AerosolProperties):
     """ Create a class to hold all of the information about an aerosol"""
-    def __init__(self, aerosol_properties, particle_sizes, wavelengths, reference_wavelengths, particle_size_grid=None,
-                 wavelength_grid=None):
+    def __init__(self, aerosol_properties, particle_sizes, wavelengths, particle_size_grid=None,
+                 wavelength_grid=None, reference_wavelengths=None):
         """ Initialize the class to hold all the aerosol's properties
 
         Parameters
@@ -141,37 +147,60 @@ class Aerosol(AerosolProperties):
             The particle sizes of this aerosol
         wavelengths: np.ndarray
             The wavelengths at which this aerosol was observed
-        reference_wavelengths: np.ndarray
-            The wavelength at which to scale the wavelengths
-        particle_size_grid: np.ndarray
+        particle_size_grid: np.ndarray, optional
             1D array of the particle sizes corresponding to aerosol_properties. Default is None
-        wavelength_grid: np.ndarray
+        wavelength_grid: np.ndarray, optional
             1D array of the wavelengths corresponding to aerosol_properties. Default is None
+        reference_wavelengths: np.ndarray, optional
+            The wavelengths at which to scale wavelengths. Must be the same length as particle_sizes and is only used
+            for computing the extinction attribute. Default is None
+
+        Attributes
+        ----------
+        aerosol_properties: np.ndarray
+            The input aerosol_properties
+        particle_size_grid: np.ndarray or None
+            The input particle size grid
+        wavelength_grid: np.ndarray or None
+            The input wavelength grid
+        particle_sizes: np.ndarray
+            The input particle sizes
+        wavelengths: np.ndarray
+            The input wavelengths
+        reference_wavelengths: np.ndarray or None
+            The input reference wavelengths
+        c_scattering: np.ndarray
+            The scattering coefficient at the input particle sizes and wavelengths
+        c_extinction: np.ndarray
+            The extinction coefficient at the input particle sizes and wavelengths
+        asymmetry_parameter: np.ndarray
+            The Henyey-Greenstein asymmetry parameter at the input particle sizes and wavelengths
+        single_scattering_albedo: np.ndarray
+            The quotient c_scattering / c_extinction at the input particle sizes and wavelengths
+        reference_extinction: np.ndarray
+            c_extinction at the reference wavelengths
+        extinction: np.ndarray
+            The quotient c_extinction / reference_extinction. If reference_extinction=None, it's simply c_extinction
+
         """
         super().__init__(aerosol_properties, particle_size_grid=particle_size_grid, wavelength_grid=wavelength_grid)
         self.particle_sizes = particle_sizes
         self.wavelengths = wavelengths
+        self.reference_wavelengths = reference_wavelengths
         self.__aerosol_dimensions = np.ndim(self.aerosol_properties)
         self.__particle_none = self.__check_if_input_is_none(self.particle_size_grid)
         self.__wavelength_none = self.__check_if_input_is_none(self.wavelength_grid)
-        self.reference_wavelengths = reference_wavelengths
+        self.__reference_none = self.__check_if_input_is_none(self.reference_wavelengths)
 
         self.__check_parameters()
         self.__inform_if_outside_wavelength_range()
 
-        # to add:
-        # extinction - scaled
         self.c_scattering = self.__trim_grid_to_inputs(self.c_scattering_grid)
         self.c_extinction = self.__trim_grid_to_inputs(self.c_extinction_grid)
         self.asymmetry_parameter = self.__trim_grid_to_inputs(self.g_grid)
         self.single_scattering_albedo = self.c_scattering / self.c_extinction
-
-
-        #self.spectral_extinction = self.__interpolate_parameter_onto_spectral_grid(self.c_extinction, self.wavelengths)
-        #self.reference_extinction = self.__interpolate_parameter_onto_spectral_grid(self.c_extinction, self.reference_wavelengths)
-        #self.extinction = np.divide.outer(self.spectral_extinction, self.reference_extinction).T
-        #self.wavelength_scattering = self.__calculate_scattering(self.wavelengths)
-
+        self.reference_extinction = self.__make_reference_extinction()
+        self.extinction = self.__make_extinction()
 
     @staticmethod
     def __check_if_input_is_none(ndarray):
@@ -179,12 +208,12 @@ class Aerosol(AerosolProperties):
 
     def __check_parameters(self):
         particle_size_checker = ParameterChecker(self.particle_sizes)
-        particle_size_checker.check_parameters()
+        particle_size_checker.check_parameters_are_array()
         wavelength_checker = ParameterChecker(self.wavelengths)
-        wavelength_checker.check_parameters()
+        wavelength_checker.check_parameters_are_array()
         reference_wavelength_checker = ParameterChecker(self.reference_wavelengths)
-        reference_wavelength_checker.check_parameters()
-        if np.shape(self.particle_sizes) != np.shape(self.reference_wavelengths):
+        reference_wavelength_checker.check_parameters_are_array_or_none()
+        if (not self.__reference_none) and (np.shape(self.particle_sizes) != np.shape(self.reference_wavelengths)):
             raise IndexError('particle_sizes and reference_wavelengths must have the same shape')
 
     def __inform_if_outside_wavelength_range(self):
@@ -208,3 +237,22 @@ class Aerosol(AerosolProperties):
         else:
             f = interp2d(self.particle_size_grid, self.wavelength_grid, grid.T)
             return f(self.particle_sizes, self.wavelengths).T
+
+    def __make_reference_extinction(self):
+        if self.__reference_none:
+            return None
+        elif self.__reference_none and self.__wavelength_none:
+            print('Cannot scale to reference wavelengths if no spectral info is provided')
+            return None
+        elif self.__aerosol_dimensions == 2:
+            ref_ext = np.interp(self.reference_wavelengths, self.wavelength_grid, self.c_extinction_grid)
+            return np.broadcast_to(ref_ext, (len(self.wavelengths), len(self.particle_sizes))).T
+        else:
+            f = interp2d(self.particle_size_grid, self.wavelength_grid, self.c_extinction_grid.T)
+            return f(self.particle_sizes, self.reference_wavelengths).T
+
+    def __make_extinction(self):
+        if self.reference_extinction is None:
+            return self.c_extinction
+        else:
+            return self.c_extinction / self.reference_extinction

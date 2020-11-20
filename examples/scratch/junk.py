@@ -146,5 +146,9 @@ for i in range(10):
 #asdf.save_fits('/home/kyle/junk3D.fits')
 
 #aero = Aerosol(fakeData, r, w, ref, wavelength_grid=wavs, particle_size_grid=sizes)
-aero = Aerosol(data, r, w, ref, wavelength_grid=wavs)
-print(aero.single_scattering_albedo)
+aero = Aerosol(data, r, w, wavelength_grid=wavs, reference_wavelengths=ref)
+print(aero.extinction)
+
+file = ExternalFile('/home/kyle/repos/pyRT_DISORT/pyRT_DISORT/data/planets/mars/aux/dust.npy')
+old = OldAerosol(file.array, w, 9.1)
+print(old.extinction_ratios)

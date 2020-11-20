@@ -46,12 +46,17 @@ Unresolved comments from the boss:
    - Do integral in log(z) space
    - Maybe don't store midpoint values of the arrays (T_midpoint, P_midpoint, etc.)
    - the description of atmosphere array should be. "An array of the atmospheric state variables”. (i.e., P, temperature, number density, vertical coordinate) (minor wording change)
---- Aerosol
-   - Remove theta_max and kappa
-   - “extinction_ratios” should simply become “extinction" and that your store the reference c_ext as an attribute (i.e., reference_extinction)
-   - please drop the “s” from _albedos, _parameters (i.e., ssa and g)
-   - please drop the “hyperspectral” text.  let’s go with single_scatteing_albedo and asymmetry_parameter
-   - Aerosol objects need to have an r_eff dimension in order to be analogous to the wavelength and reff dependence
-   - (from me) Is there a better way besides telling the user the columns in the input file must be in a specified order?
+
 --- Column
    - The reference wavelength should be defined for each particle size. So change it from float --> np.ndarray
+
+My grumbles
+--- Aerosol
+   - Handle dwaveref
+   - Update docstring
+   - Change the checker classes to print the variable name that's causing the error
+   - Add aerosol file
+   - Update the test
+   - Remake documentation
+   - Is there a better way besides telling the user the columns in the input file must be in a specified order?
+   - Should there be a self.recreate() method? To update the aerosol's attributes if more info is provided?
