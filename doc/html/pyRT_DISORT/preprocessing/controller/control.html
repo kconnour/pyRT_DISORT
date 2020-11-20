@@ -32,7 +32,7 @@ import numpy as np
 
 class Control:
     def __init__(self, user_optical_depths=False, user_angles=True, only_fluxes=False, accuracy=0,
-                 print_variables=np.array([True, False, False, False, True]), header=&#39;&#39;, do_pseudo_sphere=False,
+                 print_variables=np.array([False, False, False, False, False]), header=&#39;&#39;, do_pseudo_sphere=False,
                  planetary_radius=6371, delta_m_plus=False):
         self.user_optical_depths = user_optical_depths
         self.user_angles = user_angles
@@ -59,8 +59,7 @@ class Control:
 <dl>
 <dt id="pyRT_DISORT.preprocessing.controller.control.Control"><code class="flex name class">
 <span>class <span class="ident">Control</span></span>
-<span>(</span><span>user_optical_depths=False, user_angles=True, only_fluxes=False, accuracy=0, print_variables=array([ True, False, False, False,
-True]), header='', do_pseudo_sphere=False, planetary_radius=6371, delta_m_plus=False)</span>
+<span>(</span><span>user_optical_depths=False, user_angles=True, only_fluxes=False, accuracy=0, print_variables=array([False, False, False, False, False]), header='', do_pseudo_sphere=False, planetary_radius=6371, delta_m_plus=False)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -70,7 +69,7 @@ True]), header='', do_pseudo_sphere=False, planetary_radius=6371, delta_m_plus=F
 </summary>
 <pre><code class="python">class Control:
     def __init__(self, user_optical_depths=False, user_angles=True, only_fluxes=False, accuracy=0,
-                 print_variables=np.array([True, False, False, False, True]), header=&#39;&#39;, do_pseudo_sphere=False,
+                 print_variables=np.array([False, False, False, False, False]), header=&#39;&#39;, do_pseudo_sphere=False,
                  planetary_radius=6371, delta_m_plus=False):
         self.user_optical_depths = user_optical_depths
         self.user_angles = user_angles

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.9.1" />
-<title>pyRT_DISORT.preprocessing.utilities API documentation</title>
+<title>pyRT_DISORT.preprocessing.utilities.shared_array API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
@@ -19,55 +19,82 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>pyRT_DISORT.preprocessing.utilities</code></h1>
+<h1 class="title">Module <code>pyRT_DISORT.preprocessing.utilities.shared_array</code></h1>
 </header>
 <section id="section-intro">
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from .array_checks import *
-from .create_fits import *
-from .external_files import *
-from .fit_phase_function import *
-from .rayleigh_co2 import *
-from .shared_array import *</code></pre>
+<pre><code class="python"># Built-in imports
+import os
+from tempfile import mkdtemp
+
+# 3rd-party imports
+import numpy as np
+
+
+class SharedArray:
+    def __init__(self, shape, dtype=np.float, mode=&#39;w+&#39;):
+        self.filename = &#39;tmp_mmap&#39;
+        self.tmp_dir = mkdtemp()
+        self.path = os.path.join(self.tmp_dir, self.filename)
+        self.array = np.memmap(self.path, shape=shape, dtype=dtype, mode=mode)
+
+    def delete(self):
+        os.remove(self.path)
+        os.rmdir(self.tmp_dir)</code></pre>
 </details>
 </section>
 <section>
-<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt><code class="name"><a title="pyRT_DISORT.preprocessing.utilities.array_checks" href="array_checks.html">pyRT_DISORT.preprocessing.utilities.array_checks</a></code></dt>
+<dt id="pyRT_DISORT.preprocessing.utilities.shared_array.SharedArray"><code class="flex name class">
+<span>class <span class="ident">SharedArray</span></span>
+<span>(</span><span>shape, dtype=builtins.float, mode='w+')</span>
+</code></dt>
 <dd>
 <div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="pyRT_DISORT.preprocessing.utilities.create_fits" href="create_fits.html">pyRT_DISORT.preprocessing.utilities.create_fits</a></code></dt>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class SharedArray:
+    def __init__(self, shape, dtype=np.float, mode=&#39;w+&#39;):
+        self.filename = &#39;tmp_mmap&#39;
+        self.tmp_dir = mkdtemp()
+        self.path = os.path.join(self.tmp_dir, self.filename)
+        self.array = np.memmap(self.path, shape=shape, dtype=dtype, mode=mode)
+
+    def delete(self):
+        os.remove(self.path)
+        os.rmdir(self.tmp_dir)</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="pyRT_DISORT.preprocessing.utilities.shared_array.SharedArray.delete"><code class="name flex">
+<span>def <span class="ident">delete</span></span>(<span>self)</span>
+</code></dt>
 <dd>
 <div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="pyRT_DISORT.preprocessing.utilities.external_files" href="external_files.html">pyRT_DISORT.preprocessing.utilities.external_files</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="pyRT_DISORT.preprocessing.utilities.fit_phase_function" href="fit_phase_function.html">pyRT_DISORT.preprocessing.utilities.fit_phase_function</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="pyRT_DISORT.preprocessing.utilities.rayleigh_co2" href="rayleigh_co2.html">pyRT_DISORT.preprocessing.utilities.rayleigh_co2</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="pyRT_DISORT.preprocessing.utilities.shared_array" href="shared_array.html">pyRT_DISORT.preprocessing.utilities.shared_array</a></code></dt>
-<dd>
-<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def delete(self):
+    os.remove(self.path)
+    os.rmdir(self.tmp_dir)</code></pre>
+</details>
 </dd>
 </dl>
-</section>
-<section>
-</section>
-<section>
-</section>
-<section>
+</dd>
+</dl>
 </section>
 </article>
 <nav id="sidebar">
@@ -78,17 +105,17 @@ from .shared_array import *</code></pre>
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="pyRT_DISORT.preprocessing" href="../index.html">pyRT_DISORT.preprocessing</a></code></li>
+<li><code><a title="pyRT_DISORT.preprocessing.utilities" href="index.html">pyRT_DISORT.preprocessing.utilities</a></code></li>
 </ul>
 </li>
-<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
-<li><code><a title="pyRT_DISORT.preprocessing.utilities.array_checks" href="array_checks.html">pyRT_DISORT.preprocessing.utilities.array_checks</a></code></li>
-<li><code><a title="pyRT_DISORT.preprocessing.utilities.create_fits" href="create_fits.html">pyRT_DISORT.preprocessing.utilities.create_fits</a></code></li>
-<li><code><a title="pyRT_DISORT.preprocessing.utilities.external_files" href="external_files.html">pyRT_DISORT.preprocessing.utilities.external_files</a></code></li>
-<li><code><a title="pyRT_DISORT.preprocessing.utilities.fit_phase_function" href="fit_phase_function.html">pyRT_DISORT.preprocessing.utilities.fit_phase_function</a></code></li>
-<li><code><a title="pyRT_DISORT.preprocessing.utilities.rayleigh_co2" href="rayleigh_co2.html">pyRT_DISORT.preprocessing.utilities.rayleigh_co2</a></code></li>
-<li><code><a title="pyRT_DISORT.preprocessing.utilities.shared_array" href="shared_array.html">pyRT_DISORT.preprocessing.utilities.shared_array</a></code></li>
+<li>
+<h4><code><a title="pyRT_DISORT.preprocessing.utilities.shared_array.SharedArray" href="#pyRT_DISORT.preprocessing.utilities.shared_array.SharedArray">SharedArray</a></code></h4>
+<ul class="">
+<li><code><a title="pyRT_DISORT.preprocessing.utilities.shared_array.SharedArray.delete" href="#pyRT_DISORT.preprocessing.utilities.shared_array.SharedArray.delete">delete</a></code></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

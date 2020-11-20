@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.1" />
+<title>pyRT_DISORT.preprocessing.utilities.external_files API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>pyRT_DISORT.preprocessing.utilities.external_files</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">from astropy.io import fits
+import pandas as pd
+import numpy as np
+import glob
+import os
+
+
+class ExternalFile:
+    &#34;&#34;&#34; Read in external files and turn them into numpy arrays to work with pyRT_DISORT functions&#34;&#34;&#34;
+    def __init__(self, file_path, header_lines=0, text1d=True):
+        &#34;&#34;&#34;
+        Parameters
+        ----------
+        file_path: str
+            The absolute path to the file
+        header_lines: int, optional
+            The number of header lines to skip. Only used for plain text input
+        text1d: bool, optional
+            Denote if the data are 1D or 2D. Only used for plain text input
+        &#34;&#34;&#34;
+        self.file_path = file_path
+        self.header_lines = header_lines
+        self.text1d = text1d
+        self.__check_inputs()
+        self.__trim_file_path()
+        self.filename = self.__get_filename()
+        self.extension = self.__get_extension()
+        self.array = self.__read_in_file()
+
+    def __check_inputs(self):
+        assert isinstance(self.file_path, str), &#39;file_path must be a string&#39;
+        assert isinstance(self.header_lines, int), &#39;header_lines must be an int&#39;
+        assert isinstance(self.text1d, bool), &#39;text1d needs to be a boolean&#39;
+
+    def __trim_file_path(self):
+        self.file_path = self.file_path.strip()
+
+    def __get_filename(self):
+        return self.file_path.split(&#39;.&#39;)[0]
+
+    def __get_extension(self):
+        return self.file_path.split(&#39;.&#39;)[-1]
+
+    def __read_in_file(self):
+        if self.extension == &#39;npy&#39;:
+            return self.__read_npy_file()
+        elif self.extension == &#39;csv&#39;:
+            return self.__csv_to_npy()
+        elif self.extension == &#39;fits&#39;:
+            return self.__read_fits_file()
+        elif self.extension in [&#39;txt&#39;, &#39;dat&#39;, &#39;coef&#39;, &#39;phsfn&#39;]:
+            if self.text1d:
+                return self.__1dtext_to_npy()
+            else:
+                return self.__2dtext_to_npy()
+        else:
+            print(&#39;Unsure how to handle that extension... please use .npy, .csv, .fits, .txt, .dat, .coef, .phsfn&#39;)
+            return None
+
+    def __read_npy_file(self):
+        return np.load(self.file_path)
+
+    def __csv_to_npy(self):
+        return pd.read_csv(self.file_path).to_numpy()
+
+    def __read_fits_file(self):
+        return fits.open(self.file_path)
+
+    def __get_absolute_path(self, new_filename):
+        if new_filename.strip()[-1] == &#39;/&#39;:
+            raise SystemExit(&#39;You provided a path but not a filename...&#39;)
+
+        # assume it&#39;s a relative path
+        if &#39;/&#39; not in new_filename:
+            stripped_filename = self.__strip_extensions(new_filename)
+            split_paths = self.file_path.split(&#39;/&#39;)
+            split_paths[-1] = stripped_filename
+            return &#39;/&#39;.join(split_paths)
+        # assume it&#39;s an absolute path
+        else:
+            return new_filename
+
+    @staticmethod
+    def __strip_extensions(filename):
+        return filename.split(&#39;.&#39;)[0]
+
+    def __1dtext_to_npy(self):
+        coeff = []
+        f = open(self.file_path)
+        lines = f.readlines()[self.header_lines:]
+        for line in lines:
+            a = np.fromstring(line.strip(), sep=&#39; &#39;)
+            coeff.append(a)
+
+        # This unravels a list and stores it as an array
+        return np.array([co for all_coeff in coeff for co in all_coeff])
+
+    def __2dtext_to_npy(self):
+        return np.genfromtxt(self.file_path, skip_header=self.header_lines, filling_values=np.nan)
+
+    def save_as_npy(self, new_filename=&#39;&#39;):
+        &#34;&#34;&#34; Save the input file as a numpy array
+
+        Parameters
+        ----------
+        new_filename: str
+            The filename for the newly created file. Can be an absolute path; otherwise makes a file in the same
+            location as the data file.
+
+        Returns
+        -------
+        None
+
+        Examples
+        --------
+        &gt;&gt;&gt; folder = &#39;/path/to/my/data/&#39;
+        &gt;&gt;&gt; file = &#39;folder&#39; + &#39;myDataFile.csv&#39;
+        &gt;&gt;&gt; f = ExternalFiles(file)
+        &gt;&gt;&gt; f.save_as_npy(new_filename=&#39;myBetterNamedDataFile&#39;)
+
+        &gt;&gt;&gt; folder = &#39;/path/to/my/data/&#39;
+        &gt;&gt;&gt; file = &#39;folder&#39; + &#39;myDataFile.txt&#39;
+        &gt;&gt;&gt; f = ExternalFiles(file)
+        &gt;&gt;&gt; f.save_as_npy(new_filename=&#39;/absolute/path/to/my/new/file/fileName&#39;)
+
+        &#34;&#34;&#34;
+        assert isinstance(new_filename, str), &#39;new_filename must be a string&#39;
+        absolute_path = self.__get_absolute_path(new_filename)
+        np.save(absolute_path, self.array)
+
+    def save_as_csv(self, new_filename, headers):
+        &#34;&#34;&#34; Save the input file in .csv format
+
+        Parameters
+        ----------
+        new_filename: str
+            The filename for the newly created file. Can be an absolute path; otherwise makes a file in the same
+            location as the data file.
+        headers: list
+            A list of strings of each of the column names
+
+        Returns
+        -------
+        None
+        &#34;&#34;&#34;
+        if (dims := np.ndim(self.array)) &gt; 2:
+            print(&#39;You\&#39;re trying to save a {}D array in 2D format... consult a string theorist.&#39;.format(dims))
+            return
+        absolute_path = self.__get_absolute_path(new_filename)
+        pd.DataFrame(self.array).to_csv(&#39;{}.csv&#39;.format(absolute_path), header=headers, index=False)
+
+
+class MultipleExternalFiles:
+    &#34;&#34;&#34; Get the absolute paths of files matching a given pattern&#34;&#34;&#34;
+    def __init__(self, pattern, path):
+        &#34;&#34;&#34;
+        Parameters
+        ----------
+        pattern: str
+            A regex pattern to match
+        path: str
+            The location of files to match the pattern to
+        &#34;&#34;&#34;
+        self.pattern = pattern
+        self.path = path
+        self.files = self.__get_files()
+
+    def __check_inputs(self):
+        assert isinstance(self.pattern, str), &#39;pattern must a string&#39;
+        assert isinstance(self.path, str), &#39;path must be a string&#39;
+
+    def __get_files(self):
+        absolute_path = os.path.join(self.path, self.pattern)
+        return sorted(glob.glob(absolute_path))</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="pyRT_DISORT.preprocessing.utilities.external_files.ExternalFile"><code class="flex name class">
+<span>class <span class="ident">ExternalFile</span></span>
+<span>(</span><span>file_path, header_lines=0, text1d=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Read in external files and turn them into numpy arrays to work with pyRT_DISORT functions</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>file_path</code></strong> :&ensp;<code>str</code></dt>
+<dd>The absolute path to the file</dd>
+<dt><strong><code>header_lines</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>The number of header lines to skip. Only used for plain text input</dd>
+<dt><strong><code>text1d</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Denote if the data are 1D or 2D. Only used for plain text input</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ExternalFile:
+    &#34;&#34;&#34; Read in external files and turn them into numpy arrays to work with pyRT_DISORT functions&#34;&#34;&#34;
+    def __init__(self, file_path, header_lines=0, text1d=True):
+        &#34;&#34;&#34;
+        Parameters
+        ----------
+        file_path: str
+            The absolute path to the file
+        header_lines: int, optional
+            The number of header lines to skip. Only used for plain text input
+        text1d: bool, optional
+            Denote if the data are 1D or 2D. Only used for plain text input
+        &#34;&#34;&#34;
+        self.file_path = file_path
+        self.header_lines = header_lines
+        self.text1d = text1d
+        self.__check_inputs()
+        self.__trim_file_path()
+        self.filename = self.__get_filename()
+        self.extension = self.__get_extension()
+        self.array = self.__read_in_file()
+
+    def __check_inputs(self):
+        assert isinstance(self.file_path, str), &#39;file_path must be a string&#39;
+        assert isinstance(self.header_lines, int), &#39;header_lines must be an int&#39;
+        assert isinstance(self.text1d, bool), &#39;text1d needs to be a boolean&#39;
+
+    def __trim_file_path(self):
+        self.file_path = self.file_path.strip()
+
+    def __get_filename(self):
+        return self.file_path.split(&#39;.&#39;)[0]
+
+    def __get_extension(self):
+        return self.file_path.split(&#39;.&#39;)[-1]
+
+    def __read_in_file(self):
+        if self.extension == &#39;npy&#39;:
+            return self.__read_npy_file()
+        elif self.extension == &#39;csv&#39;:
+            return self.__csv_to_npy()
+        elif self.extension == &#39;fits&#39;:
+            return self.__read_fits_file()
+        elif self.extension in [&#39;txt&#39;, &#39;dat&#39;, &#39;coef&#39;, &#39;phsfn&#39;]:
+            if self.text1d:
+                return self.__1dtext_to_npy()
+            else:
+                return self.__2dtext_to_npy()
+        else:
+            print(&#39;Unsure how to handle that extension... please use .npy, .csv, .fits, .txt, .dat, .coef, .phsfn&#39;)
+            return None
+
+    def __read_npy_file(self):
+        return np.load(self.file_path)
+
+    def __csv_to_npy(self):
+        return pd.read_csv(self.file_path).to_numpy()
+
+    def __read_fits_file(self):
+        return fits.open(self.file_path)
+
+    def __get_absolute_path(self, new_filename):
+        if new_filename.strip()[-1] == &#39;/&#39;:
+            raise SystemExit(&#39;You provided a path but not a filename...&#39;)
+
+        # assume it&#39;s a relative path
+        if &#39;/&#39; not in new_filename:
+            stripped_filename = self.__strip_extensions(new_filename)
+            split_paths = self.file_path.split(&#39;/&#39;)
+            split_paths[-1] = stripped_filename
+            return &#39;/&#39;.join(split_paths)
+        # assume it&#39;s an absolute path
+        else:
+            return new_filename
+
+    @staticmethod
+    def __strip_extensions(filename):
+        return filename.split(&#39;.&#39;)[0]
+
+    def __1dtext_to_npy(self):
+        coeff = []
+        f = open(self.file_path)
+        lines = f.readlines()[self.header_lines:]
+        for line in lines:
+            a = np.fromstring(line.strip(), sep=&#39; &#39;)
+            coeff.append(a)
+
+        # This unravels a list and stores it as an array
+        return np.array([co for all_coeff in coeff for co in all_coeff])
+
+    def __2dtext_to_npy(self):
+        return np.genfromtxt(self.file_path, skip_header=self.header_lines, filling_values=np.nan)
+
+    def save_as_npy(self, new_filename=&#39;&#39;):
+        &#34;&#34;&#34; Save the input file as a numpy array
+
+        Parameters
+        ----------
+        new_filename: str
+            The filename for the newly created file. Can be an absolute path; otherwise makes a file in the same
+            location as the data file.
+
+        Returns
+        -------
+        None
+
+        Examples
+        --------
+        &gt;&gt;&gt; folder = &#39;/path/to/my/data/&#39;
+        &gt;&gt;&gt; file = &#39;folder&#39; + &#39;myDataFile.csv&#39;
+        &gt;&gt;&gt; f = ExternalFiles(file)
+        &gt;&gt;&gt; f.save_as_npy(new_filename=&#39;myBetterNamedDataFile&#39;)
+
+        &gt;&gt;&gt; folder = &#39;/path/to/my/data/&#39;
+        &gt;&gt;&gt; file = &#39;folder&#39; + &#39;myDataFile.txt&#39;
+        &gt;&gt;&gt; f = ExternalFiles(file)
+        &gt;&gt;&gt; f.save_as_npy(new_filename=&#39;/absolute/path/to/my/new/file/fileName&#39;)
+
+        &#34;&#34;&#34;
+        assert isinstance(new_filename, str), &#39;new_filename must be a string&#39;
+        absolute_path = self.__get_absolute_path(new_filename)
+        np.save(absolute_path, self.array)
+
+    def save_as_csv(self, new_filename, headers):
+        &#34;&#34;&#34; Save the input file in .csv format
+
+        Parameters
+        ----------
+        new_filename: str
+            The filename for the newly created file. Can be an absolute path; otherwise makes a file in the same
+            location as the data file.
+        headers: list
+            A list of strings of each of the column names
+
+        Returns
+        -------
+        None
+        &#34;&#34;&#34;
+        if (dims := np.ndim(self.array)) &gt; 2:
+            print(&#39;You\&#39;re trying to save a {}D array in 2D format... consult a string theorist.&#39;.format(dims))
+            return
+        absolute_path = self.__get_absolute_path(new_filename)
+        pd.DataFrame(self.array).to_csv(&#39;{}.csv&#39;.format(absolute_path), header=headers, index=False)</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="pyRT_DISORT.preprocessing.utilities.external_files.ExternalFile.save_as_csv"><code class="name flex">
+<span>def <span class="ident">save_as_csv</span></span>(<span>self, new_filename, headers)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Save the input file in .csv format</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>new_filename</code></strong> :&ensp;<code>str</code></dt>
+<dd>The filename for the newly created file. Can be an absolute path; otherwise makes a file in the same
+location as the data file.</dd>
+<dt><strong><code>headers</code></strong> :&ensp;<code>list</code></dt>
+<dd>A list of strings of each of the column names</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>None</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def save_as_csv(self, new_filename, headers):
+    &#34;&#34;&#34; Save the input file in .csv format
+
+    Parameters
+    ----------
+    new_filename: str
+        The filename for the newly created file. Can be an absolute path; otherwise makes a file in the same
+        location as the data file.
+    headers: list
+        A list of strings of each of the column names
+
+    Returns
+    -------
+    None
+    &#34;&#34;&#34;
+    if (dims := np.ndim(self.array)) &gt; 2:
+        print(&#39;You\&#39;re trying to save a {}D array in 2D format... consult a string theorist.&#39;.format(dims))
+        return
+    absolute_path = self.__get_absolute_path(new_filename)
+    pd.DataFrame(self.array).to_csv(&#39;{}.csv&#39;.format(absolute_path), header=headers, index=False)</code></pre>
+</details>
+</dd>
+<dt id="pyRT_DISORT.preprocessing.utilities.external_files.ExternalFile.save_as_npy"><code class="name flex">
+<span>def <span class="ident">save_as_npy</span></span>(<span>self, new_filename='')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Save the input file as a numpy array</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>new_filename</code></strong> :&ensp;<code>str</code></dt>
+<dd>The filename for the newly created file. Can be an absolute path; otherwise makes a file in the same
+location as the data file.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>None</code></dt>
+<dd>&nbsp;</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code class="python-repl">&gt;&gt;&gt; folder = '/path/to/my/data/'
+&gt;&gt;&gt; file = 'folder' + 'myDataFile.csv'
+&gt;&gt;&gt; f = ExternalFiles(file)
+&gt;&gt;&gt; f.save_as_npy(new_filename='myBetterNamedDataFile')
+</code></pre>
+<pre><code class="python-repl">&gt;&gt;&gt; folder = '/path/to/my/data/'
+&gt;&gt;&gt; file = 'folder' + 'myDataFile.txt'
+&gt;&gt;&gt; f = ExternalFiles(file)
+&gt;&gt;&gt; f.save_as_npy(new_filename='/absolute/path/to/my/new/file/fileName')
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def save_as_npy(self, new_filename=&#39;&#39;):
+    &#34;&#34;&#34; Save the input file as a numpy array
+
+    Parameters
+    ----------
+    new_filename: str
+        The filename for the newly created file. Can be an absolute path; otherwise makes a file in the same
+        location as the data file.
+
+    Returns
+    -------
+    None
+
+    Examples
+    --------
+    &gt;&gt;&gt; folder = &#39;/path/to/my/data/&#39;
+    &gt;&gt;&gt; file = &#39;folder&#39; + &#39;myDataFile.csv&#39;
+    &gt;&gt;&gt; f = ExternalFiles(file)
+    &gt;&gt;&gt; f.save_as_npy(new_filename=&#39;myBetterNamedDataFile&#39;)
+
+    &gt;&gt;&gt; folder = &#39;/path/to/my/data/&#39;
+    &gt;&gt;&gt; file = &#39;folder&#39; + &#39;myDataFile.txt&#39;
+    &gt;&gt;&gt; f = ExternalFiles(file)
+    &gt;&gt;&gt; f.save_as_npy(new_filename=&#39;/absolute/path/to/my/new/file/fileName&#39;)
+
+    &#34;&#34;&#34;
+    assert isinstance(new_filename, str), &#39;new_filename must be a string&#39;
+    absolute_path = self.__get_absolute_path(new_filename)
+    np.save(absolute_path, self.array)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="pyRT_DISORT.preprocessing.utilities.external_files.MultipleExternalFiles"><code class="flex name class">
+<span>class <span class="ident">MultipleExternalFiles</span></span>
+<span>(</span><span>pattern, path)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get the absolute paths of files matching a given pattern</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>pattern</code></strong> :&ensp;<code>str</code></dt>
+<dd>A regex pattern to match</dd>
+<dt><strong><code>path</code></strong> :&ensp;<code>str</code></dt>
+<dd>The location of files to match the pattern to</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class MultipleExternalFiles:
+    &#34;&#34;&#34; Get the absolute paths of files matching a given pattern&#34;&#34;&#34;
+    def __init__(self, pattern, path):
+        &#34;&#34;&#34;
+        Parameters
+        ----------
+        pattern: str
+            A regex pattern to match
+        path: str
+            The location of files to match the pattern to
+        &#34;&#34;&#34;
+        self.pattern = pattern
+        self.path = path
+        self.files = self.__get_files()
+
+    def __check_inputs(self):
+        assert isinstance(self.pattern, str), &#39;pattern must a string&#39;
+        assert isinstance(self.path, str), &#39;path must be a string&#39;
+
+    def __get_files(self):
+        absolute_path = os.path.join(self.path, self.pattern)
+        return sorted(glob.glob(absolute_path))</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="pyRT_DISORT.preprocessing.utilities" href="index.html">pyRT_DISORT.preprocessing.utilities</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="pyRT_DISORT.preprocessing.utilities.external_files.ExternalFile" href="#pyRT_DISORT.preprocessing.utilities.external_files.ExternalFile">ExternalFile</a></code></h4>
+<ul class="">
+<li><code><a title="pyRT_DISORT.preprocessing.utilities.external_files.ExternalFile.save_as_csv" href="#pyRT_DISORT.preprocessing.utilities.external_files.ExternalFile.save_as_csv">save_as_csv</a></code></li>
+<li><code><a title="pyRT_DISORT.preprocessing.utilities.external_files.ExternalFile.save_as_npy" href="#pyRT_DISORT.preprocessing.utilities.external_files.ExternalFile.save_as_npy">save_as_npy</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="pyRT_DISORT.preprocessing.utilities.external_files.MultipleExternalFiles" href="#pyRT_DISORT.preprocessing.utilities.external_files.MultipleExternalFiles">MultipleExternalFiles</a></code></h4>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+</footer>
+</body>
+</html>

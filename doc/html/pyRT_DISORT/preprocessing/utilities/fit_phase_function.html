@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.1" />
+<title>pyRT_DISORT.preprocessing.utilities.fit_phase_function API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>pyRT_DISORT.preprocessing.utilities.fit_phase_function</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python"># 3rd-party imports
+import numpy as np
+from scipy import integrate, interpolate
+from numba import jit
+
+
+class PhaseFunction:
+    &#34;&#34;&#34; Provide methods to work with phase functions&#34;&#34;&#34;
+    def __init__(self, input_phase_function, degrees=True):
+        &#34;&#34;&#34;
+        Parameters
+        ----------
+        input_phase_function: np.ndarray
+            A 2D array where the first column is the scattering angle and the second is the (possibly unnormalized)
+            phase function
+        degrees: bool
+            Denote if the first column of phase_function is in degrees. Default is True
+        &#34;&#34;&#34;
+        self.input_phase_function = input_phase_function
+        self.degrees = degrees
+
+        if self.degrees:
+            self.input_theta_degrees = self.input_phase_function[:, 0]
+            self.input_theta_radians = np.radians(self.input_theta_degrees)
+        else:
+            self.input_theta_radians = self.input_phase_function[:, 0]
+        # For numba...
+        #self.input_theta_degrees = self.input_phase_function[:, 0]
+        #self.input_theta_radians = np.radians(self.input_theta_degrees)
+
+        self.mu = np.cos(self.input_theta_radians)
+        self.phase_function = self.input_phase_function[:, 1]
+        self.n_angles = len(self.mu)
+
+    @jit(forceobj=True)
+    def create_legendre_coefficients(self, n_moments, n_samples):
+        &#34;&#34;&#34; Create the Legendre coefficients for this phase function, forcing coefficients to be non-negative
+
+        Parameters
+        ----------
+        n_moments: int
+            The desired number of moments to find a solution for
+        n_samples: int
+            Resample the input phase function to n_samples. Must be &gt;= n_moments
+
+        Returns
+        -------
+        fit_coefficients: np.ndarray
+            A 1D array of fitted coefficients of length n_moments
+        &#34;&#34;&#34;
+        #self.__check_create_coefficient_inputs(n_moments, n_samples)
+        #self.__check_samples_greater_than_moments(n_moments, n_samples)
+
+        resampled_theta = self.__resample_angles(n_samples)
+        norm_resampled_phase_function = self.__normalize_phase_function(self.__resample_phase_function(resampled_theta),
+                                                                        resampled_theta)
+
+        # Since we&#39;re forcing c0 = 1 and fitting p = c0 + c1 * L1 + ..., p - 1 = c1 * L1 + ..., which is what we want!
+        phase_function_to_fit = norm_resampled_phase_function - 1
+
+        legendre_polynomials = self.__make_legendre_polynomials(n_moments, n_samples, resampled_theta)
+        normal_matrix = self.__make_normal_matrix(legendre_polynomials, phase_function_to_fit)
+        normal_vector = self.__make_normal_vector(legendre_polynomials, phase_function_to_fit)
+        cholesky_factorization = self.__cholesky_decomposition(normal_matrix)
+        first_solution = self.__solve_first_system(cholesky_factorization, normal_vector)
+        second_solution = self.__solve_second_system(cholesky_factorization, first_solution)
+        fit_coefficients = self.__filter_negative_coefficients(second_solution)
+        return fit_coefficients
+
+    @staticmethod
+    def __check_create_coefficient_inputs(n_moments, n_samples):
+        assert isinstance(n_moments, int), &#39;n_moments must be an int.&#39;
+        assert isinstance(n_samples, int), &#39;n_samples must be an int.&#39;
+
+    @staticmethod
+    def __check_samples_greater_than_moments(n_moments, n_samples):
+        assert n_samples &gt;= n_moments, &#39;n_samples must be &gt;= n_moments&#39;
+
+    def __resample_angles(self, n_samples):
+        return np.linspace(0, self.input_theta_radians[-1], num=n_samples)
+
+    def __resample_phase_function(self, resampled_theta):
+        f = interpolate.interp1d(self.mu, self.phase_function)
+        resampled_mu = np.cos(resampled_theta)
+        return f(resampled_mu)
+
+    @staticmethod
+    def __normalize_phase_function(interp_phase_function, resampled_theta):
+        resampled_norm = np.abs(integrate.simps(interp_phase_function, np.cos(resampled_theta)))
+        return 2 * interp_phase_function / resampled_norm
+
+    @staticmethod
+    def __make_legendre_polynomials(n_moments, n_samples, resampled_theta):
+        &#34;&#34;&#34; Evaulate Legendre polynomials
+
+        Parameters
+        ----------
+        n_moments
+        n_samples
+        resampled_theta
+
+        Returns
+        -------
+        np.ndarray
+            A 2D array. The 0th index is the i+1 polynomial and the 1st index is the angle. So [2, 6] will be the
+            3rd Legendre polynomial (L3) evaluated at the 7th angle
+        &#34;&#34;&#34;
+        # Make a 2D array with 1s on the diagonal to pick out only the desired Legendre polynomial
+        diagonal = np.diag(np.ones(n_moments))
+        dummy_coeff = np.zeros((n_moments, n_samples))
+        dummy_coeff[:, :n_moments] = diagonal
+        # Evaluate the polynomials at the input angles. I have no idea why legval resizes the output array,
+        # so slice off the 0th moment (which we aren&#39;t fitting), and only get up to n_moments
+        return np.polynomial.legendre.legval(np.cos(resampled_theta), dummy_coeff)[1:n_moments, :]
+
+    @staticmethod
+    def __make_normal_matrix(legendre_coefficients, phase_function_to_fit):
+        return np.sum(legendre_coefficients[:, None, :] * legendre_coefficients[None, :, :] / phase_function_to_fit**2,
+                      axis=-1)
+
+    @staticmethod
+    def __make_normal_vector(legendre_coefficients, phase_function_to_fit):
+        return np.sum(legendre_coefficients / phase_function_to_fit, axis=-1)
+
+    @staticmethod
+    def __cholesky_decomposition(normal_matrix):
+        return np.linalg.cholesky(normal_matrix)
+
+    @staticmethod
+    def __solve_first_system(cholesky_factorization, normal_vector):
+        return np.linalg.solve(cholesky_factorization, normal_vector)
+
+    @staticmethod
+    def __solve_second_system(cholesky_factorization, first_solution):
+        return np.linalg.solve(cholesky_factorization.T, first_solution)
+
+    @staticmethod
+    def __filter_negative_coefficients(second_solution):
+        coefficients = np.concatenate((np.array([1]), second_solution))
+        first_negative_index = np.argmax(coefficients &lt; 0)
+        if first_negative_index:
+            print(f&#34;Setting coefficients to zero starting with coefficient {first_negative_index}&#34;)
+            coefficients[first_negative_index:] = 0
+        return coefficients</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="pyRT_DISORT.preprocessing.utilities.fit_phase_function.PhaseFunction"><code class="flex name class">
+<span>class <span class="ident">PhaseFunction</span></span>
+<span>(</span><span>input_phase_function, degrees=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Provide methods to work with phase functions</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>input_phase_function</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>A 2D array where the first column is the scattering angle and the second is the (possibly unnormalized)
+phase function</dd>
+<dt><strong><code>degrees</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Denote if the first column of phase_function is in degrees. Default is True</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class PhaseFunction:
+    &#34;&#34;&#34; Provide methods to work with phase functions&#34;&#34;&#34;
+    def __init__(self, input_phase_function, degrees=True):
+        &#34;&#34;&#34;
+        Parameters
+        ----------
+        input_phase_function: np.ndarray
+            A 2D array where the first column is the scattering angle and the second is the (possibly unnormalized)
+            phase function
+        degrees: bool
+            Denote if the first column of phase_function is in degrees. Default is True
+        &#34;&#34;&#34;
+        self.input_phase_function = input_phase_function
+        self.degrees = degrees
+
+        if self.degrees:
+            self.input_theta_degrees = self.input_phase_function[:, 0]
+            self.input_theta_radians = np.radians(self.input_theta_degrees)
+        else:
+            self.input_theta_radians = self.input_phase_function[:, 0]
+        # For numba...
+        #self.input_theta_degrees = self.input_phase_function[:, 0]
+        #self.input_theta_radians = np.radians(self.input_theta_degrees)
+
+        self.mu = np.cos(self.input_theta_radians)
+        self.phase_function = self.input_phase_function[:, 1]
+        self.n_angles = len(self.mu)
+
+    @jit(forceobj=True)
+    def create_legendre_coefficients(self, n_moments, n_samples):
+        &#34;&#34;&#34; Create the Legendre coefficients for this phase function, forcing coefficients to be non-negative
+
+        Parameters
+        ----------
+        n_moments: int
+            The desired number of moments to find a solution for
+        n_samples: int
+            Resample the input phase function to n_samples. Must be &gt;= n_moments
+
+        Returns
+        -------
+        fit_coefficients: np.ndarray
+            A 1D array of fitted coefficients of length n_moments
+        &#34;&#34;&#34;
+        #self.__check_create_coefficient_inputs(n_moments, n_samples)
+        #self.__check_samples_greater_than_moments(n_moments, n_samples)
+
+        resampled_theta = self.__resample_angles(n_samples)
+        norm_resampled_phase_function = self.__normalize_phase_function(self.__resample_phase_function(resampled_theta),
+                                                                        resampled_theta)
+
+        # Since we&#39;re forcing c0 = 1 and fitting p = c0 + c1 * L1 + ..., p - 1 = c1 * L1 + ..., which is what we want!
+        phase_function_to_fit = norm_resampled_phase_function - 1
+
+        legendre_polynomials = self.__make_legendre_polynomials(n_moments, n_samples, resampled_theta)
+        normal_matrix = self.__make_normal_matrix(legendre_polynomials, phase_function_to_fit)
+        normal_vector = self.__make_normal_vector(legendre_polynomials, phase_function_to_fit)
+        cholesky_factorization = self.__cholesky_decomposition(normal_matrix)
+        first_solution = self.__solve_first_system(cholesky_factorization, normal_vector)
+        second_solution = self.__solve_second_system(cholesky_factorization, first_solution)
+        fit_coefficients = self.__filter_negative_coefficients(second_solution)
+        return fit_coefficients
+
+    @staticmethod
+    def __check_create_coefficient_inputs(n_moments, n_samples):
+        assert isinstance(n_moments, int), &#39;n_moments must be an int.&#39;
+        assert isinstance(n_samples, int), &#39;n_samples must be an int.&#39;
+
+    @staticmethod
+    def __check_samples_greater_than_moments(n_moments, n_samples):
+        assert n_samples &gt;= n_moments, &#39;n_samples must be &gt;= n_moments&#39;
+
+    def __resample_angles(self, n_samples):
+        return np.linspace(0, self.input_theta_radians[-1], num=n_samples)
+
+    def __resample_phase_function(self, resampled_theta):
+        f = interpolate.interp1d(self.mu, self.phase_function)
+        resampled_mu = np.cos(resampled_theta)
+        return f(resampled_mu)
+
+    @staticmethod
+    def __normalize_phase_function(interp_phase_function, resampled_theta):
+        resampled_norm = np.abs(integrate.simps(interp_phase_function, np.cos(resampled_theta)))
+        return 2 * interp_phase_function / resampled_norm
+
+    @staticmethod
+    def __make_legendre_polynomials(n_moments, n_samples, resampled_theta):
+        &#34;&#34;&#34; Evaulate Legendre polynomials
+
+        Parameters
+        ----------
+        n_moments
+        n_samples
+        resampled_theta
+
+        Returns
+        -------
+        np.ndarray
+            A 2D array. The 0th index is the i+1 polynomial and the 1st index is the angle. So [2, 6] will be the
+            3rd Legendre polynomial (L3) evaluated at the 7th angle
+        &#34;&#34;&#34;
+        # Make a 2D array with 1s on the diagonal to pick out only the desired Legendre polynomial
+        diagonal = np.diag(np.ones(n_moments))
+        dummy_coeff = np.zeros((n_moments, n_samples))
+        dummy_coeff[:, :n_moments] = diagonal
+        # Evaluate the polynomials at the input angles. I have no idea why legval resizes the output array,
+        # so slice off the 0th moment (which we aren&#39;t fitting), and only get up to n_moments
+        return np.polynomial.legendre.legval(np.cos(resampled_theta), dummy_coeff)[1:n_moments, :]
+
+    @staticmethod
+    def __make_normal_matrix(legendre_coefficients, phase_function_to_fit):
+        return np.sum(legendre_coefficients[:, None, :] * legendre_coefficients[None, :, :] / phase_function_to_fit**2,
+                      axis=-1)
+
+    @staticmethod
+    def __make_normal_vector(legendre_coefficients, phase_function_to_fit):
+        return np.sum(legendre_coefficients / phase_function_to_fit, axis=-1)
+
+    @staticmethod
+    def __cholesky_decomposition(normal_matrix):
+        return np.linalg.cholesky(normal_matrix)
+
+    @staticmethod
+    def __solve_first_system(cholesky_factorization, normal_vector):
+        return np.linalg.solve(cholesky_factorization, normal_vector)
+
+    @staticmethod
+    def __solve_second_system(cholesky_factorization, first_solution):
+        return np.linalg.solve(cholesky_factorization.T, first_solution)
+
+    @staticmethod
+    def __filter_negative_coefficients(second_solution):
+        coefficients = np.concatenate((np.array([1]), second_solution))
+        first_negative_index = np.argmax(coefficients &lt; 0)
+        if first_negative_index:
+            print(f&#34;Setting coefficients to zero starting with coefficient {first_negative_index}&#34;)
+            coefficients[first_negative_index:] = 0
+        return coefficients</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="pyRT_DISORT.preprocessing.utilities.fit_phase_function.PhaseFunction.create_legendre_coefficients"><code class="name flex">
+<span>def <span class="ident">create_legendre_coefficients</span></span>(<span>self, n_moments, n_samples)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create the Legendre coefficients for this phase function, forcing coefficients to be non-negative</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>n_moments</code></strong> :&ensp;<code>int</code></dt>
+<dd>The desired number of moments to find a solution for</dd>
+<dt><strong><code>n_samples</code></strong> :&ensp;<code>int</code></dt>
+<dd>Resample the input phase function to n_samples. Must be &gt;= n_moments</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>fit_coefficients</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>A 1D array of fitted coefficients of length n_moments</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@jit(forceobj=True)
+def create_legendre_coefficients(self, n_moments, n_samples):
+    &#34;&#34;&#34; Create the Legendre coefficients for this phase function, forcing coefficients to be non-negative
+
+    Parameters
+    ----------
+    n_moments: int
+        The desired number of moments to find a solution for
+    n_samples: int
+        Resample the input phase function to n_samples. Must be &gt;= n_moments
+
+    Returns
+    -------
+    fit_coefficients: np.ndarray
+        A 1D array of fitted coefficients of length n_moments
+    &#34;&#34;&#34;
+    #self.__check_create_coefficient_inputs(n_moments, n_samples)
+    #self.__check_samples_greater_than_moments(n_moments, n_samples)
+
+    resampled_theta = self.__resample_angles(n_samples)
+    norm_resampled_phase_function = self.__normalize_phase_function(self.__resample_phase_function(resampled_theta),
+                                                                    resampled_theta)
+
+    # Since we&#39;re forcing c0 = 1 and fitting p = c0 + c1 * L1 + ..., p - 1 = c1 * L1 + ..., which is what we want!
+    phase_function_to_fit = norm_resampled_phase_function - 1
+
+    legendre_polynomials = self.__make_legendre_polynomials(n_moments, n_samples, resampled_theta)
+    normal_matrix = self.__make_normal_matrix(legendre_polynomials, phase_function_to_fit)
+    normal_vector = self.__make_normal_vector(legendre_polynomials, phase_function_to_fit)
+    cholesky_factorization = self.__cholesky_decomposition(normal_matrix)
+    first_solution = self.__solve_first_system(cholesky_factorization, normal_vector)
+    second_solution = self.__solve_second_system(cholesky_factorization, first_solution)
+    fit_coefficients = self.__filter_negative_coefficients(second_solution)
+    return fit_coefficients</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="pyRT_DISORT.preprocessing.utilities" href="index.html">pyRT_DISORT.preprocessing.utilities</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="pyRT_DISORT.preprocessing.utilities.fit_phase_function.PhaseFunction" href="#pyRT_DISORT.preprocessing.utilities.fit_phase_function.PhaseFunction">PhaseFunction</a></code></h4>
+<ul class="">
+<li><code><a title="pyRT_DISORT.preprocessing.utilities.fit_phase_function.PhaseFunction.create_legendre_coefficients" href="#pyRT_DISORT.preprocessing.utilities.fit_phase_function.PhaseFunction.create_legendre_coefficients">create_legendre_coefficients</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+</footer>
+</body>
+</html>

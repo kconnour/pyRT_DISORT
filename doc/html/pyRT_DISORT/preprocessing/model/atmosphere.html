@@ -33,36 +33,35 @@ from scipy.constants import Boltzmann
 
 class Boundaries:
     &#34;&#34;&#34; Make a class to calculate the equation of state variables at the model boundaries.&#34;&#34;&#34;
-    def __init__(self, atmosphere_file):
+    def __init__(self, atmosphere):
         &#34;&#34;&#34;
         Parameters
         ----------
-        atmosphere_file: str
-            The complete path to the atmosphere file
+        atmosphere: np.ndarray
+            An array of the equations of state in the atmosphere
         &#34;&#34;&#34;
-        self.atm_file = atmosphere_file
+        self.atmosphere = atmosphere
         self.altitude_boundaries, self.pressure_boundaries, self.temperature_boundaries, \
             self.number_density_boundaries = self.__read_atmosphere()
 
     def __read_atmosphere(self):
-        atmosphere = np.load(self.atm_file, allow_pickle=True)
-        altitudes = atmosphere[:, 0]
-        pressures = atmosphere[:, 1]
-        temperatures = atmosphere[:, 2]
-        number_density = atmosphere[:, 3]
+        altitudes = self.atmosphere[:, 0]
+        pressures = self.atmosphere[:, 1]
+        temperatures = self.atmosphere[:, 2]
+        number_density = self.atmosphere[:, 3]
         return altitudes, pressures, temperatures, number_density
 
 
 class Layers(Boundaries):
     &#34;&#34;&#34;Make a class to calculate the equation of state variable at the midpoints of the boundaries.&#34;&#34;&#34;
-    def __init__(self, atmosphere_file):
+    def __init__(self, atmosphere):
         &#34;&#34;&#34;
         Parameters
         ----------
-        atmosphere_file: str
-            The complete path to the atmosphere file
+        atmosphere: np.ndarray
+            An array of the equations of state in the atmosphere
         &#34;&#34;&#34;
-        super().__init__(atmosphere_file)
+        super().__init__(atmosphere)
         self.altitude_layers = self.__calculate_midpoints(self.altitude_boundaries)
         self.pressure_layers = self.__calculate_midpoints(self.pressure_boundaries)
         self.temperature_layers = self.__calculate_midpoints(self.temperature_boundaries)
@@ -92,14 +91,14 @@ class Layers(Boundaries):
 <dl>
 <dt id="pyRT_DISORT.preprocessing.model.atmosphere.Boundaries"><code class="flex name class">
 <span>class <span class="ident">Boundaries</span></span>
-<span>(</span><span>atmosphere_file)</span>
+<span>(</span><span>atmosphere)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Make a class to calculate the equation of state variables at the model boundaries.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt><strong><code>atmosphere_file</code></strong> :&ensp;<code>str</code></dt>
-<dd>The complete path to the atmosphere file</dd>
+<dt><strong><code>atmosphere</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>An array of the equations of state in the atmosphere</dd>
 </dl></div>
 <details class="source">
 <summary>
@@ -107,23 +106,22 @@ class Layers(Boundaries):
 </summary>
 <pre><code class="python">class Boundaries:
     &#34;&#34;&#34; Make a class to calculate the equation of state variables at the model boundaries.&#34;&#34;&#34;
-    def __init__(self, atmosphere_file):
+    def __init__(self, atmosphere):
         &#34;&#34;&#34;
         Parameters
         ----------
-        atmosphere_file: str
-            The complete path to the atmosphere file
+        atmosphere: np.ndarray
+            An array of the equations of state in the atmosphere
         &#34;&#34;&#34;
-        self.atm_file = atmosphere_file
+        self.atmosphere = atmosphere
         self.altitude_boundaries, self.pressure_boundaries, self.temperature_boundaries, \
             self.number_density_boundaries = self.__read_atmosphere()
 
     def __read_atmosphere(self):
-        atmosphere = np.load(self.atm_file, allow_pickle=True)
-        altitudes = atmosphere[:, 0]
-        pressures = atmosphere[:, 1]
-        temperatures = atmosphere[:, 2]
-        number_density = atmosphere[:, 3]
+        altitudes = self.atmosphere[:, 0]
+        pressures = self.atmosphere[:, 1]
+        temperatures = self.atmosphere[:, 2]
+        number_density = self.atmosphere[:, 3]
         return altitudes, pressures, temperatures, number_density</code></pre>
 </details>
 <h3>Subclasses</h3>
@@ -133,14 +131,14 @@ class Layers(Boundaries):
 </dd>
 <dt id="pyRT_DISORT.preprocessing.model.atmosphere.Layers"><code class="flex name class">
 <span>class <span class="ident">Layers</span></span>
-<span>(</span><span>atmosphere_file)</span>
+<span>(</span><span>atmosphere)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Make a class to calculate the equation of state variable at the midpoints of the boundaries.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt><strong><code>atmosphere_file</code></strong> :&ensp;<code>str</code></dt>
-<dd>The complete path to the atmosphere file</dd>
+<dt><strong><code>atmosphere</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>An array of the equations of state in the atmosphere</dd>
 </dl></div>
 <details class="source">
 <summary>
@@ -148,14 +146,14 @@ class Layers(Boundaries):
 </summary>
 <pre><code class="python">class Layers(Boundaries):
     &#34;&#34;&#34;Make a class to calculate the equation of state variable at the midpoints of the boundaries.&#34;&#34;&#34;
-    def __init__(self, atmosphere_file):
+    def __init__(self, atmosphere):
         &#34;&#34;&#34;
         Parameters
         ----------
-        atmosphere_file: str
-            The complete path to the atmosphere file
+        atmosphere: np.ndarray
+            An array of the equations of state in the atmosphere
         &#34;&#34;&#34;
-        super().__init__(atmosphere_file)
+        super().__init__(atmosphere)
         self.altitude_layers = self.__calculate_midpoints(self.altitude_boundaries)
         self.pressure_layers = self.__calculate_midpoints(self.pressure_boundaries)
         self.temperature_layers = self.__calculate_midpoints(self.temperature_boundaries)
