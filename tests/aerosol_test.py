@@ -12,12 +12,15 @@ from pyRT_DISORT.data.get_data import get_data_path
 from pyRT_DISORT.preprocessing.utilities.external_files import ExternalFile
 
 
-'''class AerosolPropertiesTest(TestCase):
+class AerosolPropertiesTest2DWavelength(TestCase):
     def setUp(self):
         self.dust_file = ExternalFile(os.path.join(get_data_path(), 'planets/mars/aux/dust_properties.fits'))
-        self.properties ='''
+        self.properties = AerosolProperties(self.dust_file.array, wavelength_grid=self.dust_file['wavelength'].data)
 
+    def check_types(self):
+        return (self.properties.particle_size_grid is None) and (self.properties.wavelength_grid is np.ndarray)
 
+'''
 class AerosolTest(TestCase):
     def setUp(self):
         self.dustfile = ExternalFile(os.path.join(get_data_path(), 'planets/mars/aux/dust.npy'))
@@ -46,14 +49,14 @@ class AerosolTest(TestCase):
         return self.aerosol.reference_wavelength == self.wave_ref
 
     def testWavInput(self):
-        Aerosol(self.dustfile.array, 10, self.wave_ref)
+        Aerosol(self.dustfile.array, 10, self.wave_ref)'''
 
 
 if __name__ == '__main__':
-    dustfile = ExternalFile(os.path.join(get_data_path(), 'planets/mars/aux/dust.npy'))
-    wavs = np.array([1, 9.3])
-    wref = 9.3
-    aero = Aerosol(dustfile.array, wavs, wref)
+    #dustfile = ExternalFile(os.path.join(get_data_path(), 'planets/mars/aux/dust.npy'))
+    #wavs = np.array([1, 9.3])
+    #wref = 9.3
+    #aero = Aerosol(dustfile.array, wavs, wref)
 
 
-    #unittest.main()
+    unittest.main()
