@@ -60,7 +60,7 @@ class InputAtmosphere:
         altitude_grid_checker.check_1d_array_is_monotonically_decreasing()
 
 
-class ModelAtmosphere(InputAtmosphere):
+class ModelGrid(InputAtmosphere):
     """ Calculate equation of state variables at user-defined altitudes"""
     def __init__(self, atmosphere, model_altitudes):
         """
@@ -75,9 +75,9 @@ class ModelAtmosphere(InputAtmosphere):
         ----------
         model_altitudes: np.ndarray
             The user-input altitudes of the model at the boundaries
-        model_pressure: np.ndarray
+        model_pressures: np.ndarray
             The pressures at model_altitudes
-        model_temperature: np.ndarray
+        model_temperatures: np.ndarray
             The temperatures at model_altitudes
         model_number_denisty: np.ndarray
             The number density at model_altitudes
@@ -91,7 +91,8 @@ class ModelAtmosphere(InputAtmosphere):
         self.n_boundaries = len(self.model_altitudes)
         self.n_layers = self.n_boundaries - 1
         self.__check_model_altitudes()
-        self.model_pressure, self.model_temperature, self.model_number_density = self.__regrid_atmospheric_variables()
+        self.model_pressures, self.model_temperatures, self.model_number_densities = \
+            self.__regrid_atmospheric_variables()
         self.altitude_layers = self.__calculate_midpoint_altitudes()
         self.column_density_layers = self.__calculate_column_density_layers()
 
@@ -111,7 +112,8 @@ class ModelAtmosphere(InputAtmosphere):
         return regridded_pressures, regridded_temperatures, regridded_number_density
 
     def __interpolate_variable_to_new_altitudes(self, variable_grid):
-        return np.interp(self.model_altitudes, self.altitude_grid, variable_grid)
+        # I'm forced to flip the arrays because numpy.interp demands xp be monotonically increasing
+        return np.interp(self.model_altitudes, np.flip(self.altitude_grid), np.flip(variable_grid))
 
     def __calculate_number_density(self, altitude):
         interp_pressure = np.interp(altitude, np.flip(self.altitude_grid), np.flip(self.pressure_grid))
@@ -128,6 +130,7 @@ class ModelAtmosphere(InputAtmosphere):
             integral[i] = quadrature(self.__calculate_number_density, self.model_altitudes[i+1], self.model_altitudes[i])[0]
         return integral * 1000'''
 
+    # This is the bad old way
     def __calculate_column_density_layers(self):
         num_den_layers = self.__calculate_number_density(self.altitude_layers)
         return num_den_layers * np.abs(np.diff(self.model_altitudes)) * 1000

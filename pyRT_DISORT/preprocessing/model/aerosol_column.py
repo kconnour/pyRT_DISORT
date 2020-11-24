@@ -3,122 +3,68 @@ import numpy as np
 
 # Local imports
 from pyRT_DISORT.preprocessing.model.aerosol import Aerosol
-#from pyRT_DISORT.preprocessing.model.atmosphere import Layers
+from pyRT_DISORT.preprocessing.model.atmosphere import ModelGrid
+from pyRT_DISORT.preprocessing.model.vertical_profiles import ProfileHolder
+from pyRT_DISORT.preprocessing.utilities.array_checks import CheckArray
 
 
 class Column:
-    """Create an aerosol column to hold the aerosol's properties in each layer. Right now it constructs a column
-    using Conrath parameters. Will be extended to allow user input vertical distributions. """
-    def __init__(self, aerosol, layers, profile, particle_sizes, column_integrated_optical_depths):
-        """ Initialize the class
-
+    """Create an aerosol column to hold the aerosol's properties in each layer.  """
+    def __init__(self, aerosol, model_grid, profiles, column_integrated_optical_depths):
+        """
         Parameters
         ----------
         aerosol: Aerosol
-            The aerosol for which this class will construct a column
-        layers: Layers
-            The equations of state in each of the layers in the plane parallel atmosphere
-        particle_sizes: np.ndarray
-            The effective radii of this aerosol [microns]
+            The aerosol for which this class will construct columns
+        model_grid: ModelGrid
+            The model atmosphere
+        profiles: np.ndarray
+            The vertical profiles at each of the particle sizes
         column_integrated_optical_depths: np.ndarray
             The column-integrated optical depth at the effective radii
         """
         self.aerosol = aerosol
-        self.layers = layers
-        self.profile = profile
-        self.particle_sizes = particle_sizes
+        self.profiles = profiles
+        self.model_grid = model_grid
         self.column_integrated_optical_depths = column_integrated_optical_depths
-        self.__check_input_types()
+        self.__check_inputs()
+        self.multisize_total_optical_depth = self.__calculate_multisize_total_optical_depths()
+        self.multisize_scattering_optical_depth = self.__calculate_multisize_scattering_optical_depths()
+        self.total_optical_depth = self.__calculate_total_optical_depths()
+        self.scattering_optical_depth = self.__calculate_scattering_optical_depths()
 
-        self.multisize_hyperspectral_total_optical_depths = \
-            self.__calculate_multisize_hyperspectral_total_optical_depths()
-        self.multisize_hyperspectral_scattering_optical_depths = \
-            self.__calculate_multisize_hyperspectral_scattering_optical_depths()
-        self.hyperspectral_total_optical_depths = self.__reduce_total_optical_depths_size_dim()
-        self.hyperspectral_scattering_optical_depths = self.__reduce_scattering_optical_depths_size_dim()
+    def __check_inputs(self):
+        if not isinstance(self.aerosol, Aerosol):
+            raise TypeError('aerosol needs to be an instance of Aerosol.')
+        if not isinstance(self.profiles, np.ndarray):
+            raise TypeError('profiles must be a np.ndarray')
+        if not isinstance(self.model_grid, ModelGrid):
+            raise TypeError('model_grid must be an instance of ModelGrid')
+        column_od_checker = CheckArray(self.column_integrated_optical_depths, 'column_integrated_optical_depths')
+        column_od_checker.check_object_is_array()
+        column_od_checker.check_ndarray_is_numeric()
+        column_od_checker.check_ndarray_is_positive_finite()
+        if len(self.column_integrated_optical_depths) != len(self.aerosol.particle_sizes):
+            raise ValueError('column_integrated_optical_depths must be the same length as particle_sizes in Aerosol')
 
-    def __check_input_types(self):
-        assert isinstance(self.aerosol, Aerosol), 'aerosol needs to be an instance of Aerosol.'
-        assert isinstance(self.particle_sizes, np.ndarray), 'particle_sizes needs to be a numpy array.'
-        assert isinstance(self.profile, (Conrath, GCMProfile)), 'profile needs to be Conrath or GCMProfile'
-        assert isinstance(self.column_integrated_optical_depths, np.ndarray), \
-            'column_integrated_optical_depths needs to be a numpy array'
-        assert len(self.particle_sizes) == len(self.column_integrated_optical_depths), \
-            'particle_sizes and column_integrated_optical_depths need to be the same length.'
+    def __calculate_multisize_total_optical_depths(self):
+        # Array shapes for this mess, in case I ever need to modify this:
+        # self.profiles [nlayers, nsizes]
+        # self.model_atmosphere.column_density_layers [nlayers]
+        # self.columnODs [nsizes]
+        # self.normalization_factor [nsizes]
+        # self.aerosol.extinction [nsizes, nwavelengths]
+        normalization_factor = np.sum((self.profiles.T * self.model_grid.column_density_layers).T, axis=0)
+        dummy_var = self.profiles * self.column_integrated_optical_depths / normalization_factor
+        dvar = (dummy_var.T * self.model_grid.column_density_layers).T
+        return dvar[:, :, np.newaxis] * self.aerosol.extinction[np.newaxis, :, :]
 
-    def __calculate_multisize_hyperspectral_total_optical_depths(self):
-        vertical_mixing_ratio = self.profile.get_profile()
-        dust_scaling = np.sum(self.layers.column_density_layers * vertical_mixing_ratio)
-        multisize_hyperspectral_total_optical_depths = np.multiply.outer(
-            np.outer(vertical_mixing_ratio * self.layers.column_density_layers, self.column_integrated_optical_depths),
-            self.aerosol.extinction_ratios) / dust_scaling
+    def __calculate_multisize_scattering_optical_depths(self):
+        return self.multisize_total_optical_depth * self.aerosol.single_scattering_albedo
 
-        return multisize_hyperspectral_total_optical_depths
+    def __calculate_total_optical_depths(self):
+        return np.sum(self.multisize_total_optical_depth, axis=1)
 
-    def __calculate_multisize_hyperspectral_scattering_optical_depths(self):
-        return self.multisize_hyperspectral_total_optical_depths * self.aerosol.hyperspectral_single_scattering_albedos
-
-    def __reduce_total_optical_depths_size_dim(self):
-        return np.sum(self.multisize_hyperspectral_total_optical_depths, axis=1)
-
-    def __reduce_scattering_optical_depths_size_dim(self):
-        return np.average(self.multisize_hyperspectral_scattering_optical_depths, axis=1,
+    def __calculate_scattering_optical_depths(self):
+        return np.average(self.multisize_scattering_optical_depth, axis=1,
                           weights=self.column_integrated_optical_depths)
-
-
-class Conrath:
-    def __init__(self, layers, aerosol_scale_height, conrath_nu):
-        self.H = aerosol_scale_height
-        self.nu = conrath_nu
-        self.layers = layers
-
-        self.__check_input_types()
-        self.__check_conrath_parameters_do_not_suck()
-
-        self.vertical_profile = self.__make_conrath_profile()
-
-    def __check_input_types(self):
-        assert isinstance(self.H, (int, float)), 'aerosol_scale_height needs to be an int or float.'
-        assert isinstance(self.nu, (int, float)), 'conratu_nu needs to be an int or float.'
-        assert isinstance(self.layers, Layers), 'layers needs to be an instance of Layers.'
-
-    def __check_conrath_parameters_do_not_suck(self):
-        if np.isnan(self.H):
-            print('You wily bastard, you input a nan as the Conrath dust scale height. Fix that.')
-        elif np.isnan(self.nu):
-            print('You wily bastard, you input a nan as the Conrath nu parameter. Fix that.')
-        if self.H < 0:
-            raise SystemExit('Bad Conrath aerosol scale height: it cannot be negative. Fix...')
-        elif self.nu < 0:
-            raise SystemExit('Bad Conrath nu parameter: it cannot be negative. Fix...')
-
-    def __make_conrath_profile(self):
-        """Calculate the vertical dust distribution assuming a Conrath profile, i.e.
-        q(z) / q(0) = exp( nu * (1 - exp(z / H)))
-        where q is the mass mixing ratio
-
-        Returns
-        -------
-        fractional_mixing_ratio: np.ndarray (len(altitude_layer))
-            The fraction of the mass mixing ratio at the midpoint altitudes
-        """
-
-        fractional_mixing_ratio = np.exp(self.nu * (1 - np.exp(self.layers.altitude_layers / self.H)))
-        return fractional_mixing_ratio
-
-    def get_profile(self):
-        return self.vertical_profile
-
-
-class GCMProfile:
-    def __init__(self, layers, profile):
-        self.layers = layers
-        self.profile = profile
-
-    def __check_input_types(self):
-        assert isinstance(self.layers, Layers), 'layers needs to be an instance of Layers'
-        assert isinstance(self.profile, np.ndarray), 'profiles needs to be a numpy array'
-
-    def get_profile(self):
-        return self.profile
-

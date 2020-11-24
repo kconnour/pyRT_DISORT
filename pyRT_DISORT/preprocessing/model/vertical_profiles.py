@@ -2,7 +2,7 @@
 import numpy as np
 
 # Local imports
-from pyRT_DISORT.preprocessing.model.atmosphere import ModelAtmosphere
+from pyRT_DISORT.preprocessing.model.atmosphere import ModelGrid
 from pyRT_DISORT.preprocessing.utilities.array_checks import CheckArray
 
 
@@ -12,7 +12,7 @@ class VerticalProfile:
         self.__check_input_is_atmosphere()
 
     def __check_input_is_atmosphere(self):
-        if not isinstance(self.model_atmosphere, ModelAtmosphere):
+        if not isinstance(self.model_atmosphere, ModelGrid):
             raise TypeError('model_atmosphere must be an instance of ModelAtmosphere')
 
 

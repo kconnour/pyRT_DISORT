@@ -2,7 +2,7 @@
 import numpy as np
 
 # Local imports
-from pyRT_DISORT.preprocessing.model.atmosphere import ModelAtmosphere
+from pyRT_DISORT.preprocessing.model.atmosphere import ModelGrid
 
 
 class RayleighCo2:
@@ -12,7 +12,7 @@ class RayleighCo2:
         self.n_moments = n_moments
 
         assert isinstance(self.wavelengths, np.ndarray), 'wavelengths must be a numpy array.'
-        assert isinstance(self.model_atmosphere, ModelAtmosphere), 'layers must be an instance of Layers.'
+        assert isinstance(self.model_atmosphere, ModelGrid), 'layers must be an instance of Layers.'
         assert isinstance(self.n_moments, int), 'n_moments must be an int.'
 
         self.wavenumbers = 1 / (self.wavelengths * 10 ** -4)   # 1/cm
