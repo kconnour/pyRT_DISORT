@@ -2,8 +2,8 @@ import numpy as np
 
 
 class CheckArray:
-    def __init__(self, ndarray):
-        self.array_name = f'{ndarray=}'.split('=')[0]
+    def __init__(self, ndarray, array_name):
+        self.array_name = array_name
         self.ndarray = ndarray
 
     def check_object_is_array(self):
@@ -22,6 +22,10 @@ class CheckArray:
         if not np.all(self.ndarray > 0):
             raise ValueError(f'{self.array_name} must contain all positive values')
 
+    def check_ndarray_is_non_negative(self):
+        if not np.all(self.ndarray >= 0):
+            raise ValueError(f'{self.array_name} must contain all non-negative values')
+
     def check_ndarray_is_positive_finite(self):
         self.check_ndarray_is_finite()
         self.check_ndarray_is_positive()
@@ -36,3 +40,12 @@ class CheckArray:
     def check_ndarray_is_1d(self):
         if not self.check_ndarray_dimension(1):
             raise IndexError(f'{self.array_name} must be a 1D array')
+
+    def check_ndarray_is_2d(self):
+        if not self.check_ndarray_dimension(2):
+            raise IndexError(f'{self.array_name} must be a 2D array')
+
+    def check_1d_array_is_monotonically_decreasing(self):
+        diff = np.diff(self.ndarray)
+        if not np.all(diff < 0):
+            raise ValueError(f'{self.array_name} must be monotonically decreasing')

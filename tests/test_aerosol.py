@@ -66,7 +66,7 @@ class Test2DBadInput(Test2DMarsDust):
         AerosolProperties(self.primary, wavelength_grid=a)
 
     def test_unrelaistic_grids_can_work(self):
-        a = np.linspace(1, 100, num=len(self.wavelength_grid))
+        a = np.linspace(10000, 100000, num=len(self.wavelength_grid))
         AerosolProperties(self.primary, wavelength_grid=a)
 
 

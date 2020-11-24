@@ -7,9 +7,6 @@ Assumptions
 --- mars_atm.npy has the columns specified in the correct order
 --- Every aerosol will either be HG or use a 3D phase function file
 
-Questions:
---- What are pivot pressures/altitudes/temperatures?
-
 Test:
 --- Make sure if I have 100 particle sizes, things don't go haywire...
 
@@ -17,10 +14,11 @@ Fix:
 --- Remove old phase functions + generally unnecessary aux files
 
 Work on next:
---- Parallelize over wavelength / observations (pixels)
+--- Mike's changes via email
 --- Add an efficient solver
 --- Make ice PMOM
---- Ensure Column can accommodate different profiles for different particle sizes
+no --> --- Ensure Column can accommodate different profiles for different particle sizes
+yes --> --- Each aerosol column specify particle size for each layer
 --- Ensure OD cannot be 0 since weights sum to 0
 --- Add ozone
 --- Unit tests
@@ -34,6 +32,7 @@ Work on next:
 --- Add checks throughout to ensure the same wavelengths, moments, etc. are used. We don't want one aerosol observed
     at different wavelenghts than another. Also ensure they CAN have different r_effective
 --- Postprocessing
+--- Parallelize over wavelength / observations (pixels)
 --- Correlated k?
 --- T-matrix?
 --- Set a max_moments in phase_functions.py in case user doesn't believe all the moments they have

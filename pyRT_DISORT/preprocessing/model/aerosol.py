@@ -8,7 +8,7 @@ from pyRT_DISORT.preprocessing.utilities.array_checks import CheckArray
 
 class ParameterChecker(CheckArray):
     def __init__(self, array):
-        super().__init__(array)
+        super().__init__(array, 'array')
         self.nonetype = self.__check_if_input_is_none()
 
     def __check_if_input_is_none(self):
@@ -34,7 +34,7 @@ class ParameterChecker(CheckArray):
 
 class AerosolPropertiesChecker(CheckArray):
     def __init__(self, array, particle_size_grid, wavelength_grid):
-        super().__init__(array)
+        super().__init__(array, 'aerosol_properties')
         self.particle_size_grid = particle_size_grid
         self.wavelength_grid = wavelength_grid
         self.__array_dimensions = self.get_array_dimensions()

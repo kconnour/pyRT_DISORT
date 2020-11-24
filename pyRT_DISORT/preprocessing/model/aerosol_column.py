@@ -3,7 +3,7 @@ import numpy as np
 
 # Local imports
 from pyRT_DISORT.preprocessing.model.aerosol import Aerosol
-from pyRT_DISORT.preprocessing.model.atmosphere import Layers
+#from pyRT_DISORT.preprocessing.model.atmosphere import Layers
 
 
 class Column:
