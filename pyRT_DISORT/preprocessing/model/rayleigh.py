@@ -2,17 +2,17 @@
 import numpy as np
 
 # Local imports
-from pyRT_DISORT.preprocessing.model.atmosphere import Layers
+from pyRT_DISORT.preprocessing.model.atmosphere import ModelAtmosphere
 
 
 class RayleighCo2:
-    def __init__(self, wavelengths, layers, n_moments):
+    def __init__(self, wavelengths, model_atmosphere, n_moments):
         self.wavelengths = wavelengths
-        self.layers = layers
+        self.model_atmosphere = model_atmosphere
         self.n_moments = n_moments
 
         assert isinstance(self.wavelengths, np.ndarray), 'wavelengths must be a numpy array.'
-        assert isinstance(self.layers, Layers), 'layers must be an instance of Layers.'
+        assert isinstance(self.model_atmosphere, ModelAtmosphere), 'layers must be an instance of Layers.'
         assert isinstance(self.n_moments, int), 'n_moments must be an int.'
 
         self.wavenumbers = 1 / (self.wavelengths * 10 ** -4)   # 1/cm
@@ -21,7 +21,7 @@ class RayleighCo2:
         self.hyperspectral_layered_phase_function = self.__make_hyperspectral_layered_phase_function()
 
     def __calculate_hyperspectral_rayleigh_co2_optical_depths(self):
-        return np.outer(self.layers.column_density_layers, self.__calculate_molecular_cross_section())
+        return np.outer(self.model_atmosphere.column_density_layers, self.__calculate_molecular_cross_section())
 
     def __calculate_molecular_cross_section(self):
         """ Calculate the molecular cross section (m**2 / molecule)
@@ -47,7 +47,7 @@ class RayleighCo2:
         return coefficient * middle_term * king_factor   # cm**2 / molecule
 
     def __make_phase_function(self):
-        rayleigh_phase_function = np.zeros((self.n_moments, self.layers.n_layers, len(self.wavelengths)))
+        rayleigh_phase_function = np.zeros((self.n_moments, self.model_atmosphere.n_layers, len(self.wavelengths)))
         rayleigh_phase_function[0, :, :] = 1
         rayleigh_phase_function[2, :, :] = 0.1
         return rayleigh_phase_function

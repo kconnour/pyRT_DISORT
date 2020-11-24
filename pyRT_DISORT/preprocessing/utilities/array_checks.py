@@ -14,6 +14,10 @@ class CheckArray:
         if not np.issubdtype(self.ndarray.dtype, np.number):
             raise ValueError(f'{self.array_name} must contain only numbers')
 
+    def check_ndarray_contains_only_ints(self):
+        if not np.issubdtype(self.ndarray.dtype, np.int):
+            raise ValueError(f'{self.array_name} must contain only integers')
+
     def check_ndarray_is_finite(self):
         if not np.all(np.isfinite(self.ndarray)):
             raise ValueError(f'{self.array_name} must contain all finite values')
@@ -32,7 +36,7 @@ class CheckArray:
 
     def check_ndarray_is_in_range(self, low, high):
         if not(np.all(self.ndarray >= low) and np.all(self.ndarray <= high)):
-            raise ValueError(f'{self.array_name} must be in range [{low}--{high}]')
+            raise ValueError(f'{self.array_name} must be in range [{low}, {high}]')
 
     def check_ndarray_dimension(self, dimension):
         return np.ndim(self.ndarray) == dimension
@@ -49,3 +53,7 @@ class CheckArray:
         diff = np.diff(self.ndarray)
         if not np.all(diff < 0):
             raise ValueError(f'{self.array_name} must be monotonically decreasing')
+
+    def check_1d_array_is_no_longer_than(self, length):
+        if len(self.ndarray) > length:
+            raise ValueError(f'{self.array_name} must be no longer than {length}')

@@ -88,9 +88,11 @@ class ModelAtmosphere(InputAtmosphere):
         """
         super().__init__(atmosphere)
         self.model_altitudes = model_altitudes
-        self.n_layers = len(self.model_altitudes) - 1
+        self.n_boundaries = len(self.model_altitudes)
+        self.n_layers = self.n_boundaries - 1
         self.__check_model_altitudes()
         self.model_pressure, self.model_temperature, self.model_number_density = self.__regrid_atmospheric_variables()
+        self.altitude_layers = self.__calculate_midpoint_altitudes()
         self.column_density_layers = self.__calculate_column_density_layers()
 
     def __check_model_altitudes(self):
@@ -115,7 +117,9 @@ class ModelAtmosphere(InputAtmosphere):
         interp_pressure = np.interp(altitude, np.flip(self.altitude_grid), np.flip(self.pressure_grid))
         interp_temp = np.interp(altitude, np.flip(self.altitude_grid), np.flip(self.temperature_grid))
         return interp_pressure / (Boltzmann * interp_temp)
-    
+
+    def __calculate_midpoint_altitudes(self):
+        return (self.model_altitudes[:-1] + self.model_altitudes[1:]) / 2
     # I wish I knew why this refused to work
     '''def __calculate_column_density_layers(self):
         integral = np.zeros(self.n_layers)
@@ -125,6 +129,5 @@ class ModelAtmosphere(InputAtmosphere):
         return integral * 1000'''
 
     def __calculate_column_density_layers(self):
-        z_mid = (self.model_altitudes[:-1] + self.model_altitudes[1:]) / 2
-        num_den_layers = self.__calculate_number_density(z_mid)
+        num_den_layers = self.__calculate_number_density(self.altitude_layers)
         return num_den_layers * np.abs(np.diff(self.model_altitudes)) * 1000
