@@ -4,7 +4,6 @@ import numpy as np
 # Local imports
 from pyRT_DISORT.preprocessing.model.aerosol import Aerosol
 from pyRT_DISORT.preprocessing.model.atmosphere import ModelGrid
-from pyRT_DISORT.preprocessing.model.vertical_profiles import ProfileHolder
 from pyRT_DISORT.preprocessing.utilities.array_checks import CheckArray
 
 

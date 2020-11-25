@@ -6,3 +6,4 @@ from .model_atmosphere import *
 from .phase_function import *
 from .rayleigh import *
 from .surface import *
+from .vertical_profiles import *
