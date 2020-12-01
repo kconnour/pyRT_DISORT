@@ -3,119 +3,68 @@ import numpy as np
 from scipy.interpolate import interp2d
 
 # Local imports
+from pyRT_DISORT.preprocessing.model.aerosol import AerosolProperties
 from pyRT_DISORT.preprocessing.model.atmosphere import ModelGrid
 from pyRT_DISORT.preprocessing.utilities.array_checks import ArrayChecker
 
 
-class AerosolProperties:
-    def __init__(self, aerosol_properties, particle_size_grid=None, wavelength_grid=None, debug=False):
-        self.aerosol_properties = aerosol_properties
-        self.particle_size_grid = particle_size_grid
-        self.wavelength_grid = wavelength_grid
-        self.particle_none = self.__check_if_input_is_none(self.particle_size_grid)
-        self.wavelength_none = self.__check_if_input_is_none(self.wavelength_grid)
-
-        if debug:
-            self.__array_dimensions = self.__get_properties_dimensions()
-            self.__array_shape = self.__get_properties_shape()
-
-            self.__check_properties_and_grids()
-
-        self.__c_ext_ind = 0    # I define these 3 because I may loosen the ordering restriction in the future
-        self.__c_sca_ind = 1
-        self.__g_ind = 2
-        self.c_extinction_grid, self.c_scattering_grid, self.g_grid = self.__read_aerosol_file()
-
-        if debug:
-            self.__check_radiative_properties()
-
-    def __get_properties_dimensions(self):
-        return np.ndim(self.aerosol_properties)
-
-    def __get_properties_shape(self):
-        return np.shape(self.aerosol_properties)
-
-    @staticmethod
-    def __check_if_input_is_none(ndarray):
-        return True if ndarray is None else False
-
-    def __check_properties_and_grids(self):
-        self.__check_properties_are_plausible()
-        self.__check_grid_is_plausible(self.particle_size_grid, 'particle_size_grid')
-        self.__check_grid_is_plausible(self.wavelength_grid, 'wavelength_grid')
-        self.__check_properties_dimensions()
-        self.__check_grids_match_2d_properties()
-        self.__check_grids_match_3d_properties()
-
-    def __check_properties_are_plausible(self):
-        properties_checker = ArrayChecker(self.aerosol_properties, 'aerosol_properties')
-        properties_checker.check_object_is_array()
-        properties_checker.check_ndarray_is_numeric()
-        properties_checker.check_ndarray_is_positive_finite()
-
-    @staticmethod
-    def __check_grid_is_plausible(grid, grid_name):
-        grid_checker = ArrayChecker(grid, grid_name)
-        grid_checker.check_object_is_array()
-        grid_checker.check_ndarray_is_numeric()
-        grid_checker.check_ndarray_is_positive_finite()
-        grid_checker.check_ndarray_is_1d()
-        grid_checker.check_1d_array_is_monotonically_increasing()
-
-    def __check_properties_dimensions(self):
-        if self.__array_dimensions not in [2, 3]:
-            raise IndexError('aerosol_properties must be a 2D or 3D array')
-        if self.__array_shape[-1] != 3:
-            raise IndexError('aerosol_properties must be an (M)xNx3 array for the 3 parameters')
-
-    def __check_grids_match_2d_properties(self):
-        if self.__array_dimensions != 2:
-            return
-        if not (self.particle_size_grid is None) ^ (self.wavelength_grid is None):
-            raise TypeError(
-                'For 2D aerosol_properties, provide one and only one of particle_size_grid and wavelength_grid')
-        if not self.__particle_none:
-            if self.__array_shape[0] != len(self.particle_size_grid):
-                raise IndexError(
-                    'For 2D files, aerosol_properties\' first dimension must be the same length as particle_size_grid')
-        if not self.__wavelength_none:
-            if self.__array_shape[0] != len(self.wavelength_grid):
-                raise IndexError(
-                    'For 2D files, aerosol_properties\' first dimension must be the same length as wavelength_grid')
-
-    def __check_grids_match_3d_properties(self):
-        if self.__array_dimensions != 3:
-            return
-        if (self.particle_size_grid is None) or (self.wavelength_grid is None):
-            raise TypeError('You need to include both particle_size_grid and wavelength_grid')
-        if self.__array_shape[0] != len(self.particle_size_grid):
-            raise IndexError(
-                'For 3D files, aerosol_properties\' first dimension must be the same length as particle_size_grid')
-        if self.__array_shape[1] != len(self.wavelength_grid):
-            raise IndexError(
-                    'For 3D files, aerosol_properties\' second dimension must be the same length as wavelength_grid')
-
-    def __check_radiative_properties(self):
-        self.__check_radiative_property_is_plausible(self.c_extinction_grid, 'c_extinction')
-        self.__check_radiative_property_is_plausible(self.c_scattering_grid, 'c_scattering')
-        self.__check_radiative_property_is_plausible(self.g_grid, 'g')
-
-    @staticmethod
-    def __check_radiative_property_is_plausible(radiative_property, property_name):
-        grid_checker = ArrayChecker(radiative_property, property_name)
-        grid_checker.check_ndarray_is_numeric()
-        grid_checker.check_ndarray_is_positive_finite()
-
-    def __read_aerosol_file(self):
-        c_extinction = np.take(self.aerosol_properties, self.__c_ext_ind, axis=-1)
-        c_scattering = np.take(self.aerosol_properties, self.__c_sca_ind, axis=-1)
-        g = np.take(self.aerosol_properties, self.__g_ind, axis=-1)
-        return c_extinction, c_scattering, g
-
-
 class Column:
+    """ A Column object creates a single column from an input vertical profile """
     def __init__(self, aerosol_properties, model_grid, mixing_ratio_profile, particle_size_profile, wavelengths,
                  reference_wavelength, column_integrated_optical_depth, debug=False):
+        """
+        Parameters
+        ----------
+        aerosol_properties: AerosolProperties
+            An instance of AerosolProperties to use for this column
+        model_grid: ModelGrid
+            An instance of ModelGrid to set the structure of the model
+        mixing_ratio_profile: np.ndarray
+            The vertical mixing ratio profile to constrain Column
+        particle_size_profile: np.ndarray
+            The vertical profile of particle sizes in each layer
+        wavelengths: np.ndarray
+            The wavelengths where to construct this column
+        reference_wavelength: int or float
+            The reference wavelength
+        column_integrated_optical_depth: int or float
+            The total column integrated optical depth of this column
+        debug: bool, optional
+            Denote if this code should perform sanity checks on inputs to see if they're expected. Default is False
+
+        Attributes
+        ----------
+        aerosol_properties: AerosolProperties
+            The input aerosol_properties
+        model_grid: ModelGrid
+            The input model_grid
+        mixing_ratio_profile: np.ndarray
+            The input mixing_ratio_profile
+        particle_size_profile: np.ndarray
+            The input particle_size_profile
+        wavelengths: np.ndarray
+            The input wavelengths
+        reference_wavelength: int or float
+            The input reference_wavelength
+        OD: int or float
+            The input column_integrated_optical_depth
+        c_extinction: np.ndarray
+            2D array of the extinction coefficient at the altitudes and wavelengths of the model
+        c_scattering: np.ndarray
+            2D array of the scattering coefficient at the altitudes and wavelengths of the model
+        g: np.ndarray
+            2D array of the asymmetry parameter at the altitudes and wavelengths of the model
+        single_scattering_albedo: np.ndarray
+            2D array of c_scattering / c_extinction
+        extinction_profile: np.ndarray
+            1D array of the extinction coefficient at the model altitudes and reference wavelength
+        extinction: np.ndarray
+            2D array of c_extinction / extinction_profile
+        total_optical_depths: np.ndarray
+            2D array of the total optical depths in each layer at each wavelength
+        scattering_optical_depth: np.ndarray
+            2D array of the scattering optical depths in each layer at each wavelength
+        """
         self.aerosol_properties = aerosol_properties
         self.model_grid = model_grid
         self.mixing_ratio_profile = mixing_ratio_profile
@@ -178,6 +127,20 @@ class Column:
         wavelength_checker.check_ndarray_is_numeric()
         wavelength_checker.check_ndarray_is_positive_finite()
         wavelength_checker.check_ndarray_is_1d()
+        self.__inform_if_outside_wavelength_range()
+
+    def __inform_if_outside_wavelength_range(self):
+        shortest_wavelength = self.aerosol_properties.wavelength_grid[0]
+        longest_wavelength = self.aerosol_properties.wavelength_grid[-1]
+        if not self.__wavelength_none:
+            if np.size((too_short := self.wavelengths[self.wavelengths < shortest_wavelength]) != 0):
+                print(
+                    f'The following input wavelengths: {too_short} microns are shorter than {shortest_wavelength:.3f} '
+                    f'microns---the shortest wavelength in the file. Using properties from that wavelength.')
+            if np.size((too_long := self.wavelengths[self.wavelengths > longest_wavelength]) != 0):
+                print(
+                    f'The following input wavelengths: {too_long} microns are longer than {longest_wavelength:.1f} '
+                    f'microns---the longest wavelength in the file. Using properties from that wavelength.')
 
     def __check_reference_wavelength(self):
         if not isinstance(self.reference_wavelength, (int, float)):
@@ -196,12 +159,12 @@ class Column:
             raise ValueError('column_integrated_optical_depth must be positive')
 
     def __make_radiative_properties(self):
-        c_extinction = self.__construct_radiative_properties_grid(self.aerosol_properties.c_extinction_grid)
-        c_scattering = self.__construct_radiative_properties_grid(self.aerosol_properties.c_scattering_grid)
-        g = self.__construct_radiative_properties_grid(self.aerosol_properties.g_grid)
+        c_extinction = self.__interpolate_radiative_properties__to_model_grid(self.aerosol_properties.c_extinction_grid)
+        c_scattering = self.__interpolate_radiative_properties__to_model_grid(self.aerosol_properties.c_scattering_grid)
+        g = self.__interpolate_radiative_properties__to_model_grid(self.aerosol_properties.g_grid)
         return c_extinction, c_scattering, g
 
-    def __construct_radiative_properties_grid(self, radiative_property):
+    def __interpolate_radiative_properties__to_model_grid(self, radiative_property):
         if self.__wavelength_none:
             interp_grid = np.interp(self.particle_size_profile, self.aerosol_properties.particle_size_grid,
                                     radiative_property)
@@ -220,7 +183,9 @@ class Column:
                                     self.aerosol_properties.c_extinction_grid)
         elif self.__particle_none:
             print('aerosol_properties has no particle size info. Using the same value for all points in extinction')
-            return np.ones(len(self.particle_size_profile))
+            return np.ones(len(self.particle_size_profile)) * np.interp(self.reference_wavelength,
+                                                                        self.aerosol_properties.wavelength_grid,
+                                                                        self.aerosol_properties.c_extinction_grid)
         else:
             f = interp2d(self.aerosol_properties.particle_size_grid, self.aerosol_properties.wavelength_grid,
                          self.aerosol_properties.c_extinction_grid.T)
@@ -239,7 +204,27 @@ class Column:
 
 
 class SporadicParticleSizes:
+    """ This class interpolates particle sizes on a sporadic altitude grid to the model altitude grid"""
     def __init__(self, z_size_grid, model_grid, debug=False):
+        """
+        Parameters
+        ----------
+        z_size_grid: np.ndarray
+            An Nx2 array where the first column are altitudes and the second column are the associated particle sizes
+        model_grid: ModelGrid
+            Model structure to interpolate particle sizes on to
+        debug: bool, optional
+            Denote if this code should perform sanity checks on inputs to see if they're expected. Default is False
+
+        Attributes
+        ----------
+        z_size_grid: np.ndarray
+            The input z_size_grid
+        model_grid: ModelGrid
+            The input model_grid
+        regridded_particle_sizes: np.ndarray
+            The particle sizes regridded to match the number of layers in model_grid
+        """
         self.z_size_grid = z_size_grid
         self.model_grid = model_grid
 
@@ -255,11 +240,13 @@ class SporadicParticleSizes:
         z_size_checker.check_ndarray_is_non_negative()
         z_size_checker.check_ndarray_is_finite()
         z_size_checker.check_ndarray_is_2d()
+        altitude_checker = ArrayChecker(self.z_size_grid[:, 0], 'z_size_grid')
+        altitude_checker.check_1d_array_is_monotonically_decreasing()
         if self.z_size_grid.shape[-1] != 2:
             raise IndexError('The second dimension of z_size_grid must be 2')
         if not isinstance(self.model_grid, ModelGrid):
             raise TypeError('model_grid must be an instance of ModelGrid')
 
     def __interp_to_new_grid(self):
-        return np.flip(np.interp(self.model_grid.altitude_layers, np.flip(self.z_size_grid[:, 0]),
-                                 np.flip(self.z_size_grid[:, 1])))
+        return np.interp(self.model_grid.altitude_layers, np.flip(self.z_size_grid[:, 0]),
+                                 np.flip(self.z_size_grid[:, 1]))
