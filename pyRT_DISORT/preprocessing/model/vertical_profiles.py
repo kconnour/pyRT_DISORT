@@ -3,7 +3,7 @@ import numpy as np
 
 # Local imports
 from pyRT_DISORT.preprocessing.model.atmosphere import ModelGrid
-from pyRT_DISORT.preprocessing.utilities.array_checks import CheckArray
+from pyRT_DISORT.preprocessing.utilities.array_checks import ArrayChecker
 
 
 class VerticalProfile:
@@ -42,14 +42,14 @@ class Conrath(VerticalProfile):
         self.__check_conrath_nu_is_plausible()
 
     def __check_scale_height_is_plausible(self):
-        scale_height_checker = CheckArray(self.H, 'scale_height')
+        scale_height_checker = ArrayChecker(self.H, 'scale_height')
         scale_height_checker.check_object_is_array()
         scale_height_checker.check_ndarray_is_numeric()
         scale_height_checker.check_ndarray_is_positive_finite()
         scale_height_checker.check_ndarray_is_1d()
 
     def __check_conrath_nu_is_plausible(self):
-        scale_height_checker = CheckArray(self.nu, 'conrath_nu')
+        scale_height_checker = ArrayChecker(self.nu, 'conrath_nu')
         scale_height_checker.check_object_is_array()
         scale_height_checker.check_ndarray_is_numeric()
         scale_height_checker.check_ndarray_is_positive_finite()
@@ -95,7 +95,7 @@ class Uniform(VerticalProfile):
         self.__check_altitude_relationships()
 
     def __check_altitude_bottom(self):
-        bottom_altitude_checker = CheckArray(self.altitude_bottom, 'altitude_bottom')
+        bottom_altitude_checker = ArrayChecker(self.altitude_bottom, 'altitude_bottom')
         bottom_altitude_checker.check_object_is_array()
         bottom_altitude_checker.check_ndarray_is_numeric()
         bottom_altitude_checker.check_ndarray_is_finite()
@@ -103,7 +103,7 @@ class Uniform(VerticalProfile):
         bottom_altitude_checker.check_ndarray_is_1d()
 
     def __check_altitude_top(self):
-        top_altitude_checker = CheckArray(self.altitude_top, 'altitude_top')
+        top_altitude_checker = ArrayChecker(self.altitude_top, 'altitude_top')
         top_altitude_checker.check_object_is_array()
         top_altitude_checker.check_ndarray_is_numeric()
         top_altitude_checker.check_ndarray_is_positive_finite()
@@ -169,7 +169,7 @@ class Layers(VerticalProfile):
         if isinstance(self.layer_indices, int):
             return
         else:
-            indices_checker = CheckArray(self.layer_indices, 'layer_indices')
+            indices_checker = ArrayChecker(self.layer_indices, 'layer_indices')
             indices_checker.check_object_is_array()
             indices_checker.check_ndarray_contains_only_ints()
             indices_checker.check_ndarray_is_in_range(-self.model_atmosphere.n_layers, self.model_atmosphere.n_layers)

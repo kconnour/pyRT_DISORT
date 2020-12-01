@@ -3,7 +3,7 @@ import numpy as np
 
 # Local imports
 #from pyRT_DISORT.preprocessing.model.atmosphere import Layers
-from pyRT_DISORT.preprocessing.model.atmosphere import ModelAtmosphere
+from pyRT_DISORT.preprocessing.model.atmosphere import ModelGrid
 from pyRT_DISORT.preprocessing.utilities.external_files import ExternalFile
 from pyRT_DISORT.preprocessing.model.aerosol_column import Column as NewColumn
 from pyRT_DISORT.preprocessing.model.aerosol import Aerosol
@@ -84,7 +84,7 @@ class Conrath:
     def __check_input_types(self):
         assert isinstance(self.H, (int, float)), 'aerosol_scale_height needs to be an int or float.'
         assert isinstance(self.nu, (int, float)), 'conratu_nu needs to be an int or float.'
-        assert isinstance(self.layers, ModelAtmosphere), 'layers needs to be an instance of Layers.'
+        assert isinstance(self.layers, ModelGrid), 'layers needs to be an instance of Layers.'
 
     def __check_conrath_parameters_do_not_suck(self):
         if np.isnan(self.H):
@@ -119,7 +119,7 @@ class GCMProfile:
         self.profile = profile
 
     def __check_input_types(self):
-        assert isinstance(self.layers, ModelAtmosphere), 'layers needs to be an instance of Layers'
+        assert isinstance(self.layers, ModelGrid), 'layers needs to be an instance of Layers'
         assert isinstance(self.profile, np.ndarray), 'profiles needs to be a numpy array'
 
     def get_profile(self):
@@ -198,13 +198,14 @@ class OldAerosol:
 
 
 atmFile = ExternalFile('/home/kyle/repos/pyRT_DISORT/pyRT_DISORT/data/planets/mars/aux/mars_atm.npy')
-ma = ModelAtmosphere(atmFile.array, atmFile.array[:, 0])
+ma = ModelGrid(atmFile.array, atmFile.array[:, 0])
 
 dustFile = ExternalFile('/home/kyle/repos/pyRT_DISORT/pyRT_DISORT/data/planets/mars/aux/dust.npy')
 wavs = np.array([1, 9.3])
-oldAero = OldAerosol(dustFile.array, wavs, 12.1)
+oldAero = OldAerosol(dustFile.array, wavs, 9.3)
 con = Conrath(ma, 10, 0.5)
 
 #raise SystemExit(9)
-dcol = Column(oldAero, ma, con, np.array([1, 1.2, 1.4]), np.array([0.1, 0.8, 0.2]))
-print(dcol.hyperspectral_total_optical_depths)
+dcol = Column(oldAero, ma, con, np.array([1]), np.array([1]))
+print(np.sum(dcol.hyperspectral_total_optical_depths, axis=0))
+print(np.sum(dcol.hyperspectral_scattering_optical_depths, axis=0))

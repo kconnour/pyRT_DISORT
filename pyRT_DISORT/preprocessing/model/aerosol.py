@@ -3,10 +3,10 @@ import numpy as np
 from scipy.interpolate import interp2d
 
 # Local imports
-from pyRT_DISORT.preprocessing.utilities.array_checks import CheckArray
+from pyRT_DISORT.preprocessing.utilities.array_checks import ArrayChecker
 
 
-class ParameterChecker(CheckArray):
+class ParameterChecker(ArrayChecker):
     def __init__(self, array):
         super().__init__(array, 'array')
         self.nonetype = self.__check_if_input_is_none()
@@ -32,7 +32,7 @@ class ParameterChecker(CheckArray):
         self.check_ndarray_is_positive_finite()
 
 
-class AerosolPropertiesChecker(CheckArray):
+class AerosolPropertiesChecker(ArrayChecker):
     def __init__(self, array, particle_size_grid, wavelength_grid):
         super().__init__(array, 'aerosol_properties')
         self.particle_size_grid = particle_size_grid
@@ -256,3 +256,7 @@ class Aerosol(AerosolProperties):
             return self.c_extinction
         else:
             return self.c_extinction / self.reference_extinction
+
+
+
+
