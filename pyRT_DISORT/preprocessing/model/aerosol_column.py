@@ -236,3 +236,30 @@ class Column:
 
     def __calculate_scattering_optical_depth(self):
         return self.total_optical_depth * self.single_scattering_albedo
+
+
+class SporadicParticleSizes:
+    def __init__(self, z_size_grid, model_grid, debug=False):
+        self.z_size_grid = z_size_grid
+        self.model_grid = model_grid
+
+        if debug:
+            self.__check_grids()
+
+        self.regridded_particle_sizes = self.__interp_to_new_grid()
+
+    def __check_grids(self):
+        z_size_checker = ArrayChecker(self.z_size_grid, 'z_size_grid')
+        z_size_checker.check_object_is_array()
+        z_size_checker.check_ndarray_is_numeric()
+        z_size_checker.check_ndarray_is_non_negative()
+        z_size_checker.check_ndarray_is_finite()
+        z_size_checker.check_ndarray_is_2d()
+        if self.z_size_grid.shape[-1] != 2:
+            raise IndexError('The second dimension of z_size_grid must be 2')
+        if not isinstance(self.model_grid, ModelGrid):
+            raise TypeError('model_grid must be an instance of ModelGrid')
+
+    def __interp_to_new_grid(self):
+        return np.flip(np.interp(self.model_grid.altitude_layers, np.flip(self.z_size_grid[:, 0]),
+                                 np.flip(self.z_size_grid[:, 1])))

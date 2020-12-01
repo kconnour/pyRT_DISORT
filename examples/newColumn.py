@@ -1,9 +1,11 @@
-from pyRT_DISORT.preprocessing.model.aerosol_column import AerosolProperties, Column
+from pyRT_DISORT.preprocessing.model.aerosol_column import AerosolProperties, Column, SporadicParticleSizes
 from pyRT_DISORT.preprocessing.utilities.external_files import MultipleExternalFiles, ExternalFile
 from pyRT_DISORT.preprocessing.model.atmosphere import ModelGrid
 from pyRT_DISORT.preprocessing.model.vertical_profiles import Conrath, Uniform, Layers, ProfileHolder
 
 import numpy as np
+
+
 
 f = ExternalFile('/home/kyle/repos/pyRT_DISORT/pyRT_DISORT/data/planets/mars/aux/dust_properties.fits')
 
@@ -32,3 +34,7 @@ print(newcol.total_optical_depth)
 #print(np.sum(newcol.total_optical_depth, axis=0))
 #print(newcol.total_optical_depth)
 #print(np.sum(newcol.scatting_optical_depth, axis=0))
+
+spor = np.array([[50, 1], [30, 1.2], [10, 1.4], [5, 1.6]])
+s = SporadicParticleSizes(spor, model_grid)
+print(s.regridded_particle_sizes)
