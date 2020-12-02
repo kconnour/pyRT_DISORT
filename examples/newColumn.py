@@ -2,6 +2,7 @@ from pyRT_DISORT.preprocessing.model.aerosol_column import AerosolProperties, Co
 from pyRT_DISORT.preprocessing.utilities.external_files import ExternalFile
 from pyRT_DISORT.preprocessing.model.atmosphere import ModelGrid
 from pyRT_DISORT.preprocessing.model.vertical_profiles import Conrath
+from pyRT_DISORT.preprocessing.model.new_phase_function import LegendreCoefficients, HenyeyGreenstein, TabularLegendreCoefficients
 
 import numpy as np
 
@@ -46,23 +47,33 @@ prop = AerosolProperties(dustFile.array['primary'].data, wavelength_grid=dustFil
 # Also of note: instead of checking all inputs, I added a debug flag to run some tests. I don't claim that it's
 # comprehensive, but it may be useful when messing with these classes to handle errors before they propagate further
 
+# Phase function stuff
+#pf = HenyeyGreenstein(n_moments=200)
+idk = ExternalFile('/home/kyle/repos/pyRT_DISORT/pyRT_DISORT/data/planets/mars/aux/dust_phase_function.fits')
+#pf = TabularLegendreCoefficients(idk.array['primary'].data, phase_function_wavelengths=idk.array['wavelengths'].data, phase_function_particle_sizes=idk.array['particle_sizes'].data)
+pf = TabularLegendreCoefficients(idk.array['primary'].data[:, 0, 0])
+
 # Make a new Column instance
-newcol = Column(prop, model_grid, q_profile, particle_sizes, wavs, 9.3, 1)   # 9.3 = wavelength reference; 1 = column integrated OD
+newcol = Column(prop, model_grid, q_profile, particle_sizes, wavs, 9.3, 1, pf)   # 9.3 = wavelength reference; 1 = column integrated OD
 
 # Column contains 2D arrays of the radiative properties. Before, I passed wavelengths and particle sizes to Aerosol,
 # but this redesign rendered Aerosol obsolete (at least in my mind). So these properties are now all (n_layers, n_wavelengths)
-print(newcol.c_extinction)
-print(newcol.c_scattering)
-print(newcol.g)
+#print(newcol.c_extinction)
+#print(newcol.c_scattering)
+#print(newcol.g)
 
 # Assuming I did everything with q correctly (which wasn't much at all...) then you can get the correct ODs in the
 # Column attributes. These at least match old versions of my code and disort_multi. Also, I removed
 # all attributes involving "multisize" since I don't think they're useful anymore.
-print(newcol.total_optical_depth)
-print(np.sum(newcol.total_optical_depth, axis=0))
-print(newcol.scatting_optical_depth)
+#print(newcol.total_optical_depth)
+#print(np.sum(newcol.total_optical_depth, axis=0))
+#print(newcol.scatting_optical_depth)
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+print(newcol.phase_function.shape)
+#print(np.amax(newcol.phase_function))
+raise SystemExit(9)
+
+'''# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Example 2: Similar to example 1 but you don't know the particle sizes as well
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Make a q_profile again
@@ -101,3 +112,4 @@ print(newcol.total_optical_depth)
 print(np.sum(newcol.total_optical_depth, axis=0))
 print(newcol.scatting_optical_depth)
 
+'''

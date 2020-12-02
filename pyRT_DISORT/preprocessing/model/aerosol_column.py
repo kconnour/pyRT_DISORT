@@ -5,13 +5,14 @@ from scipy.interpolate import interp2d
 # Local imports
 from pyRT_DISORT.preprocessing.model.aerosol import AerosolProperties
 from pyRT_DISORT.preprocessing.model.atmosphere import ModelGrid
+from pyRT_DISORT.preprocessing.model.new_phase_function import LegendreCoefficients, HenyeyGreenstein, TabularLegendreCoefficients
 from pyRT_DISORT.preprocessing.utilities.array_checks import ArrayChecker
 
 
 class Column:
     """ A Column object creates a single column from an input vertical profile """
     def __init__(self, aerosol_properties, model_grid, mixing_ratio_profile, particle_size_profile, wavelengths,
-                 reference_wavelength, column_integrated_optical_depth, debug=False):
+                 reference_wavelength, column_integrated_optical_depth, legendre_coefficients, debug=False):
         """
         Parameters
         ----------
@@ -29,6 +30,8 @@ class Column:
             The reference wavelength
         column_integrated_optical_depth: int or float
             The total column integrated optical depth of this column
+        legendre_coefficients: LegendreCoefficients
+            A class derived from LegendreCoefficients
         debug: bool, optional
             Denote if this code should perform sanity checks on inputs to see if they're expected. Default is False
 
@@ -71,6 +74,7 @@ class Column:
         self.particle_size_profile = particle_size_profile
         self.wavelengths = wavelengths
         self.reference_wavelength = reference_wavelength
+        self.legendre_coefficients = legendre_coefficients
         self.OD = column_integrated_optical_depth
         self.__particle_none = self.aerosol_properties.particle_none
         self.__wavelength_none = self.aerosol_properties.wavelength_none
@@ -84,6 +88,7 @@ class Column:
         self.extinction = self.__make_extinction()
         self.total_optical_depth = self.__calculate_total_optical_depth()
         self.scatting_optical_depth = self.__calculate_scattering_optical_depth()
+        self.phase_function = self.__make_phase_function()
 
     def __check_inputs_are_feasible(self):
         self.__check_properties()
@@ -93,6 +98,7 @@ class Column:
         self.__check_wavelengths()
         self.__check_reference_wavelength()
         self.__check_column_integrated_optical_depth()
+        self.__check_legendre_coefficients()
 
     def __check_properties(self):
         if not isinstance(self.aerosol_properties, AerosolProperties):
@@ -158,6 +164,10 @@ class Column:
         if self.OD <= 0:
             raise ValueError('column_integrated_optical_depth must be positive')
 
+    def __check_legendre_coefficients(self):
+        if not isinstance(self.legendre_coefficients, LegendreCoefficients):
+            raise TypeError('legendre_coefficients must be an instance of a derived class of LegendreCoefficients')
+
     def __make_radiative_properties(self):
         c_extinction = self.__interpolate_radiative_properties__to_model_grid(self.aerosol_properties.c_extinction_grid)
         c_scattering = self.__interpolate_radiative_properties__to_model_grid(self.aerosol_properties.c_scattering_grid)
@@ -201,6 +211,29 @@ class Column:
 
     def __calculate_scattering_optical_depth(self):
         return self.total_optical_depth * self.single_scattering_albedo
+
+    def __make_phase_function(self):
+        if isinstance(self.legendre_coefficients, HenyeyGreenstein):
+            unnormalized_coefficients = self.legendre_coefficients.make_legendre_coefficients(self.g)
+            return self.__make_normalized_coefficients(unnormalized_coefficients)
+        elif isinstance(self.legendre_coefficients, TabularLegendreCoefficients):
+            if self.legendre_coefficients.coefficients_dimensions == 1:
+                unnormalized_coefficients = np.broadcast_to(self.legendre_coefficients.tabulated_coefficients,
+                                                            (len(self.wavelengths), self.model_grid.n_layers,
+                                                             len(self.legendre_coefficients.tabulated_coefficients))).T
+                return self.__make_normalized_coefficients(unnormalized_coefficients)
+            elif self.legendre_coefficients.coefficients_dimensions == 2:
+                pass
+            elif self.legendre_coefficients.coefficients_dimensions == 3:
+                pass
+        else:
+            raise TypeError('I have no idea how to handle this type of phase function yet...')
+
+    @staticmethod
+    def __make_normalized_coefficients(unnormalized_coefficients):
+        n_moments = unnormalized_coefficients.shape[0]
+        normalization = np.linspace(0, n_moments-1, num=n_moments)*2 + 1
+        return (unnormalized_coefficients.T / normalization).T
 
 
 class SporadicParticleSizes:
