@@ -39,22 +39,22 @@ class ForwardScatteringProperty:
         self.particle_size_grid = particle_size_grid
         self.wavelength_grid = wavelength_grid
         self.__property_dims = np.ndim(self.property_values)
-        self.__scattering_property_is_singleton = self.__determine_scattering_property_is_singleton()
+        self.scattering_property_is_singleton = self.__determine_scattering_property_is_singleton()
         self.__check_property_and_grids_are_physical()
 
     def __determine_scattering_property_is_singleton(self):
         return True if self.__property_dims == 1 and len(self.property_values) == 1 else False
 
     def __check_property_and_grids_are_physical(self):
-        self.__check_property_is_plausible()
+        self.__check_property_is_physical()
         self.__check_property_dimensions()
-        self.__check_grid_is_plausible(self.particle_size_grid, 'particle_size_grid')
-        self.__check_grid_is_plausible(self.wavelength_grid, 'wavelength_grid')
+        self.__check_grid_is_physical(self.particle_size_grid, 'particle_size_grid')
+        self.__check_grid_is_physical(self.wavelength_grid, 'wavelength_grid')
         self.__check_grids_match_2d_property()
         self.__check_grids_match_1d_property()
         self.__check_grids_match_0d_property()
 
-    def __check_property_is_plausible(self):
+    def __check_property_is_physical(self):
         properties_checker = ArrayChecker(self.property_values, 'scattering_property')
         properties_checker.check_object_is_array()
         properties_checker.check_ndarray_is_numeric()
@@ -65,7 +65,7 @@ class ForwardScatteringProperty:
             raise IndexError('scattering_property must be a 1D or 2D np.ndarray')
 
     @staticmethod
-    def __check_grid_is_plausible(grid, grid_name):
+    def __check_grid_is_physical(grid, grid_name):
         if grid is not None:
             grid_checker = ArrayChecker(grid, grid_name)
             grid_checker.check_object_is_array()
@@ -89,7 +89,7 @@ class ForwardScatteringProperty:
                              'wavelength_grid')
 
     def __check_grids_match_1d_property(self):
-        if self.__property_dims != 1 or self.__scattering_property_is_singleton:
+        if self.__property_dims != 1 or self.scattering_property_is_singleton:
             return
         if not (self.particle_size_grid is None) ^ (self.wavelength_grid is None):
             raise TypeError(
@@ -105,25 +105,38 @@ class ForwardScatteringProperty:
                                  'particle_size_grid or wavelength_grid, whichever is provided')
 
     def __check_grids_match_0d_property(self):
-        if not self.__scattering_property_is_singleton:
+        if not self.scattering_property_is_singleton:
             return
         if self.particle_size_grid is not None or self.wavelength_grid is not None:
             raise TypeError('For 0D scattering_property, do not provide particle_size_grid or wavelength_grid')
 
 
 class ForwardScatteringProperties:
+    """A ForwardScatteringProperties object is designed to hold all of the relevant forward scattering properties for
+    a particular aerosol. """
     def __init__(self, c_scattering, c_extinction, g=None):
+        """
+        Parameters
+        ----------
+        c_scattering: ForwardScatteringProperty
+            The scattering coefficient and the grids over which it's defined
+        c_extinction: ForwardScatteringProperty
+            The extinction coefficient and the grids over which it's defined
+        g: ForwardScatteringProperty, optional
+            The Henyey-Greenstein asymmetry parameter and the grids over which it's defined. Default is None
+        """
         self.c_scattering = c_scattering
         self.c_extinction = c_extinction
         self.g = g
-        self.__ensure_properties_are_fsc()
+        self.__ensure_properties_are_forward_scattering_properties()
 
-    def __ensure_properties_are_fsc(self):
+    def __ensure_properties_are_forward_scattering_properties(self):
         self.__ensure_property_is_ForwardScatteringProperty(self.c_scattering, 'c_scattering')
         self.__ensure_property_is_ForwardScatteringProperty(self.c_extinction, 'c_extinction')
         if self.g is not None:
             self.__ensure_property_is_ForwardScatteringProperty(self.g, 'g')
 
-    def __ensure_property_is_ForwardScatteringProperty(self, forward_property, property_name):
+    @staticmethod
+    def __ensure_property_is_ForwardScatteringProperty(forward_property, property_name):
         if not isinstance(forward_property, ForwardScatteringProperty):
             raise TypeError(f'{property_name} must be an instance of ForwardScatteringProperty')

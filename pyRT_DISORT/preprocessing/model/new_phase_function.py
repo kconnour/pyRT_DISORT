@@ -113,9 +113,9 @@ class TabularLegendreCoefficients(LegendreCoefficients):
             return
         if self.__particle_none or self.__wavelength_none:
             raise TypeError('You need to include both particle size and wavelength info')
-        if self.__coefficients_shape[0] != len(self.particle_sizes):
+        if self.__coefficients_shape[1] != len(self.particle_sizes):
             raise IndexError(
                 '3D tabulated_coefficients\' first dimension must be the same length as particle sizes')
-        if self.__coefficients_shape[1] != len(self.wavelengths):
+        if self.__coefficients_shape[2] != len(self.wavelengths):
             raise IndexError(
                     '3D tabulated_coefficients\' second dimension must be the same length as wavelengths')
