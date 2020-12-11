@@ -5,7 +5,7 @@ Fixes:
 --- Ensure column integrated OD cannot be 0 since weights sum to 0
 --- Change strings everywhere to f strings
 --- Re-do all my older classes to remove asserts from __init__
---- Obliterate phase function and put half its logic in Aerosol, and half in Column
+--- Check I can make a 1 layer atmosphere
 --- Remake the examples with the new classes
 --- ModelGrid might need a better name since altitude_grid is a parameter in InputAtmosphere (the word "grid" clashes)
 --- ModelGrid should use Gaussian quadrature for the integral
@@ -13,20 +13,18 @@ Fixes:
 --- Remove the AerosolChecker classes
 
 Additions:
+--- Unit tests
+--- Integrated tests
 --- Make ice PMOM
 --- Add ozone
 --- Add an efficient solver
 --- Parallelize over wavelength / observations (pixels)
---- Set a max_moments in phase_functions.py in case user doesn't believe all the moments they have
---- Postprocessing
---- Unit tests
 --- Rewrite the test cases using my classes
 --- Correlated k
 --- T-matrix
 
 Design thoughts:
 --- Is there a better way besides telling the user the columns in an input file must be in a specified order?
---- UU outputs a bunch of junk 0s in addition to "good" values---fix that?
 
 Tests:
 --- What happens when phase functions are defined at different wavelengths? Like dust and ice at short wavs
