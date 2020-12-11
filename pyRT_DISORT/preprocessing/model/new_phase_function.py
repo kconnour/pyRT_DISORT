@@ -23,8 +23,8 @@ class HenyeyGreenstein(LegendreCoefficients):
 
 class TabularLegendreCoefficients(LegendreCoefficients):
     def __init__(self, tabulated_coefficients, phase_function_particle_sizes=None, phase_function_wavelengths=None,
-                 max_moments=None):
-        self.tabulated_coefficients = tabulated_coefficients[:max_moments]
+                 max_moments=None, debug=False):
+        self.tabulated_coefficients = tabulated_coefficients
         self.particle_sizes = phase_function_particle_sizes
         self.wavelengths = phase_function_wavelengths
         self.max_moments = max_moments
@@ -34,10 +34,12 @@ class TabularLegendreCoefficients(LegendreCoefficients):
         else:
             super().__init__(min(self.max_moments, self.__get_n_moments()))
 
-        self.__particle_none = self.__check_if_input_is_none(self.particle_sizes)
-        self.__wavelength_none = self.__check_if_input_is_none(self.wavelengths)
-        self.__coefficients_shape = self.__get_coefficients_shape()
-        self.__check_coefficients_and_grids()
+        if debug:
+            self.__particle_none = self.__check_if_input_is_none(self.particle_sizes)
+            self.__wavelength_none = self.__check_if_input_is_none(self.wavelengths)
+
+            self.__coefficients_shape = self.__get_coefficients_shape()
+            self.__check_coefficients_and_grids()
 
     def __get_n_moments(self):
         return self.tabulated_coefficients.shape[0]

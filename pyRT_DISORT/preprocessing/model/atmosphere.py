@@ -4,7 +4,7 @@ from scipy.integrate import quadrature
 from scipy.constants import Boltzmann
 
 # Local imports
-from pyRT_DISORT.preprocessing.utilities.array_checks import CheckArray
+from pyRT_DISORT.preprocessing.utilities.array_checks import ArrayChecker
 
 
 class InputAtmosphere:
@@ -37,7 +37,7 @@ class InputAtmosphere:
         self.__check_altitudes_are_decreasing()
 
     def __check_atmosphere_values_are_plausible(self):
-        atmosphere_checker = CheckArray(self.atmosphere, 'atmosphere')
+        atmosphere_checker = ArrayChecker(self.atmosphere, 'atmosphere')
         atmosphere_checker.check_object_is_array()
         atmosphere_checker.check_ndarray_is_numeric()
         atmosphere_checker.check_ndarray_is_finite()
@@ -56,7 +56,7 @@ class InputAtmosphere:
         return altitudes, pressures, temperatures, number_density
 
     def __check_altitudes_are_decreasing(self):
-        altitude_grid_checker = CheckArray(self.altitude_grid, 'altitude_grid')
+        altitude_grid_checker = ArrayChecker(self.altitude_grid, 'altitude_grid')
         altitude_grid_checker.check_1d_array_is_monotonically_decreasing()
 
 
@@ -97,7 +97,7 @@ class ModelGrid(InputAtmosphere):
         self.column_density_layers = self.__calculate_column_density_layers()
 
     def __check_model_altitudes(self):
-        altitude_checker = CheckArray(self.model_altitudes, 'model_altitudes')
+        altitude_checker = ArrayChecker(self.model_altitudes, 'model_altitudes')
         altitude_checker.check_object_is_array()
         altitude_checker.check_ndarray_is_numeric()
         altitude_checker.check_ndarray_is_finite()

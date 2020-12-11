@@ -1,61 +1,33 @@
-Design
---- UU outputs a bunch of junk 0s in addition to "good" values---fix that?
+Fixes:
+--- Combine most recent dust files into a 3D .fits file
+--- Combine most recent ice files in to a 3D .fits file
+--- Clean up all the Mars aux files since most are now unnecessary
+--- Ensure column integrated OD cannot be 0 since weights sum to 0
+--- Change strings everywhere to f strings
+--- Re-do all my older classes to remove asserts from __init__
+--- Check I can make a 1 layer atmosphere
+--- Remake the examples with the new classes
+--- ModelGrid might need a better name since altitude_grid is a parameter in InputAtmosphere (the word "grid" clashes)
+--- ModelGrid should use Gaussian quadrature for the integral
+--- ModelGrid should do integral in log(z) space
+--- Remove the AerosolChecker classes
 
-Assumptions
---- Every aerosol will have a dust.npy-type file
---- ice.npy / dust.npy have the columns specified in the correct order
---- mars_atm.npy has the columns specified in the correct order
---- Every aerosol will either be HG or use a 3D phase function file
-
-Test:
---- Make sure if I have 100 particle sizes, things don't go haywire...
-
-Fix:
---- Remove old phase functions + generally unnecessary aux files
-
-Work on next:
---- Mike's changes via email
---- Add an efficient solver
---- Make ice PMOM
-no --> --- Ensure Column can accommodate different profiles for different particle sizes
-yes --> --- Each aerosol column specify particle size for each layer
---- Ensure OD cannot be 0 since weights sum to 0
---- Add ozone
+Additions:
 --- Unit tests
+--- Integrated tests
+--- Make ice PMOM
+--- Add ozone
+--- Add an efficient solver
+--- Parallelize over wavelength / observations (pixels)
+--- Rewrite the test cases using my classes
+--- Correlated k
+--- T-matrix
+
+Design thoughts:
+--- Is there a better way besides telling the user the columns in an input file must be in a specified order?
+
+Tests:
 --- What happens when phase functions are defined at different wavelengths? Like dust and ice at short wavs
---- Thoroughly test __check_shapes_match() for 1D, 2D, and 3D phase functions
---- Combine radii + wavelengths into 1 phase function file
---- Change strings to f strings
---- Fix defining self.wavelengths / self.particle_sizes in PhaseFunction.expand_dimensions()
---- assert() might be better to raise ValueError('myMessage') or something
---- Move all the asserts in __init__ into a function since they just check the inputs are good
 --- Add checks throughout to ensure the same wavelengths, moments, etc. are used. We don't want one aerosol observed
     at different wavelenghts than another. Also ensure they CAN have different r_effective
---- Postprocessing
---- Parallelize over wavelength / observations (pixels)
---- Correlated k?
---- T-matrix?
---- Set a max_moments in phase_functions.py in case user doesn't believe all the moments they have
---- Rewrite the test cases using my classes
-
-Unresolved comments from the boss:
---- Layers/Boundaries
-   - User should specify z vector that defines the boundaries of the layers. The input file is just the grid of EoS values
-   - Interpolate EoS values onto this vector
-   - Do integral in log(z) space
-   - Maybe don't store midpoint values of the arrays (T_midpoint, P_midpoint, etc.)
-   - the description of atmosphere array should be. "An array of the atmospheric state variables”. (i.e., P, temperature, number density, vertical coordinate) (minor wording change)
-
---- Column
-   - The reference wavelength should be defined for each particle size. So change it from float --> np.ndarray
-
-My grumbles
---- Aerosol
-   - Handle dwaveref
-   - Update docstring
-   - Change the checker classes to print the variable name that's causing the error
-   - Add aerosol file
-   - Update the test
-   - Remake documentation
-   - Is there a better way besides telling the user the columns in the input file must be in a specified order?
-   - Should there be a self.recreate() method? To update the aerosol's attributes if more info is provided?
+--- Make sure if I have 100 particle sizes, things don't go haywire...

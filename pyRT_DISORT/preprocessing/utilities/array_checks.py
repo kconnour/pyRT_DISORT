@@ -1,7 +1,7 @@
 import numpy as np
 
 
-class CheckArray:
+class ArrayChecker:
     def __init__(self, ndarray, array_name):
         self.array_name = array_name
         self.ndarray = ndarray
@@ -53,6 +53,11 @@ class CheckArray:
         diff = np.diff(self.ndarray)
         if not np.all(diff < 0):
             raise ValueError(f'{self.array_name} must be monotonically decreasing')
+
+    def check_1d_array_is_monotonically_increasing(self):
+        diff = np.diff(self.ndarray)
+        if not np.all(diff > 0):
+            raise ValueError(f'{self.array_name} must be monotonically increasing')
 
     def check_1d_array_is_no_longer_than(self, length):
         if len(self.ndarray) > length:
