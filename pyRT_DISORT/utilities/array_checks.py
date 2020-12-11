@@ -3,6 +3,8 @@ import numpy as np
 
 
 class ArrayChecker:
+    """An ArrayChecker object holds methods that may be handy to perform on np.ndarrays."""
+
     def __init__(self, some_object, array_name):
         self.array_name = array_name
         self.some_object = some_object

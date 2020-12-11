@@ -7,7 +7,8 @@ from pyRT_DISORT.utilities.array_checks import ArrayChecker
 
 
 class InputAtmosphere:
-    """ Ingest equation of state variables on a known grid """
+    """An InputAtmosphere object simply holds on input equation of state variables on a known grid."""
+
     def __init__(self, atmosphere):
         """
         Parameters
@@ -58,7 +59,8 @@ class InputAtmosphere:
 
 
 class ModelGrid(InputAtmosphere):
-    """ Calculate equation of state variables at user-defined altitudes"""
+    """A ModelGrid object computes the equation of state variables at user-defined altitudes."""
+
     def __init__(self, atmosphere, boundary_altitudes):
         """
         Parameters
