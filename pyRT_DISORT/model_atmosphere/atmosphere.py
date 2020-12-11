@@ -1,10 +1,9 @@
 # 3rd-party imports
 import numpy as np
-from scipy.integrate import quadrature
 from scipy.constants import Boltzmann
 
 # Local imports
-from pyRT_DISORT.preprocessing.utilities.array_checks import ArrayChecker
+from pyRT_DISORT.utilities.array_checks import ArrayChecker
 
 
 class InputAtmosphere:
