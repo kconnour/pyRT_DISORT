@@ -57,4 +57,4 @@ class SetupDISORT:
 
 
 if __name__ == '__main__':
-    SetupDISORT(install_disort=True)
+    SetupDISORT(install_disort=False)

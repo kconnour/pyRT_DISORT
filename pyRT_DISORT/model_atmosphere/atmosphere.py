@@ -13,45 +13,43 @@ class InputAtmosphere:
         Parameters
         ----------
         atmosphere: np.ndarray
-            A 2D array of the atmospheric state variables (z, P, T, and n). Variables must be specified in that order
+            2D array of the atmospheric state variables (z, P, T, and n). Variables must be specified in that order
 
         Attributes
         ----------
-        atmosphere: np.ndarray
-            The input atmosphere
         altitude_grid: np.ndarray
-            The first column from atmosphere
+            The first column from atmosphere [km]
         pressure_grid: np.ndarray
-            The second column from atmosphere
+            The second column from atmosphere [Pascals]
         temperature_grid: np.ndarray
-            The third column from atmosphere
+            The third column from atmosphere [K]
         number_density_grid: np.ndarray
-            The fourth column from atmosphere
+            The fourth column from atmosphere [particles / m**3]
         """
-        self.atmosphere = atmosphere
-        self.__check_atmosphere_values_are_plausible()
-        self.__check_atmosphere_columns()
+        self.__atmosphere = atmosphere
+        self.__check_atmosphere_values_are_physical()
+        self.__check_atmosphere_has_4_columns()
         self.altitude_grid, self.pressure_grid, self.temperature_grid, self.number_density_grid = \
             self.__read_atmosphere()
         self.__check_altitudes_are_decreasing()
 
-    def __check_atmosphere_values_are_plausible(self):
-        atmosphere_checker = ArrayChecker(self.atmosphere, 'atmosphere')
+    def __check_atmosphere_values_are_physical(self):
+        atmosphere_checker = ArrayChecker(self.__atmosphere, 'atmosphere')
         atmosphere_checker.check_object_is_array()
         atmosphere_checker.check_ndarray_is_numeric()
         atmosphere_checker.check_ndarray_is_finite()
         atmosphere_checker.check_ndarray_is_non_negative()
         atmosphere_checker.check_ndarray_is_2d()
 
-    def __check_atmosphere_columns(self):
-        if self.atmosphere.shape[1] != 4:
+    def __check_atmosphere_has_4_columns(self):
+        if self.__atmosphere.shape[1] != 4:
             raise IndexError('The atmosphere must have 4 columns')
 
     def __read_atmosphere(self):
-        altitudes = self.atmosphere[:, 0]
-        pressures = self.atmosphere[:, 1]
-        temperatures = self.atmosphere[:, 2]
-        number_density = self.atmosphere[:, 3]
+        altitudes = self.__atmosphere[:, 0]
+        pressures = self.__atmosphere[:, 1]
+        temperatures = self.__atmosphere[:, 2]
+        number_density = self.__atmosphere[:, 3]
         return altitudes, pressures, temperatures, number_density
 
     def __check_altitudes_are_decreasing(self):
@@ -61,48 +59,48 @@ class InputAtmosphere:
 
 class ModelGrid(InputAtmosphere):
     """ Calculate equation of state variables at user-defined altitudes"""
-    def __init__(self, atmosphere, model_altitudes):
+    def __init__(self, atmosphere, boundary_altitudes):
         """
         Parameters
         ----------
         atmosphere: np.ndarray
-            An array of the equations of state in the atmosphere
-        model_altitudes: np.ndarray
-            1D array of the desired boundary altitudes to use in the model
+            2D array of the atmospheric state variables (z, P, T, and n). Variables must be specified in that order
+        boundary_altitudes: np.ndarray
+            1D array of the desired boundary altitudes to use in the model. Must be decreasing
 
         Attributes
         ----------
-        model_altitudes: np.ndarray
+        boundary_altitudes: np.ndarray
             The user-input altitudes of the model at the boundaries
-        model_pressures: np.ndarray
+        boundary_pressures: np.ndarray
             The pressures at model_altitudes
-        model_temperatures: np.ndarray
+        boundary_temperatures: np.ndarray
             The temperatures at model_altitudes
-        model_number_denisty: np.ndarray
+        boundary_number_denisty: np.ndarray
             The number density at model_altitudes
-        column_density_layers: np.ndarray
+        layer_column_density: np.ndarray
             The column densities in the layers
         n_layers: int
             The number of layers in the model
         """
         super().__init__(atmosphere)
-        self.model_altitudes = model_altitudes
-        self.n_boundaries = len(self.model_altitudes)
-        self.n_layers = self.n_boundaries - 1
-        self.__check_model_altitudes()
-        self.model_pressures, self.model_temperatures, self.model_number_densities = \
+        self.boundary_altitudes = boundary_altitudes
+        self.__check_boundary_altitudes()
+        self.n_layers = len(self.boundary_altitudes) - 1
+        self.boundary_pressures, self.boundary_temperatures, self.boundary_number_densities = \
             self.__regrid_atmospheric_variables()
-        self.altitude_layers = self.__calculate_midpoint_altitudes()
-        self.column_density_layers = self.__calculate_column_density_layers()
+        self.layer_altitudes = self.__calculate_midpoint_altitudes()
+        self.column_density_layers = self.__calculate_layer_column_density()
 
-    def __check_model_altitudes(self):
-        altitude_checker = ArrayChecker(self.model_altitudes, 'model_altitudes')
+    def __check_boundary_altitudes(self):
+        altitude_checker = ArrayChecker(self.boundary_altitudes, 'boundary_altitudes')
         altitude_checker.check_object_is_array()
         altitude_checker.check_ndarray_is_numeric()
         altitude_checker.check_ndarray_is_finite()
         altitude_checker.check_ndarray_is_non_negative()
         altitude_checker.check_ndarray_is_1d()
         altitude_checker.check_1d_array_is_monotonically_decreasing()
+        altitude_checker.check_1d_array_is_at_least(2)
 
     def __regrid_atmospheric_variables(self):
         regridded_pressures = self.__interpolate_variable_to_new_altitudes(self.pressure_grid)
@@ -112,24 +110,16 @@ class ModelGrid(InputAtmosphere):
 
     def __interpolate_variable_to_new_altitudes(self, variable_grid):
         # I'm forced to flip the arrays because numpy.interp demands xp be monotonically increasing
-        return np.interp(self.model_altitudes, np.flip(self.altitude_grid), np.flip(variable_grid))
+        return np.interp(self.boundary_altitudes, np.flip(self.altitude_grid), np.flip(variable_grid))
+
+    def __calculate_midpoint_altitudes(self):
+        return (self.boundary_altitudes[:-1] + self.boundary_altitudes[1:]) / 2
 
     def __calculate_number_density(self, altitude):
         interp_pressure = np.interp(altitude, np.flip(self.altitude_grid), np.flip(self.pressure_grid))
         interp_temp = np.interp(altitude, np.flip(self.altitude_grid), np.flip(self.temperature_grid))
         return interp_pressure / (Boltzmann * interp_temp)
 
-    def __calculate_midpoint_altitudes(self):
-        return (self.model_altitudes[:-1] + self.model_altitudes[1:]) / 2
-    # I wish I knew why this refused to work
-    '''def __calculate_column_density_layers(self):
-        integral = np.zeros(self.n_layers)
-        for i in range(self.n_layers):
-            print(self.model_altitudes[i], self.model_altitudes[i+1])
-            integral[i] = quadrature(self.__calculate_number_density, self.model_altitudes[i+1], self.model_altitudes[i])[0]
-        return integral * 1000'''
-
-    # This is the bad old way
-    def __calculate_column_density_layers(self):
-        num_den_layers = self.__calculate_number_density(self.altitude_layers)
-        return num_den_layers * np.abs(np.diff(self.model_altitudes)) * 1000
+    def __calculate_layer_column_density(self):
+        num_den_layers = self.__calculate_number_density(self.layer_altitudes)
+        return num_den_layers * np.abs(np.diff(self.boundary_altitudes)) * 1000
