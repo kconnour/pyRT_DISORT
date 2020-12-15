@@ -3,11 +3,11 @@ import numpy as np
 from scipy.interpolate import interp2d
 
 # Local imports
-from pyRT_DISORT.preprocessing.model.aerosol import ForwardScatteringProperties
-from pyRT_DISORT.preprocessing.model.atmosphere import ModelGrid
-from pyRT_DISORT.preprocessing.model.phase_function import LegendreCoefficients, HenyeyGreenstein, \
+from pyRT_DISORT.model_atmosphere.aerosol import ForwardScatteringPropertyCollection
+from pyRT_DISORT.model_atmosphere.atmosphere_grid import ModelGrid
+from pyRT_DISORT.model_atmosphere.phase_function import LegendreCoefficients, HenyeyGreenstein, \
     TabularLegendreCoefficients
-from pyRT_DISORT.preprocessing.utilities.array_checks import ArrayChecker
+from pyRT_DISORT.utilities.array_checks import ArrayChecker
 
 
 class Column:
@@ -17,8 +17,8 @@ class Column:
         """
         Parameters
         ----------
-        forward_scattering_properties: ForwardScatteringProperties
-            An instance of AerosolProperties to use for this column
+        forward_scattering_properties: ForwardScatteringPropertyCollection
+            An aerosol's forward scattering to use for this column
         model_grid: ModelGrid
             An instance of ModelGrid to set the structure of the model
         mixing_ratio_profile: np.ndarray
@@ -36,8 +36,8 @@ class Column:
 
         Attributes
         ----------
-        aerosol_properties: AerosolProperties
-            The input aerosol_properties
+        forward_scattering_properties: ForwardScatteringPropertyCollection
+            The input forward_scattering_properties
         model_grid: ModelGrid
             The input model_grid
         mixing_ratio_profile: np.ndarray
@@ -89,8 +89,82 @@ class Column:
         self.scattering_optical_depth = self.__calculate_scattering_optical_depth()
         self.phase_function = self.__make_phase_function()
 
+    def check_inputs_are_physical(self):
+        self.__check_forward_scattering_properties_is_ForwardScatteringPropertyCollection()
+        self.__check_forward_scattering_properties_have_expected_attributes()
+        self.__check_model_grid_is_ModelGrid()
+        self.__check_mixing_ratio_profile_is_physical()
+        self.__check_particle_size_profile_is_physical()
+        self.__check_profiles_match_layers()
+        self.__check_wavelengths_are_physical()
+        self.__check_reference_wavelength_is_physical()
+        self.__check_column_integrated_optical_depth_is_physical()
+        self.__check_legendre_coefficients_is_LegendreCoefficients()
+
+    def __check_forward_scattering_properties_is_ForwardScatteringPropertyCollection(self):
+        if not isinstance(self.forward_scattering_properties, ForwardScatteringPropertyCollection):
+            raise TypeError('forward_scattering_properties must be an instance of ForwardScatteringPropertyCollection.')
+
+    def __check_forward_scattering_properties_have_expected_attributes(self):
+        if not hasattr(self.forward_scattering_properties, 'c_scattering'):
+            raise AttributeError('forward_scattering_properties must have attribute c_scattering')
+        if not hasattr(self.forward_scattering_properties, 'c_extinction'):
+            raise AttributeError('forward_scattering_properties must have attribute c_extinction')
+
+    def __check_model_grid_is_ModelGrid(self):
+        if not isinstance(self.model_grid, ModelGrid):
+            raise TypeError('model_grid must be an instance of ModelGrid.')
+
+    def __check_mixing_ratio_profile_is_physical(self):
+        mixing_ratio_checker = ArrayChecker(self.mixing_ratio_profile, 'mixing_ratio_profile')
+        mixing_ratio_checker.check_object_is_array()
+        mixing_ratio_checker.check_ndarray_is_numeric()
+        mixing_ratio_checker.check_ndarray_is_non_negative()
+        mixing_ratio_checker.check_ndarray_is_finite()
+        mixing_ratio_checker.check_ndarray_is_1d()
+
+    def __check_particle_size_profile_is_physical(self):
+        size_checker = ArrayChecker(self.particle_size_profile, 'particle_size_profile')
+        size_checker.check_object_is_array()
+        size_checker.check_ndarray_is_numeric()
+        size_checker.check_ndarray_is_positive_finite()
+        size_checker.check_ndarray_is_1d()
+
+    def __check_profiles_match_layers(self):
+        if self.model_grid.column_density_layers.shape != self.mixing_ratio_profile.shape:
+            raise IndexError('mixing_ratio_profile must be the same length as the number of layers in the model')
+        if self.model_grid.column_density_layers.shape != self.particle_size_profile.shape:
+            raise IndexError('particle_size_profile must be the same length as the number of layers in the model')
+
+    def __check_wavelengths_are_physical(self):
+        wavelength_checker = ArrayChecker(self.wavelengths, 'wavelengths')
+        wavelength_checker.check_object_is_array()
+        wavelength_checker.check_ndarray_is_numeric()
+        wavelength_checker.check_ndarray_is_positive_finite()
+        wavelength_checker.check_ndarray_is_1d()
+
+    def __check_reference_wavelength_is_physical(self):
+        if not isinstance(self.reference_wavelength, (int, float)):
+            raise TypeError('reference_wavelength must be an int or float')
+        if not np.isfinite(self.reference_wavelength):
+            raise ValueError('reference_wavelength must be finite')
+        if self.reference_wavelength <= 0:
+            raise ValueError('reference_wavelength must be positive')
+
+    def __check_column_integrated_optical_depth_is_physical(self):
+        if not isinstance(self.OD, (int, float)):
+            raise TypeError('column_integrated_optical_depth must be an int or float')
+        if not np.isfinite(self.reference_wavelength):
+            raise ValueError('column_integrated_optical_depth must be finite')
+        if self.OD <= 0:
+            raise ValueError('column_integrated_optical_depth must be positive')
+
+    def __check_legendre_coefficients_is_LegendreCoefficients(self):
+        if not isinstance(self.legendre_coefficients, LegendreCoefficients):
+            raise TypeError('legendre_coefficients must be a derived instance of LegendreCoefficients')
+
     def __interpolate_radiative_property_to_model_grid(self, forward_scattering_property):
-        if forward_scattering_property.scattering_property_is_singleton:
+        if len(forward_scattering_property) == 1:
             return np.ones((len(self.particle_size_profile), len(self.wavelengths))) * \
                    forward_scattering_property.property_values
         elif forward_scattering_property.wavelength_grid is None:
@@ -139,11 +213,34 @@ class Column:
             raise TypeError('I have no idea how to handle this type of phase function yet...')
 
     def __make_hg_phase_function(self):
-        if self.forward_scattering_properties.g is None:
+        if not hasattr(self.forward_scattering_properties, 'g'):
             raise AttributeError('forward_scattering_properties has no attribute "g"')
         unnormalized_coefficients = self.legendre_coefficients.make_legendre_coefficients(
             self.forward_scattering_properties.g.property_values)
         return self.__make_normalized_coefficients(unnormalized_coefficients)
+
+    @staticmethod
+    def __make_normalized_coefficients(unnormalized_coefficients):
+        n_moments = unnormalized_coefficients.shape[0]
+        normalization = np.linspace(0, n_moments-1, num=n_moments)*2 + 1
+        return (unnormalized_coefficients.T / normalization).T
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     def __make_tabular_phase_function(self):
         if self.legendre_coefficients.coefficients_dimensions == 1:
@@ -166,12 +263,6 @@ class Column:
                 self.legendre_coefficients.tabulated_coefficients)
             return self.__make_normalized_coefficients(unnormalized_coefficients)
 
-    @staticmethod
-    def __make_normalized_coefficients(unnormalized_coefficients):
-        n_moments = unnormalized_coefficients.shape[0]
-        normalization = np.linspace(0, n_moments-1, num=n_moments)*2 + 1
-        return (unnormalized_coefficients.T / normalization).T
-
     def __get_nearest_neighbor_phase_functions(self, coefficients):
         radius_indices = self.__get_nearest_indices(self.particle_size_profile, self.legendre_coefficients.particle_sizes)
         wavelength_indices = self.__get_nearest_indices(self.wavelengths, self.legendre_coefficients.wavelengths)
@@ -183,69 +274,4 @@ class Column:
         indices = np.abs(diff).argmin(axis=0)
         return indices
 
-    def check_inputs_are_physical(self):
-        self.__check_forward_scattering_properties_is_ForwardScatteringProperties()
-        self.__check_model_grid_is_ModelGrid()
-        self.__check_mixing_ratio_profile_is_physical()
-        self.__check_particle_size_profile_is_physical()
-        self.__check_profiles_match_layers()
-        self.__check_wavelengths_are_physical()
-        self.__check_reference_wavelength_is_physical()
-        self.__check_column_integrated_optical_depth_is_physical()
-        self.__check_legendre_coefficients_is_LegendreCoefficients()
 
-    def __check_forward_scattering_properties_is_ForwardScatteringProperties(self):
-        if not isinstance(self.forward_scattering_properties, ForwardScatteringProperties):
-            raise TypeError('forward_scattering_properties needs to be an instance of ForwardScatteringProperties.')
-
-    def __check_model_grid_is_ModelGrid(self):
-        if not isinstance(self.model_grid, ModelGrid):
-            raise TypeError('model_grid needs to be an instance of ModelGrid.')
-
-    def __check_mixing_ratio_profile_is_physical(self):
-        mixing_ratio_checker = ArrayChecker(self.mixing_ratio_profile, 'mixing_ratio_profile')
-        mixing_ratio_checker.check_object_is_array()
-        mixing_ratio_checker.check_ndarray_is_numeric()
-        mixing_ratio_checker.check_ndarray_is_non_negative()
-        mixing_ratio_checker.check_ndarray_is_finite()
-        mixing_ratio_checker.check_ndarray_is_1d()
-
-    def __check_particle_size_profile_is_physical(self):
-        size_checker = ArrayChecker(self.particle_size_profile, 'particle_size_profile')
-        size_checker.check_object_is_array()
-        size_checker.check_ndarray_is_numeric()
-        size_checker.check_ndarray_is_positive_finite()
-        size_checker.check_ndarray_is_1d()
-
-    def __check_profiles_match_layers(self):
-        if self.model_grid.column_density_layers.shape != self.mixing_ratio_profile.shape:
-            raise IndexError('mixing_ratio_profile must be the same length as the number of layers in the model')
-        if self.model_grid.column_density_layers.shape != self.particle_size_profile.shape:
-            raise IndexError('particle_size_profile must be the same length as the number of layers in the model')
-
-    def __check_wavelengths_are_physical(self):
-        wavelength_checker = ArrayChecker(self.wavelengths, 'wavelengths')
-        wavelength_checker.check_object_is_array()
-        wavelength_checker.check_ndarray_is_numeric()
-        wavelength_checker.check_ndarray_is_positive_finite()
-        wavelength_checker.check_ndarray_is_1d()
-
-    def __check_reference_wavelength_is_physical(self):
-        if not isinstance(self.reference_wavelength, (int, float)):
-            raise TypeError('reference_wavelength must be an int or float')
-        if not np.isfinite(self.reference_wavelength):
-            raise ValueError('reference_wavelength must be finite')
-        if self.reference_wavelength <= 0:
-            raise ValueError('reference_wavelength must be positive')
-
-    def __check_column_integrated_optical_depth_is_physical(self):
-        if not isinstance(self.OD, (int, float)):
-            raise TypeError('column_integrated_optical_depth must be an int or float')
-        if not np.isfinite(self.reference_wavelength):
-            raise ValueError('column_integrated_optical_depth must be finite')
-        if self.OD <= 0:
-            raise ValueError('column_integrated_optical_depth must be positive')
-
-    def __check_legendre_coefficients_is_LegendreCoefficients(self):
-        if not isinstance(self.legendre_coefficients, LegendreCoefficients):
-            raise TypeError('legendre_coefficients must be an instance of LegendreCoefficients')
