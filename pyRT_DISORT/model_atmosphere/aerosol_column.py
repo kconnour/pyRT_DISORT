@@ -225,23 +225,6 @@ class Column:
         normalization = np.linspace(0, n_moments-1, num=n_moments)*2 + 1
         return (unnormalized_coefficients.T / normalization).T
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     def __make_tabular_phase_function(self):
         if self.legendre_coefficients.coefficients_dimensions == 1:
             unnormalized_coefficients = np.broadcast_to(self.legendre_coefficients.tabulated_coefficients,
@@ -264,7 +247,8 @@ class Column:
             return self.__make_normalized_coefficients(unnormalized_coefficients)
 
     def __get_nearest_neighbor_phase_functions(self, coefficients):
-        radius_indices = self.__get_nearest_indices(self.particle_size_profile, self.legendre_coefficients.particle_sizes)
+        radius_indices = self.__get_nearest_indices(self.particle_size_profile,
+                                                    self.legendre_coefficients.particle_sizes)
         wavelength_indices = self.__get_nearest_indices(self.wavelengths, self.legendre_coefficients.wavelengths)
         return coefficients[:, radius_indices, :][:, :, wavelength_indices]
 
@@ -273,5 +257,3 @@ class Column:
         diff = (values.reshape(1, -1) - array.reshape(-1, 1))
         indices = np.abs(diff).argmin(axis=0)
         return indices
-
-

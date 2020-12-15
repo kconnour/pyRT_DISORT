@@ -2,23 +2,44 @@
 import numpy as np
 
 # Local imports
-from pyRT_DISORT.preprocessing.model.atmosphere import ModelGrid
+from pyRT_DISORT.model_atmosphere.atmosphere_grid import ModelGrid
+from pyRT_DISORT.utilities.array_checks import ArrayChecker
 
 
 class RayleighCo2:
-    def __init__(self, wavelengths, model_atmosphere, n_moments):
+    """A RayleighCo2 object contains the Rayleigh scattering optical depths in each model layer due to CO2,
+    along with the phase function"""
+    def __init__(self, wavelengths, model_grid, n_moments):
         self.wavelengths = wavelengths
-        self.model_atmosphere = model_atmosphere
+        self.model_grid = model_grid
         self.n_moments = n_moments
 
-        assert isinstance(self.wavelengths, np.ndarray), 'wavelengths must be a numpy array.'
-        assert isinstance(self.model_atmosphere, ModelGrid), 'layers must be an instance of Layers.'
-        assert isinstance(self.n_moments, int), 'n_moments must be an int.'
+        self.__check_inputs_are_physical()
 
         self.wavenumbers = 1 / (self.wavelengths * 10 ** -4)   # 1/cm
         self.hyperspectral_optical_depths = self.__calculate_hyperspectral_rayleigh_co2_optical_depths()
         self.phase_function = self.__make_phase_function()
         self.hyperspectral_layered_phase_function = self.__make_hyperspectral_layered_phase_function()
+
+    def __check_inputs_are_physical(self):
+        self.__check_wavelengths_are_physical()
+        self.__check_model_grid_is_ModelGrid()
+        self.__check_n_moments_is_int()
+
+    def __check_wavelengths_are_physical(self):
+        wavelength_checker = ArrayChecker(self.wavelengths, 'wavelengths')
+        wavelength_checker.check_object_is_array()
+        wavelength_checker.check_ndarray_is_numeric()
+        wavelength_checker.check_ndarray_is_positive_finite()
+        wavelength_checker.check_ndarray_is_1d()
+
+    def __check_model_grid_is_ModelGrid(self):
+        if not isinstance(self.model_grid, ModelGrid):
+            raise TypeError('model_grid must be an instance of ModelGrid')
+
+    def __check_n_moments_is_int(self):
+        if not isinstance(self.n_moments, int):
+            raise TypeError('n_moments must be an int')
 
     def __calculate_hyperspectral_rayleigh_co2_optical_depths(self):
         return np.outer(self.model_atmosphere.column_density_layers, self.__calculate_molecular_cross_section())
@@ -47,6 +68,8 @@ class RayleighCo2:
         return coefficient * middle_term * king_factor   # cm**2 / molecule
 
     def __make_phase_function(self):
+        # Note: if I have other Rayleigh things I can probably put this in a Rayleigh class and everything else
+        # into the RayleighCo2 class which extends Rayleigh
         rayleigh_phase_function = np.zeros((self.n_moments, self.model_atmosphere.n_layers, len(self.wavelengths)))
         rayleigh_phase_function[0, :, :] = 1
         rayleigh_phase_function[2, :, :] = 0.1

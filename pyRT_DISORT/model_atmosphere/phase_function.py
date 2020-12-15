@@ -67,7 +67,7 @@ class TabularLegendreCoefficients(LegendreCoefficients):
         self.wavelengths = wavelengths
         self.__max_moments = max_moments
 
-        self.__coefficients_dimensions = self.__get_coefficients_dimensions()
+        self.coefficients_dimensions = self.__get_coefficients_dimensions()
         self.__coefficients_shape = self.__get_coefficients_shape()
         self.__check_coefficients_and_grids_are_physical()
         self.__check_max_moments_is_int_or_none()
