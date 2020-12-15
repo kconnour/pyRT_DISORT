@@ -3,7 +3,8 @@ import numpy as np
 
 
 class ModelAtmosphere:
-    """Make a class to hold all the atmospheric constituents and calculate the dtauc, ssalb, and pmom arrays"""
+    """A ModelAtmosphere object holds the atmospheric constituents and can calculate the DTAUC, SSALB, and PMOM
+    arrays for DISORT"""
     def __init__(self):
         self.constituent_total_optical_depths = []
         self.constituent_scattering_optical_depths = []
@@ -18,17 +19,22 @@ class ModelAtmosphere:
         Parameters
         ----------
         properties: tuple
-            (total optical depth, scattering optical depth, legendre coefficients) for this constitudent
+            (total optical depth, scattering optical depth, legendre coefficients) for this constituent
 
-        Returns
-        -------
-        None
         """
-        assert isinstance(properties, tuple), 'properties needs to be a tuple.'
-        assert len(properties) == 3, 'properties needs to be of length 3.'
+        self.__check_constituent_addition(properties)
         self.constituent_total_optical_depths.append(properties[0])
         self.constituent_scattering_optical_depths.append(properties[1])
         self.constituent_legendre_coefficients.append(properties[2])
+
+    @staticmethod
+    def __check_constituent_addition(properties):
+        if not isinstance(properties, tuple):
+            raise TypeError('properties must be a tuple')
+        if len(properties) != 3:
+            raise ValueError('properties must be of length 3')
+        if not all(isinstance(x, np.ndarray) for x in properties):
+            raise TypeError('All elements in properties must be a np.ndarray')
 
     def compute_model(self):
         """ Compute the properties of this model. Run this method after everything is added to the model.

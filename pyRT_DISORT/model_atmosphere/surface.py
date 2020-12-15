@@ -3,16 +3,28 @@ import numpy as np
 from disort import disobrdf
 
 # Local imports
-from pyRT_DISORT.preprocessing.controller.size import Size
-from pyRT_DISORT.preprocessing.observation import Observation
-from pyRT_DISORT.preprocessing.controller.control import Control
-from pyRT_DISORT.preprocessing.model.boundary_conditions import BoundaryConditions
+from pyRT_DISORT.model_controller.size import Size
+from pyRT_DISORT.observation.observation import Observation
+from pyRT_DISORT.model_controller.control import Control
+from pyRT_DISORT.model_atmosphere.boundary_conditions import BoundaryConditions
 
 
 class Hapke:
-    """Construct a class to make a Hapke surface phase function as defined in default DISORT"""
-    def __init__(self, size, observation, control, boundary_conditions, albedo, b0=1, hh=0.06, w=0.6,
-                 n_mug=200, debug=False):
+    """A Hapke object makes a Hapke surface phase function as defined in default DISORT"""
+    def __init__(self, size, observation, control, boundary_conditions, albedo, b0=1, hh=0.06, w=0.6, n_mug=200):
+        """
+        Parameters
+        ----------
+        size: Size
+        observation: Observation
+        control: Control
+        boundary_conditions: BoundaryConditions
+        albedo: float
+        b0: int or float
+        hh: float
+        w: float
+        n_mug: int
+        """
         assert isinstance(size, Size), 'size needs to be an instance of Size.'
         assert isinstance(observation, Observation)
         assert isinstance(control, Control)
@@ -29,7 +41,6 @@ class Hapke:
         self.w = w            # Single scattering albedo in Hapke model
         self.n_mug = n_mug    # No idea...
         self.brdf_argument = np.array([self.b0, self.hh, self.w, 0, 0, 0])
-        self.debug = debug
         self.rhoq = self.__make_rhoq()
         self.rhou = self.__make_rhou()
         self.bemst = self.__make_bemst()
