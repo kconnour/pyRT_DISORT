@@ -1,10 +1,6 @@
 Fixes:
 --- Combine most recent dust files into a 3D .fits file
 --- Combine most recent ice files in to a 3D .fits file
---- Clean up all the Mars aux files since most are now unnecessary
---- Ensure column integrated OD cannot be 0 since weights sum to 0
---- Change strings everywhere to f strings
---- Re-do all my older classes to remove asserts from __init__
 --- Check I can make a 1 layer atmosphere
 --- Remake the examples with the new classes
 --- ModelGrid might need a better name since altitude_grid is a parameter in InputAtmosphere (the word "grid" clashes)

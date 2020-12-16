@@ -95,11 +95,11 @@ class TabularLegendreCoefficients(LegendreCoefficients):
         coefficient_checker = ArrayChecker(self.tabulated_coefficients, 'tabulated_coefficients')
         coefficient_checker.check_object_is_array()
         coefficient_checker.check_ndarray_is_numeric()
-        coefficient_checker.check_ndarray_is_positive_finite()
+        #coefficient_checker.check_ndarray_is_positive_finite()
         self.__check_coefficients_dimensions()
 
     def __check_coefficients_dimensions(self):
-        if self.__coefficients_dimensions not in [1, 2, 3]:
+        if self.coefficients_dimensions not in [1, 2, 3]:
             raise IndexError('tabulated_coefficients must be a 1D, 2D, or 3D array')
 
     def __check_particle_size_grid_is_physical(self):
@@ -119,13 +119,13 @@ class TabularLegendreCoefficients(LegendreCoefficients):
             wavelength_checker.check_ndarray_is_1d()
 
     def __check_grids_match_1d_coefficients(self):
-        if self.__coefficients_dimensions != 1:
+        if self.coefficients_dimensions != 1:
             return
         if self.particle_sizes is not None or self.wavelengths is not None:
             raise ValueError('1D tabulated_coefficients should not include any particle size or wavelength info')
 
     def __check_grids_match_2d_coefficients(self):
-        if self.__coefficients_dimensions != 2:
+        if self.coefficients_dimensions != 2:
             return
         if not (self.particle_sizes is None) ^ (self.wavelengths is None):
             raise TypeError('For 2D tabulated_coefficients, provide one and only one of particle_sizes and wavelengths')
@@ -139,7 +139,7 @@ class TabularLegendreCoefficients(LegendreCoefficients):
                     '2D tabulated_coefficients\' second dimension must be the same length as wavelength_grid')
 
     def __check_grids_match_3d_coefficients(self):
-        if self.__coefficients_dimensions != 3:
+        if self.coefficients_dimensions != 3:
             return
         if self.particle_sizes is None or self.wavelengths is None:
             raise TypeError('You need to include both particle_sizes and wavelengths')
@@ -151,7 +151,7 @@ class TabularLegendreCoefficients(LegendreCoefficients):
                     '3D tabulated_coefficients\' third dimension must be the same length as wavelengths')
 
     def __check_max_moments_is_int_or_none(self):
-        if not isinstance(self.max_moments, (int, type(None))):
+        if not isinstance(self.__max_moments, (int, type(None))):
             raise TypeError('max_moments must be an int or None')
 
     def __get_n_moments(self):

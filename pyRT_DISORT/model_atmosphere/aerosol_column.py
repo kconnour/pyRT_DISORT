@@ -164,7 +164,7 @@ class Column:
             raise TypeError('legendre_coefficients must be a derived instance of LegendreCoefficients')
 
     def __interpolate_radiative_property_to_model_grid(self, forward_scattering_property):
-        if len(forward_scattering_property) == 1:
+        if len(forward_scattering_property.property_values) == 1:
             return np.ones((len(self.particle_size_profile), len(self.wavelengths))) * \
                    forward_scattering_property.property_values
         elif forward_scattering_property.wavelength_grid is None:

@@ -25,9 +25,9 @@ class Conrath(VerticalProfile):
         ----------
         model_grid: ModelGrid
             The model atmosphere
-        scale_height: np.ndarray
+        scale_height: int or float
             1D array of the aerosols' scale heights used in the Conrath parameterization [km]
-        conrath_nu: np.ndarray
+        conrath_nu: float
             1D array of the aerosols' nu parameters used in the Conrath parameterization. Must be the same length as
             aerosol_scale_height
 
@@ -51,21 +51,15 @@ class Conrath(VerticalProfile):
     def __check_parameters_are_plausible(self):
         self.__check_scale_height_is_plausible()
         self.__check_conrath_nu_is_plausible()
-        self.__check_parameters_have_same_shapes()
+        #self.__check_parameters_have_same_shapes()
 
     def __check_scale_height_is_plausible(self):
-        scale_height_checker = ArrayChecker(self.H, 'scale_height')
-        scale_height_checker.check_object_is_array()
-        scale_height_checker.check_ndarray_is_numeric()
-        scale_height_checker.check_ndarray_is_positive_finite()
-        scale_height_checker.check_ndarray_is_1d()
+        if not isinstance(self.H, (int, float)):
+            raise TypeError('scale_height must be an int or float')
 
     def __check_conrath_nu_is_plausible(self):
-        scale_height_checker = ArrayChecker(self.nu, 'conrath_nu')
-        scale_height_checker.check_object_is_array()
-        scale_height_checker.check_ndarray_is_numeric()
-        scale_height_checker.check_ndarray_is_positive_finite()
-        scale_height_checker.check_ndarray_is_1d()
+        if not isinstance(self.nu, (int, float)):
+            raise TypeError('conrath_nu must be an int or float')
 
     def __check_parameters_have_same_shapes(self):
         if self.H.shape != self.nu.shape:

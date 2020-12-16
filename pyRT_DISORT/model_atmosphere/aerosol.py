@@ -35,7 +35,7 @@ class ForwardScatteringProperty:
         self.particle_size_grid = particle_size_grid
         self.wavelength_grid = wavelength_grid
         self.__property_dims = np.ndim(self.property_values)
-        self.__scattering_property_is_singleton = self.__determine_scattering_property_is_singleton()
+        self.scattering_property_is_singleton = self.__determine_scattering_property_is_singleton()
         self.__check_property_and_grids_are_physical()
 
     def __determine_scattering_property_is_singleton(self):
@@ -85,7 +85,7 @@ class ForwardScatteringProperty:
                              'wavelength_grid')
 
     def __check_grids_match_1d_property(self):
-        if self.__property_dims != 1 or self.__scattering_property_is_singleton:
+        if self.__property_dims != 1 or self.scattering_property_is_singleton:
             return
         if not (self.particle_size_grid is None) ^ (self.wavelength_grid is None):
             raise TypeError(
@@ -101,7 +101,7 @@ class ForwardScatteringProperty:
                                  'particle_size_grid or wavelength_grid, whichever is provided')
 
     def __check_grids_match_0d_property(self):
-        if not self.__scattering_property_is_singleton:
+        if not self.scattering_property_is_singleton:
             return
         if self.particle_size_grid is not None or self.wavelength_grid is not None:
             raise TypeError('For 0D scattering_property, do not provide particle_size_grid or wavelength_grid')
