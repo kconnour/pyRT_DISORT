@@ -1,5 +1,6 @@
 # 3rd-party imports
 import numpy as np
+import time
 
 # Local imports
 from pyRT_DISORT.utilities.array_checks import ArrayChecker
@@ -147,3 +148,69 @@ class Observation:
             d_phi = np.arccos((self.__compute_angle_cosine(self.phase_angle) - self.mu * self.mu0) /
                           (sin_emission_angle * sin_solar_zenith_angle))
         return self.phi0 + 180 - np.degrees(d_phi)
+
+
+class Wavelengths:
+    def __init__(self, short_wavelength, long_wavelength):
+        """
+        Parameters
+        ----------
+        short_wavelength: np.ndarray
+            The short wavelengths [microns] for each spectral bin.
+        long_wavelength: np.ndarray
+            The long wavelengths [microns] for each spectral bin.
+
+        Attributes
+        ----------
+        short_wavelength: np.ndarray
+            The input short wavelengths
+        long_wavelength: np.ndarray
+            The input long wavelengths
+        low_wavenumber: np.ndarray
+            The wavenumbers of long_wavelength [1 /cm]
+        high_wavenumber: np.ndarray
+            The wavenumbers of short_wavelength [1 /cm]
+        """
+        self.short_wavelength = short_wavelength
+        self.long_wavelength = long_wavelength
+
+        self.__check_wavelengths_are_physical()
+
+        self.low_wavenumber = self.__convert_wavelength_to_wavenumber(self.long_wavelength, 'long_wavelength')
+        self.high_wavenumber = self.__convert_wavelength_to_wavenumber(self.short_wavelength, 'short_wavelength')
+
+    def __check_wavelengths_are_physical(self):
+        self.__check_short_wavelengths_are_physical()
+        self.__check_long_wavelengths_are_physical()
+        self.__check_wavelengths_are_same_shape()
+        self.__check_long_wavelength_is_larger()
+
+    def __check_short_wavelengths_are_physical(self):
+        short_wav_checker = ArrayChecker(self.short_wavelength, 'short_wavelength')
+        short_wav_checker.check_object_is_array()
+        short_wav_checker.check_ndarray_is_numeric()
+        short_wav_checker.check_ndarray_is_positive_finite()
+        short_wav_checker.check_ndarray_is_1d()
+
+    def __check_long_wavelengths_are_physical(self):
+        long_wav_checker = ArrayChecker(self.long_wavelength, 'long_wavelength')
+        long_wav_checker.check_object_is_array()
+        long_wav_checker.check_ndarray_is_numeric()
+        long_wav_checker.check_ndarray_is_positive_finite()
+        long_wav_checker.check_ndarray_is_1d()
+
+    def __check_wavelengths_are_same_shape(self):
+        if self.short_wavelength.shape != self.long_wavelength.shape:
+            raise ValueError('short_wavelength and long_wavelength must have the same shape')
+
+    def __check_long_wavelength_is_larger(self):
+        if not np.all(self.long_wavelength > self.short_wavelength):
+            raise ValueError('long_wavelength must always be larger than the corresponding short_wavelength')
+
+    @staticmethod
+    def __convert_wavelength_to_wavenumber(wavelength, wavelength_name):
+        with np.errstate(divide='raise'):
+            try:
+                return 1 / (wavelength * 10 ** -4)
+            except FloatingPointError:
+                raise ValueError(f'At least one value in {wavelength_name} is too small to perform calculations!')

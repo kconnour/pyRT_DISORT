@@ -18,7 +18,7 @@ from pyRT_DISORT.model_atmosphere.surface import HapkeHG2Roughness
 import os
 import numpy as np
 
-data_path = '/Users/kyco2464/pyRT_DISORT/data'
+data_path = '/data'
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Preprocessing steps
