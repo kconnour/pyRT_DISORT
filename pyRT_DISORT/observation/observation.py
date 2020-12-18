@@ -1,80 +1,8 @@
 # 3rd-party imports
 import numpy as np
-import time
 
 # Local imports
 from pyRT_DISORT.utilities.array_checks import ArrayChecker
-
-
-class Observation:
-    """An Observation object holds the relevant observational information for doing RT."""
-    def __init__(self, solar_zenith_angle, emission_angle, phase_angle):
-        """
-        Parameters
-        ----------
-        short_wavelength: np.ndarray
-            The short wavelengths [microns] for each spectral bin.
-        long_wavelength: np.ndarray
-            The long wavelengths [microns] for each spectral bin.
-        solar_zenith_angle: np.ndarray
-            Flattened array of the pixel solar zenith angles [degrees].
-        emission_angle: np.ndarray
-            Flattened array of the pixel emission angle [degrees].
-        phase_angle: np.ndarray
-            Flattened array of the pixel phase angle [degrees].
-
-        Attributes
-        ----------
-        short_wavelength: np.ndarray
-            The input short wavelengths
-        long_wavelength: np.ndarray
-            The input long wavelengths
-        low_wavenumber: np.ndarray
-            The wavenumbers of long_wavelength [1 /cm]
-        high_wavenumber: np.ndarray
-            The wavenumbers of short_wavelength [1 /cm]
-        solar_zenith_angle: np.ndarray
-            The input solar zenith angles
-        emission_angle: np.ndarray
-            The input emission angles
-        phase_angle: np.ndarray
-            The input phase angles
-        mu0: np.ndarray
-            The cosine of the input solar zenith angles
-        mu: np.ndarray
-            The cosine of the input emission angles
-        phi0: float
-            0 (I'm assuming phi0 is always 0)
-        phi: np.ndarray
-            The computed phi angles
-
-        Notes
-        -----
-        short_wavelength and long_wavelength should be the same length. Additionally, solar_zenith_angle,
-        emission_angle, and phase_angle should be the same length.
-        """
-        self.solar_zenith_angle = solar_zenith_angle
-        self.emission_angle = emission_angle
-        self.phase_angle = phase_angle
-
-        self.mu0 = self.__compute_angle_cosine(self.solar_zenith_angle)
-        self.mu = self.__compute_angle_cosine(self.emission_angle)
-        self.phi0 = 0
-        self.phi = self.__compute_phi()
-
-    @staticmethod
-    def __compute_angle_cosine(angle):
-        return np.cos(np.radians(angle))
-
-    def __compute_phi(self):
-        sin_emission_angle = np.sin(np.radians(self.emission_angle))
-        sin_solar_zenith_angle = np.sin(np.radians(self.solar_zenith_angle))
-        if sin_emission_angle == 0 or sin_solar_zenith_angle == 0:
-            d_phi = np.pi
-        else:
-            d_phi = np.arccos((self.__compute_angle_cosine(self.phase_angle) - self.mu * self.mu0) /
-                          (sin_emission_angle * sin_solar_zenith_angle))
-        return self.phi0 + 180 - np.degrees(d_phi)
 
 
 class Angles:
@@ -156,17 +84,19 @@ class Angles:
         return np.zeros(len(self.phase_angles))
 
     def __compute_phi(self):
-        with np.errstate(invalid='ignore'):
+        with np.errstate(invalid='raise'):
             try:
                 sin_emission_angle = np.sin(np.radians(self.emission_angles))
                 sin_solar_zenith_angle = np.sin(np.radians(self.solar_zenith_angles))
-                d_phi = np.where(np.logical_or(sin_emission_angle == 0, sin_solar_zenith_angle == 0), np.pi,
-                                 np.arccos(np.clip(
-                                     (self.__compute_angle_cosine(self.phase_angles) - self.mu * self.mu0) / \
-                                     (sin_emission_angle * sin_solar_zenith_angle), -1, 1)))
+                d_phi = (self.__compute_angle_cosine(self.phase_angles) - self.mu * self.mu0) / (
+                            sin_emission_angle * sin_solar_zenith_angle)
                 return self.phi0 + 180 - np.degrees(d_phi)
             except FloatingPointError:
-                raise ValueError(f'There is an error with at least one of the angles when computing phi')
+                raise FloatingPointError('Cannot compute the arccosine for computing phi. This likely means the input'
+                                         'angles are an unrealistic combination.')
+            except ZeroDivisionError:
+                raise ZeroDivisionError('Cannot compute the arccosine for computing phi. This likely means the input'
+                                        'emission and solar zenith angles are too small.')
 
 
 class Wavelengths:
@@ -234,3 +164,50 @@ class Wavelengths:
                 return 1 / (wavelength * 10 ** -4)
             except FloatingPointError:
                 raise ValueError(f'At least one value in {wavelength_name} is too small to perform calculations!')
+
+
+class Observation(Wavelengths, Angles):
+    def __init__(self, short_wavelengths, long_wavelengths, solar_zenith_angles, emission_angles, phase_angles):
+        """ An Observation object holds the info related to a given observation and constructs quantities relevant
+        to DISORT in sub-classes. Consult Angles and Wavelengths for more information.
+
+        Parameters
+        ----------
+        short_wavelengths: np.ndarray
+            The short wavelengths [microns] for each spectral bin.
+        long_wavelengths: np.ndarray
+            The long wavelengths [microns] for each spectral bin.
+        solar_zenith_angles: np.ndarray
+            Flattened array of the pixel solar zenith angles [degrees].
+        emission_angles: np.ndarray
+            Flattened array of the pixel emission angles [degrees].
+        phase_angles: np.ndarray
+            Flattened array of the pixel phase angles [degrees].
+
+        Attributes
+        ----------
+        short_wavelength: np.ndarray
+            The input short wavelengths.
+        long_wavelength: np.ndarray
+            The input long wavelengths.
+        solar_zenith_angles: np.ndarray
+            The input solar zenith angles.
+        emission_angles: np.ndarray
+            The input emission angles.
+        phase_angles: np.ndarray
+            The input phase angles.
+        low_wavenumber: np.ndarray
+            The wavenumbers of long_wavelength [1 /cm].
+        high_wavenumber: np.ndarray
+            The wavenumbers of short_wavelength [1 /cm].
+        mu: np.ndarray
+            The cosine of the input emission angles.
+        mu0: np.ndarray
+            The cosine of the input solar zenith angles.
+        phi: np.ndarray
+            The computed phi angles [degrees].
+        phi0: np.ndarray
+            0 (I'm assuming phi0 is always 0).
+        """
+        Wavelengths.__init__(self, short_wavelengths, long_wavelengths)
+        Angles.__init__(self, solar_zenith_angles, emission_angles, phase_angles)

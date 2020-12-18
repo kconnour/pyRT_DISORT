@@ -57,15 +57,17 @@ class TestAnglesInit(TestAngles):
 
     def test_solar_zenith_angles_must_be_between_0_and_180(self):
         test_angle = np.array([50])
-        self.angles(np.array([0]), test_angle, test_angle)
-        self.angles(np.array([180]), test_angle, test_angle)
+        # I'm not testing at 0 and 180 since I find np.sin(0) = 0 but np.sin(np.radians(180)) = 10**-16
+        # so instead I'm testing numbers just inside that range
+        self.angles(np.array([10**-10]), test_angle, test_angle)
+        self.angles(np.array([180-10**-10]), test_angle, test_angle)
         self.assertRaises(ValueError, lambda: self.angles(np.nextafter(np.array([0]), -1), test_angle, test_angle))
         self.assertRaises(ValueError, lambda: self.angles(np.nextafter(np.array([180]), 181), test_angle, test_angle))
 
     def test_emission_angles_must_be_between_0_and_90(self):
         test_angle = np.array([50])
-        self.angles(test_angle, np.array([0]), test_angle)
-        self.angles(test_angle, np.array([90]), test_angle)
+        self.angles(test_angle, np.array([10**-10]), test_angle)
+        self.angles(test_angle, np.array([90-10**-10]), test_angle)
         self.assertRaises(ValueError, lambda: self.angles(test_angle, np.nextafter(np.array([0]), -1), test_angle))
         self.assertRaises(ValueError, lambda: self.angles(test_angle, np.nextafter(np.array([90]), 91), test_angle))
 
@@ -84,9 +86,8 @@ class TestAnglesInit(TestAngles):
 
     def test_mu_is_cosine_of_emission_angles(self):
         test_angles = np.array([50])
-        self.assertEqual(1, self.angles(test_angles, np.array([0]), test_angles).mu[0])
+        self.assertRaises(FloatingPointError, lambda: self.angles(test_angles, np.array([0]), test_angles))
         self.assertEqual(np.sqrt(2) / 2, self.angles(test_angles, np.array([45]), test_angles).mu[0])
-        # I guess this is a numpy issue... cos(90) = 10**-17 and not 0
         self.assertAlmostEqual(0, self.angles(test_angles, np.array([90]), test_angles).mu[0])
 
     def test_mu0_is_same_shape_as_solar_zenith_angles(self):
@@ -97,11 +98,9 @@ class TestAnglesInit(TestAngles):
 
     def test_mu0_is_cosine_of_solar_zenith_angles(self):
         test_angles = np.array([50])
-        self.assertEqual(1, self.angles(np.array([0]), test_angles, test_angles).mu0[0])
         self.assertEqual(np.sqrt(2) / 2, self.angles(np.array([45]), test_angles, test_angles).mu0[0])
         self.assertAlmostEqual(0, self.angles(np.array([90]), test_angles, test_angles).mu0[0])
         self.assertAlmostEqual(-np.sqrt(2) / 2, self.angles(np.array([135]), test_angles, test_angles).mu0[0])
-        self.assertEqual(-1, self.angles(np.array([180]), test_angles, test_angles).mu0[0])
 
     def test_phi_is_same_shape_as_phase_angles(self):
         test_phase_angles = np.linspace(10, 80, num=self.random_int)
@@ -110,9 +109,8 @@ class TestAnglesInit(TestAngles):
         self.assertEqual(test_phase_angles.shape, angles.phi.shape)
 
     def test_phi_meets_test_cases(self):
-        self.assertEqual(0, self.angles(np.array([0]), np.array([0]), np.array([0])).phi[0])
-        self.assertEqual(119.74712028120182, self.angles(np.array([10]), np.array([10]), np.array([10])).phi[0])
-        self.assertEqual(2.091309795559937e-06, self.angles(np.array([10]), np.array([20]), np.array([30])).phi[0])
+        self.assertEqual(151.57138881902853, self.angles(np.array([10]), np.array([10]), np.array([10])).phi[0])
+        self.assertEqual(237.2957795130823, self.angles(np.array([10]), np.array([20]), np.array([30])).phi[0])
 
     def test_phi0_is_same_shape_as_phase_angles(self):
         test_phase_angles = np.linspace(10, 80, num=self.random_int)
