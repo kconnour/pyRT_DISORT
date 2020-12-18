@@ -13,8 +13,8 @@ class SetupDISORT:
             self.disort_folder_name = 'disort4.0.99'
             self.module_name = 'disort'
             self.compile_disort_so_file()
-            #self.so_file_name = self.get_so_file_name()
-            #self.move_so_file_up_one_directory()
+            self.so_file_name = self.get_so_file_name()
+            self.move_so_file_up_one_directory()
         self.setup_package()
 
     def compile_disort_so_file(self):
