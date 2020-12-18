@@ -13,8 +13,8 @@ class SetupDISORT:
             self.disort_folder_name = 'disort4.0.99'
             self.module_name = 'disort'
             self.compile_disort_so_file()
-            self.so_file_name = self.get_so_file_name()
-            self.move_so_file_up_one_directory()
+            #self.so_file_name = self.get_so_file_name()
+            #self.move_so_file_up_one_directory()
         self.setup_package()
 
     def compile_disort_so_file(self):
@@ -42,7 +42,7 @@ class SetupDISORT:
             author='kconnour',
             packages=setuptools.find_packages(),
             include_package_data=True,
-            python_requires='>=3.8',
+            python_requires='>=3.7',
             install_requires=[
                 'astropy>=4.1',
                 'numba>=0.51.2',
@@ -57,4 +57,4 @@ class SetupDISORT:
 
 
 if __name__ == '__main__':
-    SetupDISORT(install_disort=False)
+    SetupDISORT(install_disort=True)

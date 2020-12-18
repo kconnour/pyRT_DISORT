@@ -5,14 +5,7 @@ from unittest import TestCase
 import numpy as np
 
 # Local imports
-from pyRT_DISORT.observation.observation import Angles, Wavelengths
-
-'''class TestObservationInit(TestObservation):
-    # There's an unknown issue here... if I input
-    #example_solar_zenith_angles = np.linspace(1, 179, num=random_int)
-    #example_emission_angles = np.linspace(10, 20, num=random_int)
-    #example_phase_angles = np.linspace(10, 30, num=random_int)
-    # to self.observation I get an error'''
+from pyRT_DISORT.observation.observation import Angles
 
 
 class TestAngles(TestCase):
