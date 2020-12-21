@@ -13,24 +13,22 @@ from pyRT_DISORT.model_controller.output import Output
 from pyRT_DISORT.model_controller.unsure import Unsure
 from pyRT_DISORT.model_atmosphere.boundary_conditions import BoundaryConditions
 from pyRT_DISORT.model_atmosphere.surface import HapkeHG2Roughness
-#from pyRT_DISORT.data.get_data import get_data_path
+from ..data.get_data import get_data_path
 
 import os
 import numpy as np
-
-data_path = '/data'
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Preprocessing steps
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Read in the atmosphere file
-atmFile = ExternalFile(os.path.join(data_path, 'planets/mars/aux/mars_atm.npy'))
+atmFile = ExternalFile(os.path.join(get_data_path(), 'planets/mars/aux/mars_atm.npy'))
 z_boundaries = np.linspace(80, 0, num=20)    # Define the boundaries I want to use. Note that I'm sticking with DISORT's convention of starting from TOA
 model_grid = ModelGrid(atmFile.array, z_boundaries)
 temperatures = model_grid.boundary_temperatures  # Define an oddball variable for use in the disort call
 
 # Read in a 3D dust file
-dustFile = ExternalFile(os.path.join(data_path, 'planets/mars/aux/dust_properties.fits'))
+dustFile = ExternalFile(os.path.join(get_data_path(), 'planets/mars/aux/dust_properties.fits'))
 wavs = dustFile.array['wavelengths'].data
 sizes = dustFile.array['particle_sizes'].data
 
@@ -51,7 +49,7 @@ p_sizes = np.linspace(0.5, 1.5, num=len(conrath_profile.profile))
 wavelengths = np.array([1, 9.3])
 
 # Make a phase function. I'm allowing negative coefficients here
-dust_phsfn_file = ExternalFile(os.path.join(data_path, 'planets/mars/aux/dust_phase_function.fits'))
+dust_phsfn_file = ExternalFile(os.path.join(get_data_path(), 'planets/mars/aux/dust_phase_function.fits'))
 dust_phsfn = TabularLegendreCoefficients(dust_phsfn_file.array['primary'].data,
                                          dust_phsfn_file.array['particle_sizes'].data,
                                          dust_phsfn_file.array['wavelengths'].data)
@@ -195,5 +193,3 @@ rfldir, rfldn, flup, dfdt, uavg, uu, albmed, trnmed = disort.disort(usrang, usrt
                                intensity, albedo_medium, transmissivity_medium)
 
 print(uu[0, :15, 0])   # shape: (1, 81, 1)
-
-
