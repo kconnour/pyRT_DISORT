@@ -13,7 +13,7 @@ from pyRT_DISORT.model_controller.output import Output
 from pyRT_DISORT.model_controller.unsure import Unsure
 from pyRT_DISORT.model_atmosphere.boundary_conditions import BoundaryConditions
 from pyRT_DISORT.model_atmosphere.surface import HapkeHG2Roughness
-from ..data.get_data import get_data_path
+import disort
 
 import os
 import numpy as np
@@ -22,13 +22,14 @@ import numpy as np
 # Preprocessing steps
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Read in the atmosphere file
-atmFile = ExternalFile(os.path.join(get_data_path(), 'planets/mars/aux/mars_atm.npy'))
+data_path = os.path.join(os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '..')), 'data')  # This hack sucks but I figure we need a quick resolution
+atmFile = ExternalFile(os.path.join(data_path, 'planets/mars/aux/mars_atm.npy'))
 z_boundaries = np.linspace(80, 0, num=20)    # Define the boundaries I want to use. Note that I'm sticking with DISORT's convention of starting from TOA
 model_grid = ModelGrid(atmFile.array, z_boundaries)
 temperatures = model_grid.boundary_temperatures  # Define an oddball variable for use in the disort call
 
 # Read in a 3D dust file
-dustFile = ExternalFile(os.path.join(get_data_path(), 'planets/mars/aux/dust_properties.fits'))
+dustFile = ExternalFile(os.path.join(data_path, 'planets/mars/aux/dust_properties.fits'))
 wavs = dustFile.array['wavelengths'].data
 sizes = dustFile.array['particle_sizes'].data
 
@@ -49,7 +50,7 @@ p_sizes = np.linspace(0.5, 1.5, num=len(conrath_profile.profile))
 wavelengths = np.array([1, 9.3])
 
 # Make a phase function. I'm allowing negative coefficients here
-dust_phsfn_file = ExternalFile(os.path.join(get_data_path(), 'planets/mars/aux/dust_phase_function.fits'))
+dust_phsfn_file = ExternalFile(os.path.join(data_path, 'planets/mars/aux/dust_phase_function.fits'))
 dust_phsfn = TabularLegendreCoefficients(dust_phsfn_file.array['primary'].data,
                                          dust_phsfn_file.array['particle_sizes'].data,
                                          dust_phsfn_file.array['wavelengths'].data)
@@ -58,25 +59,14 @@ dust_phsfn = TabularLegendreCoefficients(dust_phsfn_file.array['primary'].data,
 dust_col = Column(dust_properties, model_grid, conrath_profile.profile, p_sizes, wavelengths, 9.3, 1, dust_phsfn)
 # Then you can access total_optical_depth, scattering_optical_depth, and phase_function as attributes
 
-print(dust_col.total_optical_depth.shape)
-print(np.sum(dust_col.total_optical_depth[:, 1]))
-print(np.amax(dust_col.phase_function))
-
 # ~~~~~~~~~~~~~~~~~~~~~ New things
 # Make Rayleigh stuff
 n_moments = 1000
 rco2 = RayleighCo2(wavelengths, model_grid, n_moments)
 
-print(dust_col.total_optical_depth.shape)
-print(dust_col.scattering_optical_depth.shape)
-print(dust_col.phase_function.shape)
-
-print(rco2.scattering_optical_depths.shape)
-print(rco2.phase_function.shape)
-
 # Make the model
 model = ModelAtmosphere()
-dust_info = (dust_col.total_optical_depth, dust_col.scattering_optical_depth, dust_col.phase_function)
+dust_info = (dust_col.total_optical_depth, dust_col.scattering_optical_depth, dust_col.scattering_optical_depth * dust_col.phase_function)
 rayleigh_info = (rco2.scattering_optical_depths, rco2.scattering_optical_depths, rco2.phase_function)  # This works since scattering OD = total OD
 
 # Add dust and Rayleigh scattering to the model
@@ -99,8 +89,8 @@ emission_angle = np.array([40])
 phase_angle = np.array([20])
 obs = Observation(short_wav, long_wav, sza, emission_angle, phase_angle)
 phi = np.array([obs.phi])
-low_wavenumber = obs.low_wavenumber
-high_wavenumber = obs.high_wavenumber
+low_wavenumber = obs.low_wavenumbers
+high_wavenumber = obs.high_wavenumbers
 phi0 = obs.phi0
 umu0 = obs.mu0
 umu = np.array([obs.mu])
@@ -180,8 +170,6 @@ hapke = HapkeHG2Roughness(size, obs, control, boundary, albedo, w=0.12, asym=0.7
 # Run the model
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-print(intensity.shape)
-
 rfldir, rfldn, flup, dfdt, uavg, uu, albmed, trnmed = disort.disort(usrang, usrtau, ibcnd, onlyfl, prnt, plank, lamber,
                                                                     deltamplus, do_pseudo_sphere, optical_depths,
                                ssa, polynomial_moments, temperatures, low_wavenumber, high_wavenumber, utau, umu0, phi0,
@@ -192,4 +180,4 @@ rfldir, rfldn, flup, dfdt, uavg, uu, albmed, trnmed = disort.disort(usrang, usrt
                                                                     mean_intensity,
                                intensity, albedo_medium, transmissivity_medium)
 
-print(uu[0, :15, 0])   # shape: (1, 81, 1)
+print(uu[0, :20, 0])   # shape: (1, 81, 1)

@@ -43,7 +43,6 @@ class RayleighCo2:
         self.__check_inputs_are_physical()
 
         self.wavenumbers = self.__convert_wavelength_to_wavenumber()
-        print(len(self.wavenumbers))
         self.scattering_optical_depths = self.__calculate_hyperspectral_rayleigh_co2_optical_depths()
         self.__phase_function = self.__make_phase_function()
         self.phase_function = self.__make_hyperspectral_layered_phase_function()

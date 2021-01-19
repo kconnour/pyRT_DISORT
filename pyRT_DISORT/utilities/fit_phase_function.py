@@ -1,7 +1,6 @@
 # 3rd-party imports
 import numpy as np
 from scipy import integrate, interpolate
-from numba import jit
 
 # Local imports
 from pyRT_DISORT.utilities.array_checks import ArrayChecker
@@ -60,7 +59,6 @@ class PhaseFunction:
         if self.empirical_phase_function.shape != self.angles.shape:
             raise ValueError('empirical_phase_function and angles must have the same shape')
 
-    @jit(forceobj=True)
     def create_legendre_coefficients(self, n_moments, n_samples):
         """Create the Legendre coefficient decomposition for the input phase function
 
