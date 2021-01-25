@@ -22,7 +22,8 @@ import numpy as np
 # Preprocessing steps
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Read in the atmosphere file
-data_path = os.path.join(os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '..')), 'data')  # This hack sucks but I figure we need a quick resolution
+data_path = '/data/'
+#data_path = os.path.join(os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '..')), 'data')  # This hack sucks but I figure we need a quick resolution
 atmFile = ExternalFile(os.path.join(data_path, 'planets/mars/aux/mars_atm.npy'))
 z_boundaries = np.linspace(80, 0, num=20)    # Define the boundaries I want to use. Note that I'm sticking with DISORT's convention of starting from TOA
 model_grid = ModelGrid(atmFile.array, z_boundaries)
@@ -180,3 +181,5 @@ rfldir, rfldn, flup, dfdt, uavg, uu, albmed, trnmed = disort.disort(usrang, usrt
                                intensity, albedo_medium, transmissivity_medium)
 
 print(uu[0, :20, 0])   # shape: (1, 81, 1)
+
+# This gives: 0.01475769 using python3.8
