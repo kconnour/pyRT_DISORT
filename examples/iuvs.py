@@ -51,12 +51,12 @@ solar_spec = ExternalFile(os.path.join(get_data_path(), 'aux/solar_spectrum.npy'
 albedo_map = ExternalFile(os.path.join(get_data_path(), 'planets/mars/aux/albedo_map.npy'))
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Define observation-related quantities
+# Define observation_old-related quantities
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Read in data from the file and store values as numpy array (for readability only)
 f = '/media/kyle/Samsung_T5/IUVS_data/orbit03400/mvn_iuv_l1b_apoapse-orbit03453-muv_20160708T051356_v13_r01.fits.gz'
 hdulist = fits.open(f)
-wavs = np.squeeze(hdulist['observation'].data['wavelength'])[0, :] / 1000   # Convert to microns
+wavs = np.squeeze(hdulist['observation_old'].data['wavelength'])[0, :] / 1000   # Convert to microns
 diff = np.diff(wavs)
 diff = np.concatenate((diff, np.array([diff[0]])))
 short_wavs = (wavs - diff/2)

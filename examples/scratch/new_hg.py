@@ -101,7 +101,7 @@ polynomial_moments = model.hyperspectral_legendre_moments[:, :, 1]
 temperatures = model_grid.model_temperatures
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Make a fake observation
+# Make a fake observation_old
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 short_wav = np.array([1])    # microns
 long_wav = np.array([1.1])

@@ -154,7 +154,7 @@ polynomial_moments = model.hyperspectral_legendre_moments[:, :, 1]
 temperatures = lay.temperature_boundaries
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Make a fake observation
+# Make a fake observation_old
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 short_wav = 1    # microns
 long_wav = 1.1

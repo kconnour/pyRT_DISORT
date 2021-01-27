@@ -6,7 +6,7 @@ from pyRT_DISORT.model_atmosphere.vertical_profiles import Conrath
 from pyRT_DISORT.model_atmosphere.phase_function import TabularLegendreCoefficients
 from pyRT_DISORT.model_atmosphere.rayleigh import RayleighCo2
 from pyRT_DISORT.model_atmosphere.model_atmosphere import ModelAtmosphere
-from pyRT_DISORT.observation.observation import Observation
+from pyRT_DISORT.observation_old.observation import Observation
 from pyRT_DISORT.model_controller.size import Size
 from pyRT_DISORT.model_controller.control import Control
 from pyRT_DISORT.model_controller.output import Output
@@ -81,7 +81,7 @@ ssa = model.hyperspectral_total_single_scattering_albedos[:, 1]
 polynomial_moments = model.hyperspectral_legendre_moments[:, :, 1]
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Make a fake observation
+# Make a fake observation_old
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 short_wav = np.array([1])    # This is kinda clunky but real data will take flattened
 long_wav = np.array([1.1])

@@ -4,7 +4,7 @@ from disort import disobrdf
 
 # Local imports
 from pyRT_DISORT.model_controller.size import Size
-from pyRT_DISORT.observation.observation import Observation
+from pyRT_DISORT.observation_old.observation import Observation
 from pyRT_DISORT.model_controller.control import Control
 from pyRT_DISORT.model_atmosphere.boundary_conditions import BoundaryConditions
 
@@ -90,7 +90,7 @@ class HapkeHG2:
     def __init__(self, size, observation, control, boundary_conditions, albedo, b0=1, hh=0.06, w=0.6, asym=0.5,
                  frac=0.5, n_mug=200, debug=False):
         assert isinstance(size, Size), 'size needs to be an instance of Size.'
-        assert isinstance(observation, Observation), 'observation needs to be an instance of Observation.'
+        assert isinstance(observation, Observation), 'observation_old needs to be an instance of Observation.'
         assert isinstance(control, Control), 'control needs to be an instance of Control.'
         assert isinstance(boundary_conditions, BoundaryConditions), \
             'boundary_conditions nees to be an instance of BoundaryConditions'
@@ -180,7 +180,7 @@ class HapkeHG2Roughness:
         debug
         """
         assert isinstance(size, Size), 'size needs to be an instance of Size.'
-        assert isinstance(observation, Observation), 'observation needs to be an instance of Observation.'
+        assert isinstance(observation, Observation), 'observation_old needs to be an instance of Observation.'
         assert isinstance(control, Control), 'control needs to be an instance of Control.'
         assert isinstance(boundary_conditions, BoundaryConditions), \
             'boundary_conditions nees to be an instance of BoundaryConditions'
