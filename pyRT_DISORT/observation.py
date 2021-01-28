@@ -20,8 +20,7 @@ class Angles:
 
     def __init__(self, incidence_angles: np.ndarray,
                  emission_angles: np.ndarray, phase_angles: np.ndarray) -> None:
-        """Initialize the structure.
-
+        """
         Parameters
         ----------
         incidence_angles: np.ndarray
@@ -36,8 +35,8 @@ class Angles:
         TypeError
             Raised if any of the inputs are not np.ndarrays.
         ValueError
-            Raised if any of the inputs are not 1D arrays, or outside their
-            possible range of values.
+            Raised if any of the inputs are not 1D arrays, or outside the range
+            of possible values.
 
         """
         self.__incidence = incidence_angles
@@ -69,6 +68,7 @@ class Angles:
         self.__raise_error_if_angles_are_bad(
             self.__phase, 'phase_angles', 0, 180)
 
+    # TODO: This function does more than one thing
     def __raise_error_if_angles_are_bad(self, angle: np.ndarray, name: str,
                                         low: int, high: int) -> None:
         try:
@@ -207,6 +207,7 @@ class Angles:
         return self.__phi0
 
 
+# TODO: Do I want to require monotonically increasing wavelengths?
 class Wavelengths:
     """Wavelengths is a data structure that contains spectral info for DISORT.
 
@@ -240,8 +241,8 @@ class Wavelengths:
         Warnings
         --------
         UserWarning
-            Raised if any of the input wavelengths are outside the range 0.1 to
-            50 microns
+            Raised if any of the input wavelengths are not between 0.1 and 50
+            microns
 
         """
         self.__short_wavelengths = short_wavelengths
@@ -308,6 +309,7 @@ class Wavelengths:
         return self.__convert_wavelength_to_wavenumber(
             self.__long_wavelengths, 'long_wavelengths')
 
+    # TODO: This function does more than one thing
     @staticmethod
     def __convert_wavelength_to_wavenumber(wavelength: np.ndarray,
                                            wavelength_name: str) -> np.ndarray:

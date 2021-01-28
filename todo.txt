@@ -9,13 +9,8 @@ To-dos:
 --- Do I want to require monotonically increasing wavelengths?
 --- Some functions do more than one thing
 
-- setup.py
---- It don't do
-
-- doc.make_documentation
---- Get it to work + clean it up
-
-
+- utilities (all)
+--- Docstrings + clean
 
 
 
