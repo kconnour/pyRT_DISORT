@@ -3,10 +3,10 @@ import numpy as np
 from disort import disobrdf
 
 # Local imports
-from pyRT_DISORT.model_controller.size import Size
+from old.model_controller import Size
 from pyRT_DISORT.observation_old.observation import Observation
-from pyRT_DISORT.model_controller.control import Control
-from pyRT_DISORT.model_atmosphere.boundary_conditions import BoundaryConditions
+from old.model_controller import Control
+from old.model_atmosphere.boundary_conditions import BoundaryConditions
 
 
 class Hapke:

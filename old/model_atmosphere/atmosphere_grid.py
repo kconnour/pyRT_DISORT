@@ -3,7 +3,7 @@ import numpy as np
 from scipy.constants import Boltzmann
 
 # Local imports
-from pyRT_DISORT.utilities.array_checks import ArrayChecker
+from old.utilities import ArrayChecker
 
 
 class InputAtmosphere:

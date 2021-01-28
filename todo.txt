@@ -1,3 +1,29 @@
+To-dos:
+- observation.Angles
+--- Latex docstinrgs
+--- I don't think all possible combination of angles is mathematically possible.
+--- Some functions do more than one thing
+--- Is there a better way to make phi?
+
+- observation.Wavelengths
+--- Do I want to require monotonically increasing wavelengths?
+--- Some functions do more than one thing
+
+- utilities (all)
+--- Docstrings + clean
+
+
+
+
+
+
+
+
+
+
+
+
+
 Fixes:
 --- Combine most recent dust files into a 3D .fits file
 --- Combine most recent ice files in to a 3D .fits file

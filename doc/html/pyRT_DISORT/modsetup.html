@@ -1,0 +1,1355 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.2" />
+<title>pyRT_DISORT.modsetup API documentation</title>
+<meta name="description" content="modsetup.py contains structures for creating DISORT inputs not related to
+the physical model---things like creating output arrays, setting the number …" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS_CHTML" integrity="sha256-kZafAc6mZvK3W3v1pHOcUix30OHQN6pU/NO2oFkqZVw=" crossorigin></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>pyRT_DISORT.modsetup</code></h1>
+</header>
+<section id="section-intro">
+<p>modsetup.py contains structures for creating DISORT inputs not related to
+the physical model&mdash;things like creating output arrays, setting the number of
+streams, etc.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;modsetup.py contains structures for creating DISORT inputs not related to
+the physical model---things like creating output arrays, setting the number of
+streams, etc.
+&#34;&#34;&#34;
+import numpy as np
+
+
+class Output:
+    &#34;&#34;&#34;Output is a data structure to hold the output arrays required by DISORT.
+
+    Output creates all 8 arrays that get populated with values as DISORT is run.
+
+    &#34;&#34;&#34;
+
+    def __init__(self, size) -&gt; None:
+        &#34;&#34;&#34;
+        Parameters
+        ----------
+        size: Size
+            Data structure holding the model computational variables.
+
+        Raises
+        ------
+        TypeError
+            Raised if input is not an instance of Size.
+
+        &#34;&#34;&#34;
+        self.__size = size
+
+        self.__albedo_medium = self.__make_albedo_medium()
+        self.__diffuse_up_flux = self.__make_diffuse_up_flux()
+        self.__diffuse_down_flux = self.__make_diffuse_down_flux()
+        self.__direct_beam_flux = self.__make_direct_beam_flux()
+        self.__flux_divergence = self.__make_flux_divergence()
+        self.__intensity = self.__make_intensity()
+        self.__mean_intensity = self.__make_mean_intensity()
+        self.__transmissivity_medium = self.__make_transmissivity_medium()
+
+    def __raise_type_error_if_input_is_not_size(self) -&gt; None:
+        if not isinstance(self.__size, Size):
+            raise TypeError(&#39;size must be an instance of Size.&#39;)
+
+    def __make_albedo_medium(self) -&gt; np.ndarray:
+        return np.zeros(self.__size.n_umu)
+
+    def __make_diffuse_up_flux(self) -&gt; np.ndarray:
+        return np.zeros(self.__size.n_user_levels)
+
+    def __make_diffuse_down_flux(self) -&gt; np.ndarray:
+        return np.zeros(self.__size.n_user_levels)
+
+    def __make_direct_beam_flux(self) -&gt; np.ndarray:
+        return np.zeros(self.__size.n_user_levels)
+
+    def __make_flux_divergence(self) -&gt; np.ndarray:
+        return np.zeros(self.__size.n_user_levels)
+
+    def __make_intensity(self) -&gt; np.ndarray:
+        return np.zeros((self.__size.n_umu, self.__size.n_user_levels,
+                         self.__size.n_phi))
+
+    def __make_mean_intensity(self) -&gt; np.ndarray:
+        return np.zeros(self.__size.n_user_levels)
+
+    def __make_transmissivity_medium(self) -&gt; np.ndarray:
+        return np.zeros(self.__size.n_umu)
+
+    @property
+    def albedo_medium(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the albedo of the medium output array.
+
+        Returns
+        -------
+        np.ndarray
+            The albedo of the medium.
+
+        Notes
+        -----
+        In DISORT, this variable is named &#34;ALBMED&#34;.
+
+        &#34;&#34;&#34;
+        return self.__albedo_medium
+
+    @property
+    def diffuse_up_flux(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the diffuse upward flux output array.
+
+        Returns
+        -------
+        np.ndarray
+            The diffuse upward flux.
+
+        Notes
+        -----
+        In DISORT, this variable is named &#34;FLUP&#34;.
+
+        &#34;&#34;&#34;
+        return self.__diffuse_up_flux
+
+    @property
+    def diffuse_down_flux(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the diffuse downward flux output array.
+
+        Returns
+        -------
+        np.ndarray
+            The diffuse downward flux.
+
+        Notes
+        -----
+        In DISORT, this variable is named &#34;RFLDN&#34; (total minus direct-beam).
+
+        &#34;&#34;&#34;
+        return self.__diffuse_down_flux
+
+    @property
+    def direct_beam_flux(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the direct beam flux output array.
+
+        Returns
+        -------
+        np.ndarray
+            The direct beam flux.
+
+        Notes
+        -----
+        In DISORT, this variable is named &#34;RFLDIR&#34;.
+
+        &#34;&#34;&#34;
+        return self.__direct_beam_flux
+
+    @property
+    def flux_divergence(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the flux divergence output array.
+
+        Returns
+        -------
+        np.ndarray
+            The flux divergence.
+
+        Notes
+        -----
+        In DISORT, this variable is named &#34;DFDT&#34;, which is
+        (d(net_flux) / d(optical_depth)). This is an exact result.
+
+        &#34;&#34;&#34;
+        return self.__flux_divergence
+
+    @property
+    def intensity(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the intensity output array.
+
+        Returns
+        -------
+        np.ndarray
+            The intensity.
+
+        Notes
+        -----
+        In DISORT, this variable is named &#34;UU&#34;.
+
+        &#34;&#34;&#34;
+        return self.__intensity
+
+    @property
+    def mean_intensity(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the mean intensity output array.
+
+        Returns
+        -------
+        np.ndarray
+            The mean intensity.
+
+        Notes
+        -----
+        In DISORT, this variable is named &#34;UAVG&#34;.
+
+        &#34;&#34;&#34;
+        return self.__mean_intensity
+
+    @property
+    def transmissivity_medium(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the transmissivity of the medium output array.
+
+        Returns
+        -------
+        np.ndarray
+            The transmissivity of the medium.
+
+        Notes
+        -----
+        In DISORT, this variable is named &#34;TRNMED&#34;.
+
+        &#34;&#34;&#34;
+        return self.__transmissivity_medium
+
+
+class Size:
+    &#34;&#34;&#34;Size is a data structure to hold the computational variables for DISORT.
+
+    Size holds the number of model layers, streams, moments, and angles. It also
+    performs basic checks that these values are plausible. Objects of this class
+    are meant to be be used as inputs to other classes.
+
+    &#34;&#34;&#34;
+
+    # TODO: I&#39;d like a better name than umu and phi and better description of
+    #  user levels
+    def __init__(self, n_layers: int, n_moments: int, n_streams: int,
+                 n_umu: int, n_phi: int, n_user_levels: int) -&gt; None:
+        &#34;&#34;&#34;
+        Parameters
+        ----------
+        n_layers: int
+            The number of layers to use in the model.
+        n_moments: int
+            The number of polynomial moments to use in the model.
+        n_streams: int
+            The number of streams to use in the model.
+        n_umu: int
+            The number of umu to use in the model.
+        n_phi: int
+            The number of azimuthal angles to use in the model.
+        n_user_levels: int
+            The number of user levels to use in the model.
+
+        Raises
+        ------
+        TypeError
+            Raised if any of the inputs are not positive integers, if n_streams
+            is not even, or if n_streams is greater than n_moments.
+
+        &#34;&#34;&#34;
+        self.__n_layers = n_layers
+        self.__n_moments = n_moments
+        self.__n_streams = n_streams
+        self.__n_umu = n_umu
+        self.__n_phi = n_phi
+        self.__n_user_levels = n_user_levels
+
+        self.__raise_error_if_inputs_are_unrealistic()
+
+    def __raise_error_if_inputs_are_unrealistic(self) -&gt; None:
+        self.__raise_error_if_n_layers_is_unrealistic()
+        self.__raise_error_if_n_moments_is_unrealistic()
+        self.__raise_error_if_n_streams_is_unrealistic()
+        self.__raise_error_if_n_umu_is_unrealistic()
+        self.__raise_error_if_n_phi_is_unrealistic()
+        self.__raise_error_if_n_user_levels_is_unrealistic()
+
+    def __raise_error_if_n_layers_is_unrealistic(self) -&gt; None:
+        self.__raise_type_error_if_input_is_not_positive_int(
+            self.__n_layers, &#39;n_layers&#39;)
+
+    def __raise_error_if_n_moments_is_unrealistic(self) -&gt; None:
+        self.__raise_type_error_if_input_is_not_positive_int(
+            self.__n_moments, &#39;n_moments&#39;)
+
+    def __raise_error_if_n_streams_is_unrealistic(self) -&gt; None:
+        self.__raise_type_error_if_input_is_not_positive_int(
+            self.__n_streams, &#39;n_streams&#39;)
+        self.__raise_value_error_if_n_streams_is_more_than_n_moments()
+        self.__raise_value_error_if_n_streams_is_not_even()
+
+    def __raise_error_if_n_umu_is_unrealistic(self) -&gt; None:
+        self.__raise_type_error_if_input_is_not_positive_int(
+            self.__n_umu, &#39;n_umu&#39;)
+
+    def __raise_error_if_n_phi_is_unrealistic(self) -&gt; None:
+        self.__raise_type_error_if_input_is_not_positive_int(
+            self.__n_phi, &#39;n_phi&#39;)
+
+    def __raise_error_if_n_user_levels_is_unrealistic(self) -&gt; None:
+        self.__raise_type_error_if_input_is_not_positive_int(
+            self.__n_user_levels, &#39;n_user_levels&#39;)
+
+    def __raise_type_error_if_input_is_not_positive_int(
+            self, inp: int, name: str) -&gt; None:
+        self.__raise_type_error_if_not_int(inp, name)
+        self.__raise_type_error_if_not_positive(inp, name)
+
+    @staticmethod
+    def __raise_type_error_if_not_int(inp: int, name: str) -&gt; None:
+        if not isinstance(inp, int):
+            raise ValueError(f&#39;{name} must be an int.&#39;)
+
+    @staticmethod
+    def __raise_type_error_if_not_positive(inp: int, name: str) -&gt; None:
+        if not inp &gt; 0:
+            raise ValueError(f&#39;{name} must be positive.&#39;)
+
+    def __raise_value_error_if_n_streams_is_more_than_n_moments(self) -&gt; None:
+        if self.__n_streams &gt; self.__n_moments:
+            err_msg = f&#39;There should not be more input streams &#39; \
+                      f&#39;({self.__n_streams}) than moments ({self.__n_moments}).&#39;
+            raise ValueError(err_msg)
+
+    def __raise_value_error_if_n_streams_is_not_even(self) -&gt; None:
+        if self.__n_streams % 2 != 0:
+            raise ValueError(&#39;n_streams must be even.&#39;)
+
+    @property
+    def n_layers(self) -&gt; int:
+        &#34;&#34;&#34;Get the input number of layers.
+
+        Returns
+        -------
+        int
+            The number of layers.
+
+        &#34;&#34;&#34;
+        return self.__n_layers
+
+    @property
+    def n_moments(self) -&gt; int:
+        &#34;&#34;&#34;Get the input number of moments.
+
+        Returns
+        -------
+        int
+            The number of moments.
+
+        &#34;&#34;&#34;
+        return self.__n_moments
+
+    @property
+    def n_phi(self) -&gt; int:
+        &#34;&#34;&#34;Get the number of phis.
+
+        Returns
+        -------
+        int
+            The number of azimuthal angles.
+
+        &#34;&#34;&#34;
+        return self.__n_phi
+
+    @property
+    def n_streams(self) -&gt; int:
+        &#34;&#34;&#34;Get the input number of streams.
+
+        Returns
+        -------
+        int
+            The number of streams.
+
+        &#34;&#34;&#34;
+        return self.__n_streams
+
+    @property
+    def n_umu(self) -&gt; int:
+        &#34;&#34;&#34;Get the number of umus.
+
+        Returns
+        -------
+        int
+            The number of umus.
+
+        &#34;&#34;&#34;
+        return self.__n_umu
+
+    @property
+    def n_user_levels(self) -&gt; int:
+        &#34;&#34;&#34;Get the number of user levels.
+
+        Returns
+        -------
+        int
+            The number of user levels.
+
+        &#34;&#34;&#34;
+        return self.__n_user_levels
+
+
+# TODO: Become sure of what this does and remove it
+class Unsure:
+    &#34;&#34;&#34;This class makes the variable &#34;h_lyr&#34;. I don&#39;t really know what this
+    variable does since it can be all 0s.
+
+    &#34;&#34;&#34;
+    def __init__(self, size):
+        self.size = size
+        self.__h_lyr = np.zeros(self.size.n_layers+1)
+
+    @property
+    def h_lyr(self):
+        return self.__h_lyr</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="pyRT_DISORT.modsetup.Output"><code class="flex name class">
+<span>class <span class="ident">Output</span></span>
+<span>(</span><span>size)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Output is a data structure to hold the output arrays required by DISORT.</p>
+<p>Output creates all 8 arrays that get populated with values as DISORT is run.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>size</code></strong> :&ensp;<code><a title="pyRT_DISORT.modsetup.Size" href="#pyRT_DISORT.modsetup.Size">Size</a></code></dt>
+<dd>Data structure holding the model computational variables.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>TypeError</code></dt>
+<dd>Raised if input is not an instance of Size.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Output:
+    &#34;&#34;&#34;Output is a data structure to hold the output arrays required by DISORT.
+
+    Output creates all 8 arrays that get populated with values as DISORT is run.
+
+    &#34;&#34;&#34;
+
+    def __init__(self, size) -&gt; None:
+        &#34;&#34;&#34;
+        Parameters
+        ----------
+        size: Size
+            Data structure holding the model computational variables.
+
+        Raises
+        ------
+        TypeError
+            Raised if input is not an instance of Size.
+
+        &#34;&#34;&#34;
+        self.__size = size
+
+        self.__albedo_medium = self.__make_albedo_medium()
+        self.__diffuse_up_flux = self.__make_diffuse_up_flux()
+        self.__diffuse_down_flux = self.__make_diffuse_down_flux()
+        self.__direct_beam_flux = self.__make_direct_beam_flux()
+        self.__flux_divergence = self.__make_flux_divergence()
+        self.__intensity = self.__make_intensity()
+        self.__mean_intensity = self.__make_mean_intensity()
+        self.__transmissivity_medium = self.__make_transmissivity_medium()
+
+    def __raise_type_error_if_input_is_not_size(self) -&gt; None:
+        if not isinstance(self.__size, Size):
+            raise TypeError(&#39;size must be an instance of Size.&#39;)
+
+    def __make_albedo_medium(self) -&gt; np.ndarray:
+        return np.zeros(self.__size.n_umu)
+
+    def __make_diffuse_up_flux(self) -&gt; np.ndarray:
+        return np.zeros(self.__size.n_user_levels)
+
+    def __make_diffuse_down_flux(self) -&gt; np.ndarray:
+        return np.zeros(self.__size.n_user_levels)
+
+    def __make_direct_beam_flux(self) -&gt; np.ndarray:
+        return np.zeros(self.__size.n_user_levels)
+
+    def __make_flux_divergence(self) -&gt; np.ndarray:
+        return np.zeros(self.__size.n_user_levels)
+
+    def __make_intensity(self) -&gt; np.ndarray:
+        return np.zeros((self.__size.n_umu, self.__size.n_user_levels,
+                         self.__size.n_phi))
+
+    def __make_mean_intensity(self) -&gt; np.ndarray:
+        return np.zeros(self.__size.n_user_levels)
+
+    def __make_transmissivity_medium(self) -&gt; np.ndarray:
+        return np.zeros(self.__size.n_umu)
+
+    @property
+    def albedo_medium(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the albedo of the medium output array.
+
+        Returns
+        -------
+        np.ndarray
+            The albedo of the medium.
+
+        Notes
+        -----
+        In DISORT, this variable is named &#34;ALBMED&#34;.
+
+        &#34;&#34;&#34;
+        return self.__albedo_medium
+
+    @property
+    def diffuse_up_flux(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the diffuse upward flux output array.
+
+        Returns
+        -------
+        np.ndarray
+            The diffuse upward flux.
+
+        Notes
+        -----
+        In DISORT, this variable is named &#34;FLUP&#34;.
+
+        &#34;&#34;&#34;
+        return self.__diffuse_up_flux
+
+    @property
+    def diffuse_down_flux(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the diffuse downward flux output array.
+
+        Returns
+        -------
+        np.ndarray
+            The diffuse downward flux.
+
+        Notes
+        -----
+        In DISORT, this variable is named &#34;RFLDN&#34; (total minus direct-beam).
+
+        &#34;&#34;&#34;
+        return self.__diffuse_down_flux
+
+    @property
+    def direct_beam_flux(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the direct beam flux output array.
+
+        Returns
+        -------
+        np.ndarray
+            The direct beam flux.
+
+        Notes
+        -----
+        In DISORT, this variable is named &#34;RFLDIR&#34;.
+
+        &#34;&#34;&#34;
+        return self.__direct_beam_flux
+
+    @property
+    def flux_divergence(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the flux divergence output array.
+
+        Returns
+        -------
+        np.ndarray
+            The flux divergence.
+
+        Notes
+        -----
+        In DISORT, this variable is named &#34;DFDT&#34;, which is
+        (d(net_flux) / d(optical_depth)). This is an exact result.
+
+        &#34;&#34;&#34;
+        return self.__flux_divergence
+
+    @property
+    def intensity(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the intensity output array.
+
+        Returns
+        -------
+        np.ndarray
+            The intensity.
+
+        Notes
+        -----
+        In DISORT, this variable is named &#34;UU&#34;.
+
+        &#34;&#34;&#34;
+        return self.__intensity
+
+    @property
+    def mean_intensity(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the mean intensity output array.
+
+        Returns
+        -------
+        np.ndarray
+            The mean intensity.
+
+        Notes
+        -----
+        In DISORT, this variable is named &#34;UAVG&#34;.
+
+        &#34;&#34;&#34;
+        return self.__mean_intensity
+
+    @property
+    def transmissivity_medium(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the transmissivity of the medium output array.
+
+        Returns
+        -------
+        np.ndarray
+            The transmissivity of the medium.
+
+        Notes
+        -----
+        In DISORT, this variable is named &#34;TRNMED&#34;.
+
+        &#34;&#34;&#34;
+        return self.__transmissivity_medium</code></pre>
+</details>
+<h3>Instance variables</h3>
+<dl>
+<dt id="pyRT_DISORT.modsetup.Output.albedo_medium"><code class="name">var <span class="ident">albedo_medium</span> : numpy.ndarray</code></dt>
+<dd>
+<div class="desc"><p>Get the albedo of the medium output array.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>np.ndarray</code></dt>
+<dd>The albedo of the medium.</dd>
+</dl>
+<h2 id="notes">Notes</h2>
+<p>In DISORT, this variable is named "ALBMED".</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def albedo_medium(self) -&gt; np.ndarray:
+    &#34;&#34;&#34;Get the albedo of the medium output array.
+
+    Returns
+    -------
+    np.ndarray
+        The albedo of the medium.
+
+    Notes
+    -----
+    In DISORT, this variable is named &#34;ALBMED&#34;.
+
+    &#34;&#34;&#34;
+    return self.__albedo_medium</code></pre>
+</details>
+</dd>
+<dt id="pyRT_DISORT.modsetup.Output.diffuse_down_flux"><code class="name">var <span class="ident">diffuse_down_flux</span> : numpy.ndarray</code></dt>
+<dd>
+<div class="desc"><p>Get the diffuse downward flux output array.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>np.ndarray</code></dt>
+<dd>The diffuse downward flux.</dd>
+</dl>
+<h2 id="notes">Notes</h2>
+<p>In DISORT, this variable is named "RFLDN" (total minus direct-beam).</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def diffuse_down_flux(self) -&gt; np.ndarray:
+    &#34;&#34;&#34;Get the diffuse downward flux output array.
+
+    Returns
+    -------
+    np.ndarray
+        The diffuse downward flux.
+
+    Notes
+    -----
+    In DISORT, this variable is named &#34;RFLDN&#34; (total minus direct-beam).
+
+    &#34;&#34;&#34;
+    return self.__diffuse_down_flux</code></pre>
+</details>
+</dd>
+<dt id="pyRT_DISORT.modsetup.Output.diffuse_up_flux"><code class="name">var <span class="ident">diffuse_up_flux</span> : numpy.ndarray</code></dt>
+<dd>
+<div class="desc"><p>Get the diffuse upward flux output array.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>np.ndarray</code></dt>
+<dd>The diffuse upward flux.</dd>
+</dl>
+<h2 id="notes">Notes</h2>
+<p>In DISORT, this variable is named "FLUP".</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def diffuse_up_flux(self) -&gt; np.ndarray:
+    &#34;&#34;&#34;Get the diffuse upward flux output array.
+
+    Returns
+    -------
+    np.ndarray
+        The diffuse upward flux.
+
+    Notes
+    -----
+    In DISORT, this variable is named &#34;FLUP&#34;.
+
+    &#34;&#34;&#34;
+    return self.__diffuse_up_flux</code></pre>
+</details>
+</dd>
+<dt id="pyRT_DISORT.modsetup.Output.direct_beam_flux"><code class="name">var <span class="ident">direct_beam_flux</span> : numpy.ndarray</code></dt>
+<dd>
+<div class="desc"><p>Get the direct beam flux output array.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>np.ndarray</code></dt>
+<dd>The direct beam flux.</dd>
+</dl>
+<h2 id="notes">Notes</h2>
+<p>In DISORT, this variable is named "RFLDIR".</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def direct_beam_flux(self) -&gt; np.ndarray:
+    &#34;&#34;&#34;Get the direct beam flux output array.
+
+    Returns
+    -------
+    np.ndarray
+        The direct beam flux.
+
+    Notes
+    -----
+    In DISORT, this variable is named &#34;RFLDIR&#34;.
+
+    &#34;&#34;&#34;
+    return self.__direct_beam_flux</code></pre>
+</details>
+</dd>
+<dt id="pyRT_DISORT.modsetup.Output.flux_divergence"><code class="name">var <span class="ident">flux_divergence</span> : numpy.ndarray</code></dt>
+<dd>
+<div class="desc"><p>Get the flux divergence output array.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>np.ndarray</code></dt>
+<dd>The flux divergence.</dd>
+</dl>
+<h2 id="notes">Notes</h2>
+<p>In DISORT, this variable is named "DFDT", which is
+(d(net_flux) / d(optical_depth)). This is an exact result.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def flux_divergence(self) -&gt; np.ndarray:
+    &#34;&#34;&#34;Get the flux divergence output array.
+
+    Returns
+    -------
+    np.ndarray
+        The flux divergence.
+
+    Notes
+    -----
+    In DISORT, this variable is named &#34;DFDT&#34;, which is
+    (d(net_flux) / d(optical_depth)). This is an exact result.
+
+    &#34;&#34;&#34;
+    return self.__flux_divergence</code></pre>
+</details>
+</dd>
+<dt id="pyRT_DISORT.modsetup.Output.intensity"><code class="name">var <span class="ident">intensity</span> : numpy.ndarray</code></dt>
+<dd>
+<div class="desc"><p>Get the intensity output array.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>np.ndarray</code></dt>
+<dd>The intensity.</dd>
+</dl>
+<h2 id="notes">Notes</h2>
+<p>In DISORT, this variable is named "UU".</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def intensity(self) -&gt; np.ndarray:
+    &#34;&#34;&#34;Get the intensity output array.
+
+    Returns
+    -------
+    np.ndarray
+        The intensity.
+
+    Notes
+    -----
+    In DISORT, this variable is named &#34;UU&#34;.
+
+    &#34;&#34;&#34;
+    return self.__intensity</code></pre>
+</details>
+</dd>
+<dt id="pyRT_DISORT.modsetup.Output.mean_intensity"><code class="name">var <span class="ident">mean_intensity</span> : numpy.ndarray</code></dt>
+<dd>
+<div class="desc"><p>Get the mean intensity output array.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>np.ndarray</code></dt>
+<dd>The mean intensity.</dd>
+</dl>
+<h2 id="notes">Notes</h2>
+<p>In DISORT, this variable is named "UAVG".</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def mean_intensity(self) -&gt; np.ndarray:
+    &#34;&#34;&#34;Get the mean intensity output array.
+
+    Returns
+    -------
+    np.ndarray
+        The mean intensity.
+
+    Notes
+    -----
+    In DISORT, this variable is named &#34;UAVG&#34;.
+
+    &#34;&#34;&#34;
+    return self.__mean_intensity</code></pre>
+</details>
+</dd>
+<dt id="pyRT_DISORT.modsetup.Output.transmissivity_medium"><code class="name">var <span class="ident">transmissivity_medium</span> : numpy.ndarray</code></dt>
+<dd>
+<div class="desc"><p>Get the transmissivity of the medium output array.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>np.ndarray</code></dt>
+<dd>The transmissivity of the medium.</dd>
+</dl>
+<h2 id="notes">Notes</h2>
+<p>In DISORT, this variable is named "TRNMED".</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def transmissivity_medium(self) -&gt; np.ndarray:
+    &#34;&#34;&#34;Get the transmissivity of the medium output array.
+
+    Returns
+    -------
+    np.ndarray
+        The transmissivity of the medium.
+
+    Notes
+    -----
+    In DISORT, this variable is named &#34;TRNMED&#34;.
+
+    &#34;&#34;&#34;
+    return self.__transmissivity_medium</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="pyRT_DISORT.modsetup.Size"><code class="flex name class">
+<span>class <span class="ident">Size</span></span>
+<span>(</span><span>n_layers: int, n_moments: int, n_streams: int, n_umu: int, n_phi: int, n_user_levels: int)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Size is a data structure to hold the computational variables for DISORT.</p>
+<p>Size holds the number of model layers, streams, moments, and angles. It also
+performs basic checks that these values are plausible. Objects of this class
+are meant to be be used as inputs to other classes.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>n_layers</code></strong> :&ensp;<code>int</code></dt>
+<dd>The number of layers to use in the model.</dd>
+<dt><strong><code>n_moments</code></strong> :&ensp;<code>int</code></dt>
+<dd>The number of polynomial moments to use in the model.</dd>
+<dt><strong><code>n_streams</code></strong> :&ensp;<code>int</code></dt>
+<dd>The number of streams to use in the model.</dd>
+<dt><strong><code>n_umu</code></strong> :&ensp;<code>int</code></dt>
+<dd>The number of umu to use in the model.</dd>
+<dt><strong><code>n_phi</code></strong> :&ensp;<code>int</code></dt>
+<dd>The number of azimuthal angles to use in the model.</dd>
+<dt><strong><code>n_user_levels</code></strong> :&ensp;<code>int</code></dt>
+<dd>The number of user levels to use in the model.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>TypeError</code></dt>
+<dd>Raised if any of the inputs are not positive integers, if n_streams
+is not even, or if n_streams is greater than n_moments.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Size:
+    &#34;&#34;&#34;Size is a data structure to hold the computational variables for DISORT.
+
+    Size holds the number of model layers, streams, moments, and angles. It also
+    performs basic checks that these values are plausible. Objects of this class
+    are meant to be be used as inputs to other classes.
+
+    &#34;&#34;&#34;
+
+    # TODO: I&#39;d like a better name than umu and phi and better description of
+    #  user levels
+    def __init__(self, n_layers: int, n_moments: int, n_streams: int,
+                 n_umu: int, n_phi: int, n_user_levels: int) -&gt; None:
+        &#34;&#34;&#34;
+        Parameters
+        ----------
+        n_layers: int
+            The number of layers to use in the model.
+        n_moments: int
+            The number of polynomial moments to use in the model.
+        n_streams: int
+            The number of streams to use in the model.
+        n_umu: int
+            The number of umu to use in the model.
+        n_phi: int
+            The number of azimuthal angles to use in the model.
+        n_user_levels: int
+            The number of user levels to use in the model.
+
+        Raises
+        ------
+        TypeError
+            Raised if any of the inputs are not positive integers, if n_streams
+            is not even, or if n_streams is greater than n_moments.
+
+        &#34;&#34;&#34;
+        self.__n_layers = n_layers
+        self.__n_moments = n_moments
+        self.__n_streams = n_streams
+        self.__n_umu = n_umu
+        self.__n_phi = n_phi
+        self.__n_user_levels = n_user_levels
+
+        self.__raise_error_if_inputs_are_unrealistic()
+
+    def __raise_error_if_inputs_are_unrealistic(self) -&gt; None:
+        self.__raise_error_if_n_layers_is_unrealistic()
+        self.__raise_error_if_n_moments_is_unrealistic()
+        self.__raise_error_if_n_streams_is_unrealistic()
+        self.__raise_error_if_n_umu_is_unrealistic()
+        self.__raise_error_if_n_phi_is_unrealistic()
+        self.__raise_error_if_n_user_levels_is_unrealistic()
+
+    def __raise_error_if_n_layers_is_unrealistic(self) -&gt; None:
+        self.__raise_type_error_if_input_is_not_positive_int(
+            self.__n_layers, &#39;n_layers&#39;)
+
+    def __raise_error_if_n_moments_is_unrealistic(self) -&gt; None:
+        self.__raise_type_error_if_input_is_not_positive_int(
+            self.__n_moments, &#39;n_moments&#39;)
+
+    def __raise_error_if_n_streams_is_unrealistic(self) -&gt; None:
+        self.__raise_type_error_if_input_is_not_positive_int(
+            self.__n_streams, &#39;n_streams&#39;)
+        self.__raise_value_error_if_n_streams_is_more_than_n_moments()
+        self.__raise_value_error_if_n_streams_is_not_even()
+
+    def __raise_error_if_n_umu_is_unrealistic(self) -&gt; None:
+        self.__raise_type_error_if_input_is_not_positive_int(
+            self.__n_umu, &#39;n_umu&#39;)
+
+    def __raise_error_if_n_phi_is_unrealistic(self) -&gt; None:
+        self.__raise_type_error_if_input_is_not_positive_int(
+            self.__n_phi, &#39;n_phi&#39;)
+
+    def __raise_error_if_n_user_levels_is_unrealistic(self) -&gt; None:
+        self.__raise_type_error_if_input_is_not_positive_int(
+            self.__n_user_levels, &#39;n_user_levels&#39;)
+
+    def __raise_type_error_if_input_is_not_positive_int(
+            self, inp: int, name: str) -&gt; None:
+        self.__raise_type_error_if_not_int(inp, name)
+        self.__raise_type_error_if_not_positive(inp, name)
+
+    @staticmethod
+    def __raise_type_error_if_not_int(inp: int, name: str) -&gt; None:
+        if not isinstance(inp, int):
+            raise ValueError(f&#39;{name} must be an int.&#39;)
+
+    @staticmethod
+    def __raise_type_error_if_not_positive(inp: int, name: str) -&gt; None:
+        if not inp &gt; 0:
+            raise ValueError(f&#39;{name} must be positive.&#39;)
+
+    def __raise_value_error_if_n_streams_is_more_than_n_moments(self) -&gt; None:
+        if self.__n_streams &gt; self.__n_moments:
+            err_msg = f&#39;There should not be more input streams &#39; \
+                      f&#39;({self.__n_streams}) than moments ({self.__n_moments}).&#39;
+            raise ValueError(err_msg)
+
+    def __raise_value_error_if_n_streams_is_not_even(self) -&gt; None:
+        if self.__n_streams % 2 != 0:
+            raise ValueError(&#39;n_streams must be even.&#39;)
+
+    @property
+    def n_layers(self) -&gt; int:
+        &#34;&#34;&#34;Get the input number of layers.
+
+        Returns
+        -------
+        int
+            The number of layers.
+
+        &#34;&#34;&#34;
+        return self.__n_layers
+
+    @property
+    def n_moments(self) -&gt; int:
+        &#34;&#34;&#34;Get the input number of moments.
+
+        Returns
+        -------
+        int
+            The number of moments.
+
+        &#34;&#34;&#34;
+        return self.__n_moments
+
+    @property
+    def n_phi(self) -&gt; int:
+        &#34;&#34;&#34;Get the number of phis.
+
+        Returns
+        -------
+        int
+            The number of azimuthal angles.
+
+        &#34;&#34;&#34;
+        return self.__n_phi
+
+    @property
+    def n_streams(self) -&gt; int:
+        &#34;&#34;&#34;Get the input number of streams.
+
+        Returns
+        -------
+        int
+            The number of streams.
+
+        &#34;&#34;&#34;
+        return self.__n_streams
+
+    @property
+    def n_umu(self) -&gt; int:
+        &#34;&#34;&#34;Get the number of umus.
+
+        Returns
+        -------
+        int
+            The number of umus.
+
+        &#34;&#34;&#34;
+        return self.__n_umu
+
+    @property
+    def n_user_levels(self) -&gt; int:
+        &#34;&#34;&#34;Get the number of user levels.
+
+        Returns
+        -------
+        int
+            The number of user levels.
+
+        &#34;&#34;&#34;
+        return self.__n_user_levels</code></pre>
+</details>
+<h3>Instance variables</h3>
+<dl>
+<dt id="pyRT_DISORT.modsetup.Size.n_layers"><code class="name">var <span class="ident">n_layers</span> : int</code></dt>
+<dd>
+<div class="desc"><p>Get the input number of layers.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>int</code></dt>
+<dd>The number of layers.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def n_layers(self) -&gt; int:
+    &#34;&#34;&#34;Get the input number of layers.
+
+    Returns
+    -------
+    int
+        The number of layers.
+
+    &#34;&#34;&#34;
+    return self.__n_layers</code></pre>
+</details>
+</dd>
+<dt id="pyRT_DISORT.modsetup.Size.n_moments"><code class="name">var <span class="ident">n_moments</span> : int</code></dt>
+<dd>
+<div class="desc"><p>Get the input number of moments.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>int</code></dt>
+<dd>The number of moments.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def n_moments(self) -&gt; int:
+    &#34;&#34;&#34;Get the input number of moments.
+
+    Returns
+    -------
+    int
+        The number of moments.
+
+    &#34;&#34;&#34;
+    return self.__n_moments</code></pre>
+</details>
+</dd>
+<dt id="pyRT_DISORT.modsetup.Size.n_phi"><code class="name">var <span class="ident">n_phi</span> : int</code></dt>
+<dd>
+<div class="desc"><p>Get the number of phis.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>int</code></dt>
+<dd>The number of azimuthal angles.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def n_phi(self) -&gt; int:
+    &#34;&#34;&#34;Get the number of phis.
+
+    Returns
+    -------
+    int
+        The number of azimuthal angles.
+
+    &#34;&#34;&#34;
+    return self.__n_phi</code></pre>
+</details>
+</dd>
+<dt id="pyRT_DISORT.modsetup.Size.n_streams"><code class="name">var <span class="ident">n_streams</span> : int</code></dt>
+<dd>
+<div class="desc"><p>Get the input number of streams.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>int</code></dt>
+<dd>The number of streams.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def n_streams(self) -&gt; int:
+    &#34;&#34;&#34;Get the input number of streams.
+
+    Returns
+    -------
+    int
+        The number of streams.
+
+    &#34;&#34;&#34;
+    return self.__n_streams</code></pre>
+</details>
+</dd>
+<dt id="pyRT_DISORT.modsetup.Size.n_umu"><code class="name">var <span class="ident">n_umu</span> : int</code></dt>
+<dd>
+<div class="desc"><p>Get the number of umus.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>int</code></dt>
+<dd>The number of umus.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def n_umu(self) -&gt; int:
+    &#34;&#34;&#34;Get the number of umus.
+
+    Returns
+    -------
+    int
+        The number of umus.
+
+    &#34;&#34;&#34;
+    return self.__n_umu</code></pre>
+</details>
+</dd>
+<dt id="pyRT_DISORT.modsetup.Size.n_user_levels"><code class="name">var <span class="ident">n_user_levels</span> : int</code></dt>
+<dd>
+<div class="desc"><p>Get the number of user levels.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>int</code></dt>
+<dd>The number of user levels.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def n_user_levels(self) -&gt; int:
+    &#34;&#34;&#34;Get the number of user levels.
+
+    Returns
+    -------
+    int
+        The number of user levels.
+
+    &#34;&#34;&#34;
+    return self.__n_user_levels</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="pyRT_DISORT.modsetup.Unsure"><code class="flex name class">
+<span>class <span class="ident">Unsure</span></span>
+<span>(</span><span>size)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>This class makes the variable "h_lyr". I don't really know what this
+variable does since it can be all 0s.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Unsure:
+    &#34;&#34;&#34;This class makes the variable &#34;h_lyr&#34;. I don&#39;t really know what this
+    variable does since it can be all 0s.
+
+    &#34;&#34;&#34;
+    def __init__(self, size):
+        self.size = size
+        self.__h_lyr = np.zeros(self.size.n_layers+1)
+
+    @property
+    def h_lyr(self):
+        return self.__h_lyr</code></pre>
+</details>
+<h3>Instance variables</h3>
+<dl>
+<dt id="pyRT_DISORT.modsetup.Unsure.h_lyr"><code class="name">var <span class="ident">h_lyr</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def h_lyr(self):
+    return self.__h_lyr</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="pyRT_DISORT" href="index.html">pyRT_DISORT</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="pyRT_DISORT.modsetup.Output" href="#pyRT_DISORT.modsetup.Output">Output</a></code></h4>
+<ul class="">
+<li><code><a title="pyRT_DISORT.modsetup.Output.albedo_medium" href="#pyRT_DISORT.modsetup.Output.albedo_medium">albedo_medium</a></code></li>
+<li><code><a title="pyRT_DISORT.modsetup.Output.diffuse_down_flux" href="#pyRT_DISORT.modsetup.Output.diffuse_down_flux">diffuse_down_flux</a></code></li>
+<li><code><a title="pyRT_DISORT.modsetup.Output.diffuse_up_flux" href="#pyRT_DISORT.modsetup.Output.diffuse_up_flux">diffuse_up_flux</a></code></li>
+<li><code><a title="pyRT_DISORT.modsetup.Output.direct_beam_flux" href="#pyRT_DISORT.modsetup.Output.direct_beam_flux">direct_beam_flux</a></code></li>
+<li><code><a title="pyRT_DISORT.modsetup.Output.flux_divergence" href="#pyRT_DISORT.modsetup.Output.flux_divergence">flux_divergence</a></code></li>
+<li><code><a title="pyRT_DISORT.modsetup.Output.intensity" href="#pyRT_DISORT.modsetup.Output.intensity">intensity</a></code></li>
+<li><code><a title="pyRT_DISORT.modsetup.Output.mean_intensity" href="#pyRT_DISORT.modsetup.Output.mean_intensity">mean_intensity</a></code></li>
+<li><code><a title="pyRT_DISORT.modsetup.Output.transmissivity_medium" href="#pyRT_DISORT.modsetup.Output.transmissivity_medium">transmissivity_medium</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="pyRT_DISORT.modsetup.Size" href="#pyRT_DISORT.modsetup.Size">Size</a></code></h4>
+<ul class="two-column">
+<li><code><a title="pyRT_DISORT.modsetup.Size.n_layers" href="#pyRT_DISORT.modsetup.Size.n_layers">n_layers</a></code></li>
+<li><code><a title="pyRT_DISORT.modsetup.Size.n_moments" href="#pyRT_DISORT.modsetup.Size.n_moments">n_moments</a></code></li>
+<li><code><a title="pyRT_DISORT.modsetup.Size.n_phi" href="#pyRT_DISORT.modsetup.Size.n_phi">n_phi</a></code></li>
+<li><code><a title="pyRT_DISORT.modsetup.Size.n_streams" href="#pyRT_DISORT.modsetup.Size.n_streams">n_streams</a></code></li>
+<li><code><a title="pyRT_DISORT.modsetup.Size.n_umu" href="#pyRT_DISORT.modsetup.Size.n_umu">n_umu</a></code></li>
+<li><code><a title="pyRT_DISORT.modsetup.Size.n_user_levels" href="#pyRT_DISORT.modsetup.Size.n_user_levels">n_user_levels</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="pyRT_DISORT.modsetup.Unsure" href="#pyRT_DISORT.modsetup.Unsure">Unsure</a></code></h4>
+<ul class="">
+<li><code><a title="pyRT_DISORT.modsetup.Unsure.h_lyr" href="#pyRT_DISORT.modsetup.Unsure.h_lyr">h_lyr</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+</footer>
+</body>
+</html>

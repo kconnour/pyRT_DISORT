@@ -5,12 +5,14 @@ import os
 import pdoc
 
 # Local imports
-from pyRT_DISORT.path import get_project_path
+from path import get_project_path
 
 # TODO: this fails if I run it from command line
-# TODO: can I remove list of one item (self.module)?
+# TODO: can I remove list of one item (self.module)? (line 19)
 # TODO: This is not OS independent---only works on Mac/Linux
 # TODO: Remove tests from showing up in the doc
+# TODO: This shows sub-packages as sub-modules... can I fix that?
+# TODO: This code is slightly messy
 
 
 class Documentation:
@@ -19,18 +21,18 @@ class Documentation:
         self.module = [pdoc.Module('pyRT_DISORT', context=pdoc.Context())]
         pdoc.link_inheritance(pdoc.Context())
         self.html_path = self.__get_path_where_to_put_html_doc()
-        print(self.html_path)
 
     @staticmethod
     def __get_path_where_to_put_html_doc():
         return os.path.abspath(os.path.join(get_project_path(), 'doc/html'))
 
     def make_doc(self) -> None:
-        """ Make documentation
+        """Make documentation
 
         Returns
         -------
         None
+
         """
         for mod in self.module:
             for module_name, html, is_folder in self.__make_recursive_html(mod):
@@ -41,7 +43,7 @@ class Documentation:
                 self.__write_html_to_computer(abs_path, html)
 
     def __make_recursive_html(self, module: pdoc.Module):
-        yield module.name, module.html(), bool(module.submodules())
+        yield module.name, module.html(latex_math=True), bool(module.submodules())
         for submodules in module.submodules():
             yield from self.__make_recursive_html(submodules)
 
@@ -69,4 +71,4 @@ class Documentation:
 
 
 if __name__ == '__main__':
-    Documentation()#.make_doc()
+    Documentation().make_doc()

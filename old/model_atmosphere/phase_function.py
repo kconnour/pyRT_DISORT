@@ -2,7 +2,7 @@
 import numpy as np
 
 # Local imports
-from pyRT_DISORT.utilities.array_checks import ArrayChecker
+from old.utilities import ArrayChecker
 
 
 class LegendreCoefficients:

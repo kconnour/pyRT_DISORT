@@ -2,8 +2,7 @@
 import numpy as np
 
 # Local imports
-from pyRT_DISORT.model_atmosphere.atmosphere_grid import ModelGrid
-from pyRT_DISORT.utilities.array_checks import ArrayChecker
+from old.model_atmosphere import ModelGrid
 
 
 class VerticalProfile:
