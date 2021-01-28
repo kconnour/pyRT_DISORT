@@ -13,6 +13,7 @@ an observation." />
 <style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
 <style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS_CHTML" integrity="sha256-kZafAc6mZvK3W3v1pHOcUix30OHQN6pU/NO2oFkqZVw=" crossorigin></script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
 <script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
 </head>
@@ -47,12 +48,13 @@ class Angles:
     Angles accepts ``observation&#39;&#39; angles and computes mu, mu0, phi, and phi0
     from these angles.
 
+    $\(\alpha\)$
+
     &#34;&#34;&#34;
 
     def __init__(self, incidence_angles: np.ndarray,
                  emission_angles: np.ndarray, phase_angles: np.ndarray) -&gt; None:
-        &#34;&#34;&#34;Initialize the structure.
-
+        &#34;&#34;&#34;
         Parameters
         ----------
         incidence_angles: np.ndarray
@@ -67,8 +69,9 @@ class Angles:
         TypeError
             Raised if any of the inputs are not np.ndarrays.
         ValueError
-            Raised if any of the inputs are not 1D arrays, or outside their
-            possible range of values.
+            Raised if any of the inputs are not 1D arrays, outside the range of
+            of possible values, or if the input angles are not all the same
+            shape.
 
         &#34;&#34;&#34;
         self.__incidence = incidence_angles
@@ -100,6 +103,7 @@ class Angles:
         self.__raise_error_if_angles_are_bad(
             self.__phase, &#39;phase_angles&#39;, 0, 180)
 
+    # TODO: This function does more than one thing
     def __raise_error_if_angles_are_bad(self, angle: np.ndarray, name: str,
                                         low: int, high: int) -&gt; None:
         try:
@@ -179,7 +183,7 @@ class Angles:
 
     @property
     def mu(self) -&gt; np.ndarray:
-        &#34;&#34;&#34;Compute mu where mu is the cosine of the input emission angles.
+        &#34;&#34;&#34;Get mu where mu is the cosine of the input emission angles.
 
         Returns
         -------
@@ -191,7 +195,7 @@ class Angles:
 
     @property
     def mu0(self) -&gt; np.ndarray:
-        &#34;&#34;&#34;Compute mu0 where mu0 is the cosine of the input incidence angles.
+        &#34;&#34;&#34;Get mu0 where mu0 is the cosine of the input incidence angles.
 
         Returns
         -------
@@ -215,7 +219,7 @@ class Angles:
 
     @property
     def phi(self) -&gt; np.ndarray:
-        &#34;&#34;&#34;Compute phi where phi is the azimuth angle [degrees].
+        &#34;&#34;&#34;Get phi where phi is the azimuth angle [degrees].
 
         Returns
         -------
@@ -227,7 +231,7 @@ class Angles:
 
     @property
     def phi0(self) -&gt; np.ndarray:
-        &#34;&#34;&#34;Compute phi0. I assume this is always 0.
+        &#34;&#34;&#34;Get phi0. I assume this is always 0.
 
         Returns
         -------
@@ -238,6 +242,7 @@ class Angles:
         return self.__phi0
 
 
+# TODO: Do I want to require monotonically increasing wavelengths?
 class Wavelengths:
     &#34;&#34;&#34;Wavelengths is a data structure that contains spectral info for DISORT.
 
@@ -271,8 +276,8 @@ class Wavelengths:
         Warnings
         --------
         UserWarning
-            Raised if any of the input wavelengths are outside the range 0.1 to
-            50 microns
+            Raised if any of the input wavelengths are not between 0.1 and 50
+            microns
 
         &#34;&#34;&#34;
         self.__short_wavelengths = short_wavelengths
@@ -339,6 +344,7 @@ class Wavelengths:
         return self.__convert_wavelength_to_wavenumber(
             self.__long_wavelengths, &#39;long_wavelengths&#39;)
 
+    # TODO: This function does more than one thing.
     @staticmethod
     def __convert_wavelength_to_wavenumber(wavelength: np.ndarray,
                                            wavelength_name: str) -&gt; np.ndarray:
@@ -390,7 +396,7 @@ class Wavelengths:
 
     @property
     def short_wavelengths(self) -&gt; np.ndarray:
-        &#34;&#34;&#34; Get the input short wavelengths [microns].
+        &#34;&#34;&#34;Get the input short wavelengths [microns].
 
         Returns
         -------
@@ -418,7 +424,7 @@ class Wavelengths:
 <div class="desc"><p>Angles is a data structure that contains angles required by DISORT.</p>
 <p>Angles accepts ``observation'' angles and computes mu, mu0, phi, and phi0
 from these angles.</p>
-<p>Initialize the structure.</p>
+<p>$(lpha)$</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>incidence_angles</code></strong> :&ensp;<code>np.ndarray</code></dt>
@@ -433,8 +439,9 @@ from these angles.</p>
 <dt><code>TypeError</code></dt>
 <dd>Raised if any of the inputs are not np.ndarrays.</dd>
 <dt><code>ValueError</code></dt>
-<dd>Raised if any of the inputs are not 1D arrays, or outside their
-possible range of values.</dd>
+<dd>Raised if any of the inputs are not 1D arrays, outside the range of
+of possible values, or if the input angles are not all the same
+shape.</dd>
 </dl></div>
 <details class="source">
 <summary>
@@ -446,12 +453,13 @@ possible range of values.</dd>
     Angles accepts ``observation&#39;&#39; angles and computes mu, mu0, phi, and phi0
     from these angles.
 
+    $\(\alpha\)$
+
     &#34;&#34;&#34;
 
     def __init__(self, incidence_angles: np.ndarray,
                  emission_angles: np.ndarray, phase_angles: np.ndarray) -&gt; None:
-        &#34;&#34;&#34;Initialize the structure.
-
+        &#34;&#34;&#34;
         Parameters
         ----------
         incidence_angles: np.ndarray
@@ -466,8 +474,9 @@ possible range of values.</dd>
         TypeError
             Raised if any of the inputs are not np.ndarrays.
         ValueError
-            Raised if any of the inputs are not 1D arrays, or outside their
-            possible range of values.
+            Raised if any of the inputs are not 1D arrays, outside the range of
+            of possible values, or if the input angles are not all the same
+            shape.
 
         &#34;&#34;&#34;
         self.__incidence = incidence_angles
@@ -499,6 +508,7 @@ possible range of values.</dd>
         self.__raise_error_if_angles_are_bad(
             self.__phase, &#39;phase_angles&#39;, 0, 180)
 
+    # TODO: This function does more than one thing
     def __raise_error_if_angles_are_bad(self, angle: np.ndarray, name: str,
                                         low: int, high: int) -&gt; None:
         try:
@@ -578,7 +588,7 @@ possible range of values.</dd>
 
     @property
     def mu(self) -&gt; np.ndarray:
-        &#34;&#34;&#34;Compute mu where mu is the cosine of the input emission angles.
+        &#34;&#34;&#34;Get mu where mu is the cosine of the input emission angles.
 
         Returns
         -------
@@ -590,7 +600,7 @@ possible range of values.</dd>
 
     @property
     def mu0(self) -&gt; np.ndarray:
-        &#34;&#34;&#34;Compute mu0 where mu0 is the cosine of the input incidence angles.
+        &#34;&#34;&#34;Get mu0 where mu0 is the cosine of the input incidence angles.
 
         Returns
         -------
@@ -614,7 +624,7 @@ possible range of values.</dd>
 
     @property
     def phi(self) -&gt; np.ndarray:
-        &#34;&#34;&#34;Compute phi where phi is the azimuth angle [degrees].
+        &#34;&#34;&#34;Get phi where phi is the azimuth angle [degrees].
 
         Returns
         -------
@@ -626,7 +636,7 @@ possible range of values.</dd>
 
     @property
     def phi0(self) -&gt; np.ndarray:
-        &#34;&#34;&#34;Compute phi0. I assume this is always 0.
+        &#34;&#34;&#34;Get phi0. I assume this is always 0.
 
         Returns
         -------
@@ -690,7 +700,7 @@ def incidence(self) -&gt; np.ndarray:
 </dd>
 <dt id="pyRT_DISORT.observation.Angles.mu"><code class="name">var <span class="ident">mu</span> : numpy.ndarray</code></dt>
 <dd>
-<div class="desc"><p>Compute mu where mu is the cosine of the input emission angles.</p>
+<div class="desc"><p>Get mu where mu is the cosine of the input emission angles.</p>
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><code>np.ndarray</code></dt>
@@ -702,7 +712,7 @@ def incidence(self) -&gt; np.ndarray:
 </summary>
 <pre><code class="python">@property
 def mu(self) -&gt; np.ndarray:
-    &#34;&#34;&#34;Compute mu where mu is the cosine of the input emission angles.
+    &#34;&#34;&#34;Get mu where mu is the cosine of the input emission angles.
 
     Returns
     -------
@@ -715,7 +725,7 @@ def mu(self) -&gt; np.ndarray:
 </dd>
 <dt id="pyRT_DISORT.observation.Angles.mu0"><code class="name">var <span class="ident">mu0</span> : numpy.ndarray</code></dt>
 <dd>
-<div class="desc"><p>Compute mu0 where mu0 is the cosine of the input incidence angles.</p>
+<div class="desc"><p>Get mu0 where mu0 is the cosine of the input incidence angles.</p>
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><code>np.ndarray</code></dt>
@@ -727,7 +737,7 @@ def mu(self) -&gt; np.ndarray:
 </summary>
 <pre><code class="python">@property
 def mu0(self) -&gt; np.ndarray:
-    &#34;&#34;&#34;Compute mu0 where mu0 is the cosine of the input incidence angles.
+    &#34;&#34;&#34;Get mu0 where mu0 is the cosine of the input incidence angles.
 
     Returns
     -------
@@ -765,7 +775,7 @@ def phase(self) -&gt; np.ndarray:
 </dd>
 <dt id="pyRT_DISORT.observation.Angles.phi"><code class="name">var <span class="ident">phi</span> : numpy.ndarray</code></dt>
 <dd>
-<div class="desc"><p>Compute phi where phi is the azimuth angle [degrees].</p>
+<div class="desc"><p>Get phi where phi is the azimuth angle [degrees].</p>
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><code>np.ndarray</code></dt>
@@ -777,7 +787,7 @@ def phase(self) -&gt; np.ndarray:
 </summary>
 <pre><code class="python">@property
 def phi(self) -&gt; np.ndarray:
-    &#34;&#34;&#34;Compute phi where phi is the azimuth angle [degrees].
+    &#34;&#34;&#34;Get phi where phi is the azimuth angle [degrees].
 
     Returns
     -------
@@ -790,7 +800,7 @@ def phi(self) -&gt; np.ndarray:
 </dd>
 <dt id="pyRT_DISORT.observation.Angles.phi0"><code class="name">var <span class="ident">phi0</span> : numpy.ndarray</code></dt>
 <dd>
-<div class="desc"><p>Compute phi0. I assume this is always 0.</p>
+<div class="desc"><p>Get phi0. I assume this is always 0.</p>
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><code>np.ndarray</code></dt>
@@ -802,7 +812,7 @@ def phi(self) -&gt; np.ndarray:
 </summary>
 <pre><code class="python">@property
 def phi0(self) -&gt; np.ndarray:
-    &#34;&#34;&#34;Compute phi0. I assume this is always 0.
+    &#34;&#34;&#34;Get phi0. I assume this is always 0.
 
     Returns
     -------
@@ -844,8 +854,8 @@ short_wavelengths.</dd>
 </dl>
 <h2 id="warnings">Warnings</h2>
 <p>UserWarning
-Raised if any of the input wavelengths are outside the range 0.1 to
-50 microns</p></div>
+Raised if any of the input wavelengths are not between 0.1 and 50
+microns</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -883,8 +893,8 @@ Raised if any of the input wavelengths are outside the range 0.1 to
         Warnings
         --------
         UserWarning
-            Raised if any of the input wavelengths are outside the range 0.1 to
-            50 microns
+            Raised if any of the input wavelengths are not between 0.1 and 50
+            microns
 
         &#34;&#34;&#34;
         self.__short_wavelengths = short_wavelengths
@@ -951,6 +961,7 @@ Raised if any of the input wavelengths are outside the range 0.1 to
         return self.__convert_wavelength_to_wavenumber(
             self.__long_wavelengths, &#39;long_wavelengths&#39;)
 
+    # TODO: This function does more than one thing.
     @staticmethod
     def __convert_wavelength_to_wavenumber(wavelength: np.ndarray,
                                            wavelength_name: str) -&gt; np.ndarray:
@@ -1002,7 +1013,7 @@ Raised if any of the input wavelengths are outside the range 0.1 to
 
     @property
     def short_wavelengths(self) -&gt; np.ndarray:
-        &#34;&#34;&#34; Get the input short wavelengths [microns].
+        &#34;&#34;&#34;Get the input short wavelengths [microns].
 
         Returns
         -------
@@ -1107,7 +1118,7 @@ def low_wavenumber(self) -&gt; np.ndarray:
 </summary>
 <pre><code class="python">@property
 def short_wavelengths(self) -&gt; np.ndarray:
-    &#34;&#34;&#34; Get the input short wavelengths [microns].
+    &#34;&#34;&#34;Get the input short wavelengths [microns].
 
     Returns
     -------

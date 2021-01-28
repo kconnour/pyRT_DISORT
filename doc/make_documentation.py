@@ -43,7 +43,7 @@ class Documentation:
                 self.__write_html_to_computer(abs_path, html)
 
     def __make_recursive_html(self, module: pdoc.Module):
-        yield module.name, module.html(), bool(module.submodules())
+        yield module.name, module.html(latex_math=True), bool(module.submodules())
         for submodules in module.submodules():
             yield from self.__make_recursive_html(submodules)
 

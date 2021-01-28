@@ -35,8 +35,9 @@ class Angles:
         TypeError
             Raised if any of the inputs are not np.ndarrays.
         ValueError
-            Raised if any of the inputs are not 1D arrays, or outside the range
-            of possible values.
+            Raised if any of the inputs are not 1D arrays, outside the range of
+            of possible values, or if the input angles are not all the same
+            shape.
 
         """
         self.__incidence = incidence_angles
@@ -148,7 +149,7 @@ class Angles:
 
     @property
     def mu(self) -> np.ndarray:
-        """Compute mu where mu is the cosine of the input emission angles.
+        """Get mu where mu is the cosine of the input emission angles.
 
         Returns
         -------
@@ -160,7 +161,7 @@ class Angles:
 
     @property
     def mu0(self) -> np.ndarray:
-        """Compute mu0 where mu0 is the cosine of the input incidence angles.
+        """Get mu0 where mu0 is the cosine of the input incidence angles.
 
         Returns
         -------
@@ -184,7 +185,7 @@ class Angles:
 
     @property
     def phi(self) -> np.ndarray:
-        """Compute phi where phi is the azimuth angle [degrees].
+        """Get phi where phi is the azimuth angle [degrees].
 
         Returns
         -------
@@ -196,7 +197,7 @@ class Angles:
 
     @property
     def phi0(self) -> np.ndarray:
-        """Compute phi0. I assume this is always 0.
+        """Get phi0. I assume this is always 0.
 
         Returns
         -------
@@ -309,7 +310,7 @@ class Wavelengths:
         return self.__convert_wavelength_to_wavenumber(
             self.__long_wavelengths, 'long_wavelengths')
 
-    # TODO: This function does more than one thing
+    # TODO: This function does more than one thing.
     @staticmethod
     def __convert_wavelength_to_wavenumber(wavelength: np.ndarray,
                                            wavelength_name: str) -> np.ndarray:
@@ -361,7 +362,7 @@ class Wavelengths:
 
     @property
     def short_wavelengths(self) -> np.ndarray:
-        """ Get the input short wavelengths [microns].
+        """Get the input short wavelengths [microns].
 
         Returns
         -------

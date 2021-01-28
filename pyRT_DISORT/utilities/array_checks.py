@@ -4,6 +4,9 @@ array checks on an input array.
 import numpy as np
 
 
+# TODO: I'm unsure of some of the method names. After all, idk if an array can
+#  be positive, it just contains positive values. But then method names might
+#  become unwieldy...
 class ArrayChecker:
     """An ArrayChecker object can perform common checks on np.ndarrays.
 

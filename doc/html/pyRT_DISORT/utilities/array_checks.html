@@ -5,13 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.9.2" />
 <title>pyRT_DISORT.utilities.array_checks API documentation</title>
-<meta name="description" content="" />
+<meta name="description" content="array_checks.py contains ArrayChecker, an object to perform a variety of
+array checks on an input array." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
 <style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
 <style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS_CHTML" integrity="sha256-kZafAc6mZvK3W3v1pHOcUix30OHQN6pU/NO2oFkqZVw=" crossorigin></script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
 <script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
 </head>
@@ -22,14 +24,21 @@
 <h1 class="title">Module <code>pyRT_DISORT.utilities.array_checks</code></h1>
 </header>
 <section id="section-intro">
+<p>array_checks.py contains ArrayChecker, an object to perform a variety of
+array checks on an input array.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">import numpy as np
+<pre><code class="python">&#34;&#34;&#34;array_checks.py contains ArrayChecker, an object to perform a variety of
+array checks on an input array.
+&#34;&#34;&#34;
+import numpy as np
 
 
-# TODO: docstrings throughout?
+# TODO: I&#39;m unsure of some of the method names. After all, idk if an array can
+#  be positive, it just contains positive values. But then method names might
+#  become unwieldy...
 class ArrayChecker:
     &#34;&#34;&#34;An ArrayChecker object can perform common checks on np.ndarrays.
 
@@ -38,65 +47,163 @@ class ArrayChecker:
 
     &#34;&#34;&#34;
 
-    def __init__(self, array):
+    def __init__(self, array) -&gt; None:
+        &#34;&#34;&#34;
+        Parameters
+        ----------
+        array: np.ndarray
+            Any array to perform checks on.
+
+        Raises
+        ------
+        TypeError
+            Raised if the input is not a np.ndarray.
+
+        &#34;&#34;&#34;
         self.__array = array
         self.__raise_type_error_if_object_is_not_array()
 
-    def __raise_type_error_if_object_is_not_array(self):
+    def __raise_type_error_if_object_is_not_array(self) -&gt; None:
         if not self.__object_is_array():
             raise TypeError(&#39;The input object is not a np.ndarray.&#39;)
 
-    def __object_is_array(self):
+    def __object_is_array(self) -&gt; bool:
         return isinstance(self.__array, np.ndarray)
 
-    def determine_if_array_is_numeric(self):
-        return np.issubdtype(self.__array.dtype, np.number)
+    def determine_if_array_contains_only_ints(self) -&gt; bool:
+        &#34;&#34;&#34;Determine if the array contains only integers.
 
-    def determine_if_array_contains_only_ints(self):
+        Returns
+        -------
+        bool
+            True if the contents are all integers; False otherwise.
+
+        &#34;&#34;&#34;
         return np.issubdtype(self.__array.dtype, np.int)
 
-    def determine_if_array_is_finite(self):
-        return np.all(np.isfinite(self.__array))
+    def determine_if_array_is_1d(self) -&gt; bool:
+        &#34;&#34;&#34;Determine if the array is 1D.
 
-    def determine_if_array_is_positive(self):
-        return np.all(self.__array &gt; 0)
+        Returns
+        -------
+        bool
+            True if the array is 1D; False otherwise.
 
-    def determine_if_array_is_non_negative(self):
-        return np.all(self.__array &gt;= 0)
-
-    def determine_if_array_is_positive_finite(self):
-        return self.determine_if_array_is_positive() and \
-               self.determine_if_array_is_finite()
-
-    def determine_if_array_is_in_range(self, low, high):
-        more_than_low = np.all(self.__array &gt;= low)
-        less_than_high = np.all(self.__array &lt;= high)
-        return more_than_low and less_than_high
-
-    def determine_if_array_matches_dimensionality(self, dimension):
-        return np.ndim(self.__array) == dimension
-
-    def determine_if_array_is_1d(self):
+        &#34;&#34;&#34;
         return self.determine_if_array_matches_dimensionality(1)
 
-    def determine_if_array_is_2d(self):
+    def determine_if_array_is_2d(self) -&gt; bool:
+        &#34;&#34;&#34;Determine if the array is 2D.
+
+        Returns
+        -------
+        bool
+            True if the array is 2D; False otherwise.
+
+        &#34;&#34;&#34;
         return self.determine_if_array_matches_dimensionality(2)
 
-    def determine_if_array_is_monotonically_decreasing(self):
+    def determine_if_array_is_finite(self) -&gt; bool:
+        &#34;&#34;&#34;Determine if the array contains only finite values.
+
+        Returns
+        -------
+        bool
+            True if the contents are all finite; False otherwise.
+
+        &#34;&#34;&#34;
+        return np.all(np.isfinite(self.__array))
+
+    def determine_if_array_is_in_range(self, low, high) -&gt; bool:
+        &#34;&#34;&#34;Determine if the array contains only values within a range.
+
+        Returns
+        -------
+        bool
+            True if the contents are all within the input range; False
+            otherwise.
+
+        &#34;&#34;&#34;
+        return np.all(self.__array &gt;= low) and np.all(self.__array &lt;= high)
+
+    def determine_if_array_is_monotonically_decreasing(self) -&gt; bool:
+        &#34;&#34;&#34;Determine if the array is monotonically decreasing.
+
+        Returns
+        -------
+        bool
+            True if the array is monotonically decreasing; False otherwise.
+
+        &#34;&#34;&#34;
         return np.all(np.diff(self.__array) &lt; 0)
 
-    def determine_if_array_is_monotonically_increasing(self):
+    def determine_if_array_is_monotonically_increasing(self) -&gt; bool:
+        &#34;&#34;&#34;Determine if the array is monotonically increasing.
+
+        Returns
+        -------
+        bool
+            True if the array is monotonically increasing; False otherwise.
+
+        &#34;&#34;&#34;
         return np.all(np.diff(self.__array) &gt; 0)
 
-    # TODO: cleanup
-    def check_1d_array_is_no_longer_than(self, length):
-        if len(self.some_object) &gt; length:
-            raise ValueError(f&#39;{self.array_name} must be no longer than {length} elements long&#39;)
+    def determine_if_array_is_non_negative(self) -&gt; bool:
+        &#34;&#34;&#34;Determine if the array contains only non-negative values.
 
-    # TODO: cleanup
-    def check_1d_array_is_at_least(self, length):
-        if len(self.some_object) &lt; length:
-            raise ValueError(f&#39;{self.array_name} must be at least {length} elements long&#39;)</code></pre>
+        Returns
+        -------
+        bool
+            True if the contents are all non-negative; False otherwise.
+
+        &#34;&#34;&#34;
+        return np.all(self.__array &gt;= 0)
+
+    def determine_if_array_is_numeric(self) -&gt; bool:
+        &#34;&#34;&#34;Determine if the array contains numeric values.
+
+        Returns
+        -------
+        bool
+            True if contents are numeric; False otherwise.
+
+        &#34;&#34;&#34;
+        return np.issubdtype(self.__array.dtype, np.number)
+
+    def determine_if_array_is_positive(self) -&gt; bool:
+        &#34;&#34;&#34;Determine if the array contains only positive values.
+
+        Returns
+        -------
+        bool
+            True if the contents are all positive; False otherwise.
+
+        &#34;&#34;&#34;
+        return np.all(self.__array &gt; 0)
+
+    def determine_if_array_is_positive_finite(self) -&gt; bool:
+        &#34;&#34;&#34;Determine if the array contains only positive, finite values.
+
+        Returns
+        -------
+        bool
+            True if the contents are all positive finite; False otherwise.
+
+        &#34;&#34;&#34;
+        return self.determine_if_array_is_positive() and \
+            self.determine_if_array_is_finite()
+
+    def determine_if_array_matches_dimensionality(self, dimension) -&gt; bool:
+        &#34;&#34;&#34;Determine if the array matches an input number of dimensions.
+
+        Returns
+        -------
+        bool
+            True if the array has the input number of dimensions; False
+            otherwise.
+
+        &#34;&#34;&#34;
+        return np.ndim(self.__array) == dimension</code></pre>
 </details>
 </section>
 <section>
@@ -115,7 +222,17 @@ class ArrayChecker:
 <dd>
 <div class="desc"><p>An ArrayChecker object can perform common checks on np.ndarrays.</p>
 <p>The ArrayChecker class holds methods commonly performed on np.ndarrays
-throughout pyRT_DISORT to determine if the array fits some criteria.</p></div>
+throughout pyRT_DISORT to determine if the array fits some criteria.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>array</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>Any array to perform checks on.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>TypeError</code></dt>
+<dd>Raised if the input is not a np.ndarray.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -128,252 +245,480 @@ throughout pyRT_DISORT to determine if the array fits some criteria.</p></div>
 
     &#34;&#34;&#34;
 
-    def __init__(self, array):
+    def __init__(self, array) -&gt; None:
+        &#34;&#34;&#34;
+        Parameters
+        ----------
+        array: np.ndarray
+            Any array to perform checks on.
+
+        Raises
+        ------
+        TypeError
+            Raised if the input is not a np.ndarray.
+
+        &#34;&#34;&#34;
         self.__array = array
         self.__raise_type_error_if_object_is_not_array()
 
-    def __raise_type_error_if_object_is_not_array(self):
+    def __raise_type_error_if_object_is_not_array(self) -&gt; None:
         if not self.__object_is_array():
             raise TypeError(&#39;The input object is not a np.ndarray.&#39;)
 
-    def __object_is_array(self):
+    def __object_is_array(self) -&gt; bool:
         return isinstance(self.__array, np.ndarray)
 
-    def determine_if_array_is_numeric(self):
-        return np.issubdtype(self.__array.dtype, np.number)
+    def determine_if_array_contains_only_ints(self) -&gt; bool:
+        &#34;&#34;&#34;Determine if the array contains only integers.
 
-    def determine_if_array_contains_only_ints(self):
+        Returns
+        -------
+        bool
+            True if the contents are all integers; False otherwise.
+
+        &#34;&#34;&#34;
         return np.issubdtype(self.__array.dtype, np.int)
 
-    def determine_if_array_is_finite(self):
-        return np.all(np.isfinite(self.__array))
+    def determine_if_array_is_1d(self) -&gt; bool:
+        &#34;&#34;&#34;Determine if the array is 1D.
 
-    def determine_if_array_is_positive(self):
-        return np.all(self.__array &gt; 0)
+        Returns
+        -------
+        bool
+            True if the array is 1D; False otherwise.
 
-    def determine_if_array_is_non_negative(self):
-        return np.all(self.__array &gt;= 0)
-
-    def determine_if_array_is_positive_finite(self):
-        return self.determine_if_array_is_positive() and \
-               self.determine_if_array_is_finite()
-
-    def determine_if_array_is_in_range(self, low, high):
-        more_than_low = np.all(self.__array &gt;= low)
-        less_than_high = np.all(self.__array &lt;= high)
-        return more_than_low and less_than_high
-
-    def determine_if_array_matches_dimensionality(self, dimension):
-        return np.ndim(self.__array) == dimension
-
-    def determine_if_array_is_1d(self):
+        &#34;&#34;&#34;
         return self.determine_if_array_matches_dimensionality(1)
 
-    def determine_if_array_is_2d(self):
+    def determine_if_array_is_2d(self) -&gt; bool:
+        &#34;&#34;&#34;Determine if the array is 2D.
+
+        Returns
+        -------
+        bool
+            True if the array is 2D; False otherwise.
+
+        &#34;&#34;&#34;
         return self.determine_if_array_matches_dimensionality(2)
 
-    def determine_if_array_is_monotonically_decreasing(self):
+    def determine_if_array_is_finite(self) -&gt; bool:
+        &#34;&#34;&#34;Determine if the array contains only finite values.
+
+        Returns
+        -------
+        bool
+            True if the contents are all finite; False otherwise.
+
+        &#34;&#34;&#34;
+        return np.all(np.isfinite(self.__array))
+
+    def determine_if_array_is_in_range(self, low, high) -&gt; bool:
+        &#34;&#34;&#34;Determine if the array contains only values within a range.
+
+        Returns
+        -------
+        bool
+            True if the contents are all within the input range; False
+            otherwise.
+
+        &#34;&#34;&#34;
+        return np.all(self.__array &gt;= low) and np.all(self.__array &lt;= high)
+
+    def determine_if_array_is_monotonically_decreasing(self) -&gt; bool:
+        &#34;&#34;&#34;Determine if the array is monotonically decreasing.
+
+        Returns
+        -------
+        bool
+            True if the array is monotonically decreasing; False otherwise.
+
+        &#34;&#34;&#34;
         return np.all(np.diff(self.__array) &lt; 0)
 
-    def determine_if_array_is_monotonically_increasing(self):
+    def determine_if_array_is_monotonically_increasing(self) -&gt; bool:
+        &#34;&#34;&#34;Determine if the array is monotonically increasing.
+
+        Returns
+        -------
+        bool
+            True if the array is monotonically increasing; False otherwise.
+
+        &#34;&#34;&#34;
         return np.all(np.diff(self.__array) &gt; 0)
 
-    # TODO: cleanup
-    def check_1d_array_is_no_longer_than(self, length):
-        if len(self.some_object) &gt; length:
-            raise ValueError(f&#39;{self.array_name} must be no longer than {length} elements long&#39;)
+    def determine_if_array_is_non_negative(self) -&gt; bool:
+        &#34;&#34;&#34;Determine if the array contains only non-negative values.
 
-    # TODO: cleanup
-    def check_1d_array_is_at_least(self, length):
-        if len(self.some_object) &lt; length:
-            raise ValueError(f&#39;{self.array_name} must be at least {length} elements long&#39;)</code></pre>
+        Returns
+        -------
+        bool
+            True if the contents are all non-negative; False otherwise.
+
+        &#34;&#34;&#34;
+        return np.all(self.__array &gt;= 0)
+
+    def determine_if_array_is_numeric(self) -&gt; bool:
+        &#34;&#34;&#34;Determine if the array contains numeric values.
+
+        Returns
+        -------
+        bool
+            True if contents are numeric; False otherwise.
+
+        &#34;&#34;&#34;
+        return np.issubdtype(self.__array.dtype, np.number)
+
+    def determine_if_array_is_positive(self) -&gt; bool:
+        &#34;&#34;&#34;Determine if the array contains only positive values.
+
+        Returns
+        -------
+        bool
+            True if the contents are all positive; False otherwise.
+
+        &#34;&#34;&#34;
+        return np.all(self.__array &gt; 0)
+
+    def determine_if_array_is_positive_finite(self) -&gt; bool:
+        &#34;&#34;&#34;Determine if the array contains only positive, finite values.
+
+        Returns
+        -------
+        bool
+            True if the contents are all positive finite; False otherwise.
+
+        &#34;&#34;&#34;
+        return self.determine_if_array_is_positive() and \
+            self.determine_if_array_is_finite()
+
+    def determine_if_array_matches_dimensionality(self, dimension) -&gt; bool:
+        &#34;&#34;&#34;Determine if the array matches an input number of dimensions.
+
+        Returns
+        -------
+        bool
+            True if the array has the input number of dimensions; False
+            otherwise.
+
+        &#34;&#34;&#34;
+        return np.ndim(self.__array) == dimension</code></pre>
 </details>
 <h3>Methods</h3>
 <dl>
-<dt id="pyRT_DISORT.utilities.array_checks.ArrayChecker.check_1d_array_is_at_least"><code class="name flex">
-<span>def <span class="ident">check_1d_array_is_at_least</span></span>(<span>self, length)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def check_1d_array_is_at_least(self, length):
-    if len(self.some_object) &lt; length:
-        raise ValueError(f&#39;{self.array_name} must be at least {length} elements long&#39;)</code></pre>
-</details>
-</dd>
-<dt id="pyRT_DISORT.utilities.array_checks.ArrayChecker.check_1d_array_is_no_longer_than"><code class="name flex">
-<span>def <span class="ident">check_1d_array_is_no_longer_than</span></span>(<span>self, length)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def check_1d_array_is_no_longer_than(self, length):
-    if len(self.some_object) &gt; length:
-        raise ValueError(f&#39;{self.array_name} must be no longer than {length} elements long&#39;)</code></pre>
-</details>
-</dd>
 <dt id="pyRT_DISORT.utilities.array_checks.ArrayChecker.determine_if_array_contains_only_ints"><code class="name flex">
-<span>def <span class="ident">determine_if_array_contains_only_ints</span></span>(<span>self)</span>
+<span>def <span class="ident">determine_if_array_contains_only_ints</span></span>(<span>self) ‑> bool</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Determine if the array contains only integers.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>bool</code></dt>
+<dd>True if the contents are all integers; False otherwise.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def determine_if_array_contains_only_ints(self):
+<pre><code class="python">def determine_if_array_contains_only_ints(self) -&gt; bool:
+    &#34;&#34;&#34;Determine if the array contains only integers.
+
+    Returns
+    -------
+    bool
+        True if the contents are all integers; False otherwise.
+
+    &#34;&#34;&#34;
     return np.issubdtype(self.__array.dtype, np.int)</code></pre>
 </details>
 </dd>
 <dt id="pyRT_DISORT.utilities.array_checks.ArrayChecker.determine_if_array_is_1d"><code class="name flex">
-<span>def <span class="ident">determine_if_array_is_1d</span></span>(<span>self)</span>
+<span>def <span class="ident">determine_if_array_is_1d</span></span>(<span>self) ‑> bool</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Determine if the array is 1D.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>bool</code></dt>
+<dd>True if the array is 1D; False otherwise.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def determine_if_array_is_1d(self):
+<pre><code class="python">def determine_if_array_is_1d(self) -&gt; bool:
+    &#34;&#34;&#34;Determine if the array is 1D.
+
+    Returns
+    -------
+    bool
+        True if the array is 1D; False otherwise.
+
+    &#34;&#34;&#34;
     return self.determine_if_array_matches_dimensionality(1)</code></pre>
 </details>
 </dd>
 <dt id="pyRT_DISORT.utilities.array_checks.ArrayChecker.determine_if_array_is_2d"><code class="name flex">
-<span>def <span class="ident">determine_if_array_is_2d</span></span>(<span>self)</span>
+<span>def <span class="ident">determine_if_array_is_2d</span></span>(<span>self) ‑> bool</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Determine if the array is 2D.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>bool</code></dt>
+<dd>True if the array is 2D; False otherwise.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def determine_if_array_is_2d(self):
+<pre><code class="python">def determine_if_array_is_2d(self) -&gt; bool:
+    &#34;&#34;&#34;Determine if the array is 2D.
+
+    Returns
+    -------
+    bool
+        True if the array is 2D; False otherwise.
+
+    &#34;&#34;&#34;
     return self.determine_if_array_matches_dimensionality(2)</code></pre>
 </details>
 </dd>
 <dt id="pyRT_DISORT.utilities.array_checks.ArrayChecker.determine_if_array_is_finite"><code class="name flex">
-<span>def <span class="ident">determine_if_array_is_finite</span></span>(<span>self)</span>
+<span>def <span class="ident">determine_if_array_is_finite</span></span>(<span>self) ‑> bool</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Determine if the array contains only finite values.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>bool</code></dt>
+<dd>True if the contents are all finite; False otherwise.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def determine_if_array_is_finite(self):
+<pre><code class="python">def determine_if_array_is_finite(self) -&gt; bool:
+    &#34;&#34;&#34;Determine if the array contains only finite values.
+
+    Returns
+    -------
+    bool
+        True if the contents are all finite; False otherwise.
+
+    &#34;&#34;&#34;
     return np.all(np.isfinite(self.__array))</code></pre>
 </details>
 </dd>
 <dt id="pyRT_DISORT.utilities.array_checks.ArrayChecker.determine_if_array_is_in_range"><code class="name flex">
-<span>def <span class="ident">determine_if_array_is_in_range</span></span>(<span>self, low, high)</span>
+<span>def <span class="ident">determine_if_array_is_in_range</span></span>(<span>self, low, high) ‑> bool</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Determine if the array contains only values within a range.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>bool</code></dt>
+<dd>True if the contents are all within the input range; False
+otherwise.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def determine_if_array_is_in_range(self, low, high):
-    more_than_low = np.all(self.__array &gt;= low)
-    less_than_high = np.all(self.__array &lt;= high)
-    return more_than_low and less_than_high</code></pre>
+<pre><code class="python">def determine_if_array_is_in_range(self, low, high) -&gt; bool:
+    &#34;&#34;&#34;Determine if the array contains only values within a range.
+
+    Returns
+    -------
+    bool
+        True if the contents are all within the input range; False
+        otherwise.
+
+    &#34;&#34;&#34;
+    return np.all(self.__array &gt;= low) and np.all(self.__array &lt;= high)</code></pre>
 </details>
 </dd>
 <dt id="pyRT_DISORT.utilities.array_checks.ArrayChecker.determine_if_array_is_monotonically_decreasing"><code class="name flex">
-<span>def <span class="ident">determine_if_array_is_monotonically_decreasing</span></span>(<span>self)</span>
+<span>def <span class="ident">determine_if_array_is_monotonically_decreasing</span></span>(<span>self) ‑> bool</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Determine if the array is monotonically decreasing.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>bool</code></dt>
+<dd>True if the array is monotonically decreasing; False otherwise.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def determine_if_array_is_monotonically_decreasing(self):
+<pre><code class="python">def determine_if_array_is_monotonically_decreasing(self) -&gt; bool:
+    &#34;&#34;&#34;Determine if the array is monotonically decreasing.
+
+    Returns
+    -------
+    bool
+        True if the array is monotonically decreasing; False otherwise.
+
+    &#34;&#34;&#34;
     return np.all(np.diff(self.__array) &lt; 0)</code></pre>
 </details>
 </dd>
 <dt id="pyRT_DISORT.utilities.array_checks.ArrayChecker.determine_if_array_is_monotonically_increasing"><code class="name flex">
-<span>def <span class="ident">determine_if_array_is_monotonically_increasing</span></span>(<span>self)</span>
+<span>def <span class="ident">determine_if_array_is_monotonically_increasing</span></span>(<span>self) ‑> bool</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Determine if the array is monotonically increasing.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>bool</code></dt>
+<dd>True if the array is monotonically increasing; False otherwise.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def determine_if_array_is_monotonically_increasing(self):
+<pre><code class="python">def determine_if_array_is_monotonically_increasing(self) -&gt; bool:
+    &#34;&#34;&#34;Determine if the array is monotonically increasing.
+
+    Returns
+    -------
+    bool
+        True if the array is monotonically increasing; False otherwise.
+
+    &#34;&#34;&#34;
     return np.all(np.diff(self.__array) &gt; 0)</code></pre>
 </details>
 </dd>
 <dt id="pyRT_DISORT.utilities.array_checks.ArrayChecker.determine_if_array_is_non_negative"><code class="name flex">
-<span>def <span class="ident">determine_if_array_is_non_negative</span></span>(<span>self)</span>
+<span>def <span class="ident">determine_if_array_is_non_negative</span></span>(<span>self) ‑> bool</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Determine if the array contains only non-negative values.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>bool</code></dt>
+<dd>True if the contents are all non-negative; False otherwise.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def determine_if_array_is_non_negative(self):
+<pre><code class="python">def determine_if_array_is_non_negative(self) -&gt; bool:
+    &#34;&#34;&#34;Determine if the array contains only non-negative values.
+
+    Returns
+    -------
+    bool
+        True if the contents are all non-negative; False otherwise.
+
+    &#34;&#34;&#34;
     return np.all(self.__array &gt;= 0)</code></pre>
 </details>
 </dd>
 <dt id="pyRT_DISORT.utilities.array_checks.ArrayChecker.determine_if_array_is_numeric"><code class="name flex">
-<span>def <span class="ident">determine_if_array_is_numeric</span></span>(<span>self)</span>
+<span>def <span class="ident">determine_if_array_is_numeric</span></span>(<span>self) ‑> bool</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Determine if the array contains numeric values.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>bool</code></dt>
+<dd>True if contents are numeric; False otherwise.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def determine_if_array_is_numeric(self):
+<pre><code class="python">def determine_if_array_is_numeric(self) -&gt; bool:
+    &#34;&#34;&#34;Determine if the array contains numeric values.
+
+    Returns
+    -------
+    bool
+        True if contents are numeric; False otherwise.
+
+    &#34;&#34;&#34;
     return np.issubdtype(self.__array.dtype, np.number)</code></pre>
 </details>
 </dd>
 <dt id="pyRT_DISORT.utilities.array_checks.ArrayChecker.determine_if_array_is_positive"><code class="name flex">
-<span>def <span class="ident">determine_if_array_is_positive</span></span>(<span>self)</span>
+<span>def <span class="ident">determine_if_array_is_positive</span></span>(<span>self) ‑> bool</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Determine if the array contains only positive values.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>bool</code></dt>
+<dd>True if the contents are all positive; False otherwise.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def determine_if_array_is_positive(self):
+<pre><code class="python">def determine_if_array_is_positive(self) -&gt; bool:
+    &#34;&#34;&#34;Determine if the array contains only positive values.
+
+    Returns
+    -------
+    bool
+        True if the contents are all positive; False otherwise.
+
+    &#34;&#34;&#34;
     return np.all(self.__array &gt; 0)</code></pre>
 </details>
 </dd>
 <dt id="pyRT_DISORT.utilities.array_checks.ArrayChecker.determine_if_array_is_positive_finite"><code class="name flex">
-<span>def <span class="ident">determine_if_array_is_positive_finite</span></span>(<span>self)</span>
+<span>def <span class="ident">determine_if_array_is_positive_finite</span></span>(<span>self) ‑> bool</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Determine if the array contains only positive, finite values.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>bool</code></dt>
+<dd>True if the contents are all positive finite; False otherwise.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def determine_if_array_is_positive_finite(self):
+<pre><code class="python">def determine_if_array_is_positive_finite(self) -&gt; bool:
+    &#34;&#34;&#34;Determine if the array contains only positive, finite values.
+
+    Returns
+    -------
+    bool
+        True if the contents are all positive finite; False otherwise.
+
+    &#34;&#34;&#34;
     return self.determine_if_array_is_positive() and \
-           self.determine_if_array_is_finite()</code></pre>
+        self.determine_if_array_is_finite()</code></pre>
 </details>
 </dd>
 <dt id="pyRT_DISORT.utilities.array_checks.ArrayChecker.determine_if_array_matches_dimensionality"><code class="name flex">
-<span>def <span class="ident">determine_if_array_matches_dimensionality</span></span>(<span>self, dimension)</span>
+<span>def <span class="ident">determine_if_array_matches_dimensionality</span></span>(<span>self, dimension) ‑> bool</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Determine if the array matches an input number of dimensions.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>bool</code></dt>
+<dd>True if the array has the input number of dimensions; False
+otherwise.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def determine_if_array_matches_dimensionality(self, dimension):
+<pre><code class="python">def determine_if_array_matches_dimensionality(self, dimension) -&gt; bool:
+    &#34;&#34;&#34;Determine if the array matches an input number of dimensions.
+
+    Returns
+    -------
+    bool
+        True if the array has the input number of dimensions; False
+        otherwise.
+
+    &#34;&#34;&#34;
     return np.ndim(self.__array) == dimension</code></pre>
 </details>
 </dd>
@@ -398,8 +743,6 @@ throughout pyRT_DISORT to determine if the array fits some criteria.</p></div>
 <li>
 <h4><code><a title="pyRT_DISORT.utilities.array_checks.ArrayChecker" href="#pyRT_DISORT.utilities.array_checks.ArrayChecker">ArrayChecker</a></code></h4>
 <ul class="">
-<li><code><a title="pyRT_DISORT.utilities.array_checks.ArrayChecker.check_1d_array_is_at_least" href="#pyRT_DISORT.utilities.array_checks.ArrayChecker.check_1d_array_is_at_least">check_1d_array_is_at_least</a></code></li>
-<li><code><a title="pyRT_DISORT.utilities.array_checks.ArrayChecker.check_1d_array_is_no_longer_than" href="#pyRT_DISORT.utilities.array_checks.ArrayChecker.check_1d_array_is_no_longer_than">check_1d_array_is_no_longer_than</a></code></li>
 <li><code><a title="pyRT_DISORT.utilities.array_checks.ArrayChecker.determine_if_array_contains_only_ints" href="#pyRT_DISORT.utilities.array_checks.ArrayChecker.determine_if_array_contains_only_ints">determine_if_array_contains_only_ints</a></code></li>
 <li><code><a title="pyRT_DISORT.utilities.array_checks.ArrayChecker.determine_if_array_is_1d" href="#pyRT_DISORT.utilities.array_checks.ArrayChecker.determine_if_array_is_1d">determine_if_array_is_1d</a></code></li>
 <li><code><a title="pyRT_DISORT.utilities.array_checks.ArrayChecker.determine_if_array_is_2d" href="#pyRT_DISORT.utilities.array_checks.ArrayChecker.determine_if_array_is_2d">determine_if_array_is_2d</a></code></li>
