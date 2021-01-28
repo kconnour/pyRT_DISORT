@@ -5,7 +5,7 @@ import os
 import pdoc
 
 # Local imports
-from pyRT_DISORT.path import get_project_path
+from pyRT_DISORT.utilities.path import get_project_path
 
 # TODO: this fails if I run it from command line
 # TODO: can I remove list of one item (self.module)?

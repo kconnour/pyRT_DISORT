@@ -3,11 +3,11 @@ import numpy as np
 from scipy.interpolate import interp2d
 
 # Local imports
-from pyRT_DISORT.model_atmosphere.aerosol import ForwardScatteringPropertyCollection
-from pyRT_DISORT.model_atmosphere.atmosphere_grid import ModelGrid
-from pyRT_DISORT.model_atmosphere.phase_function import LegendreCoefficients, HenyeyGreenstein, \
+from old.model_atmosphere import ForwardScatteringPropertyCollection
+from old.model_atmosphere import ModelGrid
+from old.model_atmosphere import LegendreCoefficients, HenyeyGreenstein, \
     TabularLegendreCoefficients
-from pyRT_DISORT.utilities.array_checks import ArrayChecker
+from old.utilities import ArrayChecker
 
 
 class Column:

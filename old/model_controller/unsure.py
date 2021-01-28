@@ -2,7 +2,7 @@
 import numpy as np
 
 # Local imports
-from pyRT_DISORT.model_controller.size import Size
+from old.model_controller import Size
 
 
 class Unsure:

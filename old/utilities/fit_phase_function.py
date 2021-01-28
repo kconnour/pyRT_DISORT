@@ -3,7 +3,7 @@ import numpy as np
 from scipy import integrate, interpolate
 
 # Local imports
-from pyRT_DISORT.utilities.array_checks import ArrayChecker
+from old.utilities import ArrayChecker
 
 
 class PhaseFunction:

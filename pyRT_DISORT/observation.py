@@ -1,8 +1,8 @@
 """observation.py contains data structures to hold quantities commonly found in
 an observation.
 """
+from warnings import warn
 import numpy as np
-from pylint import epylint as lint
 from pyRT_DISORT.utilities.array_checks import ArrayChecker
 
 
@@ -11,7 +11,7 @@ from pyRT_DISORT.utilities.array_checks import ArrayChecker
 # TODO: I don't think all possible combos of angles are mathematically possible.
 #  If so, raise a warning.
 class Angles:
-    """Angles is a data structure to contain all angles required by DISORT.
+    """Angles is a data structure that contains angles required by DISORT.
 
     Angles accepts ``observation'' angles and computes mu, mu0, phi, and phi0
     from these angles.
@@ -74,7 +74,7 @@ class Angles:
         try:
             checks = self.__make_angle_checks(angle, low, high)
         except TypeError:
-            raise TypeError(f'{name} is not a np.ndarray.')
+            raise TypeError(f'{name} is not a np.ndarray.') from None
         if not all(checks):
             raise ValueError(
                 f'{name} must be a 1D array in range [{low}, {high}]')
@@ -207,118 +207,167 @@ class Angles:
         return self.__phi0
 
 
-'''class Wavelengths:
+class Wavelengths:
+    """Wavelengths is a data structure that contains spectral info for DISORT.
+
+    Wavelengths accepts ``observation'' wavelengths and computes their
+    corresponding wavenumbers.
+
+    """
+
     def __init__(self, short_wavelengths: np.ndarray,
                  long_wavelengths: np.ndarray) -> None:
-        """ A Wavelengths data structure holds the input wavelengths and their
-        corresponding wavenumbers.
-
+        """
         Parameters
         ----------
         short_wavelengths: np.ndarray
             The short wavelengths [microns] for each spectral bin.
         long_wavelengths: np.ndarray
             The long wavelengths [microns] for each spectral bin.
+
+        Raises
+        ------
+        IndexError
+            Raised if the input wavelengths are not the same shape.
+        TypeError
+            Raised if any of the inputs are not np.ndarrays.
+        ValueError
+            Raised if any of the inputs are not 1D arrays, any of the arrays
+            contain non positive finite values, or if any value in
+            long_wavelengths is not larger than the corresponding value in
+            short_wavelengths.
+
+        Warnings
+        --------
+        UserWarning
+            Raised if any of the input wavelengths are outside the range 0.1 to
+            50 microns
+
         """
         self.__short_wavelengths = short_wavelengths
         self.__long_wavelengths = long_wavelengths
 
-        self.__check_wavelengths_are_physical()
+        self.__raise_error_if_input_wavelengths_are_bad()
+        self.__warn_if_wavelengths_are_outside_expected_range()
 
-    def __check_wavelengths_are_physical(self) -> None:
-        self.__check_short_wavelengths_are_physical()
-        self.__check_long_wavelengths_are_physical()
-        self.__check_wavelengths_are_same_shape()
-        self.__check_long_wavelength_is_larger()
+        self.__high_wavenumber = self.__calculate_high_wavenumber()
+        self.__low_wavenumber = self.__calculate_low_wavenumber()
 
-    def __check_short_wavelengths_are_physical(self) -> None:
-        short_wav_checker = ArrayChecker(self.__short_wavelengths,
-                                         'short_wavelengths')
-        short_wav_checker.check_object_is_array()
-        short_wav_checker.check_ndarray_is_numeric()
-        short_wav_checker.check_ndarray_is_positive_finite()
-        short_wav_checker.check_ndarray_is_1d()
+    def __raise_error_if_input_wavelengths_are_bad(self) -> None:
+        self.__raise_error_if_short_wavelengths_are_bad()
+        self.__raise_error_if_long_wavelengths_are_bad()
+        self.__raise_index_error_if_wavelengths_are_not_same_shape()
+        self.__raise_value_error_if_long_wavelength_is_not_larger()
 
-    def __check_long_wavelengths_are_physical(self) -> None:
-        long_wav_checker = ArrayChecker(self.__long_wavelengths,
-                                        'long_wavelengths')
-        long_wav_checker.check_object_is_array()
-        long_wav_checker.check_ndarray_is_numeric()
-        long_wav_checker.check_ndarray_is_positive_finite()
-        long_wav_checker.check_ndarray_is_1d()
+    def __raise_error_if_short_wavelengths_are_bad(self) -> None:
+        self.__raise_error_if_wavelengths_are_bad(
+            self.__short_wavelengths, 'short_wavelengths')
 
-    def __check_wavelengths_are_same_shape(self) -> None:
+    def __raise_error_if_long_wavelengths_are_bad(self) -> None:
+        self.__raise_error_if_wavelengths_are_bad(
+            self.__long_wavelengths, 'long_wavelengths')
+
+    def __raise_error_if_wavelengths_are_bad(self, wavelengths, name) -> None:
+        try:
+            checks = self.__perform_wavelength_checks(wavelengths)
+        except TypeError:
+            raise TypeError(f'{name} must be a np.ndarray.') from None
+        if not all(checks):
+            raise ValueError(f'{name} must be a 1D array of positive, finite '
+                             f'values.')
+
+    @staticmethod
+    def __perform_wavelength_checks(wavelengths) -> list[bool]:
+        wavelength_checker = ArrayChecker(wavelengths)
+        checks = [wavelength_checker.determine_if_array_is_numeric(),
+                  wavelength_checker.determine_if_array_is_positive_finite(),
+                  wavelength_checker.determine_if_array_is_1d()]
+        return checks
+
+    def __raise_index_error_if_wavelengths_are_not_same_shape(self) -> None:
         if self.__short_wavelengths.shape != self.__long_wavelengths.shape:
             raise ValueError('short_wavelengths and long_wavelengths must '
                              'have the same shape.')
 
-    def __check_long_wavelength_is_larger(self) -> None:
-        if not np.all(self.long_wavelengths > self.short_wavelengths):
+    def __raise_value_error_if_long_wavelength_is_not_larger(self) -> None:
+        if not np.all(self.__long_wavelengths > self.__short_wavelengths):
             raise ValueError('long_wavelengths must always be larger than '
                              'the corresponding short_wavelengths.')
 
+    def __warn_if_wavelengths_are_outside_expected_range(self) -> None:
+        if np.any(self.__short_wavelengths < 0.1) or np.any(
+                self.__long_wavelengths > 50):
+            warn('The input wavelengths are outside the expected range of 0.1 '
+                 'to 50 microns.')
+
+    def __calculate_high_wavenumber(self) -> np.ndarray:
+        return self.__convert_wavelength_to_wavenumber(
+            self.__short_wavelengths, 'short_wavelengths')
+
+    def __calculate_low_wavenumber(self) -> np.ndarray:
+        return self.__convert_wavelength_to_wavenumber(
+            self.__long_wavelengths, 'long_wavelengths')
+
+    @staticmethod
+    def __convert_wavelength_to_wavenumber(wavelength: np.ndarray,
+                                           wavelength_name: str) -> np.ndarray:
+        with np.errstate(divide='raise'):
+            try:
+                return 1 / (wavelength * 10 ** -4)
+            except FloatingPointError:
+                raise ValueError(f'At least one value in {wavelength_name} '
+                                 f'is too small to perform calculations!')
+
     @property
     def high_wavenumber(self) -> np.ndarray:
-        """ Calculate the wavenumbers corresponding to short_wavelength [1 /cm].
+        """Get the high wavenumbers [1/cm]---the wavenumbers associated with
+        short_wavelength
 
         Returns
         -------
-        high_wavenumber: np.ndarray
-            The low wavenumbers.
+        np.ndarray
+            The high wavenumbers.
+
         """
-        return self.__make_wavenumber_from_wavelength(
-            self.__short_wavelengths, 'short_wavelengths')
+        return self.__high_wavenumber
 
     @property
     def long_wavelengths(self) -> np.ndarray:
-        """ Get the long wavelengths [microns].
+        """Get the input long wavelengths [microns].
 
         Returns
         -------
-        long_wavelengths: np.ndarray
+        np.ndarray
             The long wavelengths.
+
         """
         return self.__long_wavelengths
 
     @property
     def low_wavenumber(self) -> np.ndarray:
-        """ Calculate the wavenumbers corresponding to long_wavelength [1 /cm].
+        """Get the low wavenumbers [1/cm]---the wavenumbers associated with
+        long_wavelength
 
         Returns
         -------
-        low_wavenumber: np.ndarray
+        np.ndarray
             The low wavenumbers.
+
         """
-        return self.__make_wavenumber_from_wavelength(
-            self.__long_wavelengths, 'long_wavelengths')
+        return self.__low_wavenumber
 
     @property
     def short_wavelengths(self) -> np.ndarray:
-        """ Get the short wavelengths [microns].
+        """ Get the input short wavelengths [microns].
 
         Returns
         -------
-        short_wavelengths: np.ndarray
+        np.ndarray
             The short wavelengths.
+
         """
         return self.__short_wavelengths
 
-    def __make_wavenumber_from_wavelength(self, wavelength: np.ndarray,
-                                          wavelength_name: str):
-        with np.errstate(divide='raise'):
-            try:
-                self.__convert_wavelengths_to_wavenumber(wavelength)
-            except FloatingPointError:
-                raise ValueError(f'At least one value in {wavelength_name} '
-                                 f'is too small to perform calculations!')
 
-    @staticmethod
-    def __convert_wavelengths_to_wavenumber(wavelength: np.ndarray) \
-            -> np.ndarray:
-        return 1 / (wavelength * 10 ** -4)
-
-    # TODO: warn if not in 100 nm -- 50 microns'''
-
-
-if __name__ == '__main__':
-    lint.py_run('observation.py')
+#if __name__ == '__main__':
+#    lint.py_run('observation.py')
