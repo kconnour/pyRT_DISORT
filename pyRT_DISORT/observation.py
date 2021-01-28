@@ -286,7 +286,7 @@ class Wavelengths:
 
     def __raise_index_error_if_wavelengths_are_not_same_shape(self) -> None:
         if self.__short_wavelengths.shape != self.__long_wavelengths.shape:
-            raise ValueError('short_wavelengths and long_wavelengths must '
+            raise IndexError('short_wavelengths and long_wavelengths must '
                              'have the same shape.')
 
     def __raise_value_error_if_long_wavelength_is_not_larger(self) -> None:
@@ -316,12 +316,13 @@ class Wavelengths:
                 return 1 / (wavelength * 10 ** -4)
             except FloatingPointError:
                 raise ValueError(f'At least one value in {wavelength_name} '
-                                 f'is too small to perform calculations!')
+                                 f'is too small to perform calculations!') \
+                    from None
 
     @property
     def high_wavenumber(self) -> np.ndarray:
         """Get the high wavenumbers [1/cm]---the wavenumbers associated with
-        short_wavelength
+        short_wavelength.
 
         Returns
         -------
@@ -346,7 +347,7 @@ class Wavelengths:
     @property
     def low_wavenumber(self) -> np.ndarray:
         """Get the low wavenumbers [1/cm]---the wavenumbers associated with
-        long_wavelength
+        long_wavelength.
 
         Returns
         -------
@@ -367,7 +368,3 @@ class Wavelengths:
 
         """
         return self.__short_wavelengths
-
-
-#if __name__ == '__main__':
-#    lint.py_run('observation.py')
