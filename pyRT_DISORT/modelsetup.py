@@ -1,4 +1,4 @@
-"""modsetup.py contains data structures for creating DISORT inputs not related
+"""modelsetup.py contains data structures for creating DISORT inputs not related
 to atmospheric radiative properties.
 """
 from warnings import warn
@@ -15,8 +15,8 @@ class Control:
     """
     def __init__(self, accuracy: float = 0.0, delta_m_plus: bool = False,
                  do_pseudo_sphere: bool = False, header: str = '',
-                 only_fluxes: bool = False, print_variables=None,
-                 radius: float = 6371., user_angles: bool = True,
+                 only_fluxes: bool = False, print_variables: list[bool] = None,
+                 radius: float = 6371.0, user_angles: bool = True,
                  user_optical_depths: bool = False) -> None:
         """
         Parameters
@@ -32,10 +32,17 @@ class Control:
             Specify what characters appear in the DISORT banner. Default is ''.
         only_fluxes: bool, optional
             Denote whether to include only fluxes. Default is False.
-        print_variables
-        radius
-        user_angles
-        user_optical_depths
+        print_variables: list[bool], optional
+            Denote which quantities to print. Default is None, which sets all
+            values to False.
+        radius: float, optional
+            The planetary radius. Default is 6371.0.
+        user_angles: bool, optional
+            Denote whether radiant quantities are returned at user-specified
+            polar angles. Default is True.
+        user_optical_depths: bool, optional
+            Denote whether radiate quantities are returned at user-specified
+            optical depths. Default is False.
 
         Raises
         ------
@@ -50,9 +57,6 @@ class Control:
             Raised if accuracy is not between 0 and 0.01.
 
         """
-
-        if print_variables is None:
-            print_variables = [False, False, False, False, False]
         self.__accuracy = accuracy
         self.__delta_m_plus = delta_m_plus
         self.__do_pseudo_sphere = do_pseudo_sphere
@@ -73,13 +77,16 @@ class Control:
         self.__raise_type_error_if_header_is_not_str()
         self.__raise_value_error_if_header_is_too_long()
         self.__raise_type_error_if_only_fluxes_is_not_bool()
+        self.__raise_type_error_if_print_variables_is_not_list_of_bool()
+        self.__raise_type_error_if_radius_is_not_float()
+        self.__raise_type_error_if_user_angles_is_not_bool()
+        self.__raise_type_error_if_user_optical_depths_is_not_bool()
 
     def __warn_if_inputs_are_bad(self) -> None:
         self.__warn_if_accuracy_is_outside_expected_range()
 
     def __raise_type_error_if_accuracy_is_not_float(self) -> None:
-        if not isinstance(self.__accuracy, float):
-            raise TypeError('accuracy must be a float.')
+        self.__raise_type_error_if_not_float(self.__accuracy, 'accuracy')
 
     def __raise_type_error_if_delta_m_plus_is_not_bool(self) -> None:
         self.__raise_type_error_if_not_bool(self.__delta_m_plus, 'delta_m_plus')
@@ -92,19 +99,45 @@ class Control:
         if not isinstance(self.__header, str):
             raise TypeError('header must be a str.')
 
-    def __raise_value_error_if_header_is_too_long(self):
+    def __raise_value_error_if_header_is_too_long(self) -> None:
         if len(self.__header) > 127:
             raise ValueError('header must be 127 characters or less.')
 
-    def __raise_type_error_if_only_fluxes_is_not_bool(self):
+    def __raise_type_error_if_only_fluxes_is_not_bool(self) -> None:
         self.__raise_type_error_if_not_bool(self.__only_fluxes, 'only_fluxes')
+
+    # TODO: this does more than one thing..
+    def __raise_type_error_if_print_variables_is_not_list_of_bool(self) -> None:
+        if self.__print_variables is None:
+            self.__print_variables = [False, False, False, False, False]
+        if not isinstance(self.__print_variables, list):
+            raise TypeError('print_variables must be a list of booleans.')
+        if not all([isinstance(f, bool) for f in self.__print_variables]):
+            raise ValueError('print_variables must only contain bools.')
+        if len(self.__print_variables) != 5:
+            raise ValueError('print_variables must only contain 5 bools.')
+
+    def __raise_type_error_if_radius_is_not_float(self) -> None:
+        self.__raise_type_error_if_not_float(self.__radius, 'radius')
+
+    def __raise_type_error_if_user_angles_is_not_bool(self) -> None:
+        self.__raise_type_error_if_not_bool(self.__user_angles, 'user_angles')
+
+    def __raise_type_error_if_user_optical_depths_is_not_bool(self) -> None:
+        self.__raise_type_error_if_not_bool(
+            self.__user_optical_depths, 'user_optical_depths')
+
+    @staticmethod
+    def __raise_type_error_if_not_float(inp: float, name: str) -> None:
+        if not isinstance(inp, float):
+            raise TypeError(f'{name} must be a float.')
 
     @staticmethod
     def __raise_type_error_if_not_bool(inp: bool, name: str) -> None:
         if not isinstance(inp, bool):
             raise TypeError(f'{name} must be a boolean.')
 
-    def __warn_if_accuracy_is_outside_expected_range(self):
+    def __warn_if_accuracy_is_outside_expected_range(self) -> None:
         if not 0 <= self.__accuracy <= 0.01:
             warn('accuracy is expected to be in range [0, 0.01].')
 
@@ -204,14 +237,101 @@ class Control:
 
         Notes
         -----
-        From the documentation: If True, return fluxes, flux divergences, and
+        In DISORT, this variable is named "ONLYFL". From the documentation: If
+        True, return fluxes, flux divergences, and
         mean intensities; if False, return all those and intensities. In
         addition, if True the number of polar angles can be 0, the number of
         azimuthal angles can be 0, phi is not used, and all values of
         intensity (UU) will be set to 0.
-        
+
         """
         return self.__only_fluxes
+
+    @property
+    def print_variables(self) -> list[bool]:
+        """Get the variables to print.
+
+        Returns
+        -------
+        list[bool]
+            The variables to print
+
+        Notes
+        -----
+        In DISORT, this variable is named "PRNT". From the documentation, the 5
+        booleans control whether each of the following is printed:
+
+        1. Input variables (except PMOM)
+        2. Fluxes
+        3. Intensities at user levels and angles
+        4. Planar transmissivity and planar albedo as a function of solar zenith
+        angle (IBCND = 1)
+        5. PMOM for each layer (but only if 1. == True and only for layers with
+        scattering)
+        """
+        return self.__print_variables
+
+    @property
+    def radius(self) -> float:
+        """Get the planetary radius.
+
+        Returns
+        -------
+        float
+            The planetary radius.
+
+        Notes
+        -----
+        In DISORT, this variable is named "EARTH_RADIUS". However, as far as I
+        can tell, it can take any value. There is no documentation on it.
+
+        """
+        return self.__radius
+
+    @property
+    def user_angles(self) -> bool:
+        """Get whether radiant quantities should be returned at user angles.
+
+        Returns
+        -------
+        bool
+            True if quantities are returned at user-specified angles; False if
+            they are returned at computational polar angles.
+
+        Notes
+        -----
+        In DISORT, this variable is named "USRANG". From the documentation: If
+        False, radiant quantities are to be returned at computational polar
+        angles. Also, UMU will return the cosines of the computational polar
+        angles and NUMU will return their number ( = NSTR). UMU must be large
+        enough to contain NSTR elements (cf. MAXUMU). If True, radiant
+        quantities are to be returned at user-specified polar angles, as
+        follows: NUMU No. of polar angles ( zero is a legal value only when
+        ONLYFL = TRUE ) UMU(IU) IU=1 to NUMU, cosines of output polar
+        angles in increasing order -- starting with negative (downward) values
+        (if any) and on through positive (upward) values; *** MUST NOT HAVE ANY
+        ZERO VALUES ***
+
+        """
+        return self.__user_angles
+
+    @property
+    def user_optical_depths(self) -> bool:
+        """Get whether radiant quantities should be returned at user optical
+        depths.
+
+        Returns
+        -------
+        bool
+            True if quantities are returned at user optical depths; False if
+            they are returned at the boundary of every computational layer.
+
+        Notes
+        -----
+        In DISORT, this variable is named "USRTAU".
+
+        """
+        return self.__user_optical_depths
 
 
 class Output:
