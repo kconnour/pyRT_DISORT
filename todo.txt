@@ -1,6 +1,23 @@
 To-dos:
+- modelsetup.Control
+--- Notes shouldn't say what everything does... that should be in the @property
+    docstring
+--- Unit tests
+
+- modelsetup.Output
+--- Add info from DISORT documentation to these docstrings
+--- Unit tests
+
+- modelsetup.Size
+--- Notes shouldn't say what everything does... that should be in the @property
+    docstring
+--- Unit tests
+
+- modelsetup.Unsure
+--- Get rid of this
+
 - observation.Angles
---- Latex docstinrgs
+--- Latex docstrings
 --- I don't think all possible combination of angles is mathematically possible.
 --- Some functions do more than one thing
 --- Is there a better way to make phi?
@@ -12,10 +29,26 @@ To-dos:
 - utilities (all)
 --- Docstrings + clean
 
+- EoS.py
+--- Add function to read in z, P, T, and n from a file and return a ModelEOS
 
+- Updates
+--- ModelGrid --> ModelEquationOfState + Gaussian quadrature (todo: I'll ask for a z grid to interpolate on to, but allow a P grid)
+--- ForwardScatteringProperty + FSPs need names fixed
+--- BoundaryConditions
+--- All the surface phase functions
+--- RayleighCO2
+--- VerticalProfiles
+--- Phase functions
+--- Aerosol columns
+--- ModelAtmosphere
 
+- Documentation
+--- I cannot have empty .py files for pdoc3 to work. But I don't want
+    __init__.py to have stuff in it
 
-
+- Miscellaneous
+--- Language: idk if an array can be positive---only contain positive values
 
 
 

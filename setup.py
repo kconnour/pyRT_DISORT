@@ -54,7 +54,8 @@ class SetupDISORT:
             install_requires=[
                 'astropy>=4.1',
                 'numpy>=1.19.1',
-                'pdoc3>=0.9.1'
+                'pdoc3>=0.9.1',
+                'scipy>=1.6.0'
             ],
             package_data={'': ['../*.so']}
         )
