@@ -242,6 +242,8 @@ class ModelEquationOfState:
 # TODO: This function does way more than one thing, so clean it up
 # TODO: Decide if I want to input a string or something else. An array would be
 #  maximally flexible but a string is most convenient.
+# TODO: Make one function that makes eos from an array. Then remake this
+#  function, where it just reads in an array from a string, then calls that func
 def eos_from_file(array_path: str, altitude_boundaries: np.ndarray) \
         -> ModelEquationOfState:
     """Create a ModelEquationOfState from a file containing atmospheric equation

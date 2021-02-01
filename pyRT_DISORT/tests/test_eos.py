@@ -6,7 +6,7 @@ from pyRT_DISORT.eos import ModelEquationOfState
 # TODO: use mars_atm.npy as a test case for all of these tests
 class TestModelEquationOfState(TestCase):
     def setUp(self) -> None:
-        self.eos = TestModelEquationOfState
+        self.eos = ModelEquationOfState
 
 
 class TestInit(TestModelEquationOfState):
