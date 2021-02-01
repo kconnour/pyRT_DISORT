@@ -36,9 +36,14 @@ To-dos:
 --- Mike said to do this in log(z) space. Is that still relevant?
 --- Fix some duplicate logic
 --- quad is giving me a type warning
+--- I ask for a z grid to interpolate on to, but allow a P grid
+
+- eos.eos_from_file
+--- This function does way more than one thing, so clean it up
+--- Decide if I want to input a string or something else. An array would be
+    maximally flexible but a string is most convenient.
 
 - Updates
---- ModelGrid --> ModelEquationOfState + Gaussian quadrature (todo: I'll ask for a z grid to interpolate on to, but allow a P grid)
 --- ForwardScatteringProperty + FSPs need names fixed
 --- BoundaryConditions
 --- All the surface phase functions
@@ -82,9 +87,6 @@ Additions:
 --- Rewrite the test cases using my classes
 --- Correlated k
 --- T-matrix
-
-Design thoughts:
---- Is there a better way besides telling the user the columns in an input file must be in a specified order?
 
 Tests:
 --- What happens when phase functions are defined at different wavelengths? Like dust and ice at short wavs

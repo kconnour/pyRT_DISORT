@@ -1,7 +1,7 @@
 """eos.py contains data structures to hold equation of state variables used
 throughout the model.
 """
-
+import warnings
 import numpy as np
 from scipy.constants import Boltzmann
 from pyRT_DISORT.utilities.array_checks import ArrayChecker
@@ -152,10 +152,13 @@ class ModelEquationOfState:
         return np.interp(self.__altitude_boundaries, self.__altitude_grid, grid)
 
     def __compute_column_density_layers(self) -> np.array:
-        return np.array([quad(self.__make_n_at_altitude,
-                              self.__altitude_boundaries[i + 1],
-                              self.__altitude_boundaries[i])[0]
-                         for i in range(self.__n_layers)])
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore")
+            colden = [quad(self.__make_n_at_altitude,
+                           self.__altitude_boundaries[i + 1],
+                           self.__altitude_boundaries[i])[0]
+                      for i in range(self.__n_layers)]
+            return np.array(colden)
 
     # TODO: This logic seems to duplicate functions above... try to fix
     def __make_n_at_altitude(self, z: float) -> float:
@@ -234,3 +237,67 @@ class ModelEquationOfState:
 
         """
         return self.__temperature_boundaries
+
+
+# TODO: This function does way more than one thing, so clean it up
+# TODO: Decide if I want to input a string or something else. An array would be
+#  maximally flexible but a string is most convenient.
+def eos_from_file(array_path: str, altitude_boundaries: np.ndarray) \
+        -> ModelEquationOfState:
+    """Create a ModelEquationOfState from a file containing atmospheric equation
+    of state variables. The array is assumed to be a 2D array, with the columns
+    having the following meanings:
+
+    0. The altitudes [km] at which the other equation of state variables are
+    defined.
+    1. The pressures [Pa] at the corresponding altitudes.
+    2. The temperatures [K] at the corresponding altitudes.
+    3. The number densities [particles / m**3] at the corresponding altitudes.
+
+    Parameters
+    ----------
+    array_path: str
+        Absolute path to the 2D array of atmospheric EoS variables.
+    altitude_boundaries: np.ndarray
+        The desired altitudes [km] of the model boundaries.
+
+    Returns
+    -------
+    ModelEquationOfState
+        The modeled equation of state object.
+
+    Raises
+    ------
+    FileNotFoundError
+        Raised if the input file path does not exist.
+    IndexError
+        Raised in the input array does not have the expected shape.
+    TypeError
+        Raised if the input array path is not a string.
+    ValueError
+        Raised if the input array path does not lead to a .npy file.
+
+    """
+    def read_file(file):
+        try:
+            return np.load(file)
+        except TypeError:
+            raise TypeError('array_path must be a str.') from None
+        except FileNotFoundError:
+            raise FileNotFoundError(f'No such file or directory: {file}.') \
+                from None
+        except ValueError:
+            raise ValueError('The file cannot be opened. This likely means the '
+                             'file is not a .npy file.')
+
+    input_atmosphere = read_file(array_path)
+    try:
+        return ModelEquationOfState(input_atmosphere[:, 0],
+                                    input_atmosphere[:, 1],
+                                    input_atmosphere[:, 2],
+                                    input_atmosphere[:, 3],
+                                    altitude_boundaries)
+    except IndexError:
+        raise IndexError('Too many indices for array. This probably means the '
+                         'input file is a 1D array instead of the expected 2D '
+                         'array.')

@@ -101,7 +101,7 @@ class TestColumnDensityLayers(TestModelEquationOfState):
         P = f[:, 1]
         T = f[:, 2]
         n = f[:, 3]
-        #alt = np.array([50, 30, 10])
+        alt = np.array([50, 30, 10])
         eos = ModelEquationOfState(z, P, T, n, z)
         answer = np.load('/home/kyle/repos/pyRT_DISORT/pyRT_DISORT/tests/colden.npy')
         self.assertTrue(np.array_equal(answer, eos.column_density_layers))
