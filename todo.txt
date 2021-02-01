@@ -1,6 +1,7 @@
 To-dos:
 - General
---- I think it's good practice to make files without _s
+--- Latex docstrings would improve readability in a number of areas
+--- Switch to whatever numpy used with Sphinx
 
 - modelsetup.Control
 --- Notes shouldn't say what everything does... that should be in the @property
@@ -20,20 +21,15 @@ To-dos:
 --- Get rid of this
 
 - observation.Angles
---- Latex docstrings
---- I don't think all possible combination of angles is mathematically possible.
+--- Add DISORT documentation to these docstrings
+--- I don't think all possible combination of angles is mathematically possible
 --- Some functions do more than one thing
 --- Is there a better way to make phi?
 
 - observation.Wavelengths
+--- Add DISORT documentation to these docstrings
 --- Do I want to require monotonically increasing wavelengths?
 --- Some functions do more than one thing
-
-- utilities (all)
---- Docstrings + clean
-
-- EoS.py
---- Add function to read in z, P, T, and n from a file and return a ModelEOS
 
 - eos.ModelEquationOfState
 --- Mike said to do this in log(z) space. Is that still relevant?
@@ -47,28 +43,31 @@ To-dos:
     maximally flexible but a string is most convenient.
 
 - Updates
---- ForwardScatteringProperty + FSPs need names fixed
---- BoundaryConditions
---- All the surface phase functions
---- RayleighCO2
---- VerticalProfiles
---- Phase functions
---- Aerosol columns
---- ModelAtmosphere
+--- surface.py
+--- rayleigh.py
+--- vertical_profiles.py
+--- aerosol.py
+--- phase_function.py
+--- aerosol_column.py
+--- model_atmosphere.py
+
+- utilities (all)
+--- Docstrings + clean
 
 - Documentation
 --- I cannot have empty .py files for pdoc3 to work. But I don't want
     __init__.py to have stuff in it
+--- Switch to Sphinx if possible
 
 - Miscellaneous
 --- Language: idk if an array can be positive---only contain positive values
+--- I'm not sure if my levels of abstraction for class checkers are good
 
 
 
-
-
-
-
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Old to-dos that I'm not ready to get rid of ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Fixes:
 --- Combine most recent dust files into a 3D .fits file
