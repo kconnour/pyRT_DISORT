@@ -10,10 +10,11 @@ from pyRT_DISORT.utilities.array_checks import ArrayChecker
 class ModelEquationOfState:
     """ModelEquationOfState computes EoS variables on a model grid.
 
-    ModelEquationOfState accepts altitudes, pressures, temperatures, and number
-    densities, along with the altitudes where the model will be defined. It
-    interpolates each of the EoS variables onto this grid and computes the
-    column density within each layer.
+    ModelEquationOfState accepts altitudes [km], pressures [Pa],
+    temperatures [K], and number densities [particles / m**3], along with the
+    altitudes where the model will be defined. It interpolates each of the EoS
+    variables onto this grid and computes the column density within each layer.
+    For this computation, quantities are assumed to be in SI units.
 
     """
     def __init__(self, altitude_grid: np.ndarray, pressure_grid: np.ndarray,
@@ -23,15 +24,16 @@ class ModelEquationOfState:
         Parameters
         ----------
         altitude_grid: np.ndarray
-            The altitudes at which the EoS variables are defined.
+            The altitudes [km] at which the EoS variables are defined.
         pressure_grid: np.ndarray
-            The pressures at the corresponding altitudes.
+            The pressures [Pa] at the corresponding altitudes.
         temperature_grid: np.ndarray
-            The temperatures at the corresponding altitudes.
+            The temperatures [K] at the corresponding altitudes.
         number_density_grid: np.ndarray
-            The number densities at the corresponding altitudes.
+            The number densities [particles / m**3] at the corresponding
+            altitudes.
         altitude_model: np.ndarray
-            The desired altitudes of the model boundaries.
+            The desired altitudes [km] of the model boundaries.
 
         Raises
         ------
@@ -50,6 +52,11 @@ class ModelEquationOfState:
         self.__altitude_model = altitude_model
 
         self.__raise_error_if_input_variables_are_bad()
+        self.__flip_grids_if_altitudes_are_mono_decreasing()
+
+        self.__pressure_model = self.__make_pressure_model()
+        self.__temperature_model = self.__make_temperature_model()
+        self.__number_density_model = self.__make_number_density_model()
 
     def __raise_error_if_input_variables_are_bad(self) -> None:
         self.__raise_error_if_altitude_grid_is_bad()
@@ -112,3 +119,26 @@ class ModelEquationOfState:
         if len(self.__altitude_model) < 2:
             raise ValueError('The model must contain at least 2 boundaries '
                              '(i.e. one layer).')
+
+    def __flip_grids_if_altitudes_are_mono_decreasing(self) -> None:
+        altitude_checker = ArrayChecker(self.__altitude_grid)
+        if altitude_checker.determine_if_array_is_monotonically_decreasing():
+            self.__altitude_grid = np.flip(self.__altitude_grid)
+            self.__pressure_grid = np.flip(self.__pressure_grid)
+            self.__temperature_grid = np.flip(self.__temperature_grid)
+            self.__number_density_grid = np.flip(self.__number_density_grid)
+
+    def __make_pressure_model(self):
+        return self.__interpolate_variable_to_model_altitudes(
+            self.__pressure_grid)
+
+    def __make_temperature_model(self):
+        return self.__interpolate_variable_to_model_altitudes(
+            self.__temperature_grid)
+
+    def __make_number_density_model(self):
+        return self.__interpolate_variable_to_model_altitudes(
+            self.__number_density_grid)
+
+    def __interpolate_variable_to_model_altitudes(self, grid):
+        return np.interp(self.__altitude_model, self.__altitude_grid, grid)
