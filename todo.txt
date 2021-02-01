@@ -32,6 +32,11 @@ To-dos:
 - EoS.py
 --- Add function to read in z, P, T, and n from a file and return a ModelEOS
 
+- eos.ModelEquationOfState
+--- Mike said to do this in log(z) space. Is that still relevant?
+--- Fix some duplicate logic
+--- quad is giving me a type warning
+
 - Updates
 --- ModelGrid --> ModelEquationOfState + Gaussian quadrature (todo: I'll ask for a z grid to interpolate on to, but allow a P grid)
 --- ForwardScatteringProperty + FSPs need names fixed

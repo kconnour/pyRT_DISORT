@@ -48,7 +48,7 @@ class Control:
     def __init__(self, accuracy: float = 0.0, delta_m_plus: bool = False,
                  do_pseudo_sphere: bool = False, header: str = &#39;&#39;,
                  only_fluxes: bool = False, print_variables: list[bool] = None,
-                 radius: float = 6371., user_angles: bool = True,
+                 radius: float = 6371.0, user_angles: bool = True,
                  user_optical_depths: bool = False) -&gt; None:
         &#34;&#34;&#34;
         Parameters
@@ -68,7 +68,7 @@ class Control:
             Denote which quantities to print. Default is None, which sets all
             values to False.
         radius: float, optional
-            The planetary radius. Default is 6371.
+            The planetary radius. Default is 6371.0.
         user_angles: bool, optional
             Denote whether radiant quantities are returned at user-specified
             polar angles. Default is True.
@@ -138,6 +138,7 @@ class Control:
     def __raise_type_error_if_only_fluxes_is_not_bool(self) -&gt; None:
         self.__raise_type_error_if_not_bool(self.__only_fluxes, &#39;only_fluxes&#39;)
 
+    # TODO: this does more than one thing..
     def __raise_type_error_if_print_variables_is_not_list_of_bool(self) -&gt; None:
         if self.__print_variables is None:
             self.__print_variables = [False, False, False, False, False]
@@ -279,7 +280,7 @@ class Control:
         return self.__only_fluxes
 
     @property
-    def print_variables(self) -&gt; None:
+    def print_variables(self) -&gt; list[bool]:
         &#34;&#34;&#34;Get the variables to print.
 
         Returns
@@ -290,7 +291,7 @@ class Control:
         Notes
         -----
         In DISORT, this variable is named &#34;PRNT&#34;. From the documentation, the 5
-        booleans control each of the following:
+        booleans control whether each of the following is printed:
 
         1. Input variables (except PMOM)
         2. Fluxes
@@ -782,7 +783,7 @@ False.</dd>
 <dd>Denote which quantities to print. Default is None, which sets all
 values to False.</dd>
 <dt><strong><code>radius</code></strong> :&ensp;<code>float</code>, optional</dt>
-<dd>The planetary radius. Default is 6371.</dd>
+<dd>The planetary radius. Default is 6371.0.</dd>
 <dt><strong><code>user_angles</code></strong> :&ensp;<code>bool</code>, optional</dt>
 <dd>Denote whether radiant quantities are returned at user-specified
 polar angles. Default is True.</dd>
@@ -815,7 +816,7 @@ Raised if accuracy is not between 0 and 0.01.</p></div>
     def __init__(self, accuracy: float = 0.0, delta_m_plus: bool = False,
                  do_pseudo_sphere: bool = False, header: str = &#39;&#39;,
                  only_fluxes: bool = False, print_variables: list[bool] = None,
-                 radius: float = 6371., user_angles: bool = True,
+                 radius: float = 6371.0, user_angles: bool = True,
                  user_optical_depths: bool = False) -&gt; None:
         &#34;&#34;&#34;
         Parameters
@@ -835,7 +836,7 @@ Raised if accuracy is not between 0 and 0.01.</p></div>
             Denote which quantities to print. Default is None, which sets all
             values to False.
         radius: float, optional
-            The planetary radius. Default is 6371.
+            The planetary radius. Default is 6371.0.
         user_angles: bool, optional
             Denote whether radiant quantities are returned at user-specified
             polar angles. Default is True.
@@ -905,6 +906,7 @@ Raised if accuracy is not between 0 and 0.01.</p></div>
     def __raise_type_error_if_only_fluxes_is_not_bool(self) -&gt; None:
         self.__raise_type_error_if_not_bool(self.__only_fluxes, &#39;only_fluxes&#39;)
 
+    # TODO: this does more than one thing..
     def __raise_type_error_if_print_variables_is_not_list_of_bool(self) -&gt; None:
         if self.__print_variables is None:
             self.__print_variables = [False, False, False, False, False]
@@ -1046,7 +1048,7 @@ Raised if accuracy is not between 0 and 0.01.</p></div>
         return self.__only_fluxes
 
     @property
-    def print_variables(self) -&gt; None:
+    def print_variables(self) -&gt; list[bool]:
         &#34;&#34;&#34;Get the variables to print.
 
         Returns
@@ -1057,7 +1059,7 @@ Raised if accuracy is not between 0 and 0.01.</p></div>
         Notes
         -----
         In DISORT, this variable is named &#34;PRNT&#34;. From the documentation, the 5
-        booleans control each of the following:
+        booleans control whether each of the following is printed:
 
         1. Input variables (except PMOM)
         2. Fluxes
@@ -1346,7 +1348,7 @@ def only_fluxes(self) -&gt; bool:
     return self.__only_fluxes</code></pre>
 </details>
 </dd>
-<dt id="pyRT_DISORT.modelsetup.Control.print_variables"><code class="name">var <span class="ident">print_variables</span> : NoneType</code></dt>
+<dt id="pyRT_DISORT.modelsetup.Control.print_variables"><code class="name">var <span class="ident">print_variables</span> : list</code></dt>
 <dd>
 <div class="desc"><p>Get the variables to print.</p>
 <h2 id="returns">Returns</h2>
@@ -1356,7 +1358,7 @@ def only_fluxes(self) -&gt; bool:
 </dl>
 <h2 id="notes">Notes</h2>
 <p>In DISORT, this variable is named "PRNT". From the documentation, the 5
-booleans control each of the following:</p>
+booleans control whether each of the following is printed:</p>
 <ol>
 <li>Input variables (except PMOM)</li>
 <li>Fluxes</li>
@@ -1371,7 +1373,7 @@ scattering)</li>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@property
-def print_variables(self) -&gt; None:
+def print_variables(self) -&gt; list[bool]:
     &#34;&#34;&#34;Get the variables to print.
 
     Returns
@@ -1382,7 +1384,7 @@ def print_variables(self) -&gt; None:
     Notes
     -----
     In DISORT, this variable is named &#34;PRNT&#34;. From the documentation, the 5
-    booleans control each of the following:
+    booleans control whether each of the following is printed:
 
     1. Input variables (except PMOM)
     2. Fluxes

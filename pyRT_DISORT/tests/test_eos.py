@@ -1,9 +1,9 @@
 from unittest import TestCase
 import numpy as np
-import numpy.testing as npt
 from pyRT_DISORT.eos import ModelEquationOfState
 
 
+# TODO: use mars_atm.npy as a test case for all of these tests
 class TestModelEquationOfState(TestCase):
     def setUp(self) -> None:
         self.eos = TestModelEquationOfState
@@ -50,6 +50,7 @@ class TestNLayers(TestModelEquationOfState):
         self.assertEqual(29, eos.n_layers)
 
 
+# TODO: this fails
 class TestNumberDensityBoundaries(TestModelEquationOfState):
     def test_number_density_is_linearly_interpolated(self):
         alts = np.array([10, 20, 30])
@@ -90,3 +91,17 @@ class TestTemperatureBoundaries(TestModelEquationOfState):
         expected_temperatures = np.array([155, 185])
         self.assertTrue(np.array_equal(expected_temperatures,
                                        eos.temperature_boundaries))
+
+
+# TODO: make this not specific to my computer
+class TestColumnDensityLayers(TestModelEquationOfState):
+    def test_column_density_calculated_reliably(self):
+        f = np.load('/home/kyle/repos/pyRT_DISORT/pyRT_DISORT/tests/mars_atm.npy')
+        z = f[:, 0]
+        P = f[:, 1]
+        T = f[:, 2]
+        n = f[:, 3]
+        #alt = np.array([50, 30, 10])
+        eos = ModelEquationOfState(z, P, T, n, z)
+        answer = np.load('/home/kyle/repos/pyRT_DISORT/pyRT_DISORT/tests/colden.npy')
+        self.assertTrue(np.array_equal(answer, eos.column_density_layers))

@@ -1,4 +1,4 @@
-"""eos.py contains data structures to hold euqation of state variables used
+"""eos.py contains data structures to hold equation of state variables used
 throughout the model.
 """
 
@@ -13,9 +13,11 @@ class ModelEquationOfState:
 
     ModelEquationOfState accepts altitudes [km], pressures [Pa],
     temperatures [K], and number densities [particles / m**3], along with the
-    altitudes where the model will be defined. It interpolates each of the EoS
-    variables onto this grid and computes the column density within each layer.
-    For this computation, quantities are assumed to be in SI units.
+    altitudes where the model is defined. It linearly interpolates
+    pressures and temperatures onto this new grid and assumes the ideal gas law
+    to calculate the number density at the new grid. It also computes the
+    column density within each layer using Gaussian quadrature. For these
+    computations, quantities are assumed to be in MKS units.
 
     """
     def __init__(self, altitude_grid: np.ndarray, pressure_grid: np.ndarray,
@@ -25,7 +27,8 @@ class ModelEquationOfState:
         Parameters
         ----------
         altitude_grid: np.ndarray
-            The altitudes [km] at which the EoS variables are defined.
+            The altitudes [km] at which the equation of state variables are
+            defined.
         pressure_grid: np.ndarray
             The pressures [Pa] at the corresponding altitudes.
         temperature_grid: np.ndarray
@@ -59,6 +62,7 @@ class ModelEquationOfState:
         self.__pressure_boundaries = self.__make_pressure_model()
         self.__temperature_boundaries = self.__make_temperature_model()
         self.__number_density_boundaries = self.__make_number_density_model()
+        self.__column_density_layers = self.__compute_column_density_layers()
 
     def __raise_error_if_input_variables_are_bad(self) -> None:
         self.__raise_error_if_altitude_grid_is_bad()
@@ -147,6 +151,18 @@ class ModelEquationOfState:
             -> np.ndarray:
         return np.interp(self.__altitude_boundaries, self.__altitude_grid, grid)
 
+    def __compute_column_density_layers(self) -> np.array:
+        return np.array([quad(self.__make_n_at_altitude,
+                              self.__altitude_boundaries[i + 1],
+                              self.__altitude_boundaries[i])[0]
+                         for i in range(self.__n_layers)])
+
+    # TODO: This logic seems to duplicate functions above... try to fix
+    def __make_n_at_altitude(self, z: float) -> float:
+        p = np.interp(z, self.__altitude_grid, self.__pressure_grid)
+        t = np.interp(z, self.__altitude_grid, self.__temperature_grid)
+        return 1 / Boltzmann * p / t
+
     @property
     def altitude_boundaries(self) -> np.ndarray:
         """Get the input altitudes at the model boundaries.
@@ -158,6 +174,18 @@ class ModelEquationOfState:
 
         """
         return self.__altitude_boundaries
+
+    @property
+    def column_density_layers(self):
+        """Get the column density within each of the layers.
+
+        Returns
+        -------
+        np.ndarray
+            The layer column densities.
+
+        """
+        return self.__column_density_layers
 
     @property
     def n_layers(self) -> int:
@@ -206,22 +234,3 @@ class ModelEquationOfState:
 
         """
         return self.__temperature_boundaries
-
-    def make_n(self, z):
-        p = np.interp(z, self.__altitude_grid, self.__pressure_grid)
-        t = np.interp(z, self.__altitude_grid, self.__temperature_grid)
-        return 1 / Boltzmann * p / t
-
-
-if __name__ == '__main__':
-    f = np.load('/home/kyle/repos/pyRT_DISORT/data/planets/mars/aux/mars_atm.npy')
-    z = f[:, 0]
-    P = f[:, 1]
-    T = f[:, 2]
-    n = f[:, 3]
-    alt = np.array([50, 30, 10])
-    print(z)
-    print(n)
-    eos = ModelEquationOfState(z, P, T, n, alt)
-    foo = quad(eos.make_n, 70, 80)
-    print(foo)
