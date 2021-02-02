@@ -62,7 +62,9 @@ To-dos:
 - Miscellaneous
 --- Language: idk if an array can be positive---only contain positive values
 --- I'm not sure if my levels of abstraction for class checkers are good
-
+--- Move path.py to the utilities folder
+--- Update README.md
+--- It still feels messy to me to have the disort4.0.99 stuff where it is
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
