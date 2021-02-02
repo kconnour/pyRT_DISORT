@@ -1,12 +1,10 @@
 """boundary_conditions.py contains a data structure to set variables related
 to DISORT's boundary conditions.
 """
+from typing import Any
 import numpy as np
 
 
-# TODO: ibcnd
-# TODO: type hints
-# TODO: remake documentation
 class BoundaryConditions:
     """A BoundaryConditions object holds boundary condition data for DISORT.
 
@@ -21,13 +19,13 @@ class BoundaryConditions:
                  top_emissivity: float = 1.0, beam_flux: float = np.pi,
                  isotropic_flux: float = 0.0,
                  lambertian_bottom_boundary: bool = True, albedo: float = 0.0,
-                 ibcnd: bool = False):
+                 incidence_beam_conditions: bool = False) -> None:
         """
         Parameters
         ----------
         thermal_emission: bool, optional
             Denote whether to use thermal emission. If True, DISORT will include
-            thermal emission and will use the following variables:
+            thermal emission and will need the following variables:
 
                 - bottom_temperature (from this class)
                 - top_temperature (from this class)
@@ -36,8 +34,8 @@ class BoundaryConditions:
                 - high_wavenumber (from Angles)
                 - temperature_boundaries (from ModelEquationOfState)
 
-            If False, DISORT will save computation time, ignore all thermal
-            emission, and ignore all the aforementioned variables. However,
+            If False, DISORT will save computation time by ignoring all thermal
+            emission and all of the aforementioned variables; however,
             pyRT_DISORT will still compute all variables. Default is False.
         bottom_temperature: float, optional
             The temperature of the bottom boundary [K]. Only used by DISORT if
@@ -71,11 +69,37 @@ class BoundaryConditions:
             bottom boundary. If True, DISORT will use the albedo specified in
             this object. If False, DISORT will use a bidirectionally reflecting
             bottom boundary defined in BDREF.f. See the surface module of
-            pyRT_DISORT for included surfaces.
+            pyRT_DISORT for included surfaces. Default is True.
         albedo: float, optional
             The surface albedo. Only used by DISORT if
             lambertian_bottom_boundary == True. Default is 0.0.
-        ibcnd: bool, optional
+        incidence_beam_conditions: bool, optional
+            Denote what functions of the incidence beam angle should be
+            included. If True, return the albedo and transmissivity of the
+            entire medium as a function of incidence beam angle. In this case,
+            the following inputs are the only ones considered by DISORT:
+
+                - NLYR
+                - DTAUC
+                - SSALB
+                - PMOM
+                - NSTR
+                - USRANG
+                - NUMU
+                - UMU
+                - ALBEDO
+                - PRNT
+                - HEADER
+
+            PLANK is assumed to be False, LAMBER is assumed to be True, and
+            ONLYFL must be False. The only output is ALBMED and TRNMED. The
+            intensities are not corrected for delta-M+ correction.
+
+            If False, this is accommodates any general case of boundary
+            conditions including beam illumination from the top, isotropic
+            illumination from the top, thermal emission from the top, internal
+            thermal emission, reflection at the bottom, and/or thermal emission
+            from the bottom. Default is False.
 
         Raises
         ------
@@ -94,10 +118,11 @@ class BoundaryConditions:
         self.__isotropic_flux = isotropic_flux
         self.__lambertian_bottom_boundary = lambertian_bottom_boundary
         self.__albedo = albedo
+        self.__incidence_beam_conditions = incidence_beam_conditions
 
         self.__raise_error_if_input_boundary_conditions_are_bad()
 
-    def __raise_error_if_input_boundary_conditions_are_bad(self):
+    def __raise_error_if_input_boundary_conditions_are_bad(self) -> None:
         self.__raise_error_if_thermal_emission_is_bad()
         self.__raise_error_if_bottom_temperature_is_bad()
         self.__raise_error_if_top_temperature_is_bad()
@@ -106,85 +131,96 @@ class BoundaryConditions:
         self.__raise_error_if_isotropic_flux_is_bad()
         self.__raise_error_if_lambertian_bottom_boundary_is_bad()
         self.__raise_error_if_albedo_is_bad()
+        self.__raise_error_if_incidence_beam_conditions_is_bad()
 
-    def __raise_error_if_thermal_emission_is_bad(self):
+    def __raise_error_if_thermal_emission_is_bad(self) -> None:
         self.__raise_type_error_if_quantity_is_not_bool(
             self.__thermal_emission, 'thermal_emission')
 
-    def __raise_error_if_bottom_temperature_is_bad(self):
-        self.__raise_type_error_if_input_is_not_float(
+    def __raise_error_if_bottom_temperature_is_bad(self) -> None:
+        self.__raise_type_error_if_quantity_is_not_float(
             self.__bottom_temperature, 'bottom_temperature')
         self.__raise_value_error_if_quantity_is_not_finite(
             self.__bottom_temperature, 'bottom_temperature')
         self.__raise_value_error_if_quantity_is_negative(
             self.__bottom_temperature, 'bottom_temperature')
 
-    def __raise_error_if_top_temperature_is_bad(self):
-        self.__raise_type_error_if_input_is_not_float(
+    def __raise_error_if_top_temperature_is_bad(self) -> None:
+        self.__raise_type_error_if_quantity_is_not_float(
             self.__top_temperature, 'top_temperature')
         self.__raise_value_error_if_quantity_is_not_finite(
             self.__top_temperature, 'top_temperature')
         self.__raise_value_error_if_quantity_is_negative(
             self.__top_temperature, 'top_temperature')
 
-    def __raise_error_if_top_emissivity_is_bad(self):
-        self.__raise_type_error_if_input_is_not_float(
+    def __raise_error_if_top_emissivity_is_bad(self) -> None:
+        self.__raise_type_error_if_quantity_is_not_float(
             self.__top_emissivity, 'top_emissivity')
         self.__raise_value_error_if_quantity_is_not_between_0_and_1(
             self.__top_emissivity, 'top_emissivity')
 
-    def __raise_error_if_beam_flux_is_bad(self):
-        self.__raise_type_error_if_input_is_not_float(
+    def __raise_error_if_beam_flux_is_bad(self) -> None:
+        self.__raise_type_error_if_quantity_is_not_float(
             self.__beam_flux, 'beam_flux')
         self.__raise_value_error_if_quantity_is_not_finite(
             self.__beam_flux, 'beam_flux')
         self.__raise_value_error_if_quantity_is_negative(
             self.__beam_flux, 'beam_flux')
 
-    def __raise_error_if_isotropic_flux_is_bad(self):
-        self.__raise_type_error_if_input_is_not_float(
+    def __raise_error_if_isotropic_flux_is_bad(self) -> None:
+        self.__raise_type_error_if_quantity_is_not_float(
             self.__isotropic_flux, 'isotropic_flux')
         self.__raise_value_error_if_quantity_is_not_finite(
             self.__isotropic_flux, 'isotropic_flux')
         self.__raise_value_error_if_quantity_is_negative(
             self.__isotropic_flux, 'isotropic_flux')
 
-    def __raise_error_if_lambertian_bottom_boundary_is_bad(self):
+    def __raise_error_if_lambertian_bottom_boundary_is_bad(self) -> None:
         self.__raise_type_error_if_quantity_is_not_bool(
             self.__lambertian_bottom_boundary, 'lambertian_bottom_boundary')
 
-    def __raise_error_if_albedo_is_bad(self):
-        self.__raise_type_error_if_input_is_not_float(self.__albedo, 'albedo')
+    def __raise_error_if_albedo_is_bad(self) -> None:
+        self.__raise_type_error_if_quantity_is_not_float(
+            self.__albedo, 'albedo')
         self.__raise_value_error_if_quantity_is_not_between_0_and_1(
             self.__albedo, 'albedo')
 
+    def __raise_error_if_incidence_beam_conditions_is_bad(self) -> None:
+        self.__raise_type_error_if_quantity_is_not_bool(
+            self.__incidence_beam_conditions, 'incidence_beam_conditions')
+
     @staticmethod
-    def __raise_type_error_if_quantity_is_not_bool(quantity, name):
+    def __raise_type_error_if_quantity_is_not_bool(
+            quantity: Any, name: str) -> None:
         if not isinstance(quantity, bool):
             raise TypeError(f'{name} must be a bool.')
 
     @staticmethod
-    def __raise_type_error_if_input_is_not_float(quantity, name):
+    def __raise_type_error_if_quantity_is_not_float(
+            quantity: Any, name: str) -> None:
         if not isinstance(quantity, float):
             raise TypeError(f'{name} must be a float.')
 
     @staticmethod
-    def __raise_value_error_if_quantity_is_not_finite(quantity, name):
+    def __raise_value_error_if_quantity_is_not_finite(
+            quantity: Any, name: str) -> None:
         if np.isinf(quantity):
             raise ValueError(f'{name} must be finite.')
 
     @staticmethod
-    def __raise_value_error_if_quantity_is_negative(quantity, name):
+    def __raise_value_error_if_quantity_is_negative(
+            quantity: Any, name: str) -> None:
         if quantity < 0:
             raise ValueError(f'{name} must be non-negative.')
 
     @staticmethod
-    def __raise_value_error_if_quantity_is_not_between_0_and_1(quantity, name):
+    def __raise_value_error_if_quantity_is_not_between_0_and_1(
+            quantity: Any, name: str) -> None:
         if not 0 <= quantity <= 1:
             raise ValueError(f'{name} must be between 0 and 1.')
 
     @property
-    def albedo(self):
+    def albedo(self) -> float:
         """Get the input surface albedo.
 
         Returns
@@ -200,7 +236,7 @@ class BoundaryConditions:
         return self.__albedo
 
     @property
-    def beam_flux(self):
+    def beam_flux(self) -> float:
         """Get the input flux of the incident beam at the top boundary.
 
         Returns
@@ -216,7 +252,7 @@ class BoundaryConditions:
         return self.__beam_flux
 
     @property
-    def bottom_temperature(self):
+    def bottom_temperature(self) -> float:
         """Get the input temperature at the bottom boundary.
 
         Returns
@@ -232,7 +268,20 @@ class BoundaryConditions:
         return self.__bottom_temperature
 
     @property
-    def isotropic_flux(self):
+    def incidence_beam_conditions(self) -> bool:
+        """Get whether the model will only return albedo and transmissivity.
+
+        Returns
+        -------
+        bool
+            True if DISORT should only return albedo and transmissivity; False
+            otherwise.
+
+        """
+        return self.__incidence_beam_conditions
+
+    @property
+    def isotropic_flux(self) -> float:
         """Get the input flux of isotropic sources at the top boundary.
 
         Returns
@@ -248,7 +297,7 @@ class BoundaryConditions:
         return self.__isotropic_flux
 
     @property
-    def lambertian_bottom_boundary(self):
+    def lambertian_bottom_boundary(self) -> bool:
         """Get whether the bottom boundary used in the model will be Lambertian.
 
         Returns
@@ -264,7 +313,7 @@ class BoundaryConditions:
         return self.__lambertian_bottom_boundary
 
     @property
-    def thermal_emission(self):
+    def thermal_emission(self) -> bool:
         """Get whether thermal emission will be used in the model.
 
         Returns
@@ -280,7 +329,7 @@ class BoundaryConditions:
         return self.__thermal_emission
 
     @property
-    def top_emissivity(self):
+    def top_emissivity(self) -> float:
         """Get the input emissivity at the top boundary.
 
         Returns
@@ -296,7 +345,7 @@ class BoundaryConditions:
         return self.__top_emissivity
 
     @property
-    def top_temperature(self):
+    def top_temperature(self) -> float:
         """Get the input temperature at the top boundary.
 
         Returns

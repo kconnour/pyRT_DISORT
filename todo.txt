@@ -1,7 +1,23 @@
-To-dos:
+To-dos on current clean code:
 - General
 --- Latex docstrings would improve readability in a number of areas
 --- Switch to whatever numpy used with Sphinx
+--- Add an automatic linter
+--- Can I get Github to automatically generate documentation when I push code?
+
+- boundary_conditions.BoundaryConditions
+--- I raise errors very strictly, like 1 fails where 1.0 succeeds. I should make
+    things less strict.
+
+- eos.ModelEquationOfState
+--- Mike said to do this in log(z) space. Is that still relevant?
+--- Fix some duplicate logic
+--- I ask for a z grid to interpolate on to, but allow a P grid
+
+- eos.eos_from_file
+--- This function does way more than one thing, so clean it up
+--- Decide if I want to input a string or something else. An array would be
+    maximally flexible but a string is most convenient.
 
 - modelsetup.Control
 --- Notes shouldn't say what everything does... that should be in the @property
@@ -31,18 +47,12 @@ To-dos:
 --- Do I want to require monotonically increasing wavelengths?
 --- Some functions do more than one thing
 
-- eos.ModelEquationOfState
---- Mike said to do this in log(z) space. Is that still relevant?
---- Fix some duplicate logic
---- quad is giving me a type warning
---- I ask for a z grid to interpolate on to, but allow a P grid
+- utilities.array_checks.ArrayChecker
+--- Unit tests + cleaner
 
-- eos.eos_from_file
---- This function does way more than one thing, so clean it up
---- Decide if I want to input a string or something else. An array would be
-    maximally flexible but a string is most convenient.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- Updates
+Updates:
 --- surface.py
 --- rayleigh.py
 --- vertical_profiles.py
@@ -50,9 +60,15 @@ To-dos:
 --- phase_function.py
 --- aerosol_column.py
 --- model_atmosphere.py
+--- Add integrated tests
 
-- utilities (all)
---- Docstrings + clean
+Utilities:
+--- create_fits.py
+--- external_files.py
+--- fit_phase_function.py
+--- get_module_path.py
+--- shared_array.py
+--- sporadic...grid.py
 
 - Documentation
 --- I cannot have empty .py files for pdoc3 to work. But I don't want
@@ -66,6 +82,7 @@ To-dos:
 --- Update README.md
 --- It still feels messy to me to have the disort4.0.99 stuff where it is
 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Old to-dos that I'm not ready to get rid of ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -75,20 +92,13 @@ Fixes:
 --- Combine most recent dust files into a 3D .fits file
 --- Combine most recent ice files in to a 3D .fits file
 --- Check I can make a 1 layer atmosphere
---- Remake the examples with the new classes
---- ModelGrid might need a better name since altitude_grid is a parameter in InputAtmosphere (the word "grid" clashes)
---- ModelGrid should use Gaussian quadrature for the integral
---- ModelGrid should do integral in log(z) space
---- Remove the AerosolChecker classes
+--- Remake the DISORT examples with the new classes
 
 Additions:
---- Unit tests
---- Integrated tests
 --- Make ice PMOM
 --- Add ozone
 --- Add an efficient solver
 --- Parallelize over wavelength / observations (pixels)
---- Rewrite the test cases using my classes
 --- Correlated k
 --- T-matrix
 

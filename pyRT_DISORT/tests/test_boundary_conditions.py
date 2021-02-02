@@ -100,6 +100,14 @@ class TestInit(TestCase):
         with self.assertRaises(ValueError):
             BoundaryConditions(albedo=np.nextafter(1, 2))
 
+    def test_int_incidence_beam_conditions_raises_type_error(self) -> None:
+        with self.assertRaises(TypeError):
+            BoundaryConditions(incidence_beam_conditions=0)
+
+    def test_float_incidence_beam_conditions_raises_type_error(self) -> None:
+        with self.assertRaises(TypeError):
+            BoundaryConditions(incidence_beam_conditions=1.0)
+
 
 class TestAlbedo(TestCase):
     def test_albedo_is_unchanged(self) -> None:
@@ -132,6 +140,17 @@ class TestBottomTemperature(TestCase):
     def test_bottom_temperature_defaults_to_0(self) -> None:
         bc = BoundaryConditions()
         self.assertEqual(0, bc.bottom_temperature)
+
+
+class TestIncidenceBeamConditions(TestCase):
+    def test_incidence_beam_conditions_is_unchanged(self) -> None:
+        ibc = True
+        bc = BoundaryConditions(incidence_beam_conditions=ibc)
+        self.assertEqual(ibc, bc.incidence_beam_conditions)
+
+    def test_incidence_beam_conditions_defaults_to_false(self) -> None:
+        bc = BoundaryConditions()
+        self.assertEqual(False, bc.incidence_beam_conditions)
 
 
 class TestIsotropicFlux(TestCase):
