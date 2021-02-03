@@ -3,7 +3,11 @@ To-dos on current clean code:
 --- Latex docstrings would improve readability in a number of areas
 --- Switch to whatever numpy used with Sphinx
 --- Add an automatic linter
+--- Add ability to run all unit tests with one command
 --- Can I get Github to automatically generate documentation when I push code?
+--- I'm not sure of some private method names, particularly for ArrayChecker.
+    After all idk if an array can be positive, but it can contain only positive
+    values.
 
 - boundary_conditions.BoundaryConditions
 --- I raise errors very strictly, like 1 fails where 1.0 succeeds. I should make
@@ -46,9 +50,6 @@ To-dos on current clean code:
 --- Add DISORT documentation to these docstrings
 --- Do I want to require monotonically increasing wavelengths?
 --- Some functions do more than one thing
-
-- utilities.array_checks.ArrayChecker
---- Unit tests + cleaner
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
