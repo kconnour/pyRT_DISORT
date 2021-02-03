@@ -210,76 +210,97 @@ class TestPhi(TestAngles):
 
 class TestWavelengths(TestCase):
     def setUp(self) -> None:
-        self.wavelengths = Wavelengths
+        self.dummy_wavelengths = np.linspace(10, 20, num=50)
+        self.single_wavelength = np.array([10])
+        self.wavelengths_2d = np.broadcast_to(self.dummy_wavelengths, (10, 50))
+        self.test_wavelengths = Wavelengths(
+            self.dummy_wavelengths, self.dummy_wavelengths + 1)
+        self.known_wavelengths = np.array([10, 11])
+        self.known_wavenumbers = np.array([1000, 909.090909])
 
 
-class TestInit(TestWavelengths):
-    def test_index_error_raised_if_different_input_sizes(self):
-        short = np.linspace(10, 20)
-        long = short + 1
-        short = short[:-1]
-        with self.assertRaises(IndexError):
-            Wavelengths(short, long)
-
-    def test_float_input_raises_type_error(self):
+class TestWavelengthsInit(TestWavelengths):
+    def test_float_short_wavelengths_raises_type_error(self):
         with self.assertRaises(TypeError):
-            Wavelengths(1, np.array([3, 4]))
+            Wavelengths(10, self.single_wavelength)
 
-    def test_negative_input_raises_value_error(self):
-        short = np.linspace(np.nextafter(0, -1), 20)
+    def test_float_long_wavelengths_raises_type_error(self):
+        with self.assertRaises(TypeError):
+            Wavelengths(self.single_wavelength, 10)
+
+    def test_negative_short_wavelength_raises_value_error(self):
+        short = np.copy(self.dummy_wavelengths)
+        short[0] = np.nextafter(0, -1)
         with self.assertRaises(ValueError):
             Wavelengths(short, short + 1)
 
-    def test_infinite_input_raises_value_error(self):
-        long = np.linspace(10, 20)
-        short = long - 1
+    def test_infinite_long_wavelength_raises_value_error(self):
+        short = np.copy(self.dummy_wavelengths)
+        long = short + 1
         long[-1] = np.inf
         with self.assertRaises(ValueError):
             Wavelengths(short, long)
 
-    def test_equal_input_raises_value_error(self):
-        wavelengths = np.linspace(10, 20)
+    def test_shorter_long_wavelength_raises_value_error(self):
+        short = np.copy(self.dummy_wavelengths)
+        long = short - 1
         with self.assertRaises(ValueError):
-            Wavelengths(wavelengths, wavelengths)
+            Wavelengths(short, long)
+
+    def test_equal_input_raises_value_error(self):
+        with self.assertRaises(ValueError):
+            Wavelengths(self.dummy_wavelengths, self.dummy_wavelengths)
+
+    def test_2d_short_wavelengths_raises_value_error(self):
+        with self.assertRaises(ValueError):
+            Wavelengths(self.wavelengths_2d, self.dummy_wavelengths)
+
+    def test_2d_long_wavelengths_raises_value_error(self):
+        with self.assertRaises(ValueError):
+            Wavelengths(self.dummy_wavelengths, self.wavelengths_2d)
+
+    def test_index_error_raised_if_different_input_sizes(self):
+        short = np.copy(self.dummy_wavelengths)
+        long = short[:-1]
+        with self.assertRaises(IndexError):
+            Wavelengths(short, long)
 
 
 class TestShortWavelengths(TestWavelengths):
-    def test_short_wavelength_is_read_only(self):
-        short = np.linspace(10, 20)
-        w = Wavelengths(short, short + 1)
-        with self.assertRaises(AttributeError):
-            w.short_wavelengths = short
-
     def test_short_wavelength_is_unmodified(self):
-        short = np.linspace(10, 20)
-        w = Wavelengths(short, short + 1)
-        self.assertTrue(np.array_equal(short, w.short_wavelengths))
+        self.assertTrue(np.array_equal(
+            self.dummy_wavelengths, self.test_wavelengths.short_wavelengths))
+
+    def test_short_wavelength_is_read_only(self):
+        with self.assertRaises(AttributeError):
+            self.test_wavelengths.short_wavelengths = self.dummy_wavelengths
 
 
 class TestLongWavelengths(TestWavelengths):
-    def test_long_wavelength_is_read_only(self):
-        long = np.linspace(10, 20)
-        w = Wavelengths(long - 1, long)
-        with self.assertRaises(AttributeError):
-            w.long_wavelengths = long
+    def test_short_wavelength_is_unmodified(self):
+        self.assertTrue(np.array_equal(
+            self.dummy_wavelengths + 1, self.test_wavelengths.long_wavelengths))
 
-    def test_long_wavelength_is_unmodified(self):
-        long = np.linspace(10, 20)
-        w = Wavelengths(long - 1, long)
-        self.assertTrue(np.array_equal(long, w.long_wavelengths))
+    def test_short_wavelength_is_read_only(self):
+        with self.assertRaises(AttributeError):
+            self.test_wavelengths.long_wavelengths = self.dummy_wavelengths
 
 
 class TestHighWavenumbers(TestWavelengths):
     def test_high_wavenumbers_match_known_values(self):
-        short = np.array([10, 11])
-        w = Wavelengths(short, short + 1)
-        expected = np.array([1000, 909.090909])
-        npt.assert_almost_equal(expected, w.high_wavenumber)
+        w = Wavelengths(self.known_wavelengths, self.known_wavelengths + 1)
+        npt.assert_almost_equal(self.known_wavenumbers, w.high_wavenumber)
+
+    def test_high_wavenumbers_is_read_only(self):
+        with self.assertRaises(AttributeError):
+            self.test_wavelengths.high_wavenumber = self.dummy_wavelengths
 
 
 class TestLowWavenumbers(TestWavelengths):
     def test_low_wavenumbers_match_known_values(self):
-        long = np.array([10, 11])
-        w = Wavelengths(long - 1, long)
-        expected = np.array([1000, 909.090909])
-        npt.assert_almost_equal(expected, w.low_wavenumber)
+        w = Wavelengths(self.known_wavelengths - 1, self.known_wavelengths)
+        npt.assert_almost_equal(self.known_wavenumbers, w.low_wavenumber)
+
+    def test_low_wavenumbers_is_read_only(self):
+        with self.assertRaises(AttributeError):
+            self.test_wavelengths.low_wavenumber = self.dummy_wavelengths

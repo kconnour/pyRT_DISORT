@@ -42,11 +42,11 @@ To-dos on current clean code:
 
 - observation.Angles
 --- I don't think all possible combination of angles is mathematically possible
+    so consider warning if that's the case
 --- Some functions do more than one thing
---- Is there a better way to make phi?
+--- Is there a less messy way to make phi?
 
 - observation.Wavelengths
---- Add DISORT documentation to these docstrings
 --- Do I want to require monotonically increasing wavelengths?
 --- Some functions do more than one thing
 
@@ -60,7 +60,7 @@ Updates:
 --- phase_function.py
 --- aerosol_column.py
 --- model_atmosphere.py
---- Add integrated tests
+--- ...and all utilities
 
 Utilities:
 --- create_fits.py

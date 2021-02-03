@@ -112,7 +112,6 @@ class Angles:
     def __make_phi0(self) -> np.ndarray:
         return np.zeros(len(self.__phase))
 
-    # TODO: This feels really messy mathematically... can I do better?
     def __compute_phi(self) -> np.ndarray:
         with np.errstate(invalid='raise'):
             sin_emission_angle = np.sin(np.radians(self.__emission))
@@ -252,8 +251,9 @@ class Wavelengths:
         TypeError
             Raised if any of the inputs are not np.ndarrays.
         ValueError
-            Raised if any of the inputs are not 1D arrays, any of the arrays
-            contain non positive finite values, or if any value in
+            Raised if any of the input spectral arrays are not 1D arrays,
+            contain non-numeric values, contain non positive finite values, if
+            they are not both the same shape, or if any value in
             long_wavelengths is not larger than the corresponding value in
             short_wavelengths.
 
@@ -262,6 +262,14 @@ class Wavelengths:
         UserWarning
             Raised if any of the input wavelengths are not between 0.1 and 50
             microns
+
+        Notes
+        -----
+        DISORT does not require either short_wavelengths or long_wavelengths,
+        but these quantities are useful to use in pyRT_DISORT in order to obtain
+        the spectral dependence of aerosol radiative properties. The
+        corresponding wavenumbers are only sometimes used by DISORT. See the
+        instance variable docstrings for more details.
 
         """
         self.__short_wavelengths = short_wavelengths
@@ -327,7 +335,6 @@ class Wavelengths:
         return self.__convert_wavelength_to_wavenumber(
             self.__long_wavelengths, 'long_wavelengths')
 
-    # TODO: This function does more than one thing.
     @staticmethod
     def __convert_wavelength_to_wavenumber(wavelength: np.ndarray,
                                            wavelength_name: str) -> np.ndarray:
@@ -340,17 +347,16 @@ class Wavelengths:
                     from None
 
     @property
-    def high_wavenumber(self) -> np.ndarray:
-        """Get the high wavenumbers [1/cm]---the wavenumbers associated with
-        short_wavelength.
+    def short_wavelengths(self) -> np.ndarray:
+        """Get the input short wavelengths [microns].
 
         Returns
         -------
         np.ndarray
-            The high wavenumbers.
+            The short wavelengths.
 
         """
-        return self.__high_wavenumber
+        return self.__short_wavelengths
 
     @property
     def long_wavelengths(self) -> np.ndarray:
@@ -365,6 +371,25 @@ class Wavelengths:
         return self.__long_wavelengths
 
     @property
+    def high_wavenumber(self) -> np.ndarray:
+        """Get the high wavenumbers [1/cm]---the wavenumbers corresponding to
+        short_wavelength.
+
+        Returns
+        -------
+        np.ndarray
+            The high wavenumbers.
+
+        Notes
+        -----
+        In DISORT, this variable is named "WVNMHI". It is only needed by DISORT
+        if thermal_emission (defined in BoundaryConditions) == True, or if
+        DISORT is run multiple times and BDREF is spectrally dependent.
+
+        """
+        return self.__high_wavenumber
+
+    @property
     def low_wavenumber(self) -> np.ndarray:
         """Get the low wavenumbers [1/cm]---the wavenumbers associated with
         long_wavelength.
@@ -374,17 +399,11 @@ class Wavelengths:
         np.ndarray
             The low wavenumbers.
 
+        Notes
+        -----
+        In DISORT, this variable is named "WVNMLO". It is only needed by DISORT
+        if thermal_emission (defined in BoundaryConditions) == True, or if
+        DISORT is run multiple times and BDREF is spectrally dependent.
+
         """
         return self.__low_wavenumber
-
-    @property
-    def short_wavelengths(self) -> np.ndarray:
-        """Get the input short wavelengths [microns].
-
-        Returns
-        -------
-        np.ndarray
-            The short wavelengths.
-
-        """
-        return self.__short_wavelengths
