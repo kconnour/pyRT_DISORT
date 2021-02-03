@@ -41,7 +41,6 @@ To-dos on current clean code:
 --- Get rid of this
 
 - observation.Angles
---- Add DISORT documentation to these docstrings
 --- I don't think all possible combination of angles is mathematically possible
 --- Some functions do more than one thing
 --- Is there a better way to make phi?

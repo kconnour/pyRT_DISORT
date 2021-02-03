@@ -6,10 +6,6 @@ import numpy as np
 from pyRT_DISORT.utilities.array_checks import ArrayChecker
 
 
-# TODO: Add latex to all docstrings. It'd be nice to say mu0 = cos(sza) for
-#  whatever symbol sza is.
-# TODO: I don't think all possible combos of angles are mathematically possible.
-#  If so, raise a warning.
 class Angles:
     """Angles is a data structure that contains angles required by DISORT.
 
@@ -35,9 +31,16 @@ class Angles:
         TypeError
             Raised if any of the inputs are not np.ndarrays.
         ValueError
-            Raised if any of the inputs are not 1D arrays, outside the range of
-            of possible values, or if the input angles are not all the same
-            shape.
+            Raised if any of the input angle arrays are not 1D arrays, contain
+            non-numeric values, are outside their range of possible values, or
+            if they are not all the same shape.
+
+        Notes
+        -----
+        pyRT_DISORT computes all angular quantities across multiple pixels at
+        once to save computation time, but each DISORT run can only be done on a
+        per-pixel basis. Therefore, each element in mu, mu0, phi, and phi0 are
+        the expected DISORT inputs.
 
         """
         self.__incidence = incidence_angles
@@ -59,33 +62,33 @@ class Angles:
 
     def __raise_error_if_incidence_angles_are_bad(self) -> None:
         self.__raise_error_if_angles_are_bad(
-            self.__incidence, 'incidence_angles', 0, 180)
+            self.__incidence, 'incidence_angles', 0.0, 180.0)
 
     def __raise_error_if_emission_angles_are_bad(self) -> None:
         self.__raise_error_if_angles_are_bad(
-            self.__emission, 'emission_angles', 0, 90)
+            self.__emission, 'emission_angles', 0.0, 90.0)
 
     def __raise_error_if_phase_angles_are_bad(self) -> None:
         self.__raise_error_if_angles_are_bad(
-            self.__phase, 'phase_angles', 0, 180)
+            self.__phase, 'phase_angles', 0.0, 180.0)
 
-    # TODO: This function does more than one thing
     def __raise_error_if_angles_are_bad(self, angle: np.ndarray, name: str,
-                                        low: int, high: int) -> None:
+                                        low: float, high: float) -> None:
         try:
             checks = self.__make_angle_checks(angle, low, high)
         except TypeError:
             raise TypeError(f'{name} is not a np.ndarray.') from None
+        except ValueError:
+            raise ValueError(f'{name} contains non-numeric values.') from None
         if not all(checks):
             raise ValueError(
                 f'{name} must be a 1D array in range [{low}, {high}]')
 
     @staticmethod
-    def __make_angle_checks(angle: np.ndarray, low: int, high: int) \
+    def __make_angle_checks(angle: np.ndarray, low: float, high: float) \
             -> list[bool]:
         angle_checker = ArrayChecker(angle)
-        checks = [angle_checker.determine_if_array_is_numeric(),
-                  angle_checker.determine_if_array_is_in_range(low, high),
+        checks = [angle_checker.determine_if_array_is_in_range(low, high),
                   angle_checker.determine_if_array_is_1d()]
         return checks
 
@@ -124,18 +127,6 @@ class Angles:
             return self.phi0 + 180 - np.degrees(d_phi)
 
     @property
-    def emission(self) -> np.ndarray:
-        """Get the input emission angles [degrees].
-
-        Returns
-        -------
-        np.ndarray
-            The input emission angles.
-
-        """
-        return self.__emission
-
-    @property
     def incidence(self) -> np.ndarray:
         """Get the input incidence (solar zenith) angles [degrees].
 
@@ -148,28 +139,16 @@ class Angles:
         return self.__incidence
 
     @property
-    def mu(self) -> np.ndarray:
-        """Get mu where mu is the cosine of the input emission angles.
+    def emission(self) -> np.ndarray:
+        """Get the input emission angles [degrees].
 
         Returns
         -------
         np.ndarray
-            The cosine of the input emission angles.
+            The input emission angles.
 
         """
-        return self.__mu
-
-    @property
-    def mu0(self) -> np.ndarray:
-        """Get mu0 where mu0 is the cosine of the input incidence angles.
-
-        Returns
-        -------
-        np.ndarray
-            The cosine of the input incidence angles.
-
-        """
-        return self.__mu0
+        return self.__emission
 
     @property
     def phase(self) -> np.ndarray:
@@ -184,16 +163,36 @@ class Angles:
         return self.__phase
 
     @property
-    def phi(self) -> np.ndarray:
-        """Get phi where phi is the azimuth angle [degrees].
+    def mu0(self) -> np.ndarray:
+        """Get mu0 where mu0 is the cosine of the input incidence angles.
 
         Returns
         -------
         np.ndarray
-            The azimuth angles.
+            The cosine of the input incidence angles.
+
+        Notes
+        -----
+        Each element in this variable is named "UMU0" in DISORT.
 
         """
-        return self.__phi
+        return self.__mu0
+
+    @property
+    def mu(self) -> np.ndarray:
+        """Get mu where mu is the cosine of the input emission angles.
+
+        Returns
+        -------
+        np.ndarray
+            The cosine of the input emission angles.
+
+        Notes
+        -----
+        Each element in this variable is named "UMU" in DISORT.
+
+        """
+        return self.__mu
 
     @property
     def phi0(self) -> np.ndarray:
@@ -204,11 +203,30 @@ class Angles:
         np.ndarray
             All 0s.
 
+        Notes
+        -----
+        Each element in this variable is named "PHI0" in DISORT.
+
         """
         return self.__phi0
 
+    @property
+    def phi(self) -> np.ndarray:
+        """Get phi where phi is the azimuth angle [degrees].
 
-# TODO: Do I want to require monotonically increasing wavelengths?
+        Returns
+        -------
+        np.ndarray
+            The azimuth angles.
+
+        Notes
+        -----
+        Each element in this variable is named "PHI" in DISORT.
+
+        """
+        return self.__phi
+
+
 class Wavelengths:
     """Wavelengths is a data structure that contains spectral info for DISORT.
 
@@ -281,8 +299,7 @@ class Wavelengths:
     @staticmethod
     def __perform_wavelength_checks(wavelengths) -> list[bool]:
         wavelength_checker = ArrayChecker(wavelengths)
-        checks = [wavelength_checker.determine_if_array_is_numeric(),
-                  wavelength_checker.determine_if_array_is_positive_finite(),
+        checks = [wavelength_checker.determine_if_array_is_positive_finite(),
                   wavelength_checker.determine_if_array_is_1d()]
         return checks
 

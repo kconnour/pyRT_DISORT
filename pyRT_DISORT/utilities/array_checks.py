@@ -11,6 +11,7 @@ class ArrayChecker:
     throughout pyRT_DISORT to determine if the array fits some criteria.
 
     """
+
     def __init__(self, array: np.ndarray) -> None:
         """
         Parameters

@@ -14,6 +14,7 @@ class BoundaryConditions:
     needed in which circumstances.
 
     """
+
     def __init__(self, thermal_emission: bool = False,
                  bottom_temperature: float = 0.0, top_temperature: float = 0.0,
                  top_emissivity: float = 1.0, beam_flux: float = np.pi,
