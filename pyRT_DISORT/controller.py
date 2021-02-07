@@ -1,7 +1,6 @@
 """The controller module holds miscellaneous classes responsible for creating
-arrays that generally control how DISORT runs.
+arrays that control how DISORT runs.
 """
-from typing import Any
 from warnings import warn
 import numpy as np
 
@@ -15,64 +14,119 @@ class ComputationalParameters:
 
     """
 
-    # TODO: I'd like a better name than umu and phi and better description of
-    #  user levels
+    # TODO: I'd like a better description of n_user_levels. It's not documented
+    #  in the DISORT documentation...
     def __init__(self, n_layers: int, n_moments: int, n_streams: int,
-                 n_umu: int, n_phi: int, n_user_levels: int) -> None:
+                 n_azimuth: int, n_polar: int, n_user_levels: int) -> None:
         """
         Parameters
         ----------
         n_layers: int
             The number of layers to use in the model.
         n_moments: int
-            The number of polynomial moments to use in the model.
+            The number of polynomial moments to use in the model. This number
+            should be greater than or equal to 'n_streams' in problems with
+            scattering. In problems without scattering, this variable is not
+            used by DISORT.
         n_streams: int
-            The number of streams to use in the model.
-        n_umu: int
-            The number of umu to use in the model.
-        n_phi: int
-            The number of azimuthal angles to use in the model.
+            The number of streams (i.e. the number of computational polar
+            angles) to use in the model. This number should be even and at least
+            2. In general, the more streams used the more accurate DISORT's
+            computations will be.
+        n_azimuth: int
+            The number of azimuthal angles where DISORT should return radiant
+            quantities.
+        n_polar: int
+            The number of user-specified polar angles where DISORT should return
+            radiant quantities. Only used by DISORT if user_angles (from
+            ModelBehavior) == True.
         n_user_levels: int
             The number of user levels to use in the model.
 
         Raises
         ------
         TypeError
-            Raised if any of the inputs are not positive integers, if n_streams
-            is not even, or if n_streams is greater than n_moments.
+            Raised if any of the inputs cannot be converted to an int.
         ValueError
-            Raised if any input is not positive finite, if n_streams is not
-            even, or if n_streams is greater than n_moments.
+            Raised if any of the inputs are not positive finite.
+
+        Warnings
+        --------
+        UserWarning
+            Raised if n_streams is not even or if n_streams is greater than
+            n_moments.
 
         """
-        self.__n_layers = self.__make_parameter(n_layers, 'n_layers')
-        self.__n_moments = self.__make_parameter(n_moments, 'n_moments')
+        self.__n_layers = self.__make_n_layers(n_layers)
+        self.__n_moments = self.__make_n_moments(n_moments)
         self.__n_streams = self.__make_n_streams(n_streams)
-        self.__n_umu = self.__make_parameter(n_umu, 'n_umu')
-        self.__n_phi = self.__make_parameter(n_phi, 'n_phi')
-        self.__n_user_levels = self.__make_parameter(
+        self.__n_azimuth = self.__make_n_azimuth(n_azimuth)
+        self.__n_polar = self.__make_n_polar(n_polar)
+        self.__n_user_levels = self.__make_n_user_levels(n_user_levels)
+
+        self.__warn_if_n_streams_is_not_even()
+        self.__warn_if_n_streams_is_greater_than_n_moments()
+
+    def __make_n_layers(self, n_layers: int) -> int:
+        n_layers = self.__make_parameter(n_layers, 'n_layers')
+        self.__raise_value_error_if_parameter_is_not_positive(
+            n_layers, 'n_layers')
+        return n_layers
+
+    def __make_n_moments(self, n_moments: int) -> int:
+        n_moments = self.__make_parameter(n_moments, 'n_moments')
+        self.__raise_value_error_if_parameter_is_not_positive(
+            n_moments, 'n_moments')
+        return n_moments
+
+    def __make_n_streams(self, n_streams: int) -> int:
+        n_streams = self.__make_parameter(n_streams, 'n_streams')
+        self.__raise_value_error_if_parameter_is_not_positive(
+            n_streams, 'n_streams')
+        return n_streams
+
+    def __make_n_azimuth(self, n_azimuth: int) -> int:
+        n_azimuth = self.__make_parameter(n_azimuth, 'n_azimuth')
+        self.__raise_value_error_if_parameter_is_not_positive(
+            n_azimuth, 'n_azimuth')
+        return n_azimuth
+
+    def __make_n_polar(self, n_polar: int) -> int:
+        n_polar = self.__make_parameter(n_polar, 'n_polar')
+        self.__raise_value_error_if_parameter_is_not_positive(
+            n_polar, 'n_polar')
+        return n_polar
+
+    def __make_n_user_levels(self, n_user_levels: int) -> int:
+        n_user_levels = self.__make_parameter(n_user_levels, 'n_user_levels')
+        self.__raise_value_error_if_parameter_is_not_positive(
             n_user_levels, 'n_user_levels')
+        return n_user_levels
 
     @staticmethod
-    def __make_parameter(param: Any, name: str) -> int:
+    def __make_parameter(param: int, name: str) -> int:
         try:
-            if param <= 0 or np.isinf(param):
-                raise ValueError(f'{name} must be positive, finite')
             return int(param)
         except TypeError as te:
-            raise TypeError(f'{name} must be an int.') from te
+            raise TypeError(f'Cannot convert {name} to an int.') from te
+        except ValueError as ve:
+            raise ValueError(f'Cannot convert {name} to an int.') from ve
+        except OverflowError as oe:
+            raise ValueError(f'{name} must be finite.') from oe
 
-    def __make_n_streams(self, n_streams) -> int:
-        try:
-            if n_streams <= 0 or np.isinf(n_streams):
-                raise ValueError('n_streams must be positive, finite')
-            elif n_streams % 2 != 0:
-                raise ValueError('n_streams must be an even number.')
-            elif n_streams > self.__n_moments:
-                raise ValueError('n_moments must be greater than n_streams.')
-            return int(n_streams)
-        except TypeError as te:
-            raise TypeError('n_streams must be an int.') from te
+    @staticmethod
+    def __raise_value_error_if_parameter_is_not_positive(
+            param: int, name: str) -> None:
+        if param < 1:
+            raise ValueError(f'{name} must be positive.')
+
+    def __warn_if_n_streams_is_not_even(self) -> None:
+        if self.__n_streams % 2 != 0:
+            warn('n_streams should be even.')
+
+    def __warn_if_n_streams_is_greater_than_n_moments(self) -> None:
+        if self.__n_streams > self.__n_moments:
+            warn('n_streams should not be greater than n_moments.')
 
     @property
     def n_layers(self) -> int:
@@ -99,18 +153,6 @@ class ComputationalParameters:
         return self.__n_moments
 
     @property
-    def n_phi(self) -> int:
-        """Get the number of phis.
-
-        Returns
-        -------
-        int
-            The number of azimuthal angles.
-
-        """
-        return self.__n_phi
-
-    @property
     def n_streams(self) -> int:
         """Get the input number of streams.
 
@@ -123,20 +165,32 @@ class ComputationalParameters:
         return self.__n_streams
 
     @property
-    def n_umu(self) -> int:
-        """Get the number of umus.
+    def n_azimuth(self) -> int:
+        """Get the input number of azimuthal angles.
 
         Returns
         -------
         int
-            The number of umus.
+            The number of azimuthal angles.
 
         """
-        return self.__n_umu
+        return self.__n_azimuth
+
+    @property
+    def n_polar(self) -> int:
+        """Get the input number of user_specified polar angles.
+
+        Returns
+        -------
+        int
+            The number of polar angles.
+
+        """
+        return self.__n_polar
 
     @property
     def n_user_levels(self) -> int:
-        """Get the number of user levels.
+        """Get the input number of user levels.
 
         Returns
         -------
@@ -680,3 +734,7 @@ class OutputArrays:
 
         """
         return self.__transmissivity_medium
+
+
+if __name__ == '__main__':
+    ComputationalParameters(10, 20, 30, 40, 50, 60)

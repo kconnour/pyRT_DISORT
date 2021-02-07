@@ -11,36 +11,121 @@ class TestComputationalParameters(TestCase):
 
 
 class TestComputationalParametersInit(TestComputationalParameters):
-    def test_str_n_layers_raises_type_error(self) -> None:
+    def test_ndarray_n_layers_raises_type_error(self) -> None:
         with self.assertRaises(TypeError):
+            ComputationalParameters(np.ones(5), 30, 20, 40, 50, 60)
+
+    def test_str_n_layers_raises_value_error(self) -> None:
+        with self.assertRaises(ValueError):
             ComputationalParameters('foo', 30, 20, 40, 50, 60)
 
-    def test_str_n_moments_raises_type_error(self) -> None:
-        with self.assertRaises(TypeError):
-            ComputationalParameters(10, 'foo', 30, 40, 50, 60)
+    def test_infinite_n_layers_raises_value_error(self) -> None:
+        with self.assertRaises(ValueError):
+            ComputationalParameters(np.inf, 30, 20, 40, 50, 60)
 
-    def test_n_moments_equal_to_n_streams_is_ok(self) -> None:
-        ComputationalParameters(10, 30, 30, 40, 50, 60)
+    def test_nan_n_layers_raises_value_error(self) -> None:
+        with self.assertRaises(ValueError):
+            ComputationalParameters(np.nan, 30, 20, 40, 50, 60)
 
-    def test_str_n_streams_raises_type_error(self) -> None:
+    def test_ndarray_n_moments_raises_type_error(self) -> None:
         with self.assertRaises(TypeError):
+            ComputationalParameters(10, np.ones(5), 20, 40, 50, 60)
+
+    def test_str_n_moments_raises_value_error(self) -> None:
+        with self.assertRaises(ValueError):
+            ComputationalParameters(10, 'foo', 20, 40, 50, 60)
+
+    def test_infinite_n_moments_raises_value_error(self) -> None:
+        with self.assertRaises(ValueError):
+            ComputationalParameters(10, np.inf, 20, 40, 50, 60)
+
+    def test_nan_n_moments_raises_value_error(self) -> None:
+        with self.assertRaises(ValueError):
+            ComputationalParameters(10, np.nan, 20, 40, 50, 60)
+
+    def test_ndarray_n_streams_raises_type_error(self) -> None:
+        with self.assertRaises(TypeError):
+            ComputationalParameters(10, 30, np.ones(5), 40, 50, 60)
+
+    def test_str_n_streams_raises_value_error(self) -> None:
+        with self.assertRaises(ValueError):
             ComputationalParameters(10, 30, 'foo', 40, 50, 60)
 
-    def test_odd_n_streams_raises_value_error(self) -> None:
+    def test_infinite_n_streams_raises_value_error(self) -> None:
         with self.assertRaises(ValueError):
-            ComputationalParameters(10, 30, 25, 40, 50, 60)
+            ComputationalParameters(10, 30, np.inf, 40, 50, 60)
 
-    def test_str_n_umu_raises_type_error(self) -> None:
+    def test_nan_n_streams_raises_value_error(self) -> None:
+        with self.assertRaises(ValueError):
+            ComputationalParameters(10, 30, np.nan, 40, 50, 60)
+
+    def test_ndarray_n_azimuth_raises_type_error(self) -> None:
         with self.assertRaises(TypeError):
+            ComputationalParameters(10, 30, 20, np.ones(5), 50, 60)
+
+    def test_str_n_azimuth_raises_value_error(self) -> None:
+        with self.assertRaises(ValueError):
             ComputationalParameters(10, 30, 20, 'foo', 50, 60)
 
-    def test_str_n_phi_raises_type_error(self) -> None:
+    def test_infinite_n_azimuth_raises_value_error(self) -> None:
+        with self.assertRaises(ValueError):
+            ComputationalParameters(10, 30, 20, np.inf, 50, 60)
+
+    def test_nan_n_azimuth_raises_value_error(self) -> None:
+        with self.assertRaises(ValueError):
+            ComputationalParameters(10, 30, 20, np.nan, 50, 60)
+
+    def test_ndarray_n_polar_raises_type_error(self) -> None:
         with self.assertRaises(TypeError):
+            ComputationalParameters(10, 30, 20, 40, np.ones(5), 60)
+
+    def test_str_n_polar_raises_value_error(self) -> None:
+        with self.assertRaises(ValueError):
             ComputationalParameters(10, 30, 20, 40, 'foo', 60)
 
-    def test_str_n_user_levels_raises_type_error(self) -> None:
+    def test_infinite_n_polar_raises_value_error(self) -> None:
+        with self.assertRaises(ValueError):
+            ComputationalParameters(10, 30, 20, 40, np.inf, 60)
+
+    def test_nan_n_polar_raises_value_error(self) -> None:
+        with self.assertRaises(ValueError):
+            ComputationalParameters(10, 30, 20, 40, np.nan, 60)
+
+    def test_ndarray_n_user_levels_raises_type_error(self) -> None:
         with self.assertRaises(TypeError):
+            ComputationalParameters(10, 30, 20, 40, 50, np.ones(5))
+
+    def test_str_n_user_levels_raises_value_error(self) -> None:
+        with self.assertRaises(ValueError):
             ComputationalParameters(10, 30, 20, 40, 50, 'foo')
+
+    def test_infinite_n_user_levels_raises_value_error(self) -> None:
+        with self.assertRaises(ValueError):
+            ComputationalParameters(10, 30, 20, 40, 50, np.inf)
+
+    def test_nan_n_user_levels_raises_value_error(self) -> None:
+        with self.assertRaises(ValueError):
+            ComputationalParameters(10, 30, 20, 40, 50, np.nan)
+
+    def test_odd_n_streams_raises_warning(self) -> None:
+        with warnings.catch_warnings(record=True) as warning:
+            warnings.simplefilter("always")
+            ComputationalParameters(10, 30, 25, 40, 50, 60)
+            self.assertEqual(1, len(warning))
+            self.assertEqual(warning[-1].category, UserWarning)
+
+    def test_n_streams_greater_than_n_moments_raises_warning(self) -> None:
+        with warnings.catch_warnings(record=True) as warning:
+            warnings.simplefilter("always")
+            ComputationalParameters(10, 20, 30, 40, 50, 60)
+            self.assertEqual(1, len(warning))
+            self.assertEqual(warning[-1].category, UserWarning)
+
+    def test_n_streams_equal_to_n_moments_raises_no_warning(self) -> None:
+        with warnings.catch_warnings(record=True) as warning:
+            warnings.simplefilter("always")
+            ComputationalParameters(10, 20, 20, 40, 50, 60)
+            self.assertEqual(0, len(warning))
 
 
 class TestNLayers(TestComputationalParameters):
@@ -70,22 +155,22 @@ class TestNStreams(TestComputationalParameters):
             self.cp.n_streams = 100
 
 
-class TestNUmu(TestComputationalParameters):
-    def test_n_umu_is_unchanged(self) -> None:
-        self.assertEqual(40, self.cp.n_umu)
+class TestNAzimuth(TestComputationalParameters):
+    def test_n_azimuth_is_unchanged(self) -> None:
+        self.assertEqual(40, self.cp.n_azimuth)
 
-    def test_n_umu_is_read_only(self) -> None:
+    def test_n_azimuth_is_read_only(self) -> None:
         with self.assertRaises(AttributeError):
-            self.cp.n_umu = 100
+            self.cp.n_azimuth = 100
 
 
-class TestNPhi(TestComputationalParameters):
-    def test_n_phi_is_unchanged(self) -> None:
-        self.assertEqual(50, self.cp.n_phi)
+class TestNPolar(TestComputationalParameters):
+    def test_n_polar_is_unchanged(self) -> None:
+        self.assertEqual(50, self.cp.n_polar)
 
-    def test_n_phi_is_read_only(self) -> None:
+    def test_n_polar_is_read_only(self) -> None:
         with self.assertRaises(AttributeError):
-            self.cp.n_phi = 100
+            self.cp.n_polar = 100
 
 
 class TestNUserLevels(TestComputationalParameters):
