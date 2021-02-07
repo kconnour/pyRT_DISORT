@@ -6,8 +6,12 @@ import numpy as np
 from pyRT_DISORT.utilities.array_checks import ArrayChecker
 
 
+# TODO: I'm not sure that all combination of angles are physically realistic. If
+#  so, raise a warning
+# TODO: I'm not sure I really need to flatten the arrays
+# TODO: It'd probably be better to catch different shape errors when making phi
 class Angles:
-    """Angles is a data structure that contains angles required by DISORT.
+    """Create a data structure that contains angles required by DISORT.
 
     Angles accepts ``observation'' angles and computes mu, mu0, phi, and phi0
     from these angles.
@@ -20,77 +24,66 @@ class Angles:
         Parameters
         ----------
         incidence_angles: np.ndarray
-            Flattened array of the pixel incidence angles [degrees].
+            Pixel incidence angles [degrees].
         emission_angles: np.ndarray
-            Flattened array of the pixel emission angles [degrees].
+            Pixel emission angles [degrees].
         phase_angles: np.ndarray
-            Flattened array of the pixel phase angles [degrees].
+            Pixel phase angles [degrees].
 
         Raises
         ------
         TypeError
             Raised if any of the inputs are not np.ndarrays.
         ValueError
-            Raised if any of the input angle arrays are not 1D arrays, contain
-            non-numeric values, are outside their range of possible values, or
-            if they are not all the same shape.
+            Raised if any of the input arrays contain non-numeric values or if
+            the input arrays do not have the same shape.
 
         Notes
         -----
+        All of the input angle arrays must have the same shape. If the arrays
+        are not 1D, they are flattened before computing any of the angles.
+
         pyRT_DISORT computes all angular quantities across multiple pixels at
         once to save computation time, but each DISORT run can only be done on a
         per-pixel basis. Therefore, each element in mu, mu0, phi, and phi0 are
         the expected DISORT inputs.
 
         """
-        self.__incidence = incidence_angles
-        self.__emission = emission_angles
-        self.__phase = phase_angles
+        self.__incidence = self.__make_incidence_angles(incidence_angles)
+        self.__emission = self.__make_emission_angles(emission_angles)
+        self.__phase = self.__make_phase_angles(phase_angles)
 
-        self.__raise_error_if_input_angles_are_bad()
+        self.__raise_value_error_if_angles_are_not_same_shape()
 
         self.__mu0 = self.__compute_mu0()
         self.__mu = self.__compute_mu()
         self.__phi0 = self.__make_phi0()
         self.__phi = self.__compute_phi()
 
-    def __raise_error_if_input_angles_are_bad(self) -> None:
-        self.__raise_error_if_incidence_angles_are_bad()
-        self.__raise_error_if_emission_angles_are_bad()
-        self.__raise_error_if_phase_angles_are_bad()
-        self.__raise_value_error_if_angles_are_not_same_shape()
+    def __make_incidence_angles(self, incidence_angles: np.ndarray) \
+            -> np.ndarray:
+        return self.__make_angles(incidence_angles, 'incidence_angles', 0, 180)
 
-    def __raise_error_if_incidence_angles_are_bad(self) -> None:
-        self.__raise_error_if_angles_are_bad(
-            self.__incidence, 'incidence_angles', 0.0, 180.0)
+    def __make_emission_angles(self, emission_angles: np.ndarray) \
+            -> np.ndarray:
+        return self.__make_angles(emission_angles, 'emission_angles', 0, 90)
 
-    def __raise_error_if_emission_angles_are_bad(self) -> None:
-        self.__raise_error_if_angles_are_bad(
-            self.__emission, 'emission_angles', 0.0, 90.0)
-
-    def __raise_error_if_phase_angles_are_bad(self) -> None:
-        self.__raise_error_if_angles_are_bad(
-            self.__phase, 'phase_angles', 0.0, 180.0)
-
-    def __raise_error_if_angles_are_bad(self, angle: np.ndarray, name: str,
-                                        low: float, high: float) -> None:
-        try:
-            checks = self.__make_angle_checks(angle, low, high)
-        except TypeError:
-            raise TypeError(f'{name} is not a np.ndarray.') from None
-        except ValueError:
-            raise ValueError(f'{name} contains non-numeric values.') from None
-        if not all(checks):
-            raise ValueError(
-                f'{name} must be a 1D array in range [{low}, {high}]')
+    def __make_phase_angles(self, phase_angles: np.ndarray) \
+            -> np.ndarray:
+        return self.__make_angles(phase_angles, 'phase_angles', 0, 180)
 
     @staticmethod
-    def __make_angle_checks(angle: np.ndarray, low: float, high: float) \
-            -> list[bool]:
-        angle_checker = ArrayChecker(angle)
-        checks = [angle_checker.determine_if_array_is_in_range(low, high),
-                  angle_checker.determine_if_array_is_1d()]
-        return checks
+    def __make_angles(angles, name, low, high):
+        try:
+            angles = angles.flatten()
+            if np.any(angles < low) or np.any(angles > high):
+                raise ValueError(f'{name} must be between {low} and {high}.')
+            return angles
+        except AttributeError as ae:
+            raise TypeError(f'{name} must be a np.ndarray.') from ae
+        except TypeError as te:
+            raise ValueError(f'{name} must contain only numeric values.') \
+                from te
 
     def __raise_value_error_if_angles_are_not_same_shape(self) -> None:
         same_shape = self.__incidence.shape == self.__emission.shape == \
@@ -105,13 +98,10 @@ class Angles:
     def __compute_mu(self) -> np.ndarray:
         return self.__compute_angle_cosine(self.__emission)
 
-    @staticmethod
-    def __compute_angle_cosine(angle: np.ndarray) -> np.ndarray:
-        return np.cos(np.radians(angle))
-
     def __make_phi0(self) -> np.ndarray:
         return np.zeros(len(self.__phase))
 
+    # TODO: is there a less messy way to make this variable?
     def __compute_phi(self) -> np.ndarray:
         with np.errstate(invalid='raise'):
             sin_emission_angle = np.sin(np.radians(self.__emission))
@@ -124,6 +114,10 @@ class Angles:
             except FloatingPointError:
                 d_phi = np.pi
             return self.phi0 + 180 - np.degrees(d_phi)
+
+    @staticmethod
+    def __compute_angle_cosine(angle: np.ndarray) -> np.ndarray:
+        return np.cos(np.radians(angle))
 
     @property
     def incidence(self) -> np.ndarray:
@@ -226,6 +220,7 @@ class Angles:
         return self.__phi
 
 
+# TODO: Do I want to require monotonically increasing wavelengths?
 class Wavelengths:
     """Wavelengths is a data structure that contains spectral info for DISORT.
 

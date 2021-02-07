@@ -25,10 +25,6 @@ class TestAnglesInit(TestAngles):
         with self.assertRaises(TypeError):
             Angles(1, self.one, self.one)
 
-    def test_2d_incidence_angles_raises_value_error(self) -> None:
-        with self.assertRaises(ValueError):
-            Angles(self.test_2d_array, self.one, self.one)
-
     def test_incidence_angles_outside_0_to_180_raises_value_error(self) -> None:
         Angles(self.zero, self.one, self.one)
         Angles(self.one_eighty, self.one, self.one)
@@ -50,10 +46,6 @@ class TestAnglesInit(TestAngles):
         with self.assertRaises(TypeError):
             Angles(self.one, 1, self.one)
 
-    def test_2d_emission_angles_raises_type_error(self) -> None:
-        with self.assertRaises(ValueError):
-            Angles(self.one, self.test_2d_array, self.one)
-
     def test_emission_angles_outside_0_to_90_raises_value_error(self) -> None:
         Angles(self.one, self.zero, self.one)
         Angles(self.one, self.ninety, self.one)
@@ -74,10 +66,6 @@ class TestAnglesInit(TestAngles):
     def test_float_phase_angles_raises_type_error(self) -> None:
         with self.assertRaises(TypeError):
             Angles(self.one, self.one, 1)
-
-    def test_2d_phase_angles_raises_type_error(self) -> None:
-        with self.assertRaises(ValueError):
-            Angles(self.one, self.one, self.test_2d_array)
 
     def test_phase_angles_outside_0_to_180_raises_value_error(self) -> None:
         Angles(self.one, self.one, self.zero)

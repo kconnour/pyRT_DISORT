@@ -9,10 +9,6 @@ To-dos on current clean code:
     After all idk if an array can be positive, but it can contain only positive
     values.
 
-- boundary_conditions.BoundaryConditions
---- I raise errors very strictly, like 1 fails where 1.0 succeeds. I should make
-    things less strict.
-
 - eos.ModelEquationOfState
 --- Mike said to do this in log(z) space. Is that still relevant?
 --- Fix some duplicate logic
@@ -22,33 +18,6 @@ To-dos on current clean code:
 --- This function does way more than one thing, so clean it up
 --- Decide if I want to input a string or something else. An array would be
     maximally flexible but a string is most convenient.
-
-- modelsetup.Control
---- Notes shouldn't say what everything does... that should be in the @property
-    docstring
---- Unit tests
-
-- modelsetup.Output
---- Add info from DISORT documentation to these docstrings
---- Unit tests
-
-- modelsetup.Size
---- Notes shouldn't say what everything does... that should be in the @property
-    docstring
---- Unit tests
-
-- modelsetup.Unsure
---- Get rid of this
-
-- observation.Angles
---- I don't think all possible combination of angles is mathematically possible
-    so consider warning if that's the case
---- Some functions do more than one thing
---- Is there a less messy way to make phi?
-
-- observation.Wavelengths
---- Do I want to require monotonically increasing wavelengths?
---- Some functions do more than one thing
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -71,8 +40,6 @@ Utilities:
 --- sporadic...grid.py
 
 - Documentation
---- I cannot have empty .py files for pdoc3 to work. But I don't want
-    __init__.py to have stuff in it
 --- Switch to Sphinx if possible
 
 - Miscellaneous
