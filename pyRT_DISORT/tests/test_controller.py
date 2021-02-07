@@ -1,7 +1,8 @@
 import warnings
 from unittest import TestCase
 import numpy as np
-from pyRT_DISORT.controller import ComputationalParameters, ModelBehavior
+from pyRT_DISORT.controller import ComputationalParameters, ModelBehavior, \
+    OutputArrays
 
 
 class TestComputationalParameters(TestCase):
@@ -253,3 +254,89 @@ class TestUserAngles(TestModelBehavior):
     def test_user_angles_is_read_only(self) -> None:
         with self.assertRaises(AttributeError):
             self.mb.user_angles = True
+
+
+class TestOutputArrays(TestCase):
+    def setUp(self) -> None:
+        cp = ComputationalParameters(10, 30, 20, 40, 50, 60)
+        self.oa = OutputArrays(cp)
+
+
+class TestOutputArraysInit(TestOutputArrays):
+    def test_int_input_raises_type_error(self) -> None:
+        with self.assertRaises(TypeError):
+            OutputArrays(1)
+
+
+class TestAlbedoMedium(TestOutputArrays):
+    def test_albedo_medium_is_correctly_computed(self) -> None:
+        self.assertTrue(np.array_equal(np.zeros(40), self.oa.albedo_medium))
+
+    def test_albedo_medium_is_read_only(self) -> None:
+        with self.assertRaises(AttributeError):
+            self.oa.albedo_medium = 0
+
+
+class TestDiffuseUpFlux(TestOutputArrays):
+    def test_diffuse_up_flux_is_correctly_computed(self) -> None:
+        self.assertTrue(np.array_equal(np.zeros(60), self.oa.diffuse_up_flux))
+
+    def test_diffuse_up_flux_is_read_only(self) -> None:
+        with self.assertRaises(AttributeError):
+            self.oa.diffuse_up_flux = 0
+
+
+class TestDiffuseDownFlux(TestOutputArrays):
+    def test_diffuse_down_flux_is_correctly_computed(self) -> None:
+        self.assertTrue(np.array_equal(np.zeros(60), self.oa.diffuse_down_flux))
+
+    def test_diffuse_down_flux_is_read_only(self) -> None:
+        with self.assertRaises(AttributeError):
+            self.oa.diffuse_down_flux = 0
+
+
+class TestDirectBeamFlux(TestOutputArrays):
+    def test_direct_beam_flux_is_correctly_computed(self) -> None:
+        self.assertTrue(np.array_equal(np.zeros(60), self.oa.direct_beam_flux))
+
+    def test_direct_beam_flux_is_read_only(self) -> None:
+        with self.assertRaises(AttributeError):
+            self.oa.direct_beam_flux = 0
+
+
+class TestFluxDivergence(TestOutputArrays):
+    def test_flux_divergence_is_correctly_computed(self) -> None:
+        self.assertTrue(np.array_equal(np.zeros(60), self.oa.flux_divergence))
+
+    def test_flux_divergence_is_read_only(self) -> None:
+        with self.assertRaises(AttributeError):
+            self.oa.flux_divergence = 0
+
+
+class TestIntensity(TestOutputArrays):
+    def test_intensity_is_correctly_computed(self) -> None:
+        self.assertTrue(
+            np.array_equal(np.zeros((40, 60, 50)), self.oa.intensity))
+
+    def test_intensity_is_read_only(self) -> None:
+        with self.assertRaises(AttributeError):
+            self.oa.intensity = 0
+
+
+class TestMeanIntensity(TestOutputArrays):
+    def test_mean_intensity_is_correctly_computed(self) -> None:
+        self.assertTrue(np.array_equal(np.zeros(60), self.oa.mean_intensity))
+
+    def test_mean_intensity_is_read_only(self) -> None:
+        with self.assertRaises(AttributeError):
+            self.oa.mean_intensity = 0
+
+
+class TestTransmissivityMedium(TestOutputArrays):
+    def test_transmissivity_medium_is_correctly_computed(self) -> None:
+        self.assertTrue(
+            np.array_equal(np.zeros(40), self.oa.transmissivity_medium))
+
+    def test_transmissivity_medium_is_read_only(self) -> None:
+        with self.assertRaises(AttributeError):
+            self.oa.transmissivity_medium = 0

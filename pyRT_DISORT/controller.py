@@ -485,3 +485,198 @@ class ModelBehavior:
 
         """
         return self.__user_optical_depths
+
+
+class OutputArrays:
+    """Create a data structure to make the DISORT output arrays.
+
+    OutputArrays creates arrays of 0s that are designed to get populated with
+    values as DISORT runs.
+
+    """
+
+    def __init__(self, computational_params: ComputationalParameters) -> None:
+        """
+        Parameters
+        ----------
+        computational_params: ComputationalParameters
+            Data structure holding the model computational variables.
+
+        Raises
+        ------
+        TypeError
+            Raised if input is not an instance of ComputationalParameters.
+
+        """
+        self.__cp = computational_params
+
+        self.__raise_type_error_if_input_is_not_cp()
+
+        self.__albedo_medium = self.__make_albedo_medium()
+        self.__diffuse_up_flux = self.__make_diffuse_up_flux()
+        self.__diffuse_down_flux = self.__make_diffuse_down_flux()
+        self.__direct_beam_flux = self.__make_direct_beam_flux()
+        self.__flux_divergence = self.__make_flux_divergence()
+        self.__intensity = self.__make_intensity()
+        self.__mean_intensity = self.__make_mean_intensity()
+        self.__transmissivity_medium = self.__make_transmissivity_medium()
+
+    def __raise_type_error_if_input_is_not_cp(self) -> None:
+        if not isinstance(self.__cp, ComputationalParameters):
+            raise TypeError('computational_params must be an instance of '
+                            'ComputationalParameters.')
+
+    def __make_albedo_medium(self) -> np.ndarray:
+        return np.zeros(self.__cp.n_umu)
+
+    def __make_diffuse_up_flux(self) -> np.ndarray:
+        return np.zeros(self.__cp.n_user_levels)
+
+    def __make_diffuse_down_flux(self) -> np.ndarray:
+        return np.zeros(self.__cp.n_user_levels)
+
+    def __make_direct_beam_flux(self) -> np.ndarray:
+        return np.zeros(self.__cp.n_user_levels)
+
+    def __make_flux_divergence(self) -> np.ndarray:
+        return np.zeros(self.__cp.n_user_levels)
+
+    def __make_intensity(self) -> np.ndarray:
+        return np.zeros((self.__cp.n_umu, self.__cp.n_user_levels,
+                         self.__cp.n_phi))
+
+    def __make_mean_intensity(self) -> np.ndarray:
+        return np.zeros(self.__cp.n_user_levels)
+
+    def __make_transmissivity_medium(self) -> np.ndarray:
+        return np.zeros(self.__cp.n_umu)
+
+    @property
+    def albedo_medium(self) -> np.ndarray:
+        """Get the albedo of the medium output array.
+
+        Returns
+        -------
+        np.ndarray
+            The albedo of the medium.
+
+        Notes
+        -----
+        In DISORT, this variable is named "ALBMED".
+
+        """
+        return self.__albedo_medium
+
+    @property
+    def diffuse_up_flux(self) -> np.ndarray:
+        """Get the diffuse upward flux output array.
+
+        Returns
+        -------
+        np.ndarray
+            The diffuse upward flux.
+
+        Notes
+        -----
+        In DISORT, this variable is named "FLUP".
+
+        """
+        return self.__diffuse_up_flux
+
+    @property
+    def diffuse_down_flux(self) -> np.ndarray:
+        """Get the diffuse downward flux output array, which will be the total
+        downward flux minus the direct beam flux.
+
+        Returns
+        -------
+        np.ndarray
+            The diffuse downward flux.
+
+        Notes
+        -----
+        In DISORT, this variable is named "RFLDN".
+
+        """
+        return self.__diffuse_down_flux
+
+    @property
+    def direct_beam_flux(self) -> np.ndarray:
+        """Get the direct beam flux output array.
+
+        Returns
+        -------
+        np.ndarray
+            The direct beam flux.
+
+        Notes
+        -----
+        In DISORT, this variable is named "RFLDIR".
+
+        """
+        return self.__direct_beam_flux
+
+    @property
+    def flux_divergence(self) -> np.ndarray:
+        """Get the flux divergence output array, which is will represent
+        (d(net_flux) / d(optical_depth)). This is an exact result.
+
+        Returns
+        -------
+        np.ndarray
+            The flux divergence.
+
+        Notes
+        -----
+        In DISORT, this variable is named "DFDT".
+
+        """
+        return self.__flux_divergence
+
+    @property
+    def intensity(self) -> np.ndarray:
+        """Get the intensity output array.
+
+        Returns
+        -------
+        np.ndarray
+            The intensity.
+
+        Notes
+        -----
+        In DISORT, this variable is named "UU".
+
+        """
+        return self.__intensity
+
+    @property
+    def mean_intensity(self) -> np.ndarray:
+        """Get the mean intensity output array.
+
+        Returns
+        -------
+        np.ndarray
+            The mean intensity.
+
+        Notes
+        -----
+        In DISORT, this variable is named "UAVG".
+
+        """
+        return self.__mean_intensity
+
+    @property
+    def transmissivity_medium(self) -> np.ndarray:
+        """Get the transmissivity of the medium output array.
+
+        Returns
+        -------
+        np.ndarray
+            The transmissivity of the medium.
+
+        Notes
+        -----
+        In DISORT, this variable is named "TRNMED".
+
+        """
+        return self.__transmissivity_medium
