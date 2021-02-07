@@ -2,6 +2,7 @@
 arrays that generally control how DISORT runs.
 """
 from typing import Any
+from warnings import warn
 import numpy as np
 
 
@@ -144,3 +145,343 @@ class ComputationalParameters:
 
         """
         return self.__n_user_levels
+
+
+class ModelBehavior:
+    """Create a data structure for holding the DISORT control variables.
+
+    ModelBehavior holds the control flags that dictate DISORT's behavior. It
+    also performs basic checks that the input control options are plausible.
+
+    """
+    def __init__(self, accuracy: float = 0.0, delta_m_plus: bool = False,
+                 do_pseudo_sphere: bool = False, header: str = '',
+                 incidence_beam_conditions: bool = False,
+                 only_fluxes: bool = False, print_variables: list[bool] = None,
+                 radius: float = 6371.0, user_angles: bool = True,
+                 user_optical_depths: bool = False) -> None:
+        """
+        Parameters
+        ----------
+        accuracy: float, optional
+            The convergence criterion for azimuthal (Fourier cosine) series.
+            Will stop when the following occurs twice: largest term being added
+            is less than 'accuracy' times total series sum (twice because
+            there are cases where terms are anomalously small but azimuthal
+            series has not converged). Should be between 0 and 0.01 to avoid
+            risk of serious non-convergence. Has no effect on problems lacking a
+            beam source, since azimuthal series has only one term in that case.
+            Default is 0.0.
+        delta_m_plus: bool, optional
+            Denote whether to use the delta-M+ method of Lin et al. (2018).
+            Default is False.
+        do_pseudo_sphere: bool, optional
+            Denote whether to use a pseudo-spherical correction. Default is
+            False.
+        header: str, optional
+            Make a 127- (or less) character header for prints, embedded in the
+            DISORT banner. Note that setting header='' will eliminate both the
+            banner and the header, and this is the only way to do so ('header'
+            is not controlled by any of the 'print' flags); 'header' can be used
+            to mark the progress of a calculation in which DISORT is called many
+             times, while leaving all other printing turned off. Default is ''.
+        incidence_beam_conditions: bool, optional
+            Denote what functions of the incidence beam angle should be
+            included. If True, return the albedo and transmissivity of the
+            entire medium as a function of incidence beam angle. In this case,
+            the following inputs are the only ones considered by DISORT:
+
+                - NLYR
+                - DTAUC
+                - SSALB
+                - PMOM
+                - NSTR
+                - USRANG
+                - NUMU
+                - UMU
+                - ALBEDO
+                - PRNT
+                - HEADER
+
+            PLANK is assumed to be False, LAMBER is assumed to be True, and
+            ONLYFL must be False. The only output is ALBMED and TRNMED. The
+            intensities are not corrected for delta-M+ correction.
+
+            If False, this is accommodates any general case of boundary
+            conditions including beam illumination from the top, isotropic
+            illumination from the top, thermal emission from the top, internal
+            thermal emission, reflection at the bottom, and/or thermal emission
+            from the bottom. Default is False.
+        only_fluxes: bool, optional
+            Determine if only the fluxes are returned by the model. If True,
+            return fluxes, flux divergences, and mean intensities; if False,
+            return all those quantities and intensities. In addition, if True
+            the number of polar angles can be 0, the number of azimuthal angles
+            can be 0, phi is not used, and all values of intensity (UU) will be
+            set to 0 (these are defined in ComputationalParameters). Default is
+            False.
+        print_variables: list[bool], optional
+            Make a list of variables that control what DISORT prints. The 5
+            booleans control whether each of the following is printed:
+
+            1. Input variables (except PMOM)
+            2. Fluxes
+            3. Intensities at user levels and angles
+            4. Planar transmissivity and planar albedo as a function of solar
+            zenith angle (incidence_beam_conditions == True)
+            5. PMOM for each layer (but only if 1. == True and only for layers
+            with scattering)
+
+            Default is None, which makes [False, False, False, False, False].
+        radius: float, optional
+            The planetary radius. This is presumably only used if
+            do_pseudo_sphere == True, although there is no documentation on
+            this. Default is 6371.0.
+        user_angles: bool, optional
+            Denote whether radiant quantities should be returned at user angles.
+            If False, radiant quantities are to be returned at computational
+            polar angles. Also, UMU will return the cosines of the computational
+            polar angles and NUMU will return their number ( = NSTR).UMU must
+            be large enough to contain NSTR elements (cf. MAXUMU).If True,
+            radiant quantities are to be returned at user-specified polar
+            angles, as follows: NUMU No. of polar angles (zero is a legal value
+            only when 'only_fluxes' == True ) UMU(IU) IU=1 to NUMU, cosines of
+            output polar angles in increasing order---starting with negative
+            (downward) values (if any) and on through positive (upward)
+            values; *** MUST NOT HAVE ANY ZERO VALUES ***. Default is True.
+        user_optical_depths: bool, optional
+            Denote whether radiant quantities are returned at user-specified
+            optical depths. Default is False.
+
+        Raises
+        ------
+        TypeError
+            Raised if any inputs cannot be cast to the correct type.
+
+        Warnings
+        --------
+        UserWarning
+            Raised if accuracy is not between 0 and 0.01.
+
+        """
+        self.__accuracy = self.__make_accuracy(accuracy)
+        self.__delta_m_plus = self.__make_control_flag(delta_m_plus)
+        self.__do_pseudo_sphere = self.__make_control_flag(do_pseudo_sphere)
+        self.__header = self.__make_header(header)
+        self.__incidence_beam_conditions = \
+            self.__make_control_flag(incidence_beam_conditions)
+        self.__only_fluxes = self.__make_control_flag(only_fluxes)
+        self.__print_variables = self.__make_print_variables(print_variables)
+        self.__radius = self.__make_radius(radius)
+        self.__user_angles = self.__make_control_flag(user_angles)
+        self.__user_optical_depths = self.__make_control_flag(
+            user_optical_depths)
+
+    @staticmethod
+    def __make_accuracy(accuracy) -> float:
+        try:
+            if not 0 <= accuracy <= 0.01:
+                warn('accuracy is expected to be between 0 and 0.01.')
+            return float(accuracy)
+        except TypeError as te:
+            raise TypeError('accuracy must be a float') from te
+
+    @staticmethod
+    def __make_control_flag(flag) -> bool:
+        return bool(flag)
+
+    @staticmethod
+    def __make_header(header) -> str:
+        try:
+            header = str(header)
+            if len(header) > 127:
+                warn('header can have a maximum of 127 characters. '
+                     'Truncating to 127 characters...')
+                header = header[:127]
+            return header
+        except TypeError as te:
+            raise TypeError('header cannot be cast into a string.') from te
+
+    @staticmethod
+    def __make_print_variables(pvar) -> list[bool]:
+        if pvar is None:
+            return [False, False, False, False, False]
+        else:
+            try:
+                prnt = [bool(f) for f in pvar]
+                if len(prnt) != 5:
+                    raise ValueError('print_variables should have 5 elements.')
+                return prnt
+            except TypeError as te:
+                raise TypeError('print_variables should be a list of bools') \
+                    from te
+
+    # TODO: radius cannot be negative
+    @staticmethod
+    def __make_radius(radius) -> float:
+        try:
+            return float(radius)
+        except TypeError as te:
+            raise TypeError('radius cannot be cast into a float') from te
+
+    @property
+    def accuracy(self) -> float:
+        """Get the input accuracy.
+
+        Returns
+        -------
+        float
+            The accuracy.
+
+        Notes
+        -----
+        In DISORT, this variable is named "ACCUR".
+
+        """
+        return self.__accuracy
+
+    @property
+    def delta_m_plus(self) -> bool:
+        """Get whether to use delta-M+ scaling.
+
+        Returns
+        -------
+        bool
+            True if delta-M+ scaling is requested; False otherwise.
+
+        Notes
+        -----
+        In DISORT, this variable is named "DELTAMPLUS".
+
+        """
+        return self.__delta_m_plus
+
+    @property
+    def do_pseudo_sphere(self) -> bool:
+        """Get whether to perform a pseudo-spherical correction.
+
+        Returns
+        -------
+        bool
+            True if a pseudo-spherical correction is requested; False otherwise.
+
+        Notes
+        -----
+        In DISORT, this variable is named "DO_PSEUDO_SPHERE". There is no
+        documentation on this variable.
+
+        """
+        return self.__do_pseudo_sphere
+
+    @property
+    def header(self) -> str:
+        """Get the characters that will appear in the DISORT banner.
+
+        Returns
+        -------
+        str
+            The characters in the DISORT banner.
+
+        Notes
+        -----
+        In DISORT, this variable is named "HEADER".
+
+        """
+        return self.__header
+
+    @property
+    def incidence_beam_conditions(self) -> bool:
+        """Get whether the model will only return albedo and transmissivity.
+
+        Returns
+        -------
+        bool
+            True if DISORT should only return albedo and transmissivity; False
+            otherwise.
+
+        """
+        return self.__incidence_beam_conditions
+
+    @property
+    def only_fluxes(self) -> bool:
+        """Get whether DISORT should only return fluxes.
+
+        Returns
+        -------
+        bool
+            True if only fluxes are requested; False if fluxes and intensities
+            are requested.
+
+        Notes
+        -----
+        In DISORT, this variable is named "ONLYFL".
+
+        """
+        return self.__only_fluxes
+
+    @property
+    def print_variables(self) -> list[bool]:
+        """Get the variables to print.
+
+        Returns
+        -------
+        list[bool]
+            The variables to print
+
+        Notes
+        -----
+        In DISORT, this variable is named "PRNT".
+
+        """
+        return self.__print_variables
+
+    @property
+    def radius(self) -> float:
+        """Get the planetary radius.
+
+        Returns
+        -------
+        float
+            The planetary radius.
+
+        Notes
+        -----
+        In DISORT, this variable is named "EARTH_RADIUS".
+
+        """
+        return self.__radius
+
+    @property
+    def user_angles(self) -> bool:
+        """Get whether radiant quantities should be returned at user angles.
+
+        Returns
+        -------
+        bool
+            True if quantities are returned at user-specified angles; False if
+            they are returned at computational polar angles.
+
+        Notes
+        -----
+        In DISORT, this variable is named "USRANG".
+
+        """
+        return self.__user_angles
+
+    @property
+    def user_optical_depths(self) -> bool:
+        """Get whether radiant quantities should be returned at user optical
+        depths.
+
+        Returns
+        -------
+        bool
+            True if quantities are returned at user optical depths; False if
+            they are returned at the boundary of every computational layer.
+
+        Notes
+        -----
+        In DISORT, this variable is named "USRTAU".
+
+        """
+        return self.__user_optical_depths
