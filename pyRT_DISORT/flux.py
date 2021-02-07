@@ -6,7 +6,7 @@ import numpy as np
 
 
 class IncidentFlux:
-    """IncidentFlux is a data structure for holding the incident fluxes.
+    """Create a data structure for holding the incident fluxes.
 
     IncidentFlux creates scalars for the incident beam and isotropic fluxes and
     performs checks that the input fluxes are valid inputs to DISORT.
@@ -91,7 +91,7 @@ class IncidentFlux:
 
 
 class ThermalEmission:
-    """ThermalEmission is a data structure for holding thermal variables.
+    """Create a data structure for holding thermal emission variables.
 
     ThermalEmission creates variables needs to include thermal emission in
     DISORT.

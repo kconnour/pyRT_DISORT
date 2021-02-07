@@ -40,6 +40,11 @@ class TestBeamFlux(TestIncidentFlux):
     def test_beam_flux_defaults_to_pi(self) -> None:
         self.assertEqual(np.pi, IncidentFlux().beam_flux)
 
+    def test_beam_flux_is_read_only(self) -> None:
+        incidence = IncidentFlux()
+        with self.assertRaises(AttributeError):
+            incidence.beam_flux = 0
+
 
 class TestIsotropicFlux(TestIncidentFlux):
     def test_isotropic_flux_is_unchanged(self) -> None:
@@ -48,6 +53,11 @@ class TestIsotropicFlux(TestIncidentFlux):
 
     def test_isotropic_flux_defaults_to_0(self) -> None:
         self.assertEqual(0, IncidentFlux().isotropic_flux)
+
+    def test_isotropic_flux_is_read_only(self) -> None:
+        incidence = IncidentFlux()
+        with self.assertRaises(AttributeError):
+            incidence.isotropic_flux = 0
 
 
 class TestThermalEmission(TestCase):
@@ -103,6 +113,11 @@ class TestThermalEmissionProperty(TestThermalEmission):
     def test_top_emissivity_defaults_to_false(self) -> None:
         self.assertEqual(False, ThermalEmission().thermal_emission)
 
+    def test_thermal_emission_is_read_only(self) -> None:
+        te = ThermalEmission()
+        with self.assertRaises(AttributeError):
+            te.thermal_emission = 0
+
 
 class TestBottomTemperature(TestThermalEmission):
     def test_bottom_temperature_is_unchanged(self) -> None:
@@ -111,6 +126,11 @@ class TestBottomTemperature(TestThermalEmission):
 
     def test_bottom_temperature_defaults_to_0(self) -> None:
         self.assertEqual(0, ThermalEmission().bottom_temperature)
+
+    def test_bottom_temperature_is_read_only(self) -> None:
+        te = ThermalEmission()
+        with self.assertRaises(AttributeError):
+            te.bottom_temperature = 0
 
 
 class TestTopTemperature(TestThermalEmission):
@@ -121,6 +141,11 @@ class TestTopTemperature(TestThermalEmission):
     def test_top_temperature_defaults_to_0(self) -> None:
         self.assertEqual(0, ThermalEmission().top_temperature)
 
+    def test_top_temperature_is_read_only(self) -> None:
+        te = ThermalEmission()
+        with self.assertRaises(AttributeError):
+            te.top_temperature = 0
+
 
 class TestTopEmissivity(TestThermalEmission):
     def test_top_emissivity_is_unchanged(self) -> None:
@@ -129,3 +154,8 @@ class TestTopEmissivity(TestThermalEmission):
 
     def test_top_emissivity_defaults_to_1(self) -> None:
         self.assertEqual(1, ThermalEmission().top_emissivity)
+
+    def test_top_emissivity_is_read_only(self) -> None:
+        te = ThermalEmission()
+        with self.assertRaises(AttributeError):
+            te.top_emissivity = 0
