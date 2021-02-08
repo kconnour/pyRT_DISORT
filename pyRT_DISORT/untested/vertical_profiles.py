@@ -2,7 +2,7 @@
 import numpy as np
 
 # Local imports
-from old.model_atmosphere import ModelGrid
+from pyRT_DISORT.eos import ModelEquationOfState
 
 
 class VerticalProfile:
@@ -12,7 +12,7 @@ class VerticalProfile:
         self.__check_input_is_model_grid()
 
     def __check_input_is_model_grid(self):
-        if not isinstance(self.model_grid, ModelGrid):
+        if not isinstance(self.model_grid, ModelEquationOfState):
             raise TypeError('model_grid must be an instance of ModelGrid')
 
 

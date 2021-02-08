@@ -2,7 +2,7 @@
 import numpy as np
 
 # Local imports
-from old.utilities import ArrayChecker
+from pyRT_DISORT.untested_utils.utilities import ArrayChecker
 
 
 class ForwardScatteringProperty:

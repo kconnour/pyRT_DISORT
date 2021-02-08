@@ -1,3 +1,3 @@
 import disort
 
-print(disort.disort.__doc__)
+print(disort.disobrdf.__doc__)

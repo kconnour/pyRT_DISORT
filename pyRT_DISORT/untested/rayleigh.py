@@ -2,8 +2,8 @@
 import numpy as np
 
 # Local imports
-from old.model_atmosphere import ModelGrid
-from old.utilities import ArrayChecker
+from pyRT_DISORT.untested import ModelGrid
+from pyRT_DISORT.untested_utils.utilities import ArrayChecker
 
 
 class RayleighCo2:

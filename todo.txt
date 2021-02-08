@@ -1,22 +1,9 @@
 To-dos on current clean code:
 - General
 --- Latex docstrings would improve readability in a number of areas
---- Switch to whatever numpy used with Sphinx
 --- Add an automatic linter
 --- Add ability to run all unit/integration tests with one command
 --- Can I get Github to automatically generate documentation when I push code?
-
-- eos.ModelEquationOfState
---- Mike said to do this in log(z) space. Is that still relevant?
---- Fix some duplicate logic
---- I ask for a z grid to interpolate on to, but allow a P grid
-
-- eos.eos_from_file
---- This function does way more than one thing, so clean it up
---- Decide if I want to input a string or something else. An array would be
-    maximally flexible but a string is most convenient.
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Updates:
 --- surface.py
