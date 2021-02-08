@@ -65,14 +65,13 @@ class TestThermalEmission(TestCase):
         pass
 
 
-# TODO: test NaN... wanton users will surely input it once
 class TestThermalEmissionInit(TestThermalEmission):
     def test_list_thermal_emission_returns_true(self) -> None:
         te = ThermalEmission(thermal_emission=[100])
         self.assertTrue(te.thermal_emission)
 
-    def test_str_bottom_temperature_raises_type_error(self) -> None:
-        with self.assertRaises(TypeError):
+    def test_str_bottom_temperature_raises_value_error(self) -> None:
+        with self.assertRaises(ValueError):
             ThermalEmission(bottom_temperature='foo')
 
     def test_list_bottom_temperature_raises_type_error(self) -> None:
@@ -83,8 +82,12 @@ class TestThermalEmissionInit(TestThermalEmission):
         with self.assertRaises(ValueError):
             ThermalEmission(bottom_temperature=np.inf)
 
-    def test_str_top_temperature_raises_type_error(self) -> None:
-        with self.assertRaises(TypeError):
+    def test_nan_bottom_temperature_raises_value_error(self) -> None:
+        with self.assertRaises(ValueError):
+            ThermalEmission(bottom_temperature=np.nan)
+
+    def test_str_top_temperature_raises_value_error(self) -> None:
+        with self.assertRaises(ValueError):
             ThermalEmission(top_temperature='foo')
 
     def test_list_top_temperature_raises_type_error(self) -> None:
@@ -95,6 +98,10 @@ class TestThermalEmissionInit(TestThermalEmission):
         with self.assertRaises(ValueError):
             ThermalEmission(top_temperature=np.inf)
 
+    def test_nan_top_temperature_raises_value_error(self) -> None:
+        with self.assertRaises(ValueError):
+            ThermalEmission(bottom_temperature=np.nan)
+
     def test_top_emissivity_outside_0_to_1_raises_value_error(self) -> None:
         ThermalEmission(top_emissivity=0.0)
         with self.assertRaises(ValueError):
@@ -103,6 +110,12 @@ class TestThermalEmissionInit(TestThermalEmission):
         ThermalEmission(top_emissivity=1.0)
         with self.assertRaises(ValueError):
             ThermalEmission(top_emissivity=np.nextafter(1, 2))
+
+        with self.assertRaises(ValueError):
+            ThermalEmission(top_emissivity=np.inf)
+
+        with self.assertRaises(ValueError):
+            ThermalEmission(top_emissivity=np.nan)
 
 
 class TestThermalEmissionProperty(TestThermalEmission):
