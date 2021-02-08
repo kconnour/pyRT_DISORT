@@ -188,9 +188,50 @@ class TestModelBehavior(TestCase):
 
 
 class TestModelBehaviorInit(TestModelBehavior):
-    def test_str_accuracy_raises_type_error(self) -> None:
+    def test_ndarray_accuracy_raises_type_error(self) -> None:
         with self.assertRaises(TypeError):
+            ModelBehavior(accuracy=np.zeros(5))
+
+    def test_str_accuracy_raises_value_error(self) -> None:
+        with self.assertRaises(ValueError):
             ModelBehavior(accuracy='foo')
+
+    def test_ndarray_delta_m_plus_raises_value_error(self) -> None:
+        with self.assertRaises(ValueError):
+            ModelBehavior(delta_m_plus=np.zeros(5))
+
+    def test_ndarray_do_pseudo_sphere_raises_value_error(self) -> None:
+        with self.assertRaises(ValueError):
+            ModelBehavior(do_pseudo_sphere=np.zeros(5))
+
+    # TODO: how can I test this?
+    def test_header(self) -> None:
+        pass
+
+    def test_ndarray_incidence_beam_conditions_raises_value_error(self) -> None:
+        with self.assertRaises(ValueError):
+            ModelBehavior(incidence_beam_conditions=np.zeros(5))
+
+    def test_ndarray_only_fluxes_raises_value_error(self) -> None:
+        with self.assertRaises(ValueError):
+            ModelBehavior(only_fluxes=np.zeros(5))
+
+    def test_ndarray_print_variables_is_ok(self) -> None:
+        prnt = np.array([True, False, True, False, True])
+        ModelBehavior(print_variables=prnt)
+
+    def test_non_positive_radius_raises_value_error(self) -> None:
+        with self.assertRaises(ValueError):
+            ModelBehavior(radius=0)
+        ModelBehavior(radius=np.nextafter(0, 1))
+
+    def test_ndarray_user_angles_raises_value_error(self) -> None:
+        with self.assertRaises(ValueError):
+            ModelBehavior(user_angles=np.zeros(5))
+
+    def test_ndarray_user_optical_depths_raises_value_error(self) -> None:
+        with self.assertRaises(ValueError):
+            ModelBehavior(user_optical_depths=np.zeros(5))
 
     def test_accuracy_outside_range_raises_warning(self) -> None:
         ModelBehavior(accuracy=0)
@@ -206,20 +247,6 @@ class TestModelBehaviorInit(TestModelBehavior):
             ModelBehavior(accuracy=np.nextafter(0.01, 1))
             self.assertEqual(1, len(warning))
             self.assertEqual(warning[-1].category, UserWarning)
-
-    # TODO: deltaM+
-    # TODO: do pseudo sphere
-
-    def test_header_outside_range_raises_warning(self) -> None:
-        ModelBehavior(header='f'*127)
-        with warnings.catch_warnings(record=True) as warning:
-            warnings.simplefilter("always")
-            ModelBehavior(header='f'*128)
-            self.assertEqual(1, len(warning))
-            self.assertEqual(warning[-1].category, UserWarning)
-
-    # TODO: ibcnd
-    # TODO: onlyfl and afterwards
 
 
 class TestAccuracy(TestModelBehavior):
@@ -339,6 +366,19 @@ class TestUserAngles(TestModelBehavior):
     def test_user_angles_is_read_only(self) -> None:
         with self.assertRaises(AttributeError):
             self.mb.user_angles = True
+
+
+class TestUserOpticalDepths(TestModelBehavior):
+    def test_user_optical_depths_is_unchanged(self) -> None:
+        mb = ModelBehavior(user_optical_depths=False)
+        self.assertEqual(False, mb.user_optical_depths)
+
+    def test_user_optical_depths_defaults_to_false(self) -> None:
+        self.assertEqual(False, ModelBehavior().user_optical_depths)
+
+    def test_user_optical_depths_is_read_only(self) -> None:
+        with self.assertRaises(AttributeError):
+            self.mb.user_optical_depths = True
 
 
 class TestOutputArrays(TestCase):

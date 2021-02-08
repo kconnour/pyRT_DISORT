@@ -201,6 +201,7 @@ class ComputationalParameters:
         return self.__n_user_levels
 
 
+# TODO: fix user_angles docstring. It's a mess
 class ModelBehavior:
     """Create a data structure for holding the DISORT control variables.
 
@@ -233,29 +234,30 @@ class ModelBehavior:
             Denote whether to use a pseudo-spherical correction. Default is
             False.
         header: str, optional
-            Make a 127- (or less) character header for prints, embedded in the
-            DISORT banner. Note that setting header='' will eliminate both the
-            banner and the header, and this is the only way to do so ('header'
-            is not controlled by any of the 'print' flags); 'header' can be used
+            Use a 127- (or less) character header for prints, embedded in the
+            DISORT banner. Input headers greater than 127 characters will be
+            truncated. Setting header='' will eliminate both the banner and the
+            header, and this is the only way to do so ('header' is not
+            controlled by any of the 'print' flags); 'header' can be used
             to mark the progress of a calculation in which DISORT is called many
-             times, while leaving all other printing turned off. Default is ''.
+            times, while leaving all other printing turned off. Default is ''.
         incidence_beam_conditions: bool, optional
             Denote what functions of the incidence beam angle should be
             included. If True, return the albedo and transmissivity of the
             entire medium as a function of incidence beam angle. In this case,
             the following inputs are the only ones considered by DISORT:
 
-                - NLYR
+                - n_layers (from ComputationalParameters)
                 - DTAUC
                 - SSALB
                 - PMOM
-                - NSTR
-                - USRANG
-                - NUMU
+                - n_streams (from ComputationalParameters)
+                - user_angles (from this class)
+                - n_polar (from ComputationalParameters)
                 - UMU
                 - ALBEDO
-                - PRNT
-                - HEADER
+                - print_variables (from this class)
+                - header (from this class)
 
             PLANK is assumed to be False, LAMBER is assumed to be True, and
             ONLYFL must be False. The only output is ALBMED and TRNMED. The
@@ -295,8 +297,9 @@ class ModelBehavior:
             Denote whether radiant quantities should be returned at user angles.
             If False, radiant quantities are to be returned at computational
             polar angles. Also, UMU will return the cosines of the computational
-            polar angles and NUMU will return their number ( = NSTR).UMU must
-            be large enough to contain NSTR elements (cf. MAXUMU).If True,
+            polar angles and n_polar (from ComputationalParameters) will return
+            their number ( = n_streams).UMU must
+            be large enough to contain n_streams elements. If True,
             radiant quantities are to be returned at user-specified polar
             angles, as follows: NUMU No. of polar angles (zero is a legal value
             only when 'only_fluxes' == True ) UMU(IU) IU=1 to NUMU, cosines of
@@ -311,6 +314,9 @@ class ModelBehavior:
         ------
         TypeError
             Raised if any inputs cannot be cast to the correct type.
+        ValueError
+            Raised if any inputs cannot be cast to the correct type or if
+            print_variables does not have 5 elements.
 
         Warnings
         --------
@@ -319,43 +325,48 @@ class ModelBehavior:
 
         """
         self.__accuracy = self.__make_accuracy(accuracy)
-        self.__delta_m_plus = self.__make_control_flag(delta_m_plus)
-        self.__do_pseudo_sphere = self.__make_control_flag(do_pseudo_sphere)
+        self.__delta_m_plus = self.__make_delta_m_plus(delta_m_plus)
+        self.__do_pseudo_sphere = self.__make_do_pseudo_sphere(do_pseudo_sphere)
         self.__header = self.__make_header(header)
         self.__incidence_beam_conditions = \
-            self.__make_control_flag(incidence_beam_conditions)
-        self.__only_fluxes = self.__make_control_flag(only_fluxes)
+            self.__make_incidence_beam_conditions(incidence_beam_conditions)
+        self.__only_fluxes = self.__make_only_fluxes(only_fluxes)
         self.__print_variables = self.__make_print_variables(print_variables)
         self.__radius = self.__make_radius(radius)
-        self.__user_angles = self.__make_control_flag(user_angles)
-        self.__user_optical_depths = self.__make_control_flag(
+        self.__user_angles = self.__make_user_angles(user_angles)
+        self.__user_optical_depths = self.__make_user_optical_depths(
             user_optical_depths)
 
-    @staticmethod
-    def __make_accuracy(accuracy) -> float:
-        try:
-            if not 0 <= accuracy <= 0.01:
-                warn('accuracy is expected to be between 0 and 0.01.')
-            return float(accuracy)
-        except TypeError as te:
-            raise TypeError('accuracy must be a float') from te
+        self.__warn_if_accuracy_is_outside_valid_range()
 
-    @staticmethod
-    def __make_control_flag(flag) -> bool:
-        return bool(flag)
+    def __make_accuracy(self, accuracy: float) -> float:
+        return self.__cast_variable_to_float(accuracy, 'accuracy')
 
+    def __make_delta_m_plus(self, delta_m_plus: bool) -> bool:
+        return self.__cast_variable_to_bool(delta_m_plus, 'delta_m_plus')
+
+    def __make_do_pseudo_sphere(self, do_pseudo_sphere: bool) -> bool:
+        return self.__cast_variable_to_bool(
+            do_pseudo_sphere, 'do_pseudo_sphere')
+
+    # TODO: this does more than one thing
     @staticmethod
     def __make_header(header) -> str:
         try:
             header = str(header)
-            if len(header) > 127:
-                warn('header can have a maximum of 127 characters. '
-                     'Truncating to 127 characters...')
-                header = header[:127]
+            if len(header) >= 127:
+                header = header[:126]
             return header
         except TypeError as te:
             raise TypeError('header cannot be cast into a string.') from te
 
+    def __make_incidence_beam_conditions(self, ibcnd: bool) -> bool:
+        return self.__cast_variable_to_bool(ibcnd, 'incidence_beam_conditions')
+
+    def __make_only_fluxes(self, only_fluxes: bool) -> bool:
+        return self.__cast_variable_to_bool(only_fluxes, 'only_fluxes')
+
+    # TODO: this does more than one thing
     @staticmethod
     def __make_print_variables(pvar) -> list[bool]:
         if pvar is None:
@@ -370,13 +381,42 @@ class ModelBehavior:
                 raise TypeError('print_variables should be a list of bools') \
                     from te
 
-    # TODO: radius cannot be negative
+    def __make_radius(self, radius: float) -> float:
+        radius = self.__cast_variable_to_float(radius, 'radius')
+        self.__raise_value_error_if_radius_is_not_positive(radius)
+        return radius
+
+    def __make_user_angles(self, user_angles: bool) -> bool:
+        return self.__cast_variable_to_bool(user_angles, 'user_angles')
+
+    def __make_user_optical_depths(self, user_optical_depths: bool) -> bool:
+        return self.__cast_variable_to_bool(
+            user_optical_depths, 'user_optical_depths')
+
     @staticmethod
-    def __make_radius(radius) -> float:
+    def __cast_variable_to_float(variable: float, name: str) -> float:
         try:
-            return float(radius)
+            return float(variable)
         except TypeError as te:
-            raise TypeError('radius cannot be cast into a float') from te
+            raise TypeError(f'{name} cannot be cast into a float.') from te
+        except ValueError as ve:
+            raise ValueError(f'{name} cannot be cast into a float.') from ve
+
+    @staticmethod
+    def __cast_variable_to_bool(variable: bool, name: str) -> bool:
+        try:
+            return bool(variable)
+        except TypeError as te:
+            raise TypeError(f'{name} cannot be cast into a boolean.') from te
+
+    @staticmethod
+    def __raise_value_error_if_radius_is_not_positive(radius) -> None:
+        if radius <= 0:
+            raise ValueError('radius must be positive.')
+
+    def __warn_if_accuracy_is_outside_valid_range(self) -> None:
+        if not 0 <= self.__accuracy <= 0.01:
+            warn('accuracy is expected to be between 0 and 0.01.')
 
     @property
     def accuracy(self) -> float:
@@ -405,7 +445,8 @@ class ModelBehavior:
 
         Notes
         -----
-        In DISORT, this variable is named "DELTAMPLUS".
+        In DISORT, this variable is named "DELTAMPLUS". There is no
+        documentation on this variable.
 
         """
         return self.__delta_m_plus
@@ -500,7 +541,9 @@ class ModelBehavior:
 
         Notes
         -----
-        In DISORT, this variable is named "EARTH_RADIUS".
+        In DISORT, this variable is named "EARTH_RADIUS". There is no
+        documentation on this variable, though I'm presuming it could be any
+        planetary radius.
 
         """
         return self.__radius
