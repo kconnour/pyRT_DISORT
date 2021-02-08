@@ -8,18 +8,19 @@ from pyRT_DISORT.utilities.array_checks import ArrayChecker
 from scipy.integrate import quadrature as quad
 
 
+# TODO: Mike said to do this in log(z) space. Is this still necessary?
 class ModelEquationOfState:
-    """ModelEquationOfState computes EoS variables on a model grid.
+    """Compute equation of state variables on a model grid.
 
     ModelEquationOfState accepts altitudes [km], pressures [Pa],
     temperatures [K], and number densities [particles / m**3], along with the
     altitudes where the model is defined. It linearly interpolates
     pressures and temperatures onto this new grid and assumes the ideal gas law
     to calculate the number density at the new grid. It also computes the
-    column density within each layer using Gaussian quadrature. For these
-    computations, quantities are assumed to be in MKS units.
+    column density within each layer using Gaussian quadrature.
 
     """
+
     def __init__(self, altitude_grid: np.ndarray, pressure_grid: np.ndarray,
                  temperature_grid: np.ndarray, number_density_grid: np.ndarray,
                  altitude_boundaries: np.ndarray) -> None:
@@ -239,14 +240,9 @@ class ModelEquationOfState:
         return self.__temperature_boundaries
 
 
-# TODO: This function does way more than one thing, so clean it up
-# TODO: Decide if I want to input a string or something else. An array would be
-#  maximally flexible but a string is most convenient.
-# TODO: Make one function that makes eos from an array. Then remake this
-#  function, where it just reads in an array from a string, then calls that func
-def eos_from_file(array_path: str, altitude_boundaries: np.ndarray) \
+def eos_from_array(atm: np.ndarray, altitude_boundaries: np.ndarray) \
         -> ModelEquationOfState:
-    """Create a ModelEquationOfState from a file containing atmospheric equation
+    """Create a ModelEquationOfState from an array containing atmospheric equation
     of state variables. The array is assumed to be a 2D array, with the columns
     having the following meanings:
 
@@ -258,8 +254,8 @@ def eos_from_file(array_path: str, altitude_boundaries: np.ndarray) \
 
     Parameters
     ----------
-    array_path: str
-        Absolute path to the 2D array of atmospheric EoS variables.
+    atm: np.ndarray
+        2D array of atmospheric equation of state variables.
     altitude_boundaries: np.ndarray
         The desired altitudes [km] of the model boundaries.
 
@@ -280,26 +276,5 @@ def eos_from_file(array_path: str, altitude_boundaries: np.ndarray) \
         Raised if the input array path does not lead to a .npy file.
 
     """
-    def read_file(file):
-        try:
-            return np.load(file)
-        except TypeError:
-            raise TypeError('array_path must be a str.') from None
-        except FileNotFoundError:
-            raise FileNotFoundError(f'No such file or directory: {file}.') \
-                from None
-        except ValueError:
-            raise ValueError('The file cannot be opened. This likely means the '
-                             'file is not a .npy file.')
-
-    input_atmosphere = read_file(array_path)
-    try:
-        return ModelEquationOfState(input_atmosphere[:, 0],
-                                    input_atmosphere[:, 1],
-                                    input_atmosphere[:, 2],
-                                    input_atmosphere[:, 3],
-                                    altitude_boundaries)
-    except IndexError:
-        raise IndexError('Too many indices for array. This probably means the '
-                         'input file is a 1D array instead of the expected 2D '
-                         'array.')
+    return ModelEquationOfState(atm[:, 0], atm[:, 1], atm[:, 2], atm[:, 3],
+                                altitude_boundaries)

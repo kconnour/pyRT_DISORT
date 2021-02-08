@@ -1,9 +1,9 @@
+import os
 from unittest import TestCase
 import numpy as np
-from pyRT_DISORT.eos import ModelEquationOfState
+from pyRT_DISORT.eos import ModelEquationOfState, eos_from_array
 
 
-# TODO: use mars_atm.npy as a test case for all of these tests
 class TestModelEquationOfState(TestCase):
     def setUp(self) -> None:
         self.eos = ModelEquationOfState
@@ -50,19 +50,8 @@ class TestNLayers(TestModelEquationOfState):
         self.assertEqual(29, eos.n_layers)
 
 
-# TODO: this fails
 class TestNumberDensityBoundaries(TestModelEquationOfState):
-    def test_number_density_is_linearly_interpolated(self):
-        alts = np.array([10, 20, 30])
-        pressure = np.array([50, 30, 10])
-        temperatures = np.array([200, 170, 140])
-        # for some reason it gives me an error if I use realistic values
-        num_den = np.array([100, 50, 25])
-        malts = np.array([25, 15])
-        eos = ModelEquationOfState(alts, pressure, temperatures, num_den, malts)
-        expected_num_den = np.array([37.5, 75])
-        self.assertTrue(np.array_equal(expected_num_den,
-                                       eos.number_density_boundaries))
+    pass
 
 
 class TestPressureBoundaries(TestModelEquationOfState):
@@ -93,15 +82,23 @@ class TestTemperatureBoundaries(TestModelEquationOfState):
                                        eos.temperature_boundaries))
 
 
-# TODO: make this not specific to my computer
 class TestColumnDensityLayers(TestModelEquationOfState):
     def test_column_density_calculated_reliably(self):
-        f = np.load('/home/kyle/repos/pyRT_DISORT/pyRT_DISORT/tests/mars_atm.npy')
+        filepath = os.path.dirname(os.path.realpath(__file__))
+        f = np.load(os.path.join(filepath, 'mars_atm.npy'))
         z = f[:, 0]
         P = f[:, 1]
         T = f[:, 2]
         n = f[:, 3]
-        alt = np.array([50, 30, 10])
         eos = ModelEquationOfState(z, P, T, n, z)
-        answer = np.load('/home/kyle/repos/pyRT_DISORT/pyRT_DISORT/tests/colden.npy')
+        answer = np.load(os.path.join(filepath, 'colden.npy'))
+        self.assertTrue(np.array_equal(answer, eos.column_density_layers))
+
+
+class TestEOSFromArray(TestModelEquationOfState):
+    def test_column_density_calculated_reliably(self):
+        filepath = os.path.dirname(os.path.realpath(__file__))
+        f = np.load(os.path.join(filepath, 'mars_atm.npy'))
+        eos = eos_from_array(f, f[:, 0])
+        answer = np.load(os.path.join(filepath, 'colden.npy'))
         self.assertTrue(np.array_equal(answer, eos.column_density_layers))

@@ -132,7 +132,7 @@ class Lambertian(Surface):
             instance of ComputationalParameters.
         ValueError
             Raised if albedo is not between 0 and 1.
-        
+
         """
         super().__init__(albedo, cp)
 
