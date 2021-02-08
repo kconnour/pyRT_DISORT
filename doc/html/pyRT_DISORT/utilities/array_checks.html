@@ -36,9 +36,6 @@ array checks on an input array.
 import numpy as np
 
 
-# TODO: I&#39;m unsure of some of the method names. After all, idk if an array can
-#  be positive, it just contains positive values. But then method names might
-#  become unwieldy...
 class ArrayChecker:
     &#34;&#34;&#34;An ArrayChecker object can perform common checks on np.ndarrays.
 
@@ -47,28 +44,35 @@ class ArrayChecker:
 
     &#34;&#34;&#34;
 
-    def __init__(self, array) -&gt; None:
+    def __init__(self, array: np.ndarray) -&gt; None:
         &#34;&#34;&#34;
         Parameters
         ----------
         array: np.ndarray
-            Any array to perform checks on.
+            Array to perform numeric checks on.
 
         Raises
         ------
         TypeError
             Raised if the input is not a np.ndarray.
+        ValueError
+            Raised if the input array contains non-numeric values.
 
         &#34;&#34;&#34;
         self.__array = array
+        self.__raise_error_if_input_array_is_bad()
+
+    def __raise_error_if_input_array_is_bad(self) -&gt; None:
         self.__raise_type_error_if_object_is_not_array()
+        self.__raise_value_error_if_array_contains_non_numeric_values()
 
     def __raise_type_error_if_object_is_not_array(self) -&gt; None:
-        if not self.__object_is_array():
+        if not isinstance(self.__array, np.ndarray):
             raise TypeError(&#39;The input object is not a np.ndarray.&#39;)
 
-    def __object_is_array(self) -&gt; bool:
-        return isinstance(self.__array, np.ndarray)
+    def __raise_value_error_if_array_contains_non_numeric_values(self) -&gt; None:
+        if not np.issubdtype(self.__array.dtype, np.number):
+            raise ValueError(&#39;The input array must contain numeric values.&#39;)
 
     def determine_if_array_contains_only_ints(self) -&gt; bool:
         &#34;&#34;&#34;Determine if the array contains only integers.
@@ -114,8 +118,15 @@ class ArrayChecker:
         &#34;&#34;&#34;
         return np.all(np.isfinite(self.__array))
 
-    def determine_if_array_is_in_range(self, low, high) -&gt; bool:
+    def determine_if_array_is_in_range(self, low: float, high: float) -&gt; bool:
         &#34;&#34;&#34;Determine if the array contains only values within a range.
+
+        Parameters
+        ----------
+        low: float
+            The lower value within the requested range.
+        high: float
+            The higher value within the requested range.
 
         Returns
         -------
@@ -123,7 +134,14 @@ class ArrayChecker:
             True if the contents are all within the input range; False
             otherwise.
 
+        Raises
+        ------
+        TypeError
+            Raised if either of the inputs are not floats.
+
         &#34;&#34;&#34;
+        self.__raise_value_error_if_input_is_not_float(low, &#39;low&#39;)
+        self.__raise_value_error_if_input_is_not_float(high, &#39;high&#39;)
         return np.all(self.__array &gt;= low) and np.all(self.__array &lt;= high)
 
     def determine_if_array_is_monotonically_decreasing(self) -&gt; bool:
@@ -159,17 +177,6 @@ class ArrayChecker:
         &#34;&#34;&#34;
         return np.all(self.__array &gt;= 0)
 
-    def determine_if_array_is_numeric(self) -&gt; bool:
-        &#34;&#34;&#34;Determine if the array contains numeric values.
-
-        Returns
-        -------
-        bool
-            True if contents are numeric; False otherwise.
-
-        &#34;&#34;&#34;
-        return np.issubdtype(self.__array.dtype, np.number)
-
     def determine_if_array_is_positive(self) -&gt; bool:
         &#34;&#34;&#34;Determine if the array contains only positive values.
 
@@ -193,8 +200,13 @@ class ArrayChecker:
         return self.determine_if_array_is_positive() and \
             self.determine_if_array_is_finite()
 
-    def determine_if_array_matches_dimensionality(self, dimension) -&gt; bool:
+    def determine_if_array_matches_dimensionality(self, dimension: int) -&gt; bool:
         &#34;&#34;&#34;Determine if the array matches an input number of dimensions.
+
+        Parameters
+        ----------
+        dimension: int
+            The number of dimensions to check for.
 
         Returns
         -------
@@ -203,7 +215,13 @@ class ArrayChecker:
             otherwise.
 
         &#34;&#34;&#34;
-        return np.ndim(self.__array) == dimension</code></pre>
+        return np.ndim(self.__array) == dimension
+
+    @staticmethod
+    def __raise_value_error_if_input_is_not_float(quantity: float, name: str) \
+            -&gt; None:
+        if not isinstance(quantity, float):
+            raise TypeError(f&#39;{name} must be a float.&#39;)</code></pre>
 </details>
 </section>
 <section>
@@ -217,7 +235,7 @@ class ArrayChecker:
 <dl>
 <dt id="pyRT_DISORT.utilities.array_checks.ArrayChecker"><code class="flex name class">
 <span>class <span class="ident">ArrayChecker</span></span>
-<span>(</span><span>array)</span>
+<span>(</span><span>array: numpy.ndarray)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>An ArrayChecker object can perform common checks on np.ndarrays.</p>
@@ -226,12 +244,14 @@ throughout pyRT_DISORT to determine if the array fits some criteria.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>array</code></strong> :&ensp;<code>np.ndarray</code></dt>
-<dd>Any array to perform checks on.</dd>
+<dd>Array to perform numeric checks on.</dd>
 </dl>
 <h2 id="raises">Raises</h2>
 <dl>
 <dt><code>TypeError</code></dt>
 <dd>Raised if the input is not a np.ndarray.</dd>
+<dt><code>ValueError</code></dt>
+<dd>Raised if the input array contains non-numeric values.</dd>
 </dl></div>
 <details class="source">
 <summary>
@@ -245,28 +265,35 @@ throughout pyRT_DISORT to determine if the array fits some criteria.</p>
 
     &#34;&#34;&#34;
 
-    def __init__(self, array) -&gt; None:
+    def __init__(self, array: np.ndarray) -&gt; None:
         &#34;&#34;&#34;
         Parameters
         ----------
         array: np.ndarray
-            Any array to perform checks on.
+            Array to perform numeric checks on.
 
         Raises
         ------
         TypeError
             Raised if the input is not a np.ndarray.
+        ValueError
+            Raised if the input array contains non-numeric values.
 
         &#34;&#34;&#34;
         self.__array = array
+        self.__raise_error_if_input_array_is_bad()
+
+    def __raise_error_if_input_array_is_bad(self) -&gt; None:
         self.__raise_type_error_if_object_is_not_array()
+        self.__raise_value_error_if_array_contains_non_numeric_values()
 
     def __raise_type_error_if_object_is_not_array(self) -&gt; None:
-        if not self.__object_is_array():
+        if not isinstance(self.__array, np.ndarray):
             raise TypeError(&#39;The input object is not a np.ndarray.&#39;)
 
-    def __object_is_array(self) -&gt; bool:
-        return isinstance(self.__array, np.ndarray)
+    def __raise_value_error_if_array_contains_non_numeric_values(self) -&gt; None:
+        if not np.issubdtype(self.__array.dtype, np.number):
+            raise ValueError(&#39;The input array must contain numeric values.&#39;)
 
     def determine_if_array_contains_only_ints(self) -&gt; bool:
         &#34;&#34;&#34;Determine if the array contains only integers.
@@ -312,8 +339,15 @@ throughout pyRT_DISORT to determine if the array fits some criteria.</p>
         &#34;&#34;&#34;
         return np.all(np.isfinite(self.__array))
 
-    def determine_if_array_is_in_range(self, low, high) -&gt; bool:
+    def determine_if_array_is_in_range(self, low: float, high: float) -&gt; bool:
         &#34;&#34;&#34;Determine if the array contains only values within a range.
+
+        Parameters
+        ----------
+        low: float
+            The lower value within the requested range.
+        high: float
+            The higher value within the requested range.
 
         Returns
         -------
@@ -321,7 +355,14 @@ throughout pyRT_DISORT to determine if the array fits some criteria.</p>
             True if the contents are all within the input range; False
             otherwise.
 
+        Raises
+        ------
+        TypeError
+            Raised if either of the inputs are not floats.
+
         &#34;&#34;&#34;
+        self.__raise_value_error_if_input_is_not_float(low, &#39;low&#39;)
+        self.__raise_value_error_if_input_is_not_float(high, &#39;high&#39;)
         return np.all(self.__array &gt;= low) and np.all(self.__array &lt;= high)
 
     def determine_if_array_is_monotonically_decreasing(self) -&gt; bool:
@@ -357,17 +398,6 @@ throughout pyRT_DISORT to determine if the array fits some criteria.</p>
         &#34;&#34;&#34;
         return np.all(self.__array &gt;= 0)
 
-    def determine_if_array_is_numeric(self) -&gt; bool:
-        &#34;&#34;&#34;Determine if the array contains numeric values.
-
-        Returns
-        -------
-        bool
-            True if contents are numeric; False otherwise.
-
-        &#34;&#34;&#34;
-        return np.issubdtype(self.__array.dtype, np.number)
-
     def determine_if_array_is_positive(self) -&gt; bool:
         &#34;&#34;&#34;Determine if the array contains only positive values.
 
@@ -391,8 +421,13 @@ throughout pyRT_DISORT to determine if the array fits some criteria.</p>
         return self.determine_if_array_is_positive() and \
             self.determine_if_array_is_finite()
 
-    def determine_if_array_matches_dimensionality(self, dimension) -&gt; bool:
+    def determine_if_array_matches_dimensionality(self, dimension: int) -&gt; bool:
         &#34;&#34;&#34;Determine if the array matches an input number of dimensions.
+
+        Parameters
+        ----------
+        dimension: int
+            The number of dimensions to check for.
 
         Returns
         -------
@@ -401,7 +436,13 @@ throughout pyRT_DISORT to determine if the array fits some criteria.</p>
             otherwise.
 
         &#34;&#34;&#34;
-        return np.ndim(self.__array) == dimension</code></pre>
+        return np.ndim(self.__array) == dimension
+
+    @staticmethod
+    def __raise_value_error_if_input_is_not_float(quantity: float, name: str) \
+            -&gt; None:
+        if not isinstance(quantity, float):
+            raise TypeError(f&#39;{name} must be a float.&#39;)</code></pre>
 </details>
 <h3>Methods</h3>
 <dl>
@@ -510,22 +551,41 @@ throughout pyRT_DISORT to determine if the array fits some criteria.</p>
 </details>
 </dd>
 <dt id="pyRT_DISORT.utilities.array_checks.ArrayChecker.determine_if_array_is_in_range"><code class="name flex">
-<span>def <span class="ident">determine_if_array_is_in_range</span></span>(<span>self, low, high) ‑> bool</span>
+<span>def <span class="ident">determine_if_array_is_in_range</span></span>(<span>self, low: float, high: float) ‑> bool</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Determine if the array contains only values within a range.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>low</code></strong> :&ensp;<code>float</code></dt>
+<dd>The lower value within the requested range.</dd>
+<dt><strong><code>high</code></strong> :&ensp;<code>float</code></dt>
+<dd>The higher value within the requested range.</dd>
+</dl>
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><code>bool</code></dt>
 <dd>True if the contents are all within the input range; False
 otherwise.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>TypeError</code></dt>
+<dd>Raised if either of the inputs are not floats.</dd>
 </dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def determine_if_array_is_in_range(self, low, high) -&gt; bool:
+<pre><code class="python">def determine_if_array_is_in_range(self, low: float, high: float) -&gt; bool:
     &#34;&#34;&#34;Determine if the array contains only values within a range.
+
+    Parameters
+    ----------
+    low: float
+        The lower value within the requested range.
+    high: float
+        The higher value within the requested range.
 
     Returns
     -------
@@ -533,7 +593,14 @@ otherwise.</dd>
         True if the contents are all within the input range; False
         otherwise.
 
+    Raises
+    ------
+    TypeError
+        Raised if either of the inputs are not floats.
+
     &#34;&#34;&#34;
+    self.__raise_value_error_if_input_is_not_float(low, &#39;low&#39;)
+    self.__raise_value_error_if_input_is_not_float(high, &#39;high&#39;)
     return np.all(self.__array &gt;= low) and np.all(self.__array &lt;= high)</code></pre>
 </details>
 </dd>
@@ -615,32 +682,6 @@ otherwise.</dd>
     return np.all(self.__array &gt;= 0)</code></pre>
 </details>
 </dd>
-<dt id="pyRT_DISORT.utilities.array_checks.ArrayChecker.determine_if_array_is_numeric"><code class="name flex">
-<span>def <span class="ident">determine_if_array_is_numeric</span></span>(<span>self) ‑> bool</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Determine if the array contains numeric values.</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>bool</code></dt>
-<dd>True if contents are numeric; False otherwise.</dd>
-</dl></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def determine_if_array_is_numeric(self) -&gt; bool:
-    &#34;&#34;&#34;Determine if the array contains numeric values.
-
-    Returns
-    -------
-    bool
-        True if contents are numeric; False otherwise.
-
-    &#34;&#34;&#34;
-    return np.issubdtype(self.__array.dtype, np.number)</code></pre>
-</details>
-</dd>
 <dt id="pyRT_DISORT.utilities.array_checks.ArrayChecker.determine_if_array_is_positive"><code class="name flex">
 <span>def <span class="ident">determine_if_array_is_positive</span></span>(<span>self) ‑> bool</span>
 </code></dt>
@@ -695,10 +736,15 @@ otherwise.</dd>
 </details>
 </dd>
 <dt id="pyRT_DISORT.utilities.array_checks.ArrayChecker.determine_if_array_matches_dimensionality"><code class="name flex">
-<span>def <span class="ident">determine_if_array_matches_dimensionality</span></span>(<span>self, dimension) ‑> bool</span>
+<span>def <span class="ident">determine_if_array_matches_dimensionality</span></span>(<span>self, dimension: int) ‑> bool</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Determine if the array matches an input number of dimensions.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>dimension</code></strong> :&ensp;<code>int</code></dt>
+<dd>The number of dimensions to check for.</dd>
+</dl>
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><code>bool</code></dt>
@@ -709,8 +755,13 @@ otherwise.</dd>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def determine_if_array_matches_dimensionality(self, dimension) -&gt; bool:
+<pre><code class="python">def determine_if_array_matches_dimensionality(self, dimension: int) -&gt; bool:
     &#34;&#34;&#34;Determine if the array matches an input number of dimensions.
+
+    Parameters
+    ----------
+    dimension: int
+        The number of dimensions to check for.
 
     Returns
     -------
@@ -751,7 +802,6 @@ otherwise.</dd>
 <li><code><a title="pyRT_DISORT.utilities.array_checks.ArrayChecker.determine_if_array_is_monotonically_decreasing" href="#pyRT_DISORT.utilities.array_checks.ArrayChecker.determine_if_array_is_monotonically_decreasing">determine_if_array_is_monotonically_decreasing</a></code></li>
 <li><code><a title="pyRT_DISORT.utilities.array_checks.ArrayChecker.determine_if_array_is_monotonically_increasing" href="#pyRT_DISORT.utilities.array_checks.ArrayChecker.determine_if_array_is_monotonically_increasing">determine_if_array_is_monotonically_increasing</a></code></li>
 <li><code><a title="pyRT_DISORT.utilities.array_checks.ArrayChecker.determine_if_array_is_non_negative" href="#pyRT_DISORT.utilities.array_checks.ArrayChecker.determine_if_array_is_non_negative">determine_if_array_is_non_negative</a></code></li>
-<li><code><a title="pyRT_DISORT.utilities.array_checks.ArrayChecker.determine_if_array_is_numeric" href="#pyRT_DISORT.utilities.array_checks.ArrayChecker.determine_if_array_is_numeric">determine_if_array_is_numeric</a></code></li>
 <li><code><a title="pyRT_DISORT.utilities.array_checks.ArrayChecker.determine_if_array_is_positive" href="#pyRT_DISORT.utilities.array_checks.ArrayChecker.determine_if_array_is_positive">determine_if_array_is_positive</a></code></li>
 <li><code><a title="pyRT_DISORT.utilities.array_checks.ArrayChecker.determine_if_array_is_positive_finite" href="#pyRT_DISORT.utilities.array_checks.ArrayChecker.determine_if_array_is_positive_finite">determine_if_array_is_positive_finite</a></code></li>
 <li><code><a title="pyRT_DISORT.utilities.array_checks.ArrayChecker.determine_if_array_matches_dimensionality" href="#pyRT_DISORT.utilities.array_checks.ArrayChecker.determine_if_array_matches_dimensionality">determine_if_array_matches_dimensionality</a></code></li>

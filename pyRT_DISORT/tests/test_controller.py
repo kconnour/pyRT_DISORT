@@ -216,6 +216,11 @@ class TestModelBehaviorInit(TestModelBehavior):
         with self.assertRaises(ValueError):
             ModelBehavior(only_fluxes=np.zeros(5))
 
+    def test_4_print_variables_raises_value_error(self) -> None:
+        prnt = [True, False, True, False]
+        with self.assertRaises(ValueError):
+            ModelBehavior(print_variables=prnt)
+
     def test_ndarray_print_variables_is_ok(self) -> None:
         prnt = np.array([True, False, True, False, True])
         ModelBehavior(print_variables=prnt)
@@ -383,8 +388,7 @@ class TestUserOpticalDepths(TestModelBehavior):
 
 class TestOutputArrays(TestCase):
     def setUp(self) -> None:
-        cp = ComputationalParameters(10, 30, 20, 40, 50, 60)
-        self.oa = OutputArrays(cp)
+        self.oa = OutputArrays(ComputationalParameters(10, 30, 20, 40, 50, 60))
 
 
 class TestOutputArraysInit(TestOutputArrays):
@@ -395,7 +399,7 @@ class TestOutputArraysInit(TestOutputArrays):
 
 class TestAlbedoMedium(TestOutputArrays):
     def test_albedo_medium_is_correctly_computed(self) -> None:
-        self.assertTrue(np.array_equal(np.zeros(40), self.oa.albedo_medium))
+        self.assertTrue(np.array_equal(np.zeros(50), self.oa.albedo_medium))
 
     def test_albedo_medium_is_read_only(self) -> None:
         with self.assertRaises(AttributeError):
@@ -441,7 +445,7 @@ class TestFluxDivergence(TestOutputArrays):
 class TestIntensity(TestOutputArrays):
     def test_intensity_is_correctly_computed(self) -> None:
         self.assertTrue(
-            np.array_equal(np.zeros((40, 60, 50)), self.oa.intensity))
+            np.array_equal(np.zeros((50, 60, 40)), self.oa.intensity))
 
     def test_intensity_is_read_only(self) -> None:
         with self.assertRaises(AttributeError):
@@ -460,7 +464,7 @@ class TestMeanIntensity(TestOutputArrays):
 class TestTransmissivityMedium(TestOutputArrays):
     def test_transmissivity_medium_is_correctly_computed(self) -> None:
         self.assertTrue(
-            np.array_equal(np.zeros(40), self.oa.transmissivity_medium))
+            np.array_equal(np.zeros(50), self.oa.transmissivity_medium))
 
     def test_transmissivity_medium_is_read_only(self) -> None:
         with self.assertRaises(AttributeError):

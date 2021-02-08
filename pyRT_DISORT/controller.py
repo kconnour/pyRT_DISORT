@@ -624,7 +624,7 @@ class OutputArrays:
                             'ComputationalParameters.')
 
     def __make_albedo_medium(self) -> np.ndarray:
-        return np.zeros(self.__cp.n_umu)
+        return np.zeros(self.__cp.n_polar)
 
     def __make_diffuse_up_flux(self) -> np.ndarray:
         return np.zeros(self.__cp.n_user_levels)
@@ -639,14 +639,14 @@ class OutputArrays:
         return np.zeros(self.__cp.n_user_levels)
 
     def __make_intensity(self) -> np.ndarray:
-        return np.zeros((self.__cp.n_umu, self.__cp.n_user_levels,
-                         self.__cp.n_phi))
+        return np.zeros((self.__cp.n_polar, self.__cp.n_user_levels,
+                         self.__cp.n_azimuth))
 
     def __make_mean_intensity(self) -> np.ndarray:
         return np.zeros(self.__cp.n_user_levels)
 
     def __make_transmissivity_medium(self) -> np.ndarray:
-        return np.zeros(self.__cp.n_umu)
+        return np.zeros(self.__cp.n_polar)
 
     @property
     def albedo_medium(self) -> np.ndarray:
@@ -777,7 +777,3 @@ class OutputArrays:
 
         """
         return self.__transmissivity_medium
-
-
-if __name__ == '__main__':
-    ComputationalParameters(10, 20, 30, 40, 50, 60)
