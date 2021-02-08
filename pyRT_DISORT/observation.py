@@ -8,7 +8,6 @@ from pyRT_DISORT.utilities.array_checks import ArrayChecker
 
 # TODO: I'm not sure that all combination of angles are physically realistic. If
 #  so, raise a warning
-# TODO: I'm not sure I really need to flatten the arrays
 # TODO: It'd probably be better to catch different shape errors when making phi
 class Angles:
     """Create a data structure that contains angles required by DISORT.
@@ -32,17 +31,13 @@ class Angles:
 
         Raises
         ------
-        TypeError
-            Raised if any of the inputs are not np.ndarrays.
         ValueError
-            Raised if any of the input arrays contain non-numeric values or if
-            the input arrays do not have the same shape.
+            Raised if any of the input arrays contain non-numeric values, if
+            any of the angles contain values outside of their mathematically
+            valid range, or if the input arrays do not have the same shape.
 
         Notes
         -----
-        All of the input angle arrays must have the same shape. If the arrays
-        are not 1D, they are flattened before computing any of the angles.
-
         pyRT_DISORT computes all angular quantities across multiple pixels at
         once to save computation time, but each DISORT run can only be done on a
         per-pixel basis. Therefore, each element in mu, mu0, phi, and phi0 are
@@ -53,44 +48,28 @@ class Angles:
         self.__emission = self.__make_emission_angles(emission_angles)
         self.__phase = self.__make_phase_angles(phase_angles)
 
-        self.__raise_value_error_if_angles_are_not_same_shape()
-
         self.__mu0 = self.__compute_mu0()
         self.__mu = self.__compute_mu()
         self.__phi0 = self.__make_phi0()
         self.__phi = self.__compute_phi()
 
-    def __make_incidence_angles(self, incidence_angles: np.ndarray) \
-            -> np.ndarray:
-        return self.__make_angles(incidence_angles, 'incidence_angles', 0, 180)
+    def __make_incidence_angles(self, incidence: np.ndarray) -> np.ndarray:
+        incidence = self.__cast_to_ndarray(incidence)
+        self.__raise_value_error_if_angles_are_not_in_range(
+            incidence, 0, 180, 'incidence_angles')
+        return incidence
 
-    def __make_emission_angles(self, emission_angles: np.ndarray) \
-            -> np.ndarray:
-        return self.__make_angles(emission_angles, 'emission_angles', 0, 90)
+    def __make_emission_angles(self, emission: np.ndarray) -> np.ndarray:
+        emission = self.__cast_to_ndarray(emission)
+        self.__raise_value_error_if_angles_are_not_in_range(
+            emission, 0, 90, 'emission_angles')
+        return emission
 
-    def __make_phase_angles(self, phase_angles: np.ndarray) \
-            -> np.ndarray:
-        return self.__make_angles(phase_angles, 'phase_angles', 0, 180)
-
-    @staticmethod
-    def __make_angles(angles, name, low, high):
-        try:
-            angles = angles.flatten()
-            if np.any(angles < low) or np.any(angles > high):
-                raise ValueError(f'{name} must be between {low} and {high}.')
-            return angles
-        except AttributeError as ae:
-            raise TypeError(f'{name} must be a np.ndarray.') from ae
-        except TypeError as te:
-            raise ValueError(f'{name} must contain only numeric values.') \
-                from te
-
-    def __raise_value_error_if_angles_are_not_same_shape(self) -> None:
-        same_shape = self.__incidence.shape == self.__emission.shape == \
-                     self.__phase.shape
-        if not same_shape:
-            raise ValueError('incidence_angles, emission_angles, and '
-                             'phase_angles must all have the same shape.')
+    def __make_phase_angles(self, phase: np.ndarray) -> np.ndarray:
+        phase = self.__cast_to_ndarray(phase)
+        self.__raise_value_error_if_angles_are_not_in_range(
+            phase, 0, 180, 'phase_angles')
+        return phase
 
     def __compute_mu0(self) -> np.ndarray:
         return self.__compute_angle_cosine(self.__incidence)
@@ -103,17 +82,33 @@ class Angles:
 
     # TODO: is there a less messy way to make this variable?
     def __compute_phi(self) -> np.ndarray:
-        with np.errstate(invalid='raise'):
-            sin_emission_angle = np.sin(np.radians(self.__emission))
-            sin_solar_zenith_angle = np.sin(np.radians(self.__incidence))
-            cos_phase_angle = self.__compute_angle_cosine(self.__phase)
-            try:
-                tmp_arg = (cos_phase_angle - self.mu * self.mu0) / \
-                          (sin_emission_angle * sin_solar_zenith_angle)
-                d_phi = np.arccos(np.clip(tmp_arg, -1, 1))
-            except FloatingPointError:
-                d_phi = np.pi
-            return self.phi0 + 180 - np.degrees(d_phi)
+        try:
+            with np.errstate(invalid='raise'):
+                sin_emission_angle = np.sin(np.radians(self.__emission))
+                sin_solar_zenith_angle = np.sin(np.radians(self.__incidence))
+                cos_phase_angle = self.__compute_angle_cosine(self.__phase)
+                try:
+                    tmp_arg = (cos_phase_angle - self.mu * self.mu0) / \
+                              (sin_emission_angle * sin_solar_zenith_angle)
+                    d_phi = np.arccos(np.clip(tmp_arg, -1, 1))
+                except FloatingPointError:
+                    d_phi = np.pi
+                return self.phi0 + 180 - np.degrees(d_phi)
+        except ValueError as ve:
+            raise ValueError('The input angles must be the same shape.') from ve
+
+    @staticmethod
+    def __cast_to_ndarray(angles: np.ndarray) -> np.ndarray:
+        return np.array(angles)
+
+    @staticmethod
+    def __raise_value_error_if_angles_are_not_in_range(
+            angles: np.ndarray, low: float, high: float, name: str) -> None:
+        try:
+            if np.any(angles < low) or np.any(angles > high):
+                raise ValueError(f'{name} must be between {low} and {high}.')
+        except TypeError as te:
+            raise ValueError(f'{name} is non-numeric') from te
 
     @staticmethod
     def __compute_angle_cosine(angle: np.ndarray) -> np.ndarray:
@@ -220,9 +215,8 @@ class Angles:
         return self.__phi
 
 
-# TODO: Do I want to require monotonically increasing wavelengths?
 class Wavelengths:
-    """Wavelengths is a data structure that contains spectral info for DISORT.
+    """Create a data structure that contains spectral info for DISORT.
 
     Wavelengths accepts ``observation'' wavelengths and computes their
     corresponding wavenumbers.
@@ -378,7 +372,7 @@ class Wavelengths:
         Notes
         -----
         In DISORT, this variable is named "WVNMHI". It is only needed by DISORT
-        if thermal_emission (defined in BoundaryConditions) == True, or if
+        if thermal_emission (defined in ThermalEmission) == True, or if
         DISORT is run multiple times and BDREF is spectrally dependent.
 
         """
@@ -397,7 +391,7 @@ class Wavelengths:
         Notes
         -----
         In DISORT, this variable is named "WVNMLO". It is only needed by DISORT
-        if thermal_emission (defined in BoundaryConditions) == True, or if
+        if thermal_emission (defined in ThermalEmission) == True, or if
         DISORT is run multiple times and BDREF is spectrally dependent.
 
         """
