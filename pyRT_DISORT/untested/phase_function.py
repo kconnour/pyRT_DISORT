@@ -1,9 +1,6 @@
 # 3rd-party imports
 import numpy as np
 
-# Local imports
-from pyRT_DISORT.untested_utils.utilities import ArrayChecker
-
 
 class LegendreCoefficients:
     """A LegendreCoefficints object is an abstract class to hold basic properties of Legendre coefficients"""
@@ -92,11 +89,12 @@ class TabularLegendreCoefficients(LegendreCoefficients):
         self.__check_grids_match_3d_coefficients()
 
     def __check_coefficients_are_physical(self):
-        coefficient_checker = ArrayChecker(self.tabulated_coefficients, 'tabulated_coefficients')
-        coefficient_checker.check_object_is_array()
-        coefficient_checker.check_ndarray_is_numeric()
+        pass
+        #coefficient_checker = ArrayChecker(self.tabulated_coefficients, 'tabulated_coefficients')
+        #coefficient_checker.check_object_is_array()
+        #coefficient_checker.check_ndarray_is_numeric()
         #coefficient_checker.check_ndarray_is_positive_finite()
-        self.__check_coefficients_dimensions()
+        #self.__check_coefficients_dimensions()
 
     def __check_coefficients_dimensions(self):
         if self.coefficients_dimensions not in [1, 2, 3]:
@@ -104,19 +102,21 @@ class TabularLegendreCoefficients(LegendreCoefficients):
 
     def __check_particle_size_grid_is_physical(self):
         if self.particle_sizes is not None:
-            particle_checker = ArrayChecker(self.particle_sizes, 'particle_sizes')
-            particle_checker.check_object_is_array()
-            particle_checker.check_ndarray_is_numeric()
-            particle_checker.check_ndarray_is_positive_finite()
-            particle_checker.check_ndarray_is_1d()
+            pass
+            #particle_checker = ArrayChecker(self.particle_sizes, 'particle_sizes')
+            #particle_checker.check_object_is_array()
+            #particle_checker.check_ndarray_is_numeric()
+            #particle_checker.check_ndarray_is_positive_finite()
+            #particle_checker.check_ndarray_is_1d()
 
     def __check_wavelength_grid_is_physical(self):
         if self.wavelengths is not None:
-            wavelength_checker = ArrayChecker(self.wavelengths, 'phase_function_wavelengths')
-            wavelength_checker.check_object_is_array()
-            wavelength_checker.check_ndarray_is_numeric()
-            wavelength_checker.check_ndarray_is_positive_finite()
-            wavelength_checker.check_ndarray_is_1d()
+            pass
+            #wavelength_checker = ArrayChecker(self.wavelengths, 'phase_function_wavelengths')
+            #wavelength_checker.check_object_is_array()
+            #wavelength_checker.check_ndarray_is_numeric()
+            #wavelength_checker.check_ndarray_is_positive_finite()
+            #wavelength_checker.check_ndarray_is_1d()
 
     def __check_grids_match_1d_coefficients(self):
         if self.coefficients_dimensions != 1:
