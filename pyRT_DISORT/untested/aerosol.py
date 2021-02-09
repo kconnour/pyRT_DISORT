@@ -2,7 +2,7 @@
 import numpy as np
 
 # Local imports
-from old.utilities import ArrayChecker
+from pyRT_DISORT.utilities.array_checks import ArrayChecker
 
 
 class ForwardScatteringProperty:
@@ -51,10 +51,11 @@ class ForwardScatteringProperty:
         self.__check_grids_match_0d_property()
 
     def __check_property_is_physical(self):
-        properties_checker = ArrayChecker(self.property_values, 'scattering_property')
-        properties_checker.check_object_is_array()
-        properties_checker.check_ndarray_is_numeric()
-        properties_checker.check_ndarray_is_finite()
+        pass
+        #properties_checker = ArrayChecker(self.property_values, 'scattering_property')
+        #properties_checker.check_object_is_array()
+        #properties_checker.check_ndarray_is_numeric()
+        #properties_checker.check_ndarray_is_finite()
 
     def __check_property_dimensions(self):
         if self.__property_dims not in [1, 2]:
@@ -63,12 +64,13 @@ class ForwardScatteringProperty:
     @staticmethod
     def __check_grid_is_physical(grid, grid_name):
         if grid is not None:
-            grid_checker = ArrayChecker(grid, grid_name)
-            grid_checker.check_object_is_array()
-            grid_checker.check_ndarray_is_numeric()
-            grid_checker.check_ndarray_is_positive_finite()
-            grid_checker.check_ndarray_is_1d()
-            grid_checker.check_1d_array_is_monotonically_increasing()
+            pass
+            #grid_checker = ArrayChecker(grid, grid_name)
+            #grid_checker.check_object_is_array()
+            #grid_checker.check_ndarray_is_numeric()
+            #grid_checker.check_ndarray_is_positive_finite()
+            #grid_checker.check_ndarray_is_1d()
+            #grid_checker.check_1d_array_is_monotonically_increasing()
 
     def __check_grids_match_2d_property(self):
         if self.__property_dims != 2:

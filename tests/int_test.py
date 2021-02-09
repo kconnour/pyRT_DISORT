@@ -1,18 +1,18 @@
-from old.model_atmosphere import ForwardScatteringProperty, ForwardScatteringPropertyCollection
-from old.utilities.external_files import ExternalFile
-from old.model_atmosphere import ModelGrid
-from old.model_atmosphere import Column
-from old.model_atmosphere import Conrath
-from old.model_atmosphere import TabularLegendreCoefficients
-from old.model_atmosphere import RayleighCo2
-from old.model_atmosphere.model_atmosphere import ModelAtmosphere
+from pyRT_DISORT.untested import ForwardScatteringProperty, ForwardScatteringPropertyCollection
+from pyRT_DISORT.untested_utils.utilities.external_files import ExternalFile
+from pyRT_DISORT.untested import ModelGrid
+from pyRT_DISORT.untested import Column
+from pyRT_DISORT.untested import Conrath
+from pyRT_DISORT.untested import TabularLegendreCoefficients
+from pyRT_DISORT.untested import RayleighCo2
+from pyRT_DISORT.untested.model_atmosphere import ModelAtmosphere
 from pyRT_DISORT.observation_old.observation import Observation
 from old.model_controller import Size
 from old.model_controller import Control
 from old.model_controller.output import Output
 from old.model_controller import Unsure
-from old.model_atmosphere.boundary_conditions import BoundaryConditions
-from old.model_atmosphere import HapkeHG2Roughness
+from pyRT_DISORT.untested import BoundaryConditions
+from pyRT_DISORT.untested import HapkeHG2Roughness
 import disort
 
 import os

@@ -2,8 +2,7 @@
 import numpy as np
 
 # Local imports
-from old.model_atmosphere import ModelGrid
-from old.utilities import ArrayChecker
+from pyRT_DISORT.eos import ModelEquationOfState
 
 
 class RayleighCo2:
@@ -24,7 +23,7 @@ class RayleighCo2:
         ----------
         wavelengths: np.ndarray
             The input wavelengths
-        model_grid: ModelGrid
+        model_grid: ModelEquationOfState
             The input model_grid
         n_moments: int
             The input n_moments
@@ -40,32 +39,10 @@ class RayleighCo2:
         self.model_grid = model_grid
         self.n_moments = n_moments
 
-        self.__check_inputs_are_physical()
-
         self.wavenumbers = self.__convert_wavelength_to_wavenumber()
         self.scattering_optical_depths = self.__calculate_hyperspectral_rayleigh_co2_optical_depths()
         self.__phase_function = self.__make_phase_function()
         self.phase_function = self.__make_hyperspectral_layered_phase_function()
-
-    def __check_inputs_are_physical(self):
-        self.__check_wavelengths_are_physical()
-        self.__check_model_grid_is_ModelGrid()
-        self.__check_n_moments_is_int()
-
-    def __check_wavelengths_are_physical(self):
-        wavelength_checker = ArrayChecker(self.wavelengths, 'wavelengths')
-        wavelength_checker.check_object_is_array()
-        wavelength_checker.check_ndarray_is_numeric()
-        wavelength_checker.check_ndarray_is_positive_finite()
-        wavelength_checker.check_ndarray_is_1d()
-
-    def __check_model_grid_is_ModelGrid(self):
-        if not isinstance(self.model_grid, ModelGrid):
-            raise TypeError('model_grid must be an instance of ModelGrid')
-
-    def __check_n_moments_is_int(self):
-        if not isinstance(self.n_moments, int):
-            raise TypeError('n_moments must be an int')
 
     def __convert_wavelength_to_wavenumber(self):
         return 1 / (self.wavelengths * 10 ** -4)

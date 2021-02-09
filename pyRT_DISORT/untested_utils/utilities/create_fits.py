@@ -2,9 +2,6 @@
 from astropy.io import fits
 import numpy as np
 
-# Local imports
-from old.utilities import ArrayChecker
-
 
 class CreateFits:
     """A CreateFits object allows users to make .fits files"""
@@ -65,8 +62,9 @@ class CreateFits:
 
     @staticmethod
     def __check_addition_is_numpy_array(array, name):
-        hdu_checker = ArrayChecker(array, name)
-        hdu_checker.check_object_is_array()
+        pass
+        #hdu_checker = ArrayChecker(array, name)
+        #hdu_checker.check_object_is_array()
 
     @staticmethod
     def __check_input_is_str(test_name, input_name):

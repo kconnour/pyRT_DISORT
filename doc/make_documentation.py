@@ -36,7 +36,7 @@ class Documentation:
         """
         for mod in self.module:
             for module_name, html, is_folder in self.__make_recursive_html(mod):
-                if 'tests' in module_name:
+                if 'test' in module_name:
                     continue
                 self.__make_folder(module_name) if is_folder else False
                 abs_path = self.__make_html_name(module_name, is_folder)

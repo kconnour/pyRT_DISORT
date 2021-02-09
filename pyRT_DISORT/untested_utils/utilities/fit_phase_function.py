@@ -2,9 +2,6 @@
 import numpy as np
 from scipy import integrate, interpolate
 
-# Local imports
-from old.utilities import ArrayChecker
-
 
 class PhaseFunction:
     """A PhaseFunction object holds input phase function and can create its Legendre decomposition"""
@@ -42,18 +39,20 @@ class PhaseFunction:
         self.__check_epf_matches_angles_shape()
 
     def __check_empirical_phase_function_is_physical(self):
-        epf_checker = ArrayChecker(self.empirical_phase_function, 'empirical_phase_function')
-        epf_checker.check_object_is_array()
-        epf_checker.check_ndarray_is_numeric()
-        epf_checker.check_ndarray_is_positive_finite()
-        epf_checker.check_ndarray_is_1d()
+        pass
+        #epf_checker = ArrayChecker(self.empirical_phase_function, 'empirical_phase_function')
+        #epf_checker.check_object_is_array()
+        #epf_checker.check_ndarray_is_numeric()
+        #epf_checker.check_ndarray_is_positive_finite()
+        #epf_checker.check_ndarray_is_1d()
 
     def __check_angles_are_physical(self):
-        angles_checker = ArrayChecker(self.angles, 'angles')
-        angles_checker.check_object_is_array()
-        angles_checker.check_ndarray_is_numeric()
-        angles_checker.check_ndarray_is_in_range(0, np.pi)
-        angles_checker.check_ndarray_is_1d()
+        pass
+        #angles_checker = ArrayChecker(self.angles, 'angles')
+        #angles_checker.check_object_is_array()
+        #angles_checker.check_ndarray_is_numeric()
+        #angles_checker.check_ndarray_is_in_range(0, np.pi)
+        #angles_checker.check_ndarray_is_1d()
 
     def __check_epf_matches_angles_shape(self):
         if self.empirical_phase_function.shape != self.angles.shape:

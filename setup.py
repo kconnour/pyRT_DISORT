@@ -53,7 +53,8 @@ class SetupDISORT:
             python_requires='>=3.9',
             install_requires=[
                 'astropy>=4.1',
-                'numpy>=1.19.1',
+                'numpy>=1.20.0',
+                'pandas>=1.2.1',
                 'pdoc3>=0.9.1',
                 'scipy>=1.6.0'
             ],

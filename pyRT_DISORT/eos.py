@@ -9,6 +9,8 @@ from scipy.integrate import quadrature as quad
 
 
 # TODO: Mike said to do this in log(z) space. Is this still necessary?
+# TODO: I ask for a z grid to interpolate onto but a P grid would be a nice
+#  option
 class ModelEquationOfState:
     """Compute equation of state variables on a model grid.
 

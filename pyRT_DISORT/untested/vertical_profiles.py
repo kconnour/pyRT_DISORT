@@ -2,7 +2,7 @@
 import numpy as np
 
 # Local imports
-from old.model_atmosphere import ModelGrid
+from pyRT_DISORT.eos import ModelEquationOfState
 
 
 class VerticalProfile:
@@ -12,7 +12,7 @@ class VerticalProfile:
         self.__check_input_is_model_grid()
 
     def __check_input_is_model_grid(self):
-        if not isinstance(self.model_grid, ModelGrid):
+        if not isinstance(self.model_grid, ModelEquationOfState):
             raise TypeError('model_grid must be an instance of ModelGrid')
 
 
@@ -74,7 +74,8 @@ class Conrath(VerticalProfile):
         fractional_mixing_ratio: np.ndarray (len(altitude_layer))
             The fraction of the mass mixing ratio at the midpoint altitudes
         """
-        altitude_scale = np.divide.outer(self.model_grid.layer_altitudes, self.H)
+        la = (self.model_grid.altitude_boundaries[:-1] + self.model_grid.altitude_boundaries[1:]) / 2   # added this to avoid adding it to eos
+        altitude_scale = np.divide.outer(la, self.H)
         return np.exp(self.nu * (1 - np.exp(altitude_scale)))
 
 
