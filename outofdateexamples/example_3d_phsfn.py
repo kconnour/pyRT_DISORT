@@ -176,6 +176,8 @@ hapke = HapkeHG2Roughness(size, obs, control, boundary, albedo, w=0.12, asym=0.7
 # Run the model
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+print(polynomial_moments)
+
 rfldir, rfldn, flup, dfdt, uavg, uu, albmed, trnmed = disort.disort(usrang, usrtau, ibcnd, onlyfl, prnt, plank, lamber,
                                                                     deltamplus, do_pseudo_sphere, optical_depths,
                                ssa, polynomial_moments, temperatures, low_wavenumber, high_wavenumber, utau, umu0, phi0,

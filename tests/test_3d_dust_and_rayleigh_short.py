@@ -22,6 +22,7 @@ import disort
 # New: The old Observation class took angles and wavelengths, but they operated
 # independently so I made them into 2 classes. This class basically just creates
 # wavenumbers from wavelengths
+# WARNING: numpy is too dumb to deal with singleton wavelength when making dtauc, ssalb, and pmom... I will need to fix this but for now take note
 short_wav = np.array([1, 9.3])   # microns
 long_wav = short_wav + 1
 wavelengths = Wavelengths(short_wav, long_wav)
@@ -76,7 +77,7 @@ dust_properties.add_property(c_sca, 'c_scattering')
 conrath_profile = Conrath(model_eos, 10, 0.5)
 
 # Define a smooth gradient of particle sizes. Here I'm making all particle sizes
-# = 1 so I can compare with disort_multi (I don't know how to include a particle
+# = 1.5 so I can compare with disort_multi (I don't know how to include a particle
 # size gradient with it)
 p_sizes = np.linspace(1.5, 1.5, num=len(conrath_profile.profile))
 
@@ -86,11 +87,11 @@ dust_phsfn = TabularLegendreCoefficients(dust_phsfn_file.array['primary'].data,
                                          dust_phsfn_file.array['particle_sizes'].data,
                                          dust_phsfn_file.array['wavelengths'].data)
 
-# index 112 of wave
+# index 17 of wave
 # index 9 of sizes phase function
-#print(dust_phsfn_file.array['primary'].data[:, 9, 112])
+#print(dust_phsfn_file.array['primary'].data[:, 9, 17])
 #print(dust_phsfn_file.array['particle_sizes'].data[9])
-#print(dust_phsfn_file.array['wavelengths'].data[112])
+#print(dust_phsfn_file.array['wavelengths'].data[17])
 #raise SystemExit(9)
 
 # Make the new Column where wave_ref = 9.3 microns and OD = 1
@@ -111,9 +112,9 @@ model.add_constituent(rayleigh_info)
 
 # Once everything is in the model, compute the model. Then, slice off the wavelength dimension
 model.compute_model()
-optical_depths = model.hyperspectral_total_optical_depths[:, 1]
-ssa = model.hyperspectral_total_single_scattering_albedos[:, 1]
-polynomial_moments = model.hyperspectral_legendre_moments[:, :, 1]
+optical_depths = model.hyperspectral_total_optical_depths[:, 0]
+ssa = model.hyperspectral_total_single_scattering_albedos[:, 0]
+polynomial_moments = model.hyperspectral_legendre_moments[:, :, 0]
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Make the size of the computational parameters
@@ -228,8 +229,8 @@ rfldir, rfldn, flup, dfdt, uavg, uu, albmed, trnmed = \
                   rfldn, flup, dfdt, uavg, uu, albmed, trnmed)
 
 print(uu[0, 0, 0])   # shape: (1, 81, 1)
-# This gives          0.0415674630
-# disort_multi gives  0.0415661298
+# This gives         0.3139595
+# disort_multi gives 0.314004838
 # I'm running ./disort_multi -dust_conrath 0.5, 10 -dust_phsfn 98 -NSTR 16 < testInput.txt
 # testInput.txt is: 1, 0.5, 10, 30, 50, 40, 20, 1, 0, 0
-# And dust_phsfn has 65 moments at 1.5 micron (size) and 9.3 microns(wavelength)
+# And dust_phsfn has 65 moments at 1.5 micron (size) and 1 microns(wavelength)

@@ -37,7 +37,7 @@ nu = np.array([0.5, 0.5, 0.5])     # each particle size has the same nu
 c = Conrath(model_grid, sh, nu)    # Make a Conrath profile for all 3 particle sizes at the same time
 p = ProfileHolder()                # Make a "blank" object to just old all the profiles I give it
 p.add_profile(c.profile)           # Add the Nx3 array of vertical profiles to the object
-p.stack_profiles()                 # Combine all the arrays into an Mx3 array. Here, M=N but hopefully later examples will make this step more clear
+p.stack_profiles()                 # Combine all the arrays into an Mx3 array. Here, M=N but hopefully later outofdateexamples will make this step more clear
 
 # Define optical depths at each of the particle sizes
 ods = np.array([0.1, 0.8, 0.2])
@@ -56,7 +56,7 @@ nu = np.array([0.2, 0.5, 0.1])     # each particle size may have a different nu
 c = Conrath(model_grid, sh, nu)    # Make a Conrath profile for all 3 particle sizes at the same time
 p = ProfileHolder()                # Make a "blank" object to just old all the profiles I give it
 p.add_profile(c.profile)           # Add the Nx3 array of vertical profiles to the object
-p.stack_profiles()                 # Combine all the arrays into an Mx3 array. Here, M=N but hopefully later examples will make this step more clear
+p.stack_profiles()                 # Combine all the arrays into an Mx3 array. Here, M=N but hopefully later outofdateexamples will make this step more clear
 
 # Define optical depths at each of the particle sizes
 ods = np.array([0.1, 0.8, 0.2])

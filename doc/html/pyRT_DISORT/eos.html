@@ -40,18 +40,21 @@ from pyRT_DISORT.utilities.array_checks import ArrayChecker
 from scipy.integrate import quadrature as quad
 
 
+# TODO: Mike said to do this in log(z) space. Is this still necessary?
+# TODO: I ask for a z grid to interpolate onto but a P grid would be a nice
+#  option
 class ModelEquationOfState:
-    &#34;&#34;&#34;ModelEquationOfState computes EoS variables on a model grid.
+    &#34;&#34;&#34;Compute equation of state variables on a model grid.
 
     ModelEquationOfState accepts altitudes [km], pressures [Pa],
     temperatures [K], and number densities [particles / m**3], along with the
     altitudes where the model is defined. It linearly interpolates
     pressures and temperatures onto this new grid and assumes the ideal gas law
     to calculate the number density at the new grid. It also computes the
-    column density within each layer using Gaussian quadrature. For these
-    computations, quantities are assumed to be in MKS units.
+    column density within each layer using Gaussian quadrature.
 
     &#34;&#34;&#34;
+
     def __init__(self, altitude_grid: np.ndarray, pressure_grid: np.ndarray,
                  temperature_grid: np.ndarray, number_density_grid: np.ndarray,
                  altitude_boundaries: np.ndarray) -&gt; None:
@@ -271,14 +274,9 @@ class ModelEquationOfState:
         return self.__temperature_boundaries
 
 
-# TODO: This function does way more than one thing, so clean it up
-# TODO: Decide if I want to input a string or something else. An array would be
-#  maximally flexible but a string is most convenient.
-# TODO: Make one function that makes eos from an array. Then remake this
-#  function, where it just reads in an array from a string, then calls that func
-def eos_from_file(array_path: str, altitude_boundaries: np.ndarray) \
+def eos_from_array(atm: np.ndarray, altitude_boundaries: np.ndarray) \
         -&gt; ModelEquationOfState:
-    &#34;&#34;&#34;Create a ModelEquationOfState from a file containing atmospheric equation
+    &#34;&#34;&#34;Create a ModelEquationOfState from an array containing atmospheric equation
     of state variables. The array is assumed to be a 2D array, with the columns
     having the following meanings:
 
@@ -290,8 +288,8 @@ def eos_from_file(array_path: str, altitude_boundaries: np.ndarray) \
 
     Parameters
     ----------
-    array_path: str
-        Absolute path to the 2D array of atmospheric EoS variables.
+    atm: np.ndarray
+        2D array of atmospheric equation of state variables.
     altitude_boundaries: np.ndarray
         The desired altitudes [km] of the model boundaries.
 
@@ -312,29 +310,8 @@ def eos_from_file(array_path: str, altitude_boundaries: np.ndarray) \
         Raised if the input array path does not lead to a .npy file.
 
     &#34;&#34;&#34;
-    def read_file(file):
-        try:
-            return np.load(file)
-        except TypeError:
-            raise TypeError(&#39;array_path must be a str.&#39;) from None
-        except FileNotFoundError:
-            raise FileNotFoundError(f&#39;No such file or directory: {file}.&#39;) \
-                from None
-        except ValueError:
-            raise ValueError(&#39;The file cannot be opened. This likely means the &#39;
-                             &#39;file is not a .npy file.&#39;)
-
-    input_atmosphere = read_file(array_path)
-    try:
-        return ModelEquationOfState(input_atmosphere[:, 0],
-                                    input_atmosphere[:, 1],
-                                    input_atmosphere[:, 2],
-                                    input_atmosphere[:, 3],
-                                    altitude_boundaries)
-    except IndexError:
-        raise IndexError(&#39;Too many indices for array. This probably means the &#39;
-                         &#39;input file is a 1D array instead of the expected 2D &#39;
-                         &#39;array.&#39;)</code></pre>
+    return ModelEquationOfState(atm[:, 0], atm[:, 1], atm[:, 2], atm[:, 3],
+                                altitude_boundaries)</code></pre>
 </details>
 </section>
 <section>
@@ -344,11 +321,11 @@ def eos_from_file(array_path: str, altitude_boundaries: np.ndarray) \
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="pyRT_DISORT.eos.eos_from_file"><code class="name flex">
-<span>def <span class="ident">eos_from_file</span></span>(<span>array_path: str, altitude_boundaries: numpy.ndarray) ‑> <a title="pyRT_DISORT.eos.ModelEquationOfState" href="#pyRT_DISORT.eos.ModelEquationOfState">ModelEquationOfState</a></span>
+<dt id="pyRT_DISORT.eos.eos_from_array"><code class="name flex">
+<span>def <span class="ident">eos_from_array</span></span>(<span>atm: numpy.ndarray, altitude_boundaries: numpy.ndarray) ‑> <a title="pyRT_DISORT.eos.ModelEquationOfState" href="#pyRT_DISORT.eos.ModelEquationOfState">ModelEquationOfState</a></span>
 </code></dt>
 <dd>
-<div class="desc"><p>Create a ModelEquationOfState from a file containing atmospheric equation
+<div class="desc"><p>Create a ModelEquationOfState from an array containing atmospheric equation
 of state variables. The array is assumed to be a 2D array, with the columns
 having the following meanings:</p>
 <ol>
@@ -360,8 +337,8 @@ defined.</li>
 </ol>
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt><strong><code>array_path</code></strong> :&ensp;<code>str</code></dt>
-<dd>Absolute path to the 2D array of atmospheric EoS variables.</dd>
+<dt><strong><code>atm</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>2D array of atmospheric equation of state variables.</dd>
 <dt><strong><code>altitude_boundaries</code></strong> :&ensp;<code>np.ndarray</code></dt>
 <dd>The desired altitudes [km] of the model boundaries.</dd>
 </dl>
@@ -385,9 +362,9 @@ defined.</li>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def eos_from_file(array_path: str, altitude_boundaries: np.ndarray) \
+<pre><code class="python">def eos_from_array(atm: np.ndarray, altitude_boundaries: np.ndarray) \
         -&gt; ModelEquationOfState:
-    &#34;&#34;&#34;Create a ModelEquationOfState from a file containing atmospheric equation
+    &#34;&#34;&#34;Create a ModelEquationOfState from an array containing atmospheric equation
     of state variables. The array is assumed to be a 2D array, with the columns
     having the following meanings:
 
@@ -399,8 +376,8 @@ defined.</li>
 
     Parameters
     ----------
-    array_path: str
-        Absolute path to the 2D array of atmospheric EoS variables.
+    atm: np.ndarray
+        2D array of atmospheric equation of state variables.
     altitude_boundaries: np.ndarray
         The desired altitudes [km] of the model boundaries.
 
@@ -421,29 +398,8 @@ defined.</li>
         Raised if the input array path does not lead to a .npy file.
 
     &#34;&#34;&#34;
-    def read_file(file):
-        try:
-            return np.load(file)
-        except TypeError:
-            raise TypeError(&#39;array_path must be a str.&#39;) from None
-        except FileNotFoundError:
-            raise FileNotFoundError(f&#39;No such file or directory: {file}.&#39;) \
-                from None
-        except ValueError:
-            raise ValueError(&#39;The file cannot be opened. This likely means the &#39;
-                             &#39;file is not a .npy file.&#39;)
-
-    input_atmosphere = read_file(array_path)
-    try:
-        return ModelEquationOfState(input_atmosphere[:, 0],
-                                    input_atmosphere[:, 1],
-                                    input_atmosphere[:, 2],
-                                    input_atmosphere[:, 3],
-                                    altitude_boundaries)
-    except IndexError:
-        raise IndexError(&#39;Too many indices for array. This probably means the &#39;
-                         &#39;input file is a 1D array instead of the expected 2D &#39;
-                         &#39;array.&#39;)</code></pre>
+    return ModelEquationOfState(atm[:, 0], atm[:, 1], atm[:, 2], atm[:, 3],
+                                altitude_boundaries)</code></pre>
 </details>
 </dd>
 </dl>
@@ -456,14 +412,13 @@ defined.</li>
 <span>(</span><span>altitude_grid: numpy.ndarray, pressure_grid: numpy.ndarray, temperature_grid: numpy.ndarray, number_density_grid: numpy.ndarray, altitude_boundaries: numpy.ndarray)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>ModelEquationOfState computes EoS variables on a model grid.</p>
+<div class="desc"><p>Compute equation of state variables on a model grid.</p>
 <p>ModelEquationOfState accepts altitudes [km], pressures [Pa],
 temperatures [K], and number densities [particles / m**3], along with the
 altitudes where the model is defined. It linearly interpolates
 pressures and temperatures onto this new grid and assumes the ideal gas law
 to calculate the number density at the new grid. It also computes the
-column density within each layer using Gaussian quadrature. For these
-computations, quantities are assumed to be in MKS units.</p>
+column density within each layer using Gaussian quadrature.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>altitude_grid</code></strong> :&ensp;<code>np.ndarray</code></dt>
@@ -493,17 +448,17 @@ altitudes.</dd>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class ModelEquationOfState:
-    &#34;&#34;&#34;ModelEquationOfState computes EoS variables on a model grid.
+    &#34;&#34;&#34;Compute equation of state variables on a model grid.
 
     ModelEquationOfState accepts altitudes [km], pressures [Pa],
     temperatures [K], and number densities [particles / m**3], along with the
     altitudes where the model is defined. It linearly interpolates
     pressures and temperatures onto this new grid and assumes the ideal gas law
     to calculate the number density at the new grid. It also computes the
-    column density within each layer using Gaussian quadrature. For these
-    computations, quantities are assumed to be in MKS units.
+    column density within each layer using Gaussian quadrature.
 
     &#34;&#34;&#34;
+
     def __init__(self, altitude_grid: np.ndarray, pressure_grid: np.ndarray,
                  temperature_grid: np.ndarray, number_density_grid: np.ndarray,
                  altitude_boundaries: np.ndarray) -&gt; None:
@@ -892,7 +847,7 @@ def temperature_boundaries(self) -&gt; np.ndarray:
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="pyRT_DISORT.eos.eos_from_file" href="#pyRT_DISORT.eos.eos_from_file">eos_from_file</a></code></li>
+<li><code><a title="pyRT_DISORT.eos.eos_from_array" href="#pyRT_DISORT.eos.eos_from_array">eos_from_array</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>

@@ -33,7 +33,6 @@ used in DISORT.</p>
 <pre><code class="python">&#34;&#34;&#34;The flux module contains data structures for holding the flux variables
 used in DISORT.
 &#34;&#34;&#34;
-from typing import Any
 import numpy as np
 
 
@@ -76,12 +75,12 @@ class IncidentFlux:
             Raised if either input flux cannot be cast into a float.
 
         &#34;&#34;&#34;
-        self.__beam_flux = self.__make_flux(beam_flux, &#39;beam_flux&#39;)
+        self.__beam_flux = self.__cast_to_float(beam_flux, &#39;beam_flux&#39;)
         self.__isotropic_flux = \
-            self.__make_flux(isotropic_flux, &#39;isotropic_flux&#39;)
+            self.__cast_to_float(isotropic_flux, &#39;isotropic_flux&#39;)
 
     @staticmethod
-    def __make_flux(flux: Any, name: str) -&gt; float:
+    def __cast_to_float(flux: float, name: str) -&gt; float:
         try:
             return float(flux)
         except ValueError as ve:
@@ -176,28 +175,48 @@ class ThermalEmission:
             self.__make_temperature(top_temperature, &#39;top_temperature&#39;)
         self.__top_emissivity = self.__make_emissivity(top_emissivity)
 
-    @staticmethod
-    def __make_thermal_emission(thermal_emission: Any) -&gt; bool:
-        return bool(thermal_emission)
+    def __make_thermal_emission(self, thermal_emission: bool) -&gt; bool:
+        return self.__cast_variable_to_bool(
+            thermal_emission, &#39;thermal_emission&#39;)
+
+    def __make_temperature(self, temperature: float, name: str) -&gt; float:
+        temperature = self.__cast_variable_to_float(temperature, name)
+        self.__raise_value_error_if_temperature_is_unphysical(temperature, name)
+        return temperature
+
+    def __make_emissivity(self, top_emissivity: float) -&gt; float:
+        top_emissivity = self.__cast_variable_to_float(
+            top_emissivity, &#39;top_emissivity&#39;)
+        self.__raise_value_error_if_emissivity_not_in_range(top_emissivity)
+        return top_emissivity
 
     @staticmethod
-    def __make_temperature(temperature: Any, name: str) -&gt; float:
+    def __cast_variable_to_bool(variable: bool, name: str) -&gt; bool:
         try:
-            if temperature &lt; 0 or np.isinf(temperature):
-                raise ValueError(f&#39;{name} must be non-negative and finite.&#39;)
-            return float(temperature)
+            return bool(variable)
         except TypeError as te:
-            raise TypeError(f&#39;{name} cannot be cast to a float&#39;) from te
+            raise TypeError(f&#39;{name} cannot be cast into a boolean.&#39;) from te
 
     @staticmethod
-    def __make_emissivity(top_emissivity: Any) -&gt; float:
+    def __cast_variable_to_float(variable: float, name: str) -&gt; float:
         try:
-            if not 0 &lt;= top_emissivity &lt;= 1:
-                raise ValueError(&#39;top_emissivity must be between 0 and 1.&#39;)
-            return float(top_emissivity)
+            return float(variable)
         except TypeError as te:
-            raise TypeError(&#39;top_emissivity cannot be cast to a float&#39;) \
-                from te
+            raise TypeError(f&#39;{name} cannot be cast into a float.&#39;) from te
+        except ValueError as ve:
+            raise ValueError(f&#39;{name} cannot be cast into a float.&#39;) from ve
+
+    @staticmethod
+    def __raise_value_error_if_temperature_is_unphysical(
+            temperature: float, name: str) -&gt; None:
+        if temperature &lt; 0 or np.isinf(temperature) or np.isnan(temperature):
+            raise ValueError(f&#39;{name} must be non-negative and finite.&#39;)
+
+    @staticmethod
+    def __raise_value_error_if_emissivity_not_in_range(
+            top_emissivity: float) -&gt; None:
+        if not 0 &lt;= top_emissivity &lt;= 1:
+            raise ValueError(&#39;top_emissivity must be between 0 and 1.&#39;)
 
     @property
     def thermal_emission(self) -&gt; bool:
@@ -351,12 +370,12 @@ assumed to have the same units as these variables. Default is 0.0.</dd>
             Raised if either input flux cannot be cast into a float.
 
         &#34;&#34;&#34;
-        self.__beam_flux = self.__make_flux(beam_flux, &#39;beam_flux&#39;)
+        self.__beam_flux = self.__cast_to_float(beam_flux, &#39;beam_flux&#39;)
         self.__isotropic_flux = \
-            self.__make_flux(isotropic_flux, &#39;isotropic_flux&#39;)
+            self.__cast_to_float(isotropic_flux, &#39;isotropic_flux&#39;)
 
     @staticmethod
-    def __make_flux(flux: Any, name: str) -&gt; float:
+    def __cast_to_float(flux: float, name: str) -&gt; float:
         try:
             return float(flux)
         except ValueError as ve:
@@ -563,28 +582,48 @@ top_emissivity is not between 0 and 1.</dd>
             self.__make_temperature(top_temperature, &#39;top_temperature&#39;)
         self.__top_emissivity = self.__make_emissivity(top_emissivity)
 
-    @staticmethod
-    def __make_thermal_emission(thermal_emission: Any) -&gt; bool:
-        return bool(thermal_emission)
+    def __make_thermal_emission(self, thermal_emission: bool) -&gt; bool:
+        return self.__cast_variable_to_bool(
+            thermal_emission, &#39;thermal_emission&#39;)
+
+    def __make_temperature(self, temperature: float, name: str) -&gt; float:
+        temperature = self.__cast_variable_to_float(temperature, name)
+        self.__raise_value_error_if_temperature_is_unphysical(temperature, name)
+        return temperature
+
+    def __make_emissivity(self, top_emissivity: float) -&gt; float:
+        top_emissivity = self.__cast_variable_to_float(
+            top_emissivity, &#39;top_emissivity&#39;)
+        self.__raise_value_error_if_emissivity_not_in_range(top_emissivity)
+        return top_emissivity
 
     @staticmethod
-    def __make_temperature(temperature: Any, name: str) -&gt; float:
+    def __cast_variable_to_bool(variable: bool, name: str) -&gt; bool:
         try:
-            if temperature &lt; 0 or np.isinf(temperature):
-                raise ValueError(f&#39;{name} must be non-negative and finite.&#39;)
-            return float(temperature)
+            return bool(variable)
         except TypeError as te:
-            raise TypeError(f&#39;{name} cannot be cast to a float&#39;) from te
+            raise TypeError(f&#39;{name} cannot be cast into a boolean.&#39;) from te
 
     @staticmethod
-    def __make_emissivity(top_emissivity: Any) -&gt; float:
+    def __cast_variable_to_float(variable: float, name: str) -&gt; float:
         try:
-            if not 0 &lt;= top_emissivity &lt;= 1:
-                raise ValueError(&#39;top_emissivity must be between 0 and 1.&#39;)
-            return float(top_emissivity)
+            return float(variable)
         except TypeError as te:
-            raise TypeError(&#39;top_emissivity cannot be cast to a float&#39;) \
-                from te
+            raise TypeError(f&#39;{name} cannot be cast into a float.&#39;) from te
+        except ValueError as ve:
+            raise ValueError(f&#39;{name} cannot be cast into a float.&#39;) from ve
+
+    @staticmethod
+    def __raise_value_error_if_temperature_is_unphysical(
+            temperature: float, name: str) -&gt; None:
+        if temperature &lt; 0 or np.isinf(temperature) or np.isnan(temperature):
+            raise ValueError(f&#39;{name} must be non-negative and finite.&#39;)
+
+    @staticmethod
+    def __raise_value_error_if_emissivity_not_in_range(
+            top_emissivity: float) -&gt; None:
+        if not 0 &lt;= top_emissivity &lt;= 1:
+            raise ValueError(&#39;top_emissivity must be between 0 and 1.&#39;)
 
     @property
     def thermal_emission(self) -&gt; bool:

@@ -22,7 +22,7 @@ import disort
 # New: The old Observation class took angles and wavelengths, but they operated
 # independently so I made them into 2 classes. This class basically just creates
 # wavenumbers from wavelengths
-short_wav = np.array([1, 9.3])   # microns
+short_wav = np.array([1])   # microns
 long_wav = short_wav + 1
 wavelengths = Wavelengths(short_wav, long_wav)
 low_wavenumber = wavelengths.low_wavenumber
@@ -59,61 +59,22 @@ dustFile = ExternalFile(os.path.join(data_path, 'planets/mars/aux/dust_propertie
 wavs = dustFile.array['wavelengths'].data
 sizes = dustFile.array['particle_sizes'].data
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Construct aerosol/model properties. These will almost certainly change
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Add the columns from dustFile to dust_properties
-# Note: disort_multi ships with aerosol_dust.dat at 1.5 microns (index 10) of
-# the forward scattering file. Also note that this has 14 particle sizes, not
-# 13 like the phase function array I have
-c_ext = ForwardScatteringProperty(dustFile.array['primary'].data[:, :, 0], particle_size_grid=sizes, wavelength_grid=wavs)
-c_sca = ForwardScatteringProperty(dustFile.array['primary'].data[:, :, 1], particle_size_grid=sizes, wavelength_grid=wavs)
-dust_properties = ForwardScatteringPropertyCollection()
-dust_properties.add_property(c_ext, 'c_extinction')
-dust_properties.add_property(c_sca, 'c_scattering')
-
-# Make a dust Conrath profile
-conrath_profile = Conrath(model_eos, 10, 0.5)
-
-# Define a smooth gradient of particle sizes. Here I'm making all particle sizes
-# = 1 so I can compare with disort_multi (I don't know how to include a particle
-# size gradient with it)
-p_sizes = np.linspace(1.5, 1.5, num=len(conrath_profile.profile))
-
-# Make a phase function. I'm allowing negative coefficients here
-dust_phsfn_file = ExternalFile(os.path.join(data_path, 'planets/mars/aux/dust_phase_function.fits'))
-dust_phsfn = TabularLegendreCoefficients(dust_phsfn_file.array['primary'].data,
-                                         dust_phsfn_file.array['particle_sizes'].data,
-                                         dust_phsfn_file.array['wavelengths'].data)
-
-# index 112 of wave
-# index 9 of sizes phase function
-#print(dust_phsfn_file.array['primary'].data[:, 9, 112])
-#print(dust_phsfn_file.array['particle_sizes'].data[9])
-#print(dust_phsfn_file.array['wavelengths'].data[112])
-#raise SystemExit(9)
-
-# Make the new Column where wave_ref = 9.3 microns and OD = 1
-dust_col = Column(dust_properties, model_eos, conrath_profile.profile, p_sizes, short_wav, 9.3, 1, dust_phsfn)
-
 # Make Rayleigh stuff
 n_moments = 1000
 rco2 = RayleighCo2(short_wav, model_eos, n_moments)
 
 # Make the model
 model = ModelAtmosphere()
-dust_info = (dust_col.total_optical_depth, dust_col.scattering_optical_depth, dust_col.scattering_optical_depth * dust_col.phase_function)
 rayleigh_info = (rco2.scattering_optical_depths, rco2.scattering_optical_depths, rco2.phase_function)  # This works since scattering OD = total OD
 
 # Add dust and Rayleigh scattering to the model
-model.add_constituent(dust_info)
 model.add_constituent(rayleigh_info)
 
 # Once everything is in the model, compute the model. Then, slice off the wavelength dimension
 model.compute_model()
-optical_depths = model.hyperspectral_total_optical_depths[:, 1]
-ssa = model.hyperspectral_total_single_scattering_albedos[:, 1]
-polynomial_moments = model.hyperspectral_legendre_moments[:, :, 1]
+optical_depths = model.hyperspectral_total_optical_depths
+ssa = model.hyperspectral_total_single_scattering_albedos
+polynomial_moments = model.hyperspectral_legendre_moments
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Make the size of the computational parameters
@@ -228,8 +189,7 @@ rfldir, rfldn, flup, dfdt, uavg, uu, albmed, trnmed = \
                   rfldn, flup, dfdt, uavg, uu, albmed, trnmed)
 
 print(uu[0, 0, 0])   # shape: (1, 81, 1)
-# This gives          0.0415674630
-# disort_multi gives  0.0415661298
+# This gives         0.32141164
+# disort_multi gives 0.321434200
 # I'm running ./disort_multi -dust_conrath 0.5, 10 -dust_phsfn 98 -NSTR 16 < testInput.txt
-# testInput.txt is: 1, 0.5, 10, 30, 50, 40, 20, 1, 0, 0
-# And dust_phsfn has 65 moments at 1.5 micron (size) and 9.3 microns(wavelength)
+# testInput.txt is: 1, 0.5, 10, 30, 50, 40, 20, 0, 0, 0
