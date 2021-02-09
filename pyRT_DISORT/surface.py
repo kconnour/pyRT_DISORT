@@ -2,7 +2,10 @@
 surface treatment.
 """
 import numpy as np
-from pyRT_DISORT.controller import ComputationalParameters
+from pyRT_DISORT.controller import ComputationalParameters, ModelBehavior
+from pyRT_DISORT.flux import IncidentFlux
+from pyRT_DISORT.observation import Angles
+from disort import disobrdf
 
 
 # TODO: I still don't really know what bemst, emust, rhoq, rhou, or rho_accurate
@@ -29,14 +32,15 @@ class Surface:
         Raises
         ------
         TypeError
-            Raised if albedo cannot be cast to a float.
+            Raised if albedo cannot be cast to a float, or cp is not an instance
+            of ComputationalParameters
         ValueError
             Raised if albedo is not between 0 and 1.
 
         """
         self.__albedo = self.__make_albedo(albedo)
         self.__raise_type_error_if_cp_is_not_computational_parameters(cp)
-        self.__cp = cp
+        self._cp = cp
 
         self._bemst = self.__make_empty_bemst()
         self._emust = self.__make_empty_emust()
@@ -57,24 +61,24 @@ class Surface:
                 'cp must be an instance of ComputationalParameters.')
 
     def __make_empty_bemst(self) -> np.ndarray:
-        return np.zeros(int(0.5*self.__cp.n_streams))
+        return np.zeros(int(0.5*self._cp.n_streams))
 
     def __make_empty_emust(self) -> np.ndarray:
-        return np.zeros(self.__cp.n_polar)
+        return np.zeros(self._cp.n_polar)
 
     def __make_empty_rho_accurate(self) -> np.ndarray:
-        return np.zeros((self.__cp.n_polar, self.__cp.n_azimuth))
+        return np.zeros((self._cp.n_polar, self._cp.n_azimuth))
 
     # TODO: the first dimension seems messed up to me...
     def __make_empty_rhoq(self) -> np.ndarray:
-        return np.zeros((int(0.5 * self.__cp.n_streams),
-                         int(0.5 * self.__cp.n_streams + 1),
-                         self.__cp.n_streams))
+        return np.zeros((int(0.5 * self._cp.n_streams),
+                         int(0.5 * self._cp.n_streams + 1),
+                         self._cp.n_streams))
 
     def __make_empty_rhou(self) -> np.ndarray:
-        return np.zeros((self.__cp.n_streams,
-                         int(0.5 * self.__cp.n_streams + 1),
-                         self.__cp.n_streams))
+        return np.zeros((self._cp.n_streams,
+                         int(0.5 * self._cp.n_streams + 1),
+                         self._cp.n_streams))
 
     @staticmethod
     def __cast_to_float(albedo: float) -> float:
@@ -123,7 +127,7 @@ class Lambertian(Surface):
         albedo: float
             The surface albedo.
         cp: ComputationalParameters
-            The computational parameters
+            The computational parameters.
 
         Raises
         ------
@@ -152,6 +156,178 @@ class Lambertian(Surface):
 
         """
         return True
+
+    @property
+    def bemst(self) -> np.ndarray:
+        """Get the directional emissivity at quadrature angles. For a Lambertian
+        surface, this array is (presumably) unused and therefore set to all 0s.
+
+        Returns
+        -------
+        np.ndarray
+            The directional emissivity at quadrature angles.
+
+        Notes
+        -----
+        In DISORT, this variable is named "BEMST"
+
+        """
+        return self._bemst
+
+    @property
+    def emust(self) -> np.ndarray:
+        """Get the directional emissivity at user angles. For a Lambertian
+        surface, this array is (presumably) unused and therefore set to all 0s.
+
+        Returns
+        -------
+        np.ndarray
+            The directional emissivity at user angles.
+
+        Notes
+        -----
+        In DISORT, this variable is named "EMUST"
+
+        """
+        return self._emust
+
+    @property
+    def rho_accurate(self) -> np.ndarray:
+        """Get the analytic BRDF results. For a Lambertian surface, this
+        array is (presumably) unused and therefore set to all 0s.
+
+        Returns
+        -------
+        np.ndarray
+            The analystic BRDF results.
+
+        Notes
+        -----
+        In DISORT, this variable is named "RHO_ACCURATE".
+
+        """
+        return self._rho_accurate
+
+    @property
+    def rhoq(self) -> np.ndarray:
+        """Get the quadrature fourier expanded BRDF. For a Lambertian surface,
+        this array is (presumably) unused and therefore set to all 0s.
+
+        Returns
+        -------
+        np.ndarray
+            The quadrature fourier expanded BRDF.
+
+        Notes
+        -----
+        In DISORT, this variable is named "RHOQ".
+
+        """
+        return self._rhoq
+
+    @property
+    def rhou(self) -> np.ndarray:
+        """Get the user defined fourier expanded BRDF. For a Lambertian surface,
+        this array is (presumably) unused and therefore set to all 0s.
+
+        Returns
+        -------
+        np.ndarray
+            The user-defined fourier expanded BRDF.
+
+        Notes
+        -----
+        In DISORT, this variable is named "RHOU".
+
+        """
+        return self._rhou
+
+
+class Hapke(Surface):
+    """Create a basic Hapke surface.
+
+    Hapke creates the bi-directional reflectivity arrays required by DISORT
+    based on the input parameterization.
+
+    """
+
+    # b0 = 1, h=0.06, w = 0.6 were the old defaults
+    def __init__(self, albedo: float, cp: ComputationalParameters,
+                 mb: ModelBehavior, flux: IncidentFlux, angles: Angles,
+                 b0: float, h: float, w: float, n_mug: int = 200) -> None:
+        """
+        Parameters
+        ----------
+        albedo: float
+            The surface albedo.
+        cp: ComputationalParameters
+            The computational parameters.
+        mb: ModelBehavior
+            The model behavior.
+        flux: IncidentFlux
+            The incident flux.
+        angles: Angles
+            The observation angles.
+        b0: float
+            The strength of the opposition surge.
+        h: float
+            The width of the opposition surge.
+        w: float
+            The surface single scattering albedo.
+        n_mug: int, optional
+            The number of angle cosine quadrature points for integrating the
+            bidirectional reflectivity. Default is 200.
+
+        Raises
+        ------
+        TypeError
+            Raised if inputs cannot be cast to the correct type.
+        ValueError
+            Raised if albedo is not between 0 and 1.
+
+        """
+        super().__init__(albedo, cp)
+
+        self._rhoq, self._rhou, self._emust, self._bemst, self._rho_accurate = \
+            self.__make_output_arrays(mb, angles, flux, albedo, b0, h, w, n_mug)
+
+    def __make_output_arrays(self, mb: ModelBehavior, angles: Angles,
+                             flux: IncidentFlux, albedo, b0: float, h: float,
+                             w: float, n_mug: int):
+        try:
+            return self.__call_disobrdf(
+                mb, angles, flux, albedo, b0, h, w, n_mug)
+        except ValueError as ve:
+            raise ValueError('problem') from ve
+
+    def __call_disobrdf(self, mb: ModelBehavior, angles: Angles,
+                        flux: IncidentFlux, albedo, b0: float, h: float,
+                        w: float, n_mug: int):
+        brdf_argument = np.array([b0, h, w, 0, 0, 0])
+        return disobrdf(mb.user_angles, angles.mu, flux.beam_flux, angles.mu0,
+                        False, albedo, mb.only_fluxes, self._rhoq, self._rhou,
+                        self._emust, self._bemst, False, angles.phi,
+                        angles.phi0, self._rho_accurate, 1, brdf_argument,
+                        n_mug, nstr=self._cp.n_streams, numu=self._cp.n_polar,
+                        nphi=self._cp.n_azimuth)
+
+    # TODO: all docstrings are out of date
+    @property
+    def lambertian(self) -> bool:
+        """Get whether the bottom boundary used in the model will be Lambertian.
+        This is necessarily True for this class.
+
+        Returns
+        -------
+        bool
+            True.
+
+        Notes
+        -----
+        In DISORT, this variable is named "LAMBER".
+
+        """
+        return False
 
     @property
     def bemst(self) -> np.ndarray:
