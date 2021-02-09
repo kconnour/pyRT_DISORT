@@ -12,7 +12,7 @@ from pyRT_DISORT.untested.model_atmosphere import ModelAtmosphere
 from pyRT_DISORT.controller import ComputationalParameters, ModelBehavior, OutputArrays
 from pyRT_DISORT.flux import IncidentFlux, ThermalEmission
 from pyRT_DISORT.untested.unsure import Unsure
-from pyRT_DISORT.surface import Hapke
+from pyRT_DISORT.surface import HapkeHG2
 import disort
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -110,9 +110,9 @@ model.add_constituent(rayleigh_info)
 
 # Once everything is in the model, compute the model. Then, slice off the wavelength dimension
 model.compute_model()
-optical_depths = model.hyperspectral_total_optical_depths[:, 1]
-ssa = model.hyperspectral_total_single_scattering_albedos[:, 1]
-polynomial_moments = model.hyperspectral_legendre_moments[:, :, 1]
+optical_depths = model.hyperspectral_total_optical_depths[:, 0]
+ssa = model.hyperspectral_total_single_scattering_albedos[:, 0]
+polynomial_moments = model.hyperspectral_legendre_moments[:, :, 0]
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Make the size of the computational parameters
@@ -181,8 +181,8 @@ h_lyr = uns.h_lyr
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Surface treatment
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Use the Hapke class
-hapke = Hapke(0.5, cp, mb, incident_flux, ang, 1, 0.06, 0.6)
+# Use a Hapke function with 2 lobed HG surface
+hapke = HapkeHG2(0.5, cp, mb, incident_flux, ang, 1, 0.06, 0.6, 0.3, 0.5)
 albedo = hapke.albedo
 lamber = hapke.lambertian
 rhou = hapke.rhou
@@ -209,8 +209,10 @@ rfldir, rfldn, flup, dfdt, uavg, uu, albmed, trnmed = \
                   rfldn, flup, dfdt, uavg, uu, albmed, trnmed)
 
 print(uu[0, 0, 0])   # shape: (1, 81, 1)
-# This gives          0.027767317
-# disort_multi gives  ??? I'm unsure how to test this in d_m
-# I'm running
+# This gives          0.22223717
+# disort_multi gives  0.222105086
+# I'm running ./disort_multi -use_hg2 -dust_conrath 0.5, 10 -dust_phsfn 98 -NSTR 16 < testInput.txt
 # testInput.txt is: 1, 0.5, 10, 30, 50, 40, 20, 1, 0, 0
-# And dust_phsfn has 65 moments at 1.5 micron (size) and 9.3 microns(wavelength)
+#                   0.6, 0.3, 0.5, 1, 0.06
+
+# And dust_phsfn has 65 moments at 1.5 micron (size) and 1.0 microns(wavelength)
