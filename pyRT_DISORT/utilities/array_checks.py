@@ -1,71 +1,192 @@
-# 3rd-party imports
+"""array_checks.py contains ArrayChecker, an object to perform a variety of
+array checks on an input array.
+"""
 import numpy as np
 
 
 class ArrayChecker:
-    """An ArrayChecker object holds methods that may be handy to perform on np.ndarrays."""
+    """An ArrayChecker object can perform common checks on np.ndarrays.
 
-    def __init__(self, some_object, array_name):
-        self.array_name = array_name
-        self.some_object = some_object
+    The ArrayChecker class holds methods commonly performed on np.ndarrays
+    throughout pyRT_DISORT to determine if the array fits some criteria.
 
-    def check_object_is_array(self):
-        if not isinstance(self.some_object, np.ndarray):
-            raise TypeError(f'{self.array_name} must be a np.ndarray')
+    """
 
-    def check_ndarray_is_numeric(self):
-        if not np.issubdtype(self.some_object.dtype, np.number):
-            raise ValueError(f'{self.array_name} must contain only numbers')
+    def __init__(self, array: np.ndarray) -> None:
+        """
+        Parameters
+        ----------
+        array: np.ndarray
+            Array to perform numeric checks on.
 
-    def check_ndarray_contains_only_ints(self):
-        if not np.issubdtype(self.some_object.dtype, np.int):
-            raise ValueError(f'{self.array_name} must contain only integers')
+        Raises
+        ------
+        TypeError
+            Raised if the input is not a np.ndarray.
+        ValueError
+            Raised if the input array contains non-numeric values.
 
-    def check_ndarray_is_finite(self):
-        if not np.all(np.isfinite(self.some_object)):
-            raise ValueError(f'{self.array_name} must contain all finite values')
+        """
+        self.__array = array
+        self.__raise_error_if_input_array_is_bad()
 
-    def check_ndarray_is_positive(self):
-        if not np.all(self.some_object > 0):
-            raise ValueError(f'{self.array_name} must contain all positive values')
+    def __raise_error_if_input_array_is_bad(self) -> None:
+        self.__raise_type_error_if_object_is_not_array()
+        self.__raise_value_error_if_array_contains_non_numeric_values()
 
-    def check_ndarray_is_non_negative(self):
-        if not np.all(self.some_object >= 0):
-            raise ValueError(f'{self.array_name} must contain all non-negative values')
+    def __raise_type_error_if_object_is_not_array(self) -> None:
+        if not isinstance(self.__array, np.ndarray):
+            raise TypeError('The input object is not a np.ndarray.')
 
-    def check_ndarray_is_positive_finite(self):
-        self.check_ndarray_is_finite()
-        self.check_ndarray_is_positive()
+    def __raise_value_error_if_array_contains_non_numeric_values(self) -> None:
+        if not np.issubdtype(self.__array.dtype, np.number):
+            raise ValueError('The input array must contain numeric values.')
 
-    def check_ndarray_is_in_range(self, low, high):
-        if not(np.all(self.some_object >= low) and np.all(self.some_object <= high)):
-            raise ValueError(f'{self.array_name} must be in range [{low}, {high}]')
+    def determine_if_array_contains_only_ints(self) -> bool:
+        """Determine if the array contains only integers.
 
-    def check_ndarray_dimension(self, dimension):
-        return np.ndim(self.some_object) == dimension
+        Returns
+        -------
+        bool
+            True if the contents are all integers; False otherwise.
 
-    def check_ndarray_is_1d(self):
-        if not self.check_ndarray_dimension(1):
-            raise IndexError(f'{self.array_name} must be a 1D array')
+        """
+        return np.issubdtype(self.__array.dtype, np.int)
 
-    def check_ndarray_is_2d(self):
-        if not self.check_ndarray_dimension(2):
-            raise IndexError(f'{self.array_name} must be a 2D array')
+    def determine_if_array_is_1d(self) -> bool:
+        """Determine if the array is 1D.
 
-    def check_1d_array_is_monotonically_decreasing(self):
-        diff = np.diff(self.some_object)
-        if not np.all(diff < 0):
-            raise ValueError(f'{self.array_name} must be monotonically decreasing')
+        Returns
+        -------
+        bool
+            True if the array is 1D; False otherwise.
 
-    def check_1d_array_is_monotonically_increasing(self):
-        diff = np.diff(self.some_object)
-        if not np.all(diff > 0):
-            raise ValueError(f'{self.array_name} must be monotonically increasing')
+        """
+        return self.determine_if_array_matches_dimensionality(1)
 
-    def check_1d_array_is_no_longer_than(self, length):
-        if len(self.some_object) > length:
-            raise ValueError(f'{self.array_name} must be no longer than {length} elements long')
+    def determine_if_array_is_2d(self) -> bool:
+        """Determine if the array is 2D.
 
-    def check_1d_array_is_at_least(self, length):
-        if len(self.some_object) < length:
-            raise ValueError(f'{self.array_name} must be at least {length} elements long')
+        Returns
+        -------
+        bool
+            True if the array is 2D; False otherwise.
+
+        """
+        return self.determine_if_array_matches_dimensionality(2)
+
+    def determine_if_array_is_finite(self) -> bool:
+        """Determine if the array contains only finite values.
+
+        Returns
+        -------
+        bool
+            True if the contents are all finite; False otherwise.
+
+        """
+        return np.all(np.isfinite(self.__array))
+
+    def determine_if_array_is_in_range(self, low: float, high: float) -> bool:
+        """Determine if the array contains only values within a range.
+
+        Parameters
+        ----------
+        low: float
+            The lower value within the requested range.
+        high: float
+            The higher value within the requested range.
+
+        Returns
+        -------
+        bool
+            True if the contents are all within the input range; False
+            otherwise.
+
+        Raises
+        ------
+        TypeError
+            Raised if either of the inputs are not floats.
+
+        """
+        self.__raise_value_error_if_input_is_not_float(low, 'low')
+        self.__raise_value_error_if_input_is_not_float(high, 'high')
+        return np.all(self.__array >= low) and np.all(self.__array <= high)
+
+    def determine_if_array_is_monotonically_decreasing(self) -> bool:
+        """Determine if the array is monotonically decreasing.
+
+        Returns
+        -------
+        bool
+            True if the array is monotonically decreasing; False otherwise.
+
+        """
+        return np.all(np.diff(self.__array) < 0)
+
+    def determine_if_array_is_monotonically_increasing(self) -> bool:
+        """Determine if the array is monotonically increasing.
+
+        Returns
+        -------
+        bool
+            True if the array is monotonically increasing; False otherwise.
+
+        """
+        return np.all(np.diff(self.__array) > 0)
+
+    def determine_if_array_is_non_negative(self) -> bool:
+        """Determine if the array contains only non-negative values.
+
+        Returns
+        -------
+        bool
+            True if the contents are all non-negative; False otherwise.
+
+        """
+        return np.all(self.__array >= 0)
+
+    def determine_if_array_is_positive(self) -> bool:
+        """Determine if the array contains only positive values.
+
+        Returns
+        -------
+        bool
+            True if the contents are all positive; False otherwise.
+
+        """
+        return np.all(self.__array > 0)
+
+    def determine_if_array_is_positive_finite(self) -> bool:
+        """Determine if the array contains only positive, finite values.
+
+        Returns
+        -------
+        bool
+            True if the contents are all positive finite; False otherwise.
+
+        """
+        return self.determine_if_array_is_positive() and \
+            self.determine_if_array_is_finite()
+
+    def determine_if_array_matches_dimensionality(self, dimension: int) -> bool:
+        """Determine if the array matches an input number of dimensions.
+
+        Parameters
+        ----------
+        dimension: int
+            The number of dimensions to check for.
+
+        Returns
+        -------
+        bool
+            True if the array has the input number of dimensions; False
+            otherwise.
+
+        """
+        return np.ndim(self.__array) == dimension
+
+    @staticmethod
+    def __raise_value_error_if_input_is_not_float(quantity: float, name: str) \
+            -> None:
+        if not isinstance(quantity, float):
+            raise TypeError(f'{name} must be a float.')

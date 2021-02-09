@@ -1,0 +1,1281 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.2" />
+<title>pyRT_DISORT.observation API documentation</title>
+<meta name="description" content="observation.py contains data structures to hold quantities commonly found in
+an observation." />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS_CHTML" integrity="sha256-kZafAc6mZvK3W3v1pHOcUix30OHQN6pU/NO2oFkqZVw=" crossorigin></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>pyRT_DISORT.observation</code></h1>
+</header>
+<section id="section-intro">
+<p>observation.py contains data structures to hold quantities commonly found in
+an observation.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;observation.py contains data structures to hold quantities commonly found in
+an observation.
+&#34;&#34;&#34;
+from warnings import warn
+import numpy as np
+from pyRT_DISORT.utilities.array_checks import ArrayChecker
+
+
+# TODO: I&#39;m not sure that all combination of angles are physically realistic. If
+#  so, raise a warning
+# TODO: It&#39;d probably be better to catch different shape errors when making phi
+class Angles:
+    &#34;&#34;&#34;Create a data structure that contains angles required by DISORT.
+
+    Angles accepts ``observation&#39;&#39; angles and computes mu, mu0, phi, and phi0
+    from these angles.
+
+    &#34;&#34;&#34;
+
+    def __init__(self, incidence_angles: np.ndarray,
+                 emission_angles: np.ndarray, phase_angles: np.ndarray) -&gt; None:
+        &#34;&#34;&#34;
+        Parameters
+        ----------
+        incidence_angles: np.ndarray
+            Pixel incidence angles [degrees].
+        emission_angles: np.ndarray
+            Pixel emission angles [degrees].
+        phase_angles: np.ndarray
+            Pixel phase angles [degrees].
+
+        Raises
+        ------
+        ValueError
+            Raised if any of the input arrays contain non-numeric values, if
+            any of the angles contain values outside of their mathematically
+            valid range, or if the input arrays do not have the same shape.
+
+        Notes
+        -----
+        pyRT_DISORT computes all angular quantities across multiple pixels at
+        once to save computation time, but each DISORT run can only be done on a
+        per-pixel basis. Therefore, each element in mu, mu0, phi, and phi0 are
+        the expected DISORT inputs.
+
+        &#34;&#34;&#34;
+        self.__incidence = self.__make_incidence_angles(incidence_angles)
+        self.__emission = self.__make_emission_angles(emission_angles)
+        self.__phase = self.__make_phase_angles(phase_angles)
+
+        self.__mu0 = self.__compute_mu0()
+        self.__mu = self.__compute_mu()
+        self.__phi0 = self.__make_phi0()
+        self.__phi = self.__compute_phi()
+
+    def __make_incidence_angles(self, incidence: np.ndarray) -&gt; np.ndarray:
+        incidence = self.__cast_to_ndarray(incidence)
+        self.__raise_value_error_if_angles_are_not_in_range(
+            incidence, 0, 180, &#39;incidence_angles&#39;)
+        return incidence
+
+    def __make_emission_angles(self, emission: np.ndarray) -&gt; np.ndarray:
+        emission = self.__cast_to_ndarray(emission)
+        self.__raise_value_error_if_angles_are_not_in_range(
+            emission, 0, 90, &#39;emission_angles&#39;)
+        return emission
+
+    def __make_phase_angles(self, phase: np.ndarray) -&gt; np.ndarray:
+        phase = self.__cast_to_ndarray(phase)
+        self.__raise_value_error_if_angles_are_not_in_range(
+            phase, 0, 180, &#39;phase_angles&#39;)
+        return phase
+
+    def __compute_mu0(self) -&gt; np.ndarray:
+        return self.__compute_angle_cosine(self.__incidence)
+
+    def __compute_mu(self) -&gt; np.ndarray:
+        return self.__compute_angle_cosine(self.__emission)
+
+    def __make_phi0(self) -&gt; np.ndarray:
+        return np.zeros(len(self.__phase))
+
+    # TODO: is there a less messy way to make this variable?
+    def __compute_phi(self) -&gt; np.ndarray:
+        try:
+            with np.errstate(invalid=&#39;raise&#39;):
+                sin_emission_angle = np.sin(np.radians(self.__emission))
+                sin_solar_zenith_angle = np.sin(np.radians(self.__incidence))
+                cos_phase_angle = self.__compute_angle_cosine(self.__phase)
+                try:
+                    tmp_arg = (cos_phase_angle - self.mu * self.mu0) / \
+                              (sin_emission_angle * sin_solar_zenith_angle)
+                    d_phi = np.arccos(np.clip(tmp_arg, -1, 1))
+                except FloatingPointError:
+                    d_phi = np.pi
+                return self.phi0 + 180 - np.degrees(d_phi)
+        except ValueError as ve:
+            raise ValueError(&#39;The input angles must be the same shape.&#39;) from ve
+
+    @staticmethod
+    def __cast_to_ndarray(angles: np.ndarray) -&gt; np.ndarray:
+        return np.array(angles)
+
+    @staticmethod
+    def __raise_value_error_if_angles_are_not_in_range(
+            angles: np.ndarray, low: float, high: float, name: str) -&gt; None:
+        try:
+            if np.any(angles &lt; low) or np.any(angles &gt; high):
+                raise ValueError(f&#39;{name} must be between {low} and {high}.&#39;)
+        except TypeError as te:
+            raise ValueError(f&#39;{name} is non-numeric&#39;) from te
+
+    @staticmethod
+    def __compute_angle_cosine(angle: np.ndarray) -&gt; np.ndarray:
+        return np.cos(np.radians(angle))
+
+    @property
+    def incidence(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the input incidence (solar zenith) angles [degrees].
+
+        Returns
+        -------
+        np.ndarray
+            The input incidence angles.
+
+        &#34;&#34;&#34;
+        return self.__incidence
+
+    @property
+    def emission(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the input emission angles [degrees].
+
+        Returns
+        -------
+        np.ndarray
+            The input emission angles.
+
+        &#34;&#34;&#34;
+        return self.__emission
+
+    @property
+    def phase(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the input phase angles [degrees].
+
+        Returns
+        -------
+        np.ndarray
+            The input phase angles.
+
+        &#34;&#34;&#34;
+        return self.__phase
+
+    @property
+    def mu0(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get mu0 where mu0 is the cosine of the input incidence angles.
+
+        Returns
+        -------
+        np.ndarray
+            The cosine of the input incidence angles.
+
+        Notes
+        -----
+        Each element in this variable is named &#34;UMU0&#34; in DISORT.
+
+        &#34;&#34;&#34;
+        return self.__mu0
+
+    @property
+    def mu(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get mu where mu is the cosine of the input emission angles.
+
+        Returns
+        -------
+        np.ndarray
+            The cosine of the input emission angles.
+
+        Notes
+        -----
+        Each element in this variable is named &#34;UMU&#34; in DISORT.
+
+        &#34;&#34;&#34;
+        return self.__mu
+
+    @property
+    def phi0(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get phi0. I assume this is always 0.
+
+        Returns
+        -------
+        np.ndarray
+            All 0s.
+
+        Notes
+        -----
+        Each element in this variable is named &#34;PHI0&#34; in DISORT.
+
+        &#34;&#34;&#34;
+        return self.__phi0
+
+    @property
+    def phi(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get phi where phi is the azimuth angle [degrees].
+
+        Returns
+        -------
+        np.ndarray
+            The azimuth angles.
+
+        Notes
+        -----
+        Each element in this variable is named &#34;PHI&#34; in DISORT.
+
+        &#34;&#34;&#34;
+        return self.__phi
+
+
+class Wavelengths:
+    &#34;&#34;&#34;Create a data structure that contains spectral info for DISORT.
+
+    Wavelengths accepts ``observation&#39;&#39; wavelengths and computes their
+    corresponding wavenumbers.
+
+    &#34;&#34;&#34;
+
+    def __init__(self, short_wavelengths: np.ndarray,
+                 long_wavelengths: np.ndarray) -&gt; None:
+        &#34;&#34;&#34;
+        Parameters
+        ----------
+        short_wavelengths: np.ndarray
+            The short wavelengths [microns] for each spectral bin.
+        long_wavelengths: np.ndarray
+            The long wavelengths [microns] for each spectral bin.
+
+        Raises
+        ------
+        IndexError
+            Raised if the input wavelengths are not the same shape.
+        TypeError
+            Raised if any of the inputs are not np.ndarrays.
+        ValueError
+            Raised if any of the input spectral arrays are not 1D arrays,
+            contain non-numeric values, contain non positive finite values, if
+            they are not both the same shape, or if any value in
+            long_wavelengths is not larger than the corresponding value in
+            short_wavelengths.
+
+        Warnings
+        --------
+        UserWarning
+            Raised if any of the input wavelengths are not between 0.1 and 50
+            microns
+
+        Notes
+        -----
+        DISORT does not require either short_wavelengths or long_wavelengths,
+        but these quantities are useful to use in pyRT_DISORT in order to obtain
+        the spectral dependence of aerosol radiative properties. The
+        corresponding wavenumbers are only sometimes used by DISORT. See the
+        instance variable docstrings for more details.
+
+        &#34;&#34;&#34;
+        self.__short_wavelengths = short_wavelengths
+        self.__long_wavelengths = long_wavelengths
+
+        self.__raise_error_if_input_wavelengths_are_bad()
+        self.__warn_if_wavelengths_are_outside_expected_range()
+
+        self.__high_wavenumber = self.__calculate_high_wavenumber()
+        self.__low_wavenumber = self.__calculate_low_wavenumber()
+
+    def __raise_error_if_input_wavelengths_are_bad(self) -&gt; None:
+        self.__raise_error_if_short_wavelengths_are_bad()
+        self.__raise_error_if_long_wavelengths_are_bad()
+        self.__raise_index_error_if_wavelengths_are_not_same_shape()
+        self.__raise_value_error_if_long_wavelength_is_not_larger()
+
+    def __raise_error_if_short_wavelengths_are_bad(self) -&gt; None:
+        self.__raise_error_if_wavelengths_are_bad(
+            self.__short_wavelengths, &#39;short_wavelengths&#39;)
+
+    def __raise_error_if_long_wavelengths_are_bad(self) -&gt; None:
+        self.__raise_error_if_wavelengths_are_bad(
+            self.__long_wavelengths, &#39;long_wavelengths&#39;)
+
+    def __raise_error_if_wavelengths_are_bad(self, wavelengths, name) -&gt; None:
+        try:
+            checks = self.__perform_wavelength_checks(wavelengths)
+        except TypeError:
+            raise TypeError(f&#39;{name} must be a np.ndarray.&#39;) from None
+        if not all(checks):
+            raise ValueError(f&#39;{name} must be a 1D array of positive, finite &#39;
+                             f&#39;values.&#39;)
+
+    @staticmethod
+    def __perform_wavelength_checks(wavelengths) -&gt; list[bool]:
+        wavelength_checker = ArrayChecker(wavelengths)
+        checks = [wavelength_checker.determine_if_array_is_positive_finite(),
+                  wavelength_checker.determine_if_array_is_1d()]
+        return checks
+
+    def __raise_index_error_if_wavelengths_are_not_same_shape(self) -&gt; None:
+        if self.__short_wavelengths.shape != self.__long_wavelengths.shape:
+            raise IndexError(&#39;short_wavelengths and long_wavelengths must &#39;
+                             &#39;have the same shape.&#39;)
+
+    def __raise_value_error_if_long_wavelength_is_not_larger(self) -&gt; None:
+        if not np.all(self.__long_wavelengths &gt; self.__short_wavelengths):
+            raise ValueError(&#39;long_wavelengths must always be larger than &#39;
+                             &#39;the corresponding short_wavelengths.&#39;)
+
+    def __warn_if_wavelengths_are_outside_expected_range(self) -&gt; None:
+        if np.any(self.__short_wavelengths &lt; 0.1) or np.any(
+                self.__long_wavelengths &gt; 50):
+            warn(&#39;The input wavelengths are outside the expected range of 0.1 &#39;
+                 &#39;to 50 microns.&#39;)
+
+    def __calculate_high_wavenumber(self) -&gt; np.ndarray:
+        return self.__convert_wavelength_to_wavenumber(
+            self.__short_wavelengths, &#39;short_wavelengths&#39;)
+
+    def __calculate_low_wavenumber(self) -&gt; np.ndarray:
+        return self.__convert_wavelength_to_wavenumber(
+            self.__long_wavelengths, &#39;long_wavelengths&#39;)
+
+    @staticmethod
+    def __convert_wavelength_to_wavenumber(wavelength: np.ndarray,
+                                           wavelength_name: str) -&gt; np.ndarray:
+        with np.errstate(divide=&#39;raise&#39;):
+            try:
+                return 1 / (wavelength * 10 ** -4)
+            except FloatingPointError:
+                raise ValueError(f&#39;At least one value in {wavelength_name} &#39;
+                                 f&#39;is too small to perform calculations!&#39;) \
+                    from None
+
+    @property
+    def short_wavelengths(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the input short wavelengths [microns].
+
+        Returns
+        -------
+        np.ndarray
+            The short wavelengths.
+
+        &#34;&#34;&#34;
+        return self.__short_wavelengths
+
+    @property
+    def long_wavelengths(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the input long wavelengths [microns].
+
+        Returns
+        -------
+        np.ndarray
+            The long wavelengths.
+
+        &#34;&#34;&#34;
+        return self.__long_wavelengths
+
+    @property
+    def high_wavenumber(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the high wavenumbers [1/cm]---the wavenumbers corresponding to
+        short_wavelength.
+
+        Returns
+        -------
+        np.ndarray
+            The high wavenumbers.
+
+        Notes
+        -----
+        In DISORT, this variable is named &#34;WVNMHI&#34;. It is only needed by DISORT
+        if thermal_emission (defined in ThermalEmission) == True, or if
+        DISORT is run multiple times and BDREF is spectrally dependent.
+
+        &#34;&#34;&#34;
+        return self.__high_wavenumber
+
+    @property
+    def low_wavenumber(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the low wavenumbers [1/cm]---the wavenumbers associated with
+        long_wavelength.
+
+        Returns
+        -------
+        np.ndarray
+            The low wavenumbers.
+
+        Notes
+        -----
+        In DISORT, this variable is named &#34;WVNMLO&#34;. It is only needed by DISORT
+        if thermal_emission (defined in ThermalEmission) == True, or if
+        DISORT is run multiple times and BDREF is spectrally dependent.
+
+        &#34;&#34;&#34;
+        return self.__low_wavenumber</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="pyRT_DISORT.observation.Angles"><code class="flex name class">
+<span>class <span class="ident">Angles</span></span>
+<span>(</span><span>incidence_angles: numpy.ndarray, emission_angles: numpy.ndarray, phase_angles: numpy.ndarray)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a data structure that contains angles required by DISORT.</p>
+<p>Angles accepts ``observation'' angles and computes mu, mu0, phi, and phi0
+from these angles.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>incidence_angles</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>Pixel incidence angles [degrees].</dd>
+<dt><strong><code>emission_angles</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>Pixel emission angles [degrees].</dd>
+<dt><strong><code>phase_angles</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>Pixel phase angles [degrees].</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>ValueError</code></dt>
+<dd>Raised if any of the input arrays contain non-numeric values, if
+any of the angles contain values outside of their mathematically
+valid range, or if the input arrays do not have the same shape.</dd>
+</dl>
+<h2 id="notes">Notes</h2>
+<p>pyRT_DISORT computes all angular quantities across multiple pixels at
+once to save computation time, but each DISORT run can only be done on a
+per-pixel basis. Therefore, each element in mu, mu0, phi, and phi0 are
+the expected DISORT inputs.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Angles:
+    &#34;&#34;&#34;Create a data structure that contains angles required by DISORT.
+
+    Angles accepts ``observation&#39;&#39; angles and computes mu, mu0, phi, and phi0
+    from these angles.
+
+    &#34;&#34;&#34;
+
+    def __init__(self, incidence_angles: np.ndarray,
+                 emission_angles: np.ndarray, phase_angles: np.ndarray) -&gt; None:
+        &#34;&#34;&#34;
+        Parameters
+        ----------
+        incidence_angles: np.ndarray
+            Pixel incidence angles [degrees].
+        emission_angles: np.ndarray
+            Pixel emission angles [degrees].
+        phase_angles: np.ndarray
+            Pixel phase angles [degrees].
+
+        Raises
+        ------
+        ValueError
+            Raised if any of the input arrays contain non-numeric values, if
+            any of the angles contain values outside of their mathematically
+            valid range, or if the input arrays do not have the same shape.
+
+        Notes
+        -----
+        pyRT_DISORT computes all angular quantities across multiple pixels at
+        once to save computation time, but each DISORT run can only be done on a
+        per-pixel basis. Therefore, each element in mu, mu0, phi, and phi0 are
+        the expected DISORT inputs.
+
+        &#34;&#34;&#34;
+        self.__incidence = self.__make_incidence_angles(incidence_angles)
+        self.__emission = self.__make_emission_angles(emission_angles)
+        self.__phase = self.__make_phase_angles(phase_angles)
+
+        self.__mu0 = self.__compute_mu0()
+        self.__mu = self.__compute_mu()
+        self.__phi0 = self.__make_phi0()
+        self.__phi = self.__compute_phi()
+
+    def __make_incidence_angles(self, incidence: np.ndarray) -&gt; np.ndarray:
+        incidence = self.__cast_to_ndarray(incidence)
+        self.__raise_value_error_if_angles_are_not_in_range(
+            incidence, 0, 180, &#39;incidence_angles&#39;)
+        return incidence
+
+    def __make_emission_angles(self, emission: np.ndarray) -&gt; np.ndarray:
+        emission = self.__cast_to_ndarray(emission)
+        self.__raise_value_error_if_angles_are_not_in_range(
+            emission, 0, 90, &#39;emission_angles&#39;)
+        return emission
+
+    def __make_phase_angles(self, phase: np.ndarray) -&gt; np.ndarray:
+        phase = self.__cast_to_ndarray(phase)
+        self.__raise_value_error_if_angles_are_not_in_range(
+            phase, 0, 180, &#39;phase_angles&#39;)
+        return phase
+
+    def __compute_mu0(self) -&gt; np.ndarray:
+        return self.__compute_angle_cosine(self.__incidence)
+
+    def __compute_mu(self) -&gt; np.ndarray:
+        return self.__compute_angle_cosine(self.__emission)
+
+    def __make_phi0(self) -&gt; np.ndarray:
+        return np.zeros(len(self.__phase))
+
+    # TODO: is there a less messy way to make this variable?
+    def __compute_phi(self) -&gt; np.ndarray:
+        try:
+            with np.errstate(invalid=&#39;raise&#39;):
+                sin_emission_angle = np.sin(np.radians(self.__emission))
+                sin_solar_zenith_angle = np.sin(np.radians(self.__incidence))
+                cos_phase_angle = self.__compute_angle_cosine(self.__phase)
+                try:
+                    tmp_arg = (cos_phase_angle - self.mu * self.mu0) / \
+                              (sin_emission_angle * sin_solar_zenith_angle)
+                    d_phi = np.arccos(np.clip(tmp_arg, -1, 1))
+                except FloatingPointError:
+                    d_phi = np.pi
+                return self.phi0 + 180 - np.degrees(d_phi)
+        except ValueError as ve:
+            raise ValueError(&#39;The input angles must be the same shape.&#39;) from ve
+
+    @staticmethod
+    def __cast_to_ndarray(angles: np.ndarray) -&gt; np.ndarray:
+        return np.array(angles)
+
+    @staticmethod
+    def __raise_value_error_if_angles_are_not_in_range(
+            angles: np.ndarray, low: float, high: float, name: str) -&gt; None:
+        try:
+            if np.any(angles &lt; low) or np.any(angles &gt; high):
+                raise ValueError(f&#39;{name} must be between {low} and {high}.&#39;)
+        except TypeError as te:
+            raise ValueError(f&#39;{name} is non-numeric&#39;) from te
+
+    @staticmethod
+    def __compute_angle_cosine(angle: np.ndarray) -&gt; np.ndarray:
+        return np.cos(np.radians(angle))
+
+    @property
+    def incidence(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the input incidence (solar zenith) angles [degrees].
+
+        Returns
+        -------
+        np.ndarray
+            The input incidence angles.
+
+        &#34;&#34;&#34;
+        return self.__incidence
+
+    @property
+    def emission(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the input emission angles [degrees].
+
+        Returns
+        -------
+        np.ndarray
+            The input emission angles.
+
+        &#34;&#34;&#34;
+        return self.__emission
+
+    @property
+    def phase(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the input phase angles [degrees].
+
+        Returns
+        -------
+        np.ndarray
+            The input phase angles.
+
+        &#34;&#34;&#34;
+        return self.__phase
+
+    @property
+    def mu0(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get mu0 where mu0 is the cosine of the input incidence angles.
+
+        Returns
+        -------
+        np.ndarray
+            The cosine of the input incidence angles.
+
+        Notes
+        -----
+        Each element in this variable is named &#34;UMU0&#34; in DISORT.
+
+        &#34;&#34;&#34;
+        return self.__mu0
+
+    @property
+    def mu(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get mu where mu is the cosine of the input emission angles.
+
+        Returns
+        -------
+        np.ndarray
+            The cosine of the input emission angles.
+
+        Notes
+        -----
+        Each element in this variable is named &#34;UMU&#34; in DISORT.
+
+        &#34;&#34;&#34;
+        return self.__mu
+
+    @property
+    def phi0(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get phi0. I assume this is always 0.
+
+        Returns
+        -------
+        np.ndarray
+            All 0s.
+
+        Notes
+        -----
+        Each element in this variable is named &#34;PHI0&#34; in DISORT.
+
+        &#34;&#34;&#34;
+        return self.__phi0
+
+    @property
+    def phi(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get phi where phi is the azimuth angle [degrees].
+
+        Returns
+        -------
+        np.ndarray
+            The azimuth angles.
+
+        Notes
+        -----
+        Each element in this variable is named &#34;PHI&#34; in DISORT.
+
+        &#34;&#34;&#34;
+        return self.__phi</code></pre>
+</details>
+<h3>Instance variables</h3>
+<dl>
+<dt id="pyRT_DISORT.observation.Angles.emission"><code class="name">var <span class="ident">emission</span> : numpy.ndarray</code></dt>
+<dd>
+<div class="desc"><p>Get the input emission angles [degrees].</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>np.ndarray</code></dt>
+<dd>The input emission angles.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def emission(self) -&gt; np.ndarray:
+    &#34;&#34;&#34;Get the input emission angles [degrees].
+
+    Returns
+    -------
+    np.ndarray
+        The input emission angles.
+
+    &#34;&#34;&#34;
+    return self.__emission</code></pre>
+</details>
+</dd>
+<dt id="pyRT_DISORT.observation.Angles.incidence"><code class="name">var <span class="ident">incidence</span> : numpy.ndarray</code></dt>
+<dd>
+<div class="desc"><p>Get the input incidence (solar zenith) angles [degrees].</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>np.ndarray</code></dt>
+<dd>The input incidence angles.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def incidence(self) -&gt; np.ndarray:
+    &#34;&#34;&#34;Get the input incidence (solar zenith) angles [degrees].
+
+    Returns
+    -------
+    np.ndarray
+        The input incidence angles.
+
+    &#34;&#34;&#34;
+    return self.__incidence</code></pre>
+</details>
+</dd>
+<dt id="pyRT_DISORT.observation.Angles.mu"><code class="name">var <span class="ident">mu</span> : numpy.ndarray</code></dt>
+<dd>
+<div class="desc"><p>Get mu where mu is the cosine of the input emission angles.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>np.ndarray</code></dt>
+<dd>The cosine of the input emission angles.</dd>
+</dl>
+<h2 id="notes">Notes</h2>
+<p>Each element in this variable is named "UMU" in DISORT.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def mu(self) -&gt; np.ndarray:
+    &#34;&#34;&#34;Get mu where mu is the cosine of the input emission angles.
+
+    Returns
+    -------
+    np.ndarray
+        The cosine of the input emission angles.
+
+    Notes
+    -----
+    Each element in this variable is named &#34;UMU&#34; in DISORT.
+
+    &#34;&#34;&#34;
+    return self.__mu</code></pre>
+</details>
+</dd>
+<dt id="pyRT_DISORT.observation.Angles.mu0"><code class="name">var <span class="ident">mu0</span> : numpy.ndarray</code></dt>
+<dd>
+<div class="desc"><p>Get mu0 where mu0 is the cosine of the input incidence angles.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>np.ndarray</code></dt>
+<dd>The cosine of the input incidence angles.</dd>
+</dl>
+<h2 id="notes">Notes</h2>
+<p>Each element in this variable is named "UMU0" in DISORT.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def mu0(self) -&gt; np.ndarray:
+    &#34;&#34;&#34;Get mu0 where mu0 is the cosine of the input incidence angles.
+
+    Returns
+    -------
+    np.ndarray
+        The cosine of the input incidence angles.
+
+    Notes
+    -----
+    Each element in this variable is named &#34;UMU0&#34; in DISORT.
+
+    &#34;&#34;&#34;
+    return self.__mu0</code></pre>
+</details>
+</dd>
+<dt id="pyRT_DISORT.observation.Angles.phase"><code class="name">var <span class="ident">phase</span> : numpy.ndarray</code></dt>
+<dd>
+<div class="desc"><p>Get the input phase angles [degrees].</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>np.ndarray</code></dt>
+<dd>The input phase angles.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def phase(self) -&gt; np.ndarray:
+    &#34;&#34;&#34;Get the input phase angles [degrees].
+
+    Returns
+    -------
+    np.ndarray
+        The input phase angles.
+
+    &#34;&#34;&#34;
+    return self.__phase</code></pre>
+</details>
+</dd>
+<dt id="pyRT_DISORT.observation.Angles.phi"><code class="name">var <span class="ident">phi</span> : numpy.ndarray</code></dt>
+<dd>
+<div class="desc"><p>Get phi where phi is the azimuth angle [degrees].</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>np.ndarray</code></dt>
+<dd>The azimuth angles.</dd>
+</dl>
+<h2 id="notes">Notes</h2>
+<p>Each element in this variable is named "PHI" in DISORT.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def phi(self) -&gt; np.ndarray:
+    &#34;&#34;&#34;Get phi where phi is the azimuth angle [degrees].
+
+    Returns
+    -------
+    np.ndarray
+        The azimuth angles.
+
+    Notes
+    -----
+    Each element in this variable is named &#34;PHI&#34; in DISORT.
+
+    &#34;&#34;&#34;
+    return self.__phi</code></pre>
+</details>
+</dd>
+<dt id="pyRT_DISORT.observation.Angles.phi0"><code class="name">var <span class="ident">phi0</span> : numpy.ndarray</code></dt>
+<dd>
+<div class="desc"><p>Get phi0. I assume this is always 0.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>np.ndarray</code></dt>
+<dd>All 0s.</dd>
+</dl>
+<h2 id="notes">Notes</h2>
+<p>Each element in this variable is named "PHI0" in DISORT.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def phi0(self) -&gt; np.ndarray:
+    &#34;&#34;&#34;Get phi0. I assume this is always 0.
+
+    Returns
+    -------
+    np.ndarray
+        All 0s.
+
+    Notes
+    -----
+    Each element in this variable is named &#34;PHI0&#34; in DISORT.
+
+    &#34;&#34;&#34;
+    return self.__phi0</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="pyRT_DISORT.observation.Wavelengths"><code class="flex name class">
+<span>class <span class="ident">Wavelengths</span></span>
+<span>(</span><span>short_wavelengths: numpy.ndarray, long_wavelengths: numpy.ndarray)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a data structure that contains spectral info for DISORT.</p>
+<p>Wavelengths accepts ``observation'' wavelengths and computes their
+corresponding wavenumbers.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>short_wavelengths</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>The short wavelengths [microns] for each spectral bin.</dd>
+<dt><strong><code>long_wavelengths</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>The long wavelengths [microns] for each spectral bin.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>IndexError</code></dt>
+<dd>Raised if the input wavelengths are not the same shape.</dd>
+<dt><code>TypeError</code></dt>
+<dd>Raised if any of the inputs are not np.ndarrays.</dd>
+<dt><code>ValueError</code></dt>
+<dd>Raised if any of the input spectral arrays are not 1D arrays,
+contain non-numeric values, contain non positive finite values, if
+they are not both the same shape, or if any value in
+long_wavelengths is not larger than the corresponding value in
+short_wavelengths.</dd>
+</dl>
+<h2 id="warnings">Warnings</h2>
+<p>UserWarning
+Raised if any of the input wavelengths are not between 0.1 and 50
+microns</p>
+<h2 id="notes">Notes</h2>
+<p>DISORT does not require either short_wavelengths or long_wavelengths,
+but these quantities are useful to use in pyRT_DISORT in order to obtain
+the spectral dependence of aerosol radiative properties. The
+corresponding wavenumbers are only sometimes used by DISORT. See the
+instance variable docstrings for more details.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Wavelengths:
+    &#34;&#34;&#34;Create a data structure that contains spectral info for DISORT.
+
+    Wavelengths accepts ``observation&#39;&#39; wavelengths and computes their
+    corresponding wavenumbers.
+
+    &#34;&#34;&#34;
+
+    def __init__(self, short_wavelengths: np.ndarray,
+                 long_wavelengths: np.ndarray) -&gt; None:
+        &#34;&#34;&#34;
+        Parameters
+        ----------
+        short_wavelengths: np.ndarray
+            The short wavelengths [microns] for each spectral bin.
+        long_wavelengths: np.ndarray
+            The long wavelengths [microns] for each spectral bin.
+
+        Raises
+        ------
+        IndexError
+            Raised if the input wavelengths are not the same shape.
+        TypeError
+            Raised if any of the inputs are not np.ndarrays.
+        ValueError
+            Raised if any of the input spectral arrays are not 1D arrays,
+            contain non-numeric values, contain non positive finite values, if
+            they are not both the same shape, or if any value in
+            long_wavelengths is not larger than the corresponding value in
+            short_wavelengths.
+
+        Warnings
+        --------
+        UserWarning
+            Raised if any of the input wavelengths are not between 0.1 and 50
+            microns
+
+        Notes
+        -----
+        DISORT does not require either short_wavelengths or long_wavelengths,
+        but these quantities are useful to use in pyRT_DISORT in order to obtain
+        the spectral dependence of aerosol radiative properties. The
+        corresponding wavenumbers are only sometimes used by DISORT. See the
+        instance variable docstrings for more details.
+
+        &#34;&#34;&#34;
+        self.__short_wavelengths = short_wavelengths
+        self.__long_wavelengths = long_wavelengths
+
+        self.__raise_error_if_input_wavelengths_are_bad()
+        self.__warn_if_wavelengths_are_outside_expected_range()
+
+        self.__high_wavenumber = self.__calculate_high_wavenumber()
+        self.__low_wavenumber = self.__calculate_low_wavenumber()
+
+    def __raise_error_if_input_wavelengths_are_bad(self) -&gt; None:
+        self.__raise_error_if_short_wavelengths_are_bad()
+        self.__raise_error_if_long_wavelengths_are_bad()
+        self.__raise_index_error_if_wavelengths_are_not_same_shape()
+        self.__raise_value_error_if_long_wavelength_is_not_larger()
+
+    def __raise_error_if_short_wavelengths_are_bad(self) -&gt; None:
+        self.__raise_error_if_wavelengths_are_bad(
+            self.__short_wavelengths, &#39;short_wavelengths&#39;)
+
+    def __raise_error_if_long_wavelengths_are_bad(self) -&gt; None:
+        self.__raise_error_if_wavelengths_are_bad(
+            self.__long_wavelengths, &#39;long_wavelengths&#39;)
+
+    def __raise_error_if_wavelengths_are_bad(self, wavelengths, name) -&gt; None:
+        try:
+            checks = self.__perform_wavelength_checks(wavelengths)
+        except TypeError:
+            raise TypeError(f&#39;{name} must be a np.ndarray.&#39;) from None
+        if not all(checks):
+            raise ValueError(f&#39;{name} must be a 1D array of positive, finite &#39;
+                             f&#39;values.&#39;)
+
+    @staticmethod
+    def __perform_wavelength_checks(wavelengths) -&gt; list[bool]:
+        wavelength_checker = ArrayChecker(wavelengths)
+        checks = [wavelength_checker.determine_if_array_is_positive_finite(),
+                  wavelength_checker.determine_if_array_is_1d()]
+        return checks
+
+    def __raise_index_error_if_wavelengths_are_not_same_shape(self) -&gt; None:
+        if self.__short_wavelengths.shape != self.__long_wavelengths.shape:
+            raise IndexError(&#39;short_wavelengths and long_wavelengths must &#39;
+                             &#39;have the same shape.&#39;)
+
+    def __raise_value_error_if_long_wavelength_is_not_larger(self) -&gt; None:
+        if not np.all(self.__long_wavelengths &gt; self.__short_wavelengths):
+            raise ValueError(&#39;long_wavelengths must always be larger than &#39;
+                             &#39;the corresponding short_wavelengths.&#39;)
+
+    def __warn_if_wavelengths_are_outside_expected_range(self) -&gt; None:
+        if np.any(self.__short_wavelengths &lt; 0.1) or np.any(
+                self.__long_wavelengths &gt; 50):
+            warn(&#39;The input wavelengths are outside the expected range of 0.1 &#39;
+                 &#39;to 50 microns.&#39;)
+
+    def __calculate_high_wavenumber(self) -&gt; np.ndarray:
+        return self.__convert_wavelength_to_wavenumber(
+            self.__short_wavelengths, &#39;short_wavelengths&#39;)
+
+    def __calculate_low_wavenumber(self) -&gt; np.ndarray:
+        return self.__convert_wavelength_to_wavenumber(
+            self.__long_wavelengths, &#39;long_wavelengths&#39;)
+
+    @staticmethod
+    def __convert_wavelength_to_wavenumber(wavelength: np.ndarray,
+                                           wavelength_name: str) -&gt; np.ndarray:
+        with np.errstate(divide=&#39;raise&#39;):
+            try:
+                return 1 / (wavelength * 10 ** -4)
+            except FloatingPointError:
+                raise ValueError(f&#39;At least one value in {wavelength_name} &#39;
+                                 f&#39;is too small to perform calculations!&#39;) \
+                    from None
+
+    @property
+    def short_wavelengths(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the input short wavelengths [microns].
+
+        Returns
+        -------
+        np.ndarray
+            The short wavelengths.
+
+        &#34;&#34;&#34;
+        return self.__short_wavelengths
+
+    @property
+    def long_wavelengths(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the input long wavelengths [microns].
+
+        Returns
+        -------
+        np.ndarray
+            The long wavelengths.
+
+        &#34;&#34;&#34;
+        return self.__long_wavelengths
+
+    @property
+    def high_wavenumber(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the high wavenumbers [1/cm]---the wavenumbers corresponding to
+        short_wavelength.
+
+        Returns
+        -------
+        np.ndarray
+            The high wavenumbers.
+
+        Notes
+        -----
+        In DISORT, this variable is named &#34;WVNMHI&#34;. It is only needed by DISORT
+        if thermal_emission (defined in ThermalEmission) == True, or if
+        DISORT is run multiple times and BDREF is spectrally dependent.
+
+        &#34;&#34;&#34;
+        return self.__high_wavenumber
+
+    @property
+    def low_wavenumber(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the low wavenumbers [1/cm]---the wavenumbers associated with
+        long_wavelength.
+
+        Returns
+        -------
+        np.ndarray
+            The low wavenumbers.
+
+        Notes
+        -----
+        In DISORT, this variable is named &#34;WVNMLO&#34;. It is only needed by DISORT
+        if thermal_emission (defined in ThermalEmission) == True, or if
+        DISORT is run multiple times and BDREF is spectrally dependent.
+
+        &#34;&#34;&#34;
+        return self.__low_wavenumber</code></pre>
+</details>
+<h3>Instance variables</h3>
+<dl>
+<dt id="pyRT_DISORT.observation.Wavelengths.high_wavenumber"><code class="name">var <span class="ident">high_wavenumber</span> : numpy.ndarray</code></dt>
+<dd>
+<div class="desc"><p>Get the high wavenumbers [1/cm]&mdash;the wavenumbers corresponding to
+short_wavelength.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>np.ndarray</code></dt>
+<dd>The high wavenumbers.</dd>
+</dl>
+<h2 id="notes">Notes</h2>
+<p>In DISORT, this variable is named "WVNMHI". It is only needed by DISORT
+if thermal_emission (defined in ThermalEmission) == True, or if
+DISORT is run multiple times and BDREF is spectrally dependent.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def high_wavenumber(self) -&gt; np.ndarray:
+    &#34;&#34;&#34;Get the high wavenumbers [1/cm]---the wavenumbers corresponding to
+    short_wavelength.
+
+    Returns
+    -------
+    np.ndarray
+        The high wavenumbers.
+
+    Notes
+    -----
+    In DISORT, this variable is named &#34;WVNMHI&#34;. It is only needed by DISORT
+    if thermal_emission (defined in ThermalEmission) == True, or if
+    DISORT is run multiple times and BDREF is spectrally dependent.
+
+    &#34;&#34;&#34;
+    return self.__high_wavenumber</code></pre>
+</details>
+</dd>
+<dt id="pyRT_DISORT.observation.Wavelengths.long_wavelengths"><code class="name">var <span class="ident">long_wavelengths</span> : numpy.ndarray</code></dt>
+<dd>
+<div class="desc"><p>Get the input long wavelengths [microns].</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>np.ndarray</code></dt>
+<dd>The long wavelengths.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def long_wavelengths(self) -&gt; np.ndarray:
+    &#34;&#34;&#34;Get the input long wavelengths [microns].
+
+    Returns
+    -------
+    np.ndarray
+        The long wavelengths.
+
+    &#34;&#34;&#34;
+    return self.__long_wavelengths</code></pre>
+</details>
+</dd>
+<dt id="pyRT_DISORT.observation.Wavelengths.low_wavenumber"><code class="name">var <span class="ident">low_wavenumber</span> : numpy.ndarray</code></dt>
+<dd>
+<div class="desc"><p>Get the low wavenumbers [1/cm]&mdash;the wavenumbers associated with
+long_wavelength.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>np.ndarray</code></dt>
+<dd>The low wavenumbers.</dd>
+</dl>
+<h2 id="notes">Notes</h2>
+<p>In DISORT, this variable is named "WVNMLO". It is only needed by DISORT
+if thermal_emission (defined in ThermalEmission) == True, or if
+DISORT is run multiple times and BDREF is spectrally dependent.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def low_wavenumber(self) -&gt; np.ndarray:
+    &#34;&#34;&#34;Get the low wavenumbers [1/cm]---the wavenumbers associated with
+    long_wavelength.
+
+    Returns
+    -------
+    np.ndarray
+        The low wavenumbers.
+
+    Notes
+    -----
+    In DISORT, this variable is named &#34;WVNMLO&#34;. It is only needed by DISORT
+    if thermal_emission (defined in ThermalEmission) == True, or if
+    DISORT is run multiple times and BDREF is spectrally dependent.
+
+    &#34;&#34;&#34;
+    return self.__low_wavenumber</code></pre>
+</details>
+</dd>
+<dt id="pyRT_DISORT.observation.Wavelengths.short_wavelengths"><code class="name">var <span class="ident">short_wavelengths</span> : numpy.ndarray</code></dt>
+<dd>
+<div class="desc"><p>Get the input short wavelengths [microns].</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>np.ndarray</code></dt>
+<dd>The short wavelengths.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def short_wavelengths(self) -&gt; np.ndarray:
+    &#34;&#34;&#34;Get the input short wavelengths [microns].
+
+    Returns
+    -------
+    np.ndarray
+        The short wavelengths.
+
+    &#34;&#34;&#34;
+    return self.__short_wavelengths</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="pyRT_DISORT" href="index.html">pyRT_DISORT</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="pyRT_DISORT.observation.Angles" href="#pyRT_DISORT.observation.Angles">Angles</a></code></h4>
+<ul class="two-column">
+<li><code><a title="pyRT_DISORT.observation.Angles.emission" href="#pyRT_DISORT.observation.Angles.emission">emission</a></code></li>
+<li><code><a title="pyRT_DISORT.observation.Angles.incidence" href="#pyRT_DISORT.observation.Angles.incidence">incidence</a></code></li>
+<li><code><a title="pyRT_DISORT.observation.Angles.mu" href="#pyRT_DISORT.observation.Angles.mu">mu</a></code></li>
+<li><code><a title="pyRT_DISORT.observation.Angles.mu0" href="#pyRT_DISORT.observation.Angles.mu0">mu0</a></code></li>
+<li><code><a title="pyRT_DISORT.observation.Angles.phase" href="#pyRT_DISORT.observation.Angles.phase">phase</a></code></li>
+<li><code><a title="pyRT_DISORT.observation.Angles.phi" href="#pyRT_DISORT.observation.Angles.phi">phi</a></code></li>
+<li><code><a title="pyRT_DISORT.observation.Angles.phi0" href="#pyRT_DISORT.observation.Angles.phi0">phi0</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="pyRT_DISORT.observation.Wavelengths" href="#pyRT_DISORT.observation.Wavelengths">Wavelengths</a></code></h4>
+<ul class="">
+<li><code><a title="pyRT_DISORT.observation.Wavelengths.high_wavenumber" href="#pyRT_DISORT.observation.Wavelengths.high_wavenumber">high_wavenumber</a></code></li>
+<li><code><a title="pyRT_DISORT.observation.Wavelengths.long_wavelengths" href="#pyRT_DISORT.observation.Wavelengths.long_wavelengths">long_wavelengths</a></code></li>
+<li><code><a title="pyRT_DISORT.observation.Wavelengths.low_wavenumber" href="#pyRT_DISORT.observation.Wavelengths.low_wavenumber">low_wavenumber</a></code></li>
+<li><code><a title="pyRT_DISORT.observation.Wavelengths.short_wavelengths" href="#pyRT_DISORT.observation.Wavelengths.short_wavelengths">short_wavelengths</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+</footer>
+</body>
+</html>

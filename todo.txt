@@ -1,26 +1,57 @@
+To-dos on current clean code:
+- General
+--- Latex docstrings would improve readability in a number of areas
+--- Add an automatic linter
+--- Add ability to run all unit/integration tests with one command
+--- Can I get Github to automatically generate documentation when I push code?
+
+Updates:
+--- surface.py
+--- rayleigh.py
+--- vertical_profiles.py
+--- aerosol.py
+--- phase_function.py
+--- aerosol_column.py
+--- model_atmosphere.py
+--- ...and all utilities
+
+Utilities:
+--- create_fits.py
+--- external_files.py
+--- fit_phase_function.py
+--- get_module_path.py
+--- shared_array.py
+--- sporadic...grid.py
+
+- Documentation
+--- Switch to Sphinx if possible
+
+- Miscellaneous
+--- Language: idk if an array can be positive---only contain positive values
+--- I'm not sure if my levels of abstraction for class checkers are good
+--- Move path.py to the utilities folder
+--- Update README.md
+--- It still feels messy to me to have the disort4.0.99 stuff where it is
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Old to-dos that I'm not ready to get rid of ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 Fixes:
 --- Combine most recent dust files into a 3D .fits file
 --- Combine most recent ice files in to a 3D .fits file
 --- Check I can make a 1 layer atmosphere
---- Remake the examples with the new classes
---- ModelGrid might need a better name since altitude_grid is a parameter in InputAtmosphere (the word "grid" clashes)
---- ModelGrid should use Gaussian quadrature for the integral
---- ModelGrid should do integral in log(z) space
---- Remove the AerosolChecker classes
+--- Remake the DISORT examples with the new classes
 
 Additions:
---- Unit tests
---- Integrated tests
 --- Make ice PMOM
 --- Add ozone
 --- Add an efficient solver
 --- Parallelize over wavelength / observations (pixels)
---- Rewrite the test cases using my classes
 --- Correlated k
 --- T-matrix
-
-Design thoughts:
---- Is there a better way besides telling the user the columns in an input file must be in a specified order?
 
 Tests:
 --- What happens when phase functions are defined at different wavelengths? Like dust and ice at short wavs
