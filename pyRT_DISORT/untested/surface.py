@@ -6,21 +6,6 @@ from pyRT_DISORT.observation import Angles
 from disort import disobrdf
 
 
-# TODO: Become sure of what this does and remove it
-class Unsure:
-    """This class makes the variable "h_lyr". I don't really know what this
-    variable does since it can be all 0s.
-
-    """
-    def __init__(self, cp: ComputationalParameters):
-        self.cp = cp
-        self.__h_lyr = np.zeros(self.cp.n_layers+1)
-
-    @property
-    def h_lyr(self):
-        return self.__h_lyr
-
-
 class Hapke(Surface):
     """A Hapke object makes a Hapke surface phase function as defined in default DISORT"""
     def __init__(self, albedo, cp, mb, flux, ang, b0=1, hh=0.06, w=0.6, n_mug=200, debug=False):

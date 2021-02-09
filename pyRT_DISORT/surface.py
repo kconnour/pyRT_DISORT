@@ -67,12 +67,12 @@ class Surface:
 
     # TODO: the first dimension seems messed up to me...
     def __make_empty_rhoq(self) -> np.ndarray:
-        return np.zeros((self.__cp.n_streams,
+        return np.zeros((int(0.5 * self.__cp.n_streams),
                          int(0.5 * self.__cp.n_streams + 1),
                          self.__cp.n_streams))
 
     def __make_empty_rhou(self) -> np.ndarray:
-        return np.zeros((int(0.5 * self.__cp.n_streams),
+        return np.zeros((self.__cp.n_streams,
                          int(0.5 * self.__cp.n_streams + 1),
                          self.__cp.n_streams))
 

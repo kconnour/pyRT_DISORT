@@ -51,7 +51,8 @@ class ForwardScatteringProperty:
         self.__check_grids_match_0d_property()
 
     def __check_property_is_physical(self):
-        properties_checker = ArrayChecker(self.property_values, 'scattering_property')
+        pass
+        #properties_checker = ArrayChecker(self.property_values, 'scattering_property')
         #properties_checker.check_object_is_array()
         #properties_checker.check_ndarray_is_numeric()
         #properties_checker.check_ndarray_is_finite()

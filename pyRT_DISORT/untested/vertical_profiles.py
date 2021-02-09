@@ -74,7 +74,8 @@ class Conrath(VerticalProfile):
         fractional_mixing_ratio: np.ndarray (len(altitude_layer))
             The fraction of the mass mixing ratio at the midpoint altitudes
         """
-        altitude_scale = np.divide.outer(self.model_grid.layer_altitudes, self.H)
+        la = (self.model_grid.altitude_boundaries[:-1] + self.model_grid.altitude_boundaries[1:]) / 2   # added this to avoid adding it to eos
+        altitude_scale = np.divide.outer(la, self.H)
         return np.exp(self.nu * (1 - np.exp(altitude_scale)))
 
 

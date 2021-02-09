@@ -3,11 +3,10 @@ import numpy as np
 from scipy.interpolate import interp2d
 
 # Local imports
-from pyRT_DISORT.untested import ForwardScatteringPropertyCollection
-from pyRT_DISORT.untested import ModelGrid
-from pyRT_DISORT.untested import LegendreCoefficients, HenyeyGreenstein, \
+from pyRT_DISORT.untested.aerosol import ForwardScatteringPropertyCollection
+from pyRT_DISORT.eos import ModelEquationOfState
+from pyRT_DISORT.untested.phase_function import LegendreCoefficients, HenyeyGreenstein, \
     TabularLegendreCoefficients
-from pyRT_DISORT.untested_utils.utilities import ArrayChecker
 
 
 class Column:
@@ -19,7 +18,7 @@ class Column:
         ----------
         forward_scattering_properties: ForwardScatteringPropertyCollection
             An aerosol's forward scattering to use for this column
-        model_grid: ModelGrid
+        model_grid: ModelEquationOfState
             An instance of ModelGrid to set the structure of the model
         mixing_ratio_profile: np.ndarray
             The vertical mixing ratio profile to constrain Column
@@ -112,23 +111,25 @@ class Column:
             raise AttributeError('forward_scattering_properties must have attribute c_extinction')
 
     def __check_model_grid_is_ModelGrid(self):
-        if not isinstance(self.model_grid, ModelGrid):
-            raise TypeError('model_grid must be an instance of ModelGrid.')
+        if not isinstance(self.model_grid, ModelEquationOfState):
+            raise TypeError('model_grid must be an instance of ModelEquationOfState.')
 
     def __check_mixing_ratio_profile_is_physical(self):
-        mixing_ratio_checker = ArrayChecker(self.mixing_ratio_profile, 'mixing_ratio_profile')
-        mixing_ratio_checker.check_object_is_array()
-        mixing_ratio_checker.check_ndarray_is_numeric()
-        mixing_ratio_checker.check_ndarray_is_non_negative()
-        mixing_ratio_checker.check_ndarray_is_finite()
-        mixing_ratio_checker.check_ndarray_is_1d()
+        pass
+        #mixing_ratio_checker = ArrayChecker(self.mixing_ratio_profile, 'mixing_ratio_profile')
+        #mixing_ratio_checker.check_object_is_array()
+        #mixing_ratio_checker.check_ndarray_is_numeric()
+        #mixing_ratio_checker.check_ndarray_is_non_negative()
+        #mixing_ratio_checker.check_ndarray_is_finite()
+        #mixing_ratio_checker.check_ndarray_is_1d()
 
     def __check_particle_size_profile_is_physical(self):
-        size_checker = ArrayChecker(self.particle_size_profile, 'particle_size_profile')
-        size_checker.check_object_is_array()
-        size_checker.check_ndarray_is_numeric()
-        size_checker.check_ndarray_is_positive_finite()
-        size_checker.check_ndarray_is_1d()
+        pass
+        #size_checker = ArrayChecker(self.particle_size_profile, 'particle_size_profile')
+        #size_checker.check_object_is_array()
+        #size_checker.check_ndarray_is_numeric()
+        #size_checker.check_ndarray_is_positive_finite()
+        #size_checker.check_ndarray_is_1d()
 
     def __check_profiles_match_layers(self):
         if self.model_grid.column_density_layers.shape != self.mixing_ratio_profile.shape:
@@ -137,11 +138,12 @@ class Column:
             raise IndexError('particle_size_profile must be the same length as the number of layers in the model')
 
     def __check_wavelengths_are_physical(self):
-        wavelength_checker = ArrayChecker(self.wavelengths, 'wavelengths')
-        wavelength_checker.check_object_is_array()
-        wavelength_checker.check_ndarray_is_numeric()
-        wavelength_checker.check_ndarray_is_positive_finite()
-        wavelength_checker.check_ndarray_is_1d()
+        pass
+        #wavelength_checker = ArrayChecker(self.wavelengths, 'wavelengths')
+        #wavelength_checker.check_object_is_array()
+        #wavelength_checker.check_ndarray_is_numeric()
+        #wavelength_checker.check_ndarray_is_positive_finite()
+        #wavelength_checker.check_ndarray_is_1d()
 
     def __check_reference_wavelength_is_physical(self):
         if not isinstance(self.reference_wavelength, (int, float)):
