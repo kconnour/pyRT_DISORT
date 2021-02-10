@@ -34,7 +34,10 @@ surface treatment.</p>
 surface treatment.
 &#34;&#34;&#34;
 import numpy as np
-from pyRT_DISORT.controller import ComputationalParameters
+from pyRT_DISORT.controller import ComputationalParameters, ModelBehavior
+from pyRT_DISORT.flux import IncidentFlux
+from pyRT_DISORT.observation import Angles
+from disort import disobrdf
 
 
 # TODO: I still don&#39;t really know what bemst, emust, rhoq, rhou, or rho_accurate
@@ -61,14 +64,16 @@ class Surface:
         Raises
         ------
         TypeError
-            Raised if albedo cannot be cast to a float.
+            Raised if albedo cannot be cast to a float, or cp is not an instance
+            of ComputationalParameters
         ValueError
             Raised if albedo is not between 0 and 1.
 
         &#34;&#34;&#34;
         self.__albedo = self.__make_albedo(albedo)
         self.__raise_type_error_if_cp_is_not_computational_parameters(cp)
-        self.__cp = cp
+        self._cp = cp
+        self._lambertian = False
 
         self._bemst = self.__make_empty_bemst()
         self._emust = self.__make_empty_emust()
@@ -89,24 +94,24 @@ class Surface:
                 &#39;cp must be an instance of ComputationalParameters.&#39;)
 
     def __make_empty_bemst(self) -&gt; np.ndarray:
-        return np.zeros(int(0.5*self.__cp.n_streams))
+        return np.zeros(int(0.5*self._cp.n_streams))
 
     def __make_empty_emust(self) -&gt; np.ndarray:
-        return np.zeros(self.__cp.n_polar)
+        return np.zeros(self._cp.n_polar)
 
     def __make_empty_rho_accurate(self) -&gt; np.ndarray:
-        return np.zeros((self.__cp.n_polar, self.__cp.n_azimuth))
+        return np.zeros((self._cp.n_polar, self._cp.n_azimuth))
 
     # TODO: the first dimension seems messed up to me...
     def __make_empty_rhoq(self) -&gt; np.ndarray:
-        return np.zeros((int(0.5 * self.__cp.n_streams),
-                         int(0.5 * self.__cp.n_streams + 1),
-                         self.__cp.n_streams))
+        return np.zeros((int(0.5 * self._cp.n_streams),
+                         int(0.5 * self._cp.n_streams + 1),
+                         self._cp.n_streams))
 
     def __make_empty_rhou(self) -&gt; np.ndarray:
-        return np.zeros((self.__cp.n_streams,
-                         int(0.5 * self.__cp.n_streams + 1),
-                         self.__cp.n_streams))
+        return np.zeros((self._cp.n_streams,
+                         int(0.5 * self._cp.n_streams + 1),
+                         self._cp.n_streams))
 
     @staticmethod
     def __cast_to_float(albedo: float) -&gt; float:
@@ -121,6 +126,28 @@ class Surface:
     def __raise_value_error_if_albedo_is_unphysical(albedo: float) -&gt; None:
         if not 0 &lt;= albedo &lt;= 1:
             raise ValueError(&#39;albedo must be between 0 and 1.&#39;)
+
+    def _make_output_arrays(self, mb: ModelBehavior, angles: Angles,
+                            flux: IncidentFlux, albedo,
+                            phase_function_number: int, brdf_arg: np.ndarray,
+                            n_mug: int):
+        try:
+            return self.__call_disobrdf(
+                mb, angles, flux, albedo, phase_function_number, brdf_arg,
+                n_mug)
+        except ValueError as ve:
+            raise ValueError(&#39;problem&#39;) from ve
+
+    def __call_disobrdf(self, mb: ModelBehavior, angles: Angles,
+                        flux: IncidentFlux, albedo, phase_function_number: int,
+                        brdf_arg: np.ndarray, n_mug: int):
+        return disobrdf(mb.user_angles, angles.mu, flux.beam_flux, angles.mu0,
+                        False, albedo, mb.only_fluxes, self._rhoq, self._rhou,
+                        self._emust, self._bemst, False, angles.phi,
+                        angles.phi0, self._rho_accurate, phase_function_number,
+                        brdf_arg,
+                        n_mug, nstr=self._cp.n_streams, numu=self._cp.n_polar,
+                        nphi=self._cp.n_azimuth)
 
     @property
     def albedo(self) -&gt; float:
@@ -137,6 +164,102 @@ class Surface:
 
         &#34;&#34;&#34;
         return self.__albedo
+
+    @property
+    def lambertian(self) -&gt; bool:
+        &#34;&#34;&#34;Get whether the bottom boundary used in the model will be Lambertian.
+
+        Returns
+        -------
+        bool
+            True if the class is Lambertian, False otherwise.
+
+        Notes
+        -----
+        In DISORT, this variable is named &#34;LAMBER&#34;.
+
+        &#34;&#34;&#34;
+        return self._lambertian
+
+    @property
+    def bemst(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the directional emissivity at quadrature angles.
+
+        Returns
+        -------
+        np.ndarray
+            The directional emissivity at quadrature angles.
+
+        Notes
+        -----
+        In DISORT, this variable is named &#34;BEMST&#34;
+
+        &#34;&#34;&#34;
+        return self._bemst
+
+    @property
+    def emust(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the directional emissivity at user angles.
+
+        Returns
+        -------
+        np.ndarray
+            The directional emissivity at user angles.
+
+        Notes
+        -----
+        In DISORT, this variable is named &#34;EMUST&#34;
+
+        &#34;&#34;&#34;
+        return self._emust
+
+    @property
+    def rho_accurate(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the analytic BRDF results.
+
+        Returns
+        -------
+        np.ndarray
+            The analytic BRDF results.
+
+        Notes
+        -----
+        In DISORT, this variable is named &#34;RHO_ACCURATE&#34;.
+
+        &#34;&#34;&#34;
+        return self._rho_accurate
+
+    @property
+    def rhoq(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the quadrature fourier expanded BRDF.
+
+        Returns
+        -------
+        np.ndarray
+            The quadrature fourier expanded BRDF.
+
+        Notes
+        -----
+        In DISORT, this variable is named &#34;RHOQ&#34;.
+
+        &#34;&#34;&#34;
+        return self._rhoq
+
+    @property
+    def rhou(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the user defined fourier expanded BRDF.
+
+        Returns
+        -------
+        np.ndarray
+            The user-defined fourier expanded BRDF.
+
+        Notes
+        -----
+        In DISORT, this variable is named &#34;RHOU&#34;.
+
+        &#34;&#34;&#34;
+        return self._rhou
 
 
 class Lambertian(Surface):
@@ -155,7 +278,7 @@ class Lambertian(Surface):
         albedo: float
             The surface albedo.
         cp: ComputationalParameters
-            The computational parameters
+            The computational parameters.
 
         Raises
         ------
@@ -167,108 +290,169 @@ class Lambertian(Surface):
 
         &#34;&#34;&#34;
         super().__init__(albedo, cp)
+        self._lambertian = True
 
-    @property
-    def lambertian(self) -&gt; bool:
-        &#34;&#34;&#34;Get whether the bottom boundary used in the model will be Lambertian.
-        This is necessarily True for this class.
 
-        Returns
-        -------
-        bool
-            True.
+class Hapke(Surface):
+    &#34;&#34;&#34;Create a basic Hapke surface.
 
-        Notes
-        -----
-        In DISORT, this variable is named &#34;LAMBER&#34;.
+    Hapke creates the bi-directional reflectivity arrays required by DISORT
+    based on the input parameterization.
+
+    &#34;&#34;&#34;
+
+    def __init__(self, albedo: float, cp: ComputationalParameters,
+                 mb: ModelBehavior, flux: IncidentFlux, angles: Angles,
+                 b0: float, h: float, w: float, n_mug: int = 200) -&gt; None:
+        &#34;&#34;&#34;
+        Parameters
+        ----------
+        albedo: float
+            The surface albedo.
+        cp: ComputationalParameters
+            The computational parameters.
+        mb: ModelBehavior
+            The model behavior.
+        flux: IncidentFlux
+            The incident flux.
+        angles: Angles
+            The observation angles.
+        b0: float
+            The strength of the opposition surge.
+        h: float
+            The width of the opposition surge.
+        w: float
+            The surface single scattering albedo.
+        n_mug: int, optional
+            The number of angle cosine quadrature points for integrating the
+            bidirectional reflectivity. Default is 200.
+
+        Raises
+        ------
+        TypeError
+            Raised if inputs cannot be cast to the correct type.
+        ValueError
+            Raised if albedo is not between 0 and 1.
 
         &#34;&#34;&#34;
-        return True
+        super().__init__(albedo, cp)
+        brdf_arg = np.array([b0, h, w, 0, 0, 0])
 
-    @property
-    def bemst(self) -&gt; np.ndarray:
-        &#34;&#34;&#34;Get the directional emissivity at quadrature angles. For a Lambertian
-        surface, this array is (presumably) unused and therefore set to all 0s.
+        self._rhoq, self._rhou, self._emust, self._bemst, self._rho_accurate = \
+            self._make_output_arrays(mb, angles, flux, albedo, 1, brdf_arg,
+                                     n_mug)
 
-        Returns
-        -------
-        np.ndarray
-            The directional emissivity at quadrature angles.
 
-        Notes
-        -----
-        In DISORT, this variable is named &#34;BEMST&#34;
+class HapkeHG2(Surface):
+    &#34;&#34;&#34;Create a Hapke surface with a 2-lobed Henyey-Greenstein phase function.
+
+    Hapke creates the bi-directional reflectivity arrays required by DISORT
+    based on the input parameterization.
+
+    &#34;&#34;&#34;
+
+    def __init__(self, albedo: float, cp: ComputationalParameters,
+                 mb: ModelBehavior, flux: IncidentFlux, angles: Angles,
+                 b0: float, h: float, w: float, asym: float, frac: float,
+                 n_mug: int = 200) -&gt; None:
+        &#34;&#34;&#34;
+        Parameters
+        ----------
+        albedo: float
+            The surface albedo.
+        cp: ComputationalParameters
+            The computational parameters.
+        mb: ModelBehavior
+            The model behavior.
+        flux: IncidentFlux
+            The incident flux.
+        angles: Angles
+            The observation angles.
+        b0: float
+            The strength of the opposition surge.
+        h: float
+            The width of the opposition surge.
+        w: float
+            The surface single scattering albedo.
+        asym: float
+            The asymmetry parameter
+        frac: float
+            The forward scattering fraction
+        n_mug: int, optional
+            The number of angle cosine quadrature points for integrating the
+            bidirectional reflectivity. Default is 200.
+
+        Raises
+        ------
+        TypeError
+            Raised if inputs cannot be cast to the correct type.
+        ValueError
+            Raised if albedo is not between 0 and 1.
 
         &#34;&#34;&#34;
-        return self._bemst
+        super().__init__(albedo, cp)
+        brdf_arg = np.array([b0, h, w, asym, frac, 0])
 
-    @property
-    def emust(self) -&gt; np.ndarray:
-        &#34;&#34;&#34;Get the directional emissivity at user angles. For a Lambertian
-        surface, this array is (presumably) unused and therefore set to all 0s.
+        self._rhoq, self._rhou, self._emust, self._bemst, self._rho_accurate = \
+            self._make_output_arrays(mb, angles, flux, albedo, 5, brdf_arg,
+                                     n_mug)
 
-        Returns
-        -------
-        np.ndarray
-            The directional emissivity at user angles.
 
-        Notes
-        -----
-        In DISORT, this variable is named &#34;EMUST&#34;
+class HapkeHG2Roughness(Surface):
+    &#34;&#34;&#34;Create a Hapke surface with a 2-lobed Henyey-Greenstein phase function.
+
+    Hapke creates the bi-directional reflectivity arrays required by DISORT
+    based on the input parameterization.
+
+    &#34;&#34;&#34;
+
+    def __init__(self, albedo: float, cp: ComputationalParameters,
+                 mb: ModelBehavior, flux: IncidentFlux, angles: Angles,
+                 b0: float, h: float, w: float, asym: float, frac: float,
+                 roughness: float, n_mug: int = 200) -&gt; None:
+        &#34;&#34;&#34;
+        Parameters
+        ----------
+        albedo: float
+            The surface albedo.
+        cp: ComputationalParameters
+            The computational parameters.
+        mb: ModelBehavior
+            The model behavior.
+        flux: IncidentFlux
+            The incident flux.
+        angles: Angles
+            The observation angles.
+        b0: float
+            The strength of the opposition surge.
+        h: float
+            The width of the opposition surge.
+        w: float
+            The surface single scattering albedo.
+        asym: float
+            The asymmetry parameter.
+        frac: float
+            The forward scattering fraction.
+        roughness: float
+            The roughness parameter.
+        n_mug: int, optional
+            The number of angle cosine quadrature points for integrating the
+            bidirectional reflectivity. Default is 200.
+
+        Raises
+        ------
+        TypeError
+            Raised if inputs cannot be cast to the correct type.
+        ValueError
+            Raised if albedo is not between 0 and 1.
 
         &#34;&#34;&#34;
-        return self._emust
+        super().__init__(albedo, cp)
+        brdf_arg = np.array([b0, h, w, asym, frac, roughness])
 
-    @property
-    def rho_accurate(self) -&gt; np.ndarray:
-        &#34;&#34;&#34;Get the analytic BRDF results. For a Lambertian surface, this
-        array is (presumably) unused and therefore set to all 0s.
-
-        Returns
-        -------
-        np.ndarray
-            The analystic BRDF results.
-
-        Notes
-        -----
-        In DISORT, this variable is named &#34;RHO_ACCURATE&#34;.
-
-        &#34;&#34;&#34;
-        return self._rho_accurate
-
-    @property
-    def rhoq(self) -&gt; np.ndarray:
-        &#34;&#34;&#34;Get the quadrature fourier expanded BRDF. For a Lambertian surface,
-        this array is (presumably) unused and therefore set to all 0s.
-
-        Returns
-        -------
-        np.ndarray
-            The quadrature fourier expanded BRDF.
-
-        Notes
-        -----
-        In DISORT, this variable is named &#34;RHOQ&#34;.
-
-        &#34;&#34;&#34;
-        return self._rhoq
-
-    @property
-    def rhou(self) -&gt; np.ndarray:
-        &#34;&#34;&#34;Get the user defined fourier expanded BRDF. For a Lambertian surface,
-        this array is (presumably) unused and therefore set to all 0s.
-
-        Returns
-        -------
-        np.ndarray
-            The user-defined fourier expanded BRDF.
-
-        Notes
-        -----
-        In DISORT, this variable is named &#34;RHOU&#34;.
-
-        &#34;&#34;&#34;
-        return self._rhou</code></pre>
+        self._rhoq, self._rhou, self._emust, self._bemst, self._rho_accurate = \
+            self._make_output_arrays(mb, angles, flux, albedo, 6, brdf_arg,
+                                     n_mug)</code></pre>
 </details>
 </section>
 <section>
@@ -280,6 +464,313 @@ class Lambertian(Surface):
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
+<dt id="pyRT_DISORT.surface.Hapke"><code class="flex name class">
+<span>class <span class="ident">Hapke</span></span>
+<span>(</span><span>albedo: float, cp: <a title="pyRT_DISORT.controller.ComputationalParameters" href="controller.html#pyRT_DISORT.controller.ComputationalParameters">ComputationalParameters</a>, mb: <a title="pyRT_DISORT.controller.ModelBehavior" href="controller.html#pyRT_DISORT.controller.ModelBehavior">ModelBehavior</a>, flux: <a title="pyRT_DISORT.flux.IncidentFlux" href="flux.html#pyRT_DISORT.flux.IncidentFlux">IncidentFlux</a>, angles: <a title="pyRT_DISORT.observation.Angles" href="observation.html#pyRT_DISORT.observation.Angles">Angles</a>, b0: float, h: float, w: float, n_mug: int = 200)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a basic Hapke surface.</p>
+<p>Hapke creates the bi-directional reflectivity arrays required by DISORT
+based on the input parameterization.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>albedo</code></strong> :&ensp;<code>float</code></dt>
+<dd>The surface albedo.</dd>
+<dt><strong><code>cp</code></strong> :&ensp;<code>ComputationalParameters</code></dt>
+<dd>The computational parameters.</dd>
+<dt><strong><code>mb</code></strong> :&ensp;<code>ModelBehavior</code></dt>
+<dd>The model behavior.</dd>
+<dt><strong><code>flux</code></strong> :&ensp;<code>IncidentFlux</code></dt>
+<dd>The incident flux.</dd>
+<dt><strong><code>angles</code></strong> :&ensp;<code>Angles</code></dt>
+<dd>The observation angles.</dd>
+<dt><strong><code>b0</code></strong> :&ensp;<code>float</code></dt>
+<dd>The strength of the opposition surge.</dd>
+<dt><strong><code>h</code></strong> :&ensp;<code>float</code></dt>
+<dd>The width of the opposition surge.</dd>
+<dt><strong><code>w</code></strong> :&ensp;<code>float</code></dt>
+<dd>The surface single scattering albedo.</dd>
+<dt><strong><code>n_mug</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>The number of angle cosine quadrature points for integrating the
+bidirectional reflectivity. Default is 200.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>TypeError</code></dt>
+<dd>Raised if inputs cannot be cast to the correct type.</dd>
+<dt><code>ValueError</code></dt>
+<dd>Raised if albedo is not between 0 and 1.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Hapke(Surface):
+    &#34;&#34;&#34;Create a basic Hapke surface.
+
+    Hapke creates the bi-directional reflectivity arrays required by DISORT
+    based on the input parameterization.
+
+    &#34;&#34;&#34;
+
+    def __init__(self, albedo: float, cp: ComputationalParameters,
+                 mb: ModelBehavior, flux: IncidentFlux, angles: Angles,
+                 b0: float, h: float, w: float, n_mug: int = 200) -&gt; None:
+        &#34;&#34;&#34;
+        Parameters
+        ----------
+        albedo: float
+            The surface albedo.
+        cp: ComputationalParameters
+            The computational parameters.
+        mb: ModelBehavior
+            The model behavior.
+        flux: IncidentFlux
+            The incident flux.
+        angles: Angles
+            The observation angles.
+        b0: float
+            The strength of the opposition surge.
+        h: float
+            The width of the opposition surge.
+        w: float
+            The surface single scattering albedo.
+        n_mug: int, optional
+            The number of angle cosine quadrature points for integrating the
+            bidirectional reflectivity. Default is 200.
+
+        Raises
+        ------
+        TypeError
+            Raised if inputs cannot be cast to the correct type.
+        ValueError
+            Raised if albedo is not between 0 and 1.
+
+        &#34;&#34;&#34;
+        super().__init__(albedo, cp)
+        brdf_arg = np.array([b0, h, w, 0, 0, 0])
+
+        self._rhoq, self._rhou, self._emust, self._bemst, self._rho_accurate = \
+            self._make_output_arrays(mb, angles, flux, albedo, 1, brdf_arg,
+                                     n_mug)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="pyRT_DISORT.surface.Surface" href="#pyRT_DISORT.surface.Surface">Surface</a></li>
+</ul>
+</dd>
+<dt id="pyRT_DISORT.surface.HapkeHG2"><code class="flex name class">
+<span>class <span class="ident">HapkeHG2</span></span>
+<span>(</span><span>albedo: float, cp: <a title="pyRT_DISORT.controller.ComputationalParameters" href="controller.html#pyRT_DISORT.controller.ComputationalParameters">ComputationalParameters</a>, mb: <a title="pyRT_DISORT.controller.ModelBehavior" href="controller.html#pyRT_DISORT.controller.ModelBehavior">ModelBehavior</a>, flux: <a title="pyRT_DISORT.flux.IncidentFlux" href="flux.html#pyRT_DISORT.flux.IncidentFlux">IncidentFlux</a>, angles: <a title="pyRT_DISORT.observation.Angles" href="observation.html#pyRT_DISORT.observation.Angles">Angles</a>, b0: float, h: float, w: float, asym: float, frac: float, n_mug: int = 200)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a Hapke surface with a 2-lobed Henyey-Greenstein phase function.</p>
+<p>Hapke creates the bi-directional reflectivity arrays required by DISORT
+based on the input parameterization.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>albedo</code></strong> :&ensp;<code>float</code></dt>
+<dd>The surface albedo.</dd>
+<dt><strong><code>cp</code></strong> :&ensp;<code>ComputationalParameters</code></dt>
+<dd>The computational parameters.</dd>
+<dt><strong><code>mb</code></strong> :&ensp;<code>ModelBehavior</code></dt>
+<dd>The model behavior.</dd>
+<dt><strong><code>flux</code></strong> :&ensp;<code>IncidentFlux</code></dt>
+<dd>The incident flux.</dd>
+<dt><strong><code>angles</code></strong> :&ensp;<code>Angles</code></dt>
+<dd>The observation angles.</dd>
+<dt><strong><code>b0</code></strong> :&ensp;<code>float</code></dt>
+<dd>The strength of the opposition surge.</dd>
+<dt><strong><code>h</code></strong> :&ensp;<code>float</code></dt>
+<dd>The width of the opposition surge.</dd>
+<dt><strong><code>w</code></strong> :&ensp;<code>float</code></dt>
+<dd>The surface single scattering albedo.</dd>
+<dt><strong><code>asym</code></strong> :&ensp;<code>float</code></dt>
+<dd>The asymmetry parameter</dd>
+<dt><strong><code>frac</code></strong> :&ensp;<code>float</code></dt>
+<dd>The forward scattering fraction</dd>
+<dt><strong><code>n_mug</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>The number of angle cosine quadrature points for integrating the
+bidirectional reflectivity. Default is 200.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>TypeError</code></dt>
+<dd>Raised if inputs cannot be cast to the correct type.</dd>
+<dt><code>ValueError</code></dt>
+<dd>Raised if albedo is not between 0 and 1.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class HapkeHG2(Surface):
+    &#34;&#34;&#34;Create a Hapke surface with a 2-lobed Henyey-Greenstein phase function.
+
+    Hapke creates the bi-directional reflectivity arrays required by DISORT
+    based on the input parameterization.
+
+    &#34;&#34;&#34;
+
+    def __init__(self, albedo: float, cp: ComputationalParameters,
+                 mb: ModelBehavior, flux: IncidentFlux, angles: Angles,
+                 b0: float, h: float, w: float, asym: float, frac: float,
+                 n_mug: int = 200) -&gt; None:
+        &#34;&#34;&#34;
+        Parameters
+        ----------
+        albedo: float
+            The surface albedo.
+        cp: ComputationalParameters
+            The computational parameters.
+        mb: ModelBehavior
+            The model behavior.
+        flux: IncidentFlux
+            The incident flux.
+        angles: Angles
+            The observation angles.
+        b0: float
+            The strength of the opposition surge.
+        h: float
+            The width of the opposition surge.
+        w: float
+            The surface single scattering albedo.
+        asym: float
+            The asymmetry parameter
+        frac: float
+            The forward scattering fraction
+        n_mug: int, optional
+            The number of angle cosine quadrature points for integrating the
+            bidirectional reflectivity. Default is 200.
+
+        Raises
+        ------
+        TypeError
+            Raised if inputs cannot be cast to the correct type.
+        ValueError
+            Raised if albedo is not between 0 and 1.
+
+        &#34;&#34;&#34;
+        super().__init__(albedo, cp)
+        brdf_arg = np.array([b0, h, w, asym, frac, 0])
+
+        self._rhoq, self._rhou, self._emust, self._bemst, self._rho_accurate = \
+            self._make_output_arrays(mb, angles, flux, albedo, 5, brdf_arg,
+                                     n_mug)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="pyRT_DISORT.surface.Surface" href="#pyRT_DISORT.surface.Surface">Surface</a></li>
+</ul>
+</dd>
+<dt id="pyRT_DISORT.surface.HapkeHG2Roughness"><code class="flex name class">
+<span>class <span class="ident">HapkeHG2Roughness</span></span>
+<span>(</span><span>albedo: float, cp: <a title="pyRT_DISORT.controller.ComputationalParameters" href="controller.html#pyRT_DISORT.controller.ComputationalParameters">ComputationalParameters</a>, mb: <a title="pyRT_DISORT.controller.ModelBehavior" href="controller.html#pyRT_DISORT.controller.ModelBehavior">ModelBehavior</a>, flux: <a title="pyRT_DISORT.flux.IncidentFlux" href="flux.html#pyRT_DISORT.flux.IncidentFlux">IncidentFlux</a>, angles: <a title="pyRT_DISORT.observation.Angles" href="observation.html#pyRT_DISORT.observation.Angles">Angles</a>, b0: float, h: float, w: float, asym: float, frac: float, roughness: float, n_mug: int = 200)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a Hapke surface with a 2-lobed Henyey-Greenstein phase function.</p>
+<p>Hapke creates the bi-directional reflectivity arrays required by DISORT
+based on the input parameterization.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>albedo</code></strong> :&ensp;<code>float</code></dt>
+<dd>The surface albedo.</dd>
+<dt><strong><code>cp</code></strong> :&ensp;<code>ComputationalParameters</code></dt>
+<dd>The computational parameters.</dd>
+<dt><strong><code>mb</code></strong> :&ensp;<code>ModelBehavior</code></dt>
+<dd>The model behavior.</dd>
+<dt><strong><code>flux</code></strong> :&ensp;<code>IncidentFlux</code></dt>
+<dd>The incident flux.</dd>
+<dt><strong><code>angles</code></strong> :&ensp;<code>Angles</code></dt>
+<dd>The observation angles.</dd>
+<dt><strong><code>b0</code></strong> :&ensp;<code>float</code></dt>
+<dd>The strength of the opposition surge.</dd>
+<dt><strong><code>h</code></strong> :&ensp;<code>float</code></dt>
+<dd>The width of the opposition surge.</dd>
+<dt><strong><code>w</code></strong> :&ensp;<code>float</code></dt>
+<dd>The surface single scattering albedo.</dd>
+<dt><strong><code>asym</code></strong> :&ensp;<code>float</code></dt>
+<dd>The asymmetry parameter.</dd>
+<dt><strong><code>frac</code></strong> :&ensp;<code>float</code></dt>
+<dd>The forward scattering fraction.</dd>
+<dt><strong><code>roughness</code></strong> :&ensp;<code>float</code></dt>
+<dd>The roughness parameter.</dd>
+<dt><strong><code>n_mug</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>The number of angle cosine quadrature points for integrating the
+bidirectional reflectivity. Default is 200.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>TypeError</code></dt>
+<dd>Raised if inputs cannot be cast to the correct type.</dd>
+<dt><code>ValueError</code></dt>
+<dd>Raised if albedo is not between 0 and 1.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class HapkeHG2Roughness(Surface):
+    &#34;&#34;&#34;Create a Hapke surface with a 2-lobed Henyey-Greenstein phase function.
+
+    Hapke creates the bi-directional reflectivity arrays required by DISORT
+    based on the input parameterization.
+
+    &#34;&#34;&#34;
+
+    def __init__(self, albedo: float, cp: ComputationalParameters,
+                 mb: ModelBehavior, flux: IncidentFlux, angles: Angles,
+                 b0: float, h: float, w: float, asym: float, frac: float,
+                 roughness: float, n_mug: int = 200) -&gt; None:
+        &#34;&#34;&#34;
+        Parameters
+        ----------
+        albedo: float
+            The surface albedo.
+        cp: ComputationalParameters
+            The computational parameters.
+        mb: ModelBehavior
+            The model behavior.
+        flux: IncidentFlux
+            The incident flux.
+        angles: Angles
+            The observation angles.
+        b0: float
+            The strength of the opposition surge.
+        h: float
+            The width of the opposition surge.
+        w: float
+            The surface single scattering albedo.
+        asym: float
+            The asymmetry parameter.
+        frac: float
+            The forward scattering fraction.
+        roughness: float
+            The roughness parameter.
+        n_mug: int, optional
+            The number of angle cosine quadrature points for integrating the
+            bidirectional reflectivity. Default is 200.
+
+        Raises
+        ------
+        TypeError
+            Raised if inputs cannot be cast to the correct type.
+        ValueError
+            Raised if albedo is not between 0 and 1.
+
+        &#34;&#34;&#34;
+        super().__init__(albedo, cp)
+        brdf_arg = np.array([b0, h, w, asym, frac, roughness])
+
+        self._rhoq, self._rhou, self._emust, self._bemst, self._rho_accurate = \
+            self._make_output_arrays(mb, angles, flux, albedo, 6, brdf_arg,
+                                     n_mug)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="pyRT_DISORT.surface.Surface" href="#pyRT_DISORT.surface.Surface">Surface</a></li>
+</ul>
+</dd>
 <dt id="pyRT_DISORT.surface.Lambertian"><code class="flex name class">
 <span>class <span class="ident">Lambertian</span></span>
 <span>(</span><span>albedo: float, cp: <a title="pyRT_DISORT.controller.ComputationalParameters" href="controller.html#pyRT_DISORT.controller.ComputationalParameters">ComputationalParameters</a>)</span>
@@ -294,7 +785,7 @@ by DISORT.</p>
 <dt><strong><code>albedo</code></strong> :&ensp;<code>float</code></dt>
 <dd>The surface albedo.</dd>
 <dt><strong><code>cp</code></strong> :&ensp;<code>ComputationalParameters</code></dt>
-<dd>The computational parameters</dd>
+<dd>The computational parameters.</dd>
 </dl>
 <h2 id="raises">Raises</h2>
 <dl>
@@ -324,7 +815,7 @@ instance of ComputationalParameters.</dd>
         albedo: float
             The surface albedo.
         cp: ComputationalParameters
-            The computational parameters
+            The computational parameters.
 
         Raises
         ------
@@ -336,314 +827,12 @@ instance of ComputationalParameters.</dd>
 
         &#34;&#34;&#34;
         super().__init__(albedo, cp)
-
-    @property
-    def lambertian(self) -&gt; bool:
-        &#34;&#34;&#34;Get whether the bottom boundary used in the model will be Lambertian.
-        This is necessarily True for this class.
-
-        Returns
-        -------
-        bool
-            True.
-
-        Notes
-        -----
-        In DISORT, this variable is named &#34;LAMBER&#34;.
-
-        &#34;&#34;&#34;
-        return True
-
-    @property
-    def bemst(self) -&gt; np.ndarray:
-        &#34;&#34;&#34;Get the directional emissivity at quadrature angles. For a Lambertian
-        surface, this array is (presumably) unused and therefore set to all 0s.
-
-        Returns
-        -------
-        np.ndarray
-            The directional emissivity at quadrature angles.
-
-        Notes
-        -----
-        In DISORT, this variable is named &#34;BEMST&#34;
-
-        &#34;&#34;&#34;
-        return self._bemst
-
-    @property
-    def emust(self) -&gt; np.ndarray:
-        &#34;&#34;&#34;Get the directional emissivity at user angles. For a Lambertian
-        surface, this array is (presumably) unused and therefore set to all 0s.
-
-        Returns
-        -------
-        np.ndarray
-            The directional emissivity at user angles.
-
-        Notes
-        -----
-        In DISORT, this variable is named &#34;EMUST&#34;
-
-        &#34;&#34;&#34;
-        return self._emust
-
-    @property
-    def rho_accurate(self) -&gt; np.ndarray:
-        &#34;&#34;&#34;Get the analytic BRDF results. For a Lambertian surface, this
-        array is (presumably) unused and therefore set to all 0s.
-
-        Returns
-        -------
-        np.ndarray
-            The analystic BRDF results.
-
-        Notes
-        -----
-        In DISORT, this variable is named &#34;RHO_ACCURATE&#34;.
-
-        &#34;&#34;&#34;
-        return self._rho_accurate
-
-    @property
-    def rhoq(self) -&gt; np.ndarray:
-        &#34;&#34;&#34;Get the quadrature fourier expanded BRDF. For a Lambertian surface,
-        this array is (presumably) unused and therefore set to all 0s.
-
-        Returns
-        -------
-        np.ndarray
-            The quadrature fourier expanded BRDF.
-
-        Notes
-        -----
-        In DISORT, this variable is named &#34;RHOQ&#34;.
-
-        &#34;&#34;&#34;
-        return self._rhoq
-
-    @property
-    def rhou(self) -&gt; np.ndarray:
-        &#34;&#34;&#34;Get the user defined fourier expanded BRDF. For a Lambertian surface,
-        this array is (presumably) unused and therefore set to all 0s.
-
-        Returns
-        -------
-        np.ndarray
-            The user-defined fourier expanded BRDF.
-
-        Notes
-        -----
-        In DISORT, this variable is named &#34;RHOU&#34;.
-
-        &#34;&#34;&#34;
-        return self._rhou</code></pre>
+        self._lambertian = True</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="pyRT_DISORT.surface.Surface" href="#pyRT_DISORT.surface.Surface">Surface</a></li>
 </ul>
-<h3>Instance variables</h3>
-<dl>
-<dt id="pyRT_DISORT.surface.Lambertian.bemst"><code class="name">var <span class="ident">bemst</span> : numpy.ndarray</code></dt>
-<dd>
-<div class="desc"><p>Get the directional emissivity at quadrature angles. For a Lambertian
-surface, this array is (presumably) unused and therefore set to all 0s.</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>np.ndarray</code></dt>
-<dd>The directional emissivity at quadrature angles.</dd>
-</dl>
-<h2 id="notes">Notes</h2>
-<p>In DISORT, this variable is named "BEMST"</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@property
-def bemst(self) -&gt; np.ndarray:
-    &#34;&#34;&#34;Get the directional emissivity at quadrature angles. For a Lambertian
-    surface, this array is (presumably) unused and therefore set to all 0s.
-
-    Returns
-    -------
-    np.ndarray
-        The directional emissivity at quadrature angles.
-
-    Notes
-    -----
-    In DISORT, this variable is named &#34;BEMST&#34;
-
-    &#34;&#34;&#34;
-    return self._bemst</code></pre>
-</details>
-</dd>
-<dt id="pyRT_DISORT.surface.Lambertian.emust"><code class="name">var <span class="ident">emust</span> : numpy.ndarray</code></dt>
-<dd>
-<div class="desc"><p>Get the directional emissivity at user angles. For a Lambertian
-surface, this array is (presumably) unused and therefore set to all 0s.</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>np.ndarray</code></dt>
-<dd>The directional emissivity at user angles.</dd>
-</dl>
-<h2 id="notes">Notes</h2>
-<p>In DISORT, this variable is named "EMUST"</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@property
-def emust(self) -&gt; np.ndarray:
-    &#34;&#34;&#34;Get the directional emissivity at user angles. For a Lambertian
-    surface, this array is (presumably) unused and therefore set to all 0s.
-
-    Returns
-    -------
-    np.ndarray
-        The directional emissivity at user angles.
-
-    Notes
-    -----
-    In DISORT, this variable is named &#34;EMUST&#34;
-
-    &#34;&#34;&#34;
-    return self._emust</code></pre>
-</details>
-</dd>
-<dt id="pyRT_DISORT.surface.Lambertian.lambertian"><code class="name">var <span class="ident">lambertian</span> : bool</code></dt>
-<dd>
-<div class="desc"><p>Get whether the bottom boundary used in the model will be Lambertian.
-This is necessarily True for this class.</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>bool</code></dt>
-<dd>True.</dd>
-</dl>
-<h2 id="notes">Notes</h2>
-<p>In DISORT, this variable is named "LAMBER".</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@property
-def lambertian(self) -&gt; bool:
-    &#34;&#34;&#34;Get whether the bottom boundary used in the model will be Lambertian.
-    This is necessarily True for this class.
-
-    Returns
-    -------
-    bool
-        True.
-
-    Notes
-    -----
-    In DISORT, this variable is named &#34;LAMBER&#34;.
-
-    &#34;&#34;&#34;
-    return True</code></pre>
-</details>
-</dd>
-<dt id="pyRT_DISORT.surface.Lambertian.rho_accurate"><code class="name">var <span class="ident">rho_accurate</span> : numpy.ndarray</code></dt>
-<dd>
-<div class="desc"><p>Get the analytic BRDF results. For a Lambertian surface, this
-array is (presumably) unused and therefore set to all 0s.</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>np.ndarray</code></dt>
-<dd>The analystic BRDF results.</dd>
-</dl>
-<h2 id="notes">Notes</h2>
-<p>In DISORT, this variable is named "RHO_ACCURATE".</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@property
-def rho_accurate(self) -&gt; np.ndarray:
-    &#34;&#34;&#34;Get the analytic BRDF results. For a Lambertian surface, this
-    array is (presumably) unused and therefore set to all 0s.
-
-    Returns
-    -------
-    np.ndarray
-        The analystic BRDF results.
-
-    Notes
-    -----
-    In DISORT, this variable is named &#34;RHO_ACCURATE&#34;.
-
-    &#34;&#34;&#34;
-    return self._rho_accurate</code></pre>
-</details>
-</dd>
-<dt id="pyRT_DISORT.surface.Lambertian.rhoq"><code class="name">var <span class="ident">rhoq</span> : numpy.ndarray</code></dt>
-<dd>
-<div class="desc"><p>Get the quadrature fourier expanded BRDF. For a Lambertian surface,
-this array is (presumably) unused and therefore set to all 0s.</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>np.ndarray</code></dt>
-<dd>The quadrature fourier expanded BRDF.</dd>
-</dl>
-<h2 id="notes">Notes</h2>
-<p>In DISORT, this variable is named "RHOQ".</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@property
-def rhoq(self) -&gt; np.ndarray:
-    &#34;&#34;&#34;Get the quadrature fourier expanded BRDF. For a Lambertian surface,
-    this array is (presumably) unused and therefore set to all 0s.
-
-    Returns
-    -------
-    np.ndarray
-        The quadrature fourier expanded BRDF.
-
-    Notes
-    -----
-    In DISORT, this variable is named &#34;RHOQ&#34;.
-
-    &#34;&#34;&#34;
-    return self._rhoq</code></pre>
-</details>
-</dd>
-<dt id="pyRT_DISORT.surface.Lambertian.rhou"><code class="name">var <span class="ident">rhou</span> : numpy.ndarray</code></dt>
-<dd>
-<div class="desc"><p>Get the user defined fourier expanded BRDF. For a Lambertian surface,
-this array is (presumably) unused and therefore set to all 0s.</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>np.ndarray</code></dt>
-<dd>The user-defined fourier expanded BRDF.</dd>
-</dl>
-<h2 id="notes">Notes</h2>
-<p>In DISORT, this variable is named "RHOU".</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@property
-def rhou(self) -&gt; np.ndarray:
-    &#34;&#34;&#34;Get the user defined fourier expanded BRDF. For a Lambertian surface,
-    this array is (presumably) unused and therefore set to all 0s.
-
-    Returns
-    -------
-    np.ndarray
-        The user-defined fourier expanded BRDF.
-
-    Notes
-    -----
-    In DISORT, this variable is named &#34;RHOU&#34;.
-
-    &#34;&#34;&#34;
-    return self._rhou</code></pre>
-</details>
-</dd>
-</dl>
 </dd>
 <dt id="pyRT_DISORT.surface.Surface"><code class="flex name class">
 <span>class <span class="ident">Surface</span></span>
@@ -666,7 +855,8 @@ pyRT_DISORT.</dd>
 <h2 id="raises">Raises</h2>
 <dl>
 <dt><code>TypeError</code></dt>
-<dd>Raised if albedo cannot be cast to a float.</dd>
+<dd>Raised if albedo cannot be cast to a float, or cp is not an instance
+of ComputationalParameters</dd>
 <dt><code>ValueError</code></dt>
 <dd>Raised if albedo is not between 0 and 1.</dd>
 </dl></div>
@@ -696,14 +886,16 @@ pyRT_DISORT.</dd>
         Raises
         ------
         TypeError
-            Raised if albedo cannot be cast to a float.
+            Raised if albedo cannot be cast to a float, or cp is not an instance
+            of ComputationalParameters
         ValueError
             Raised if albedo is not between 0 and 1.
 
         &#34;&#34;&#34;
         self.__albedo = self.__make_albedo(albedo)
         self.__raise_type_error_if_cp_is_not_computational_parameters(cp)
-        self.__cp = cp
+        self._cp = cp
+        self._lambertian = False
 
         self._bemst = self.__make_empty_bemst()
         self._emust = self.__make_empty_emust()
@@ -724,24 +916,24 @@ pyRT_DISORT.</dd>
                 &#39;cp must be an instance of ComputationalParameters.&#39;)
 
     def __make_empty_bemst(self) -&gt; np.ndarray:
-        return np.zeros(int(0.5*self.__cp.n_streams))
+        return np.zeros(int(0.5*self._cp.n_streams))
 
     def __make_empty_emust(self) -&gt; np.ndarray:
-        return np.zeros(self.__cp.n_polar)
+        return np.zeros(self._cp.n_polar)
 
     def __make_empty_rho_accurate(self) -&gt; np.ndarray:
-        return np.zeros((self.__cp.n_polar, self.__cp.n_azimuth))
+        return np.zeros((self._cp.n_polar, self._cp.n_azimuth))
 
     # TODO: the first dimension seems messed up to me...
     def __make_empty_rhoq(self) -&gt; np.ndarray:
-        return np.zeros((int(0.5 * self.__cp.n_streams),
-                         int(0.5 * self.__cp.n_streams + 1),
-                         self.__cp.n_streams))
+        return np.zeros((int(0.5 * self._cp.n_streams),
+                         int(0.5 * self._cp.n_streams + 1),
+                         self._cp.n_streams))
 
     def __make_empty_rhou(self) -&gt; np.ndarray:
-        return np.zeros((self.__cp.n_streams,
-                         int(0.5 * self.__cp.n_streams + 1),
-                         self.__cp.n_streams))
+        return np.zeros((self._cp.n_streams,
+                         int(0.5 * self._cp.n_streams + 1),
+                         self._cp.n_streams))
 
     @staticmethod
     def __cast_to_float(albedo: float) -&gt; float:
@@ -757,6 +949,28 @@ pyRT_DISORT.</dd>
         if not 0 &lt;= albedo &lt;= 1:
             raise ValueError(&#39;albedo must be between 0 and 1.&#39;)
 
+    def _make_output_arrays(self, mb: ModelBehavior, angles: Angles,
+                            flux: IncidentFlux, albedo,
+                            phase_function_number: int, brdf_arg: np.ndarray,
+                            n_mug: int):
+        try:
+            return self.__call_disobrdf(
+                mb, angles, flux, albedo, phase_function_number, brdf_arg,
+                n_mug)
+        except ValueError as ve:
+            raise ValueError(&#39;problem&#39;) from ve
+
+    def __call_disobrdf(self, mb: ModelBehavior, angles: Angles,
+                        flux: IncidentFlux, albedo, phase_function_number: int,
+                        brdf_arg: np.ndarray, n_mug: int):
+        return disobrdf(mb.user_angles, angles.mu, flux.beam_flux, angles.mu0,
+                        False, albedo, mb.only_fluxes, self._rhoq, self._rhou,
+                        self._emust, self._bemst, False, angles.phi,
+                        angles.phi0, self._rho_accurate, phase_function_number,
+                        brdf_arg,
+                        n_mug, nstr=self._cp.n_streams, numu=self._cp.n_polar,
+                        nphi=self._cp.n_azimuth)
+
     @property
     def albedo(self) -&gt; float:
         &#34;&#34;&#34;Get the input albedo.
@@ -771,14 +985,110 @@ pyRT_DISORT.</dd>
         In DISORT, this variable is named &#34;ALBEDO&#34;.
 
         &#34;&#34;&#34;
-        return self.__albedo</code></pre>
+        return self.__albedo
+
+    @property
+    def lambertian(self) -&gt; bool:
+        &#34;&#34;&#34;Get whether the bottom boundary used in the model will be Lambertian.
+
+        Returns
+        -------
+        bool
+            True if the class is Lambertian, False otherwise.
+
+        Notes
+        -----
+        In DISORT, this variable is named &#34;LAMBER&#34;.
+
+        &#34;&#34;&#34;
+        return self._lambertian
+
+    @property
+    def bemst(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the directional emissivity at quadrature angles.
+
+        Returns
+        -------
+        np.ndarray
+            The directional emissivity at quadrature angles.
+
+        Notes
+        -----
+        In DISORT, this variable is named &#34;BEMST&#34;
+
+        &#34;&#34;&#34;
+        return self._bemst
+
+    @property
+    def emust(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the directional emissivity at user angles.
+
+        Returns
+        -------
+        np.ndarray
+            The directional emissivity at user angles.
+
+        Notes
+        -----
+        In DISORT, this variable is named &#34;EMUST&#34;
+
+        &#34;&#34;&#34;
+        return self._emust
+
+    @property
+    def rho_accurate(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the analytic BRDF results.
+
+        Returns
+        -------
+        np.ndarray
+            The analytic BRDF results.
+
+        Notes
+        -----
+        In DISORT, this variable is named &#34;RHO_ACCURATE&#34;.
+
+        &#34;&#34;&#34;
+        return self._rho_accurate
+
+    @property
+    def rhoq(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the quadrature fourier expanded BRDF.
+
+        Returns
+        -------
+        np.ndarray
+            The quadrature fourier expanded BRDF.
+
+        Notes
+        -----
+        In DISORT, this variable is named &#34;RHOQ&#34;.
+
+        &#34;&#34;&#34;
+        return self._rhoq
+
+    @property
+    def rhou(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;Get the user defined fourier expanded BRDF.
+
+        Returns
+        -------
+        np.ndarray
+            The user-defined fourier expanded BRDF.
+
+        Notes
+        -----
+        In DISORT, this variable is named &#34;RHOU&#34;.
+
+        &#34;&#34;&#34;
+        return self._rhou</code></pre>
 </details>
 <h3>Subclasses</h3>
 <ul class="hlist">
+<li><a title="pyRT_DISORT.surface.Hapke" href="#pyRT_DISORT.surface.Hapke">Hapke</a></li>
+<li><a title="pyRT_DISORT.surface.HapkeHG2" href="#pyRT_DISORT.surface.HapkeHG2">HapkeHG2</a></li>
+<li><a title="pyRT_DISORT.surface.HapkeHG2Roughness" href="#pyRT_DISORT.surface.HapkeHG2Roughness">HapkeHG2Roughness</a></li>
 <li><a title="pyRT_DISORT.surface.Lambertian" href="#pyRT_DISORT.surface.Lambertian">Lambertian</a></li>
-<li><a title="pyRT_DISORT.untested.surface.Hapke" href="untested/surface.html#pyRT_DISORT.untested.surface.Hapke">Hapke</a></li>
-<li><a title="pyRT_DISORT.untested.surface.HapkeHG2" href="untested/surface.html#pyRT_DISORT.untested.surface.HapkeHG2">HapkeHG2</a></li>
-<li><a title="pyRT_DISORT.untested.surface.HapkeHG2Roughness" href="untested/surface.html#pyRT_DISORT.untested.surface.HapkeHG2Roughness">HapkeHG2Roughness</a></li>
 </ul>
 <h3>Instance variables</h3>
 <dl>
@@ -813,6 +1123,192 @@ def albedo(self) -&gt; float:
     return self.__albedo</code></pre>
 </details>
 </dd>
+<dt id="pyRT_DISORT.surface.Surface.bemst"><code class="name">var <span class="ident">bemst</span> : numpy.ndarray</code></dt>
+<dd>
+<div class="desc"><p>Get the directional emissivity at quadrature angles.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>np.ndarray</code></dt>
+<dd>The directional emissivity at quadrature angles.</dd>
+</dl>
+<h2 id="notes">Notes</h2>
+<p>In DISORT, this variable is named "BEMST"</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def bemst(self) -&gt; np.ndarray:
+    &#34;&#34;&#34;Get the directional emissivity at quadrature angles.
+
+    Returns
+    -------
+    np.ndarray
+        The directional emissivity at quadrature angles.
+
+    Notes
+    -----
+    In DISORT, this variable is named &#34;BEMST&#34;
+
+    &#34;&#34;&#34;
+    return self._bemst</code></pre>
+</details>
+</dd>
+<dt id="pyRT_DISORT.surface.Surface.emust"><code class="name">var <span class="ident">emust</span> : numpy.ndarray</code></dt>
+<dd>
+<div class="desc"><p>Get the directional emissivity at user angles.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>np.ndarray</code></dt>
+<dd>The directional emissivity at user angles.</dd>
+</dl>
+<h2 id="notes">Notes</h2>
+<p>In DISORT, this variable is named "EMUST"</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def emust(self) -&gt; np.ndarray:
+    &#34;&#34;&#34;Get the directional emissivity at user angles.
+
+    Returns
+    -------
+    np.ndarray
+        The directional emissivity at user angles.
+
+    Notes
+    -----
+    In DISORT, this variable is named &#34;EMUST&#34;
+
+    &#34;&#34;&#34;
+    return self._emust</code></pre>
+</details>
+</dd>
+<dt id="pyRT_DISORT.surface.Surface.lambertian"><code class="name">var <span class="ident">lambertian</span> : bool</code></dt>
+<dd>
+<div class="desc"><p>Get whether the bottom boundary used in the model will be Lambertian.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>bool</code></dt>
+<dd>True if the class is Lambertian, False otherwise.</dd>
+</dl>
+<h2 id="notes">Notes</h2>
+<p>In DISORT, this variable is named "LAMBER".</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def lambertian(self) -&gt; bool:
+    &#34;&#34;&#34;Get whether the bottom boundary used in the model will be Lambertian.
+
+    Returns
+    -------
+    bool
+        True if the class is Lambertian, False otherwise.
+
+    Notes
+    -----
+    In DISORT, this variable is named &#34;LAMBER&#34;.
+
+    &#34;&#34;&#34;
+    return self._lambertian</code></pre>
+</details>
+</dd>
+<dt id="pyRT_DISORT.surface.Surface.rho_accurate"><code class="name">var <span class="ident">rho_accurate</span> : numpy.ndarray</code></dt>
+<dd>
+<div class="desc"><p>Get the analytic BRDF results.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>np.ndarray</code></dt>
+<dd>The analytic BRDF results.</dd>
+</dl>
+<h2 id="notes">Notes</h2>
+<p>In DISORT, this variable is named "RHO_ACCURATE".</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def rho_accurate(self) -&gt; np.ndarray:
+    &#34;&#34;&#34;Get the analytic BRDF results.
+
+    Returns
+    -------
+    np.ndarray
+        The analytic BRDF results.
+
+    Notes
+    -----
+    In DISORT, this variable is named &#34;RHO_ACCURATE&#34;.
+
+    &#34;&#34;&#34;
+    return self._rho_accurate</code></pre>
+</details>
+</dd>
+<dt id="pyRT_DISORT.surface.Surface.rhoq"><code class="name">var <span class="ident">rhoq</span> : numpy.ndarray</code></dt>
+<dd>
+<div class="desc"><p>Get the quadrature fourier expanded BRDF.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>np.ndarray</code></dt>
+<dd>The quadrature fourier expanded BRDF.</dd>
+</dl>
+<h2 id="notes">Notes</h2>
+<p>In DISORT, this variable is named "RHOQ".</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def rhoq(self) -&gt; np.ndarray:
+    &#34;&#34;&#34;Get the quadrature fourier expanded BRDF.
+
+    Returns
+    -------
+    np.ndarray
+        The quadrature fourier expanded BRDF.
+
+    Notes
+    -----
+    In DISORT, this variable is named &#34;RHOQ&#34;.
+
+    &#34;&#34;&#34;
+    return self._rhoq</code></pre>
+</details>
+</dd>
+<dt id="pyRT_DISORT.surface.Surface.rhou"><code class="name">var <span class="ident">rhou</span> : numpy.ndarray</code></dt>
+<dd>
+<div class="desc"><p>Get the user defined fourier expanded BRDF.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>np.ndarray</code></dt>
+<dd>The user-defined fourier expanded BRDF.</dd>
+</dl>
+<h2 id="notes">Notes</h2>
+<p>In DISORT, this variable is named "RHOU".</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def rhou(self) -&gt; np.ndarray:
+    &#34;&#34;&#34;Get the user defined fourier expanded BRDF.
+
+    Returns
+    -------
+    np.ndarray
+        The user-defined fourier expanded BRDF.
+
+    Notes
+    -----
+    In DISORT, this variable is named &#34;RHOU&#34;.
+
+    &#34;&#34;&#34;
+    return self._rhou</code></pre>
+</details>
+</dd>
 </dl>
 </dd>
 </dl>
@@ -832,20 +1328,27 @@ def albedo(self) -&gt; float:
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
+<h4><code><a title="pyRT_DISORT.surface.Hapke" href="#pyRT_DISORT.surface.Hapke">Hapke</a></code></h4>
+</li>
+<li>
+<h4><code><a title="pyRT_DISORT.surface.HapkeHG2" href="#pyRT_DISORT.surface.HapkeHG2">HapkeHG2</a></code></h4>
+</li>
+<li>
+<h4><code><a title="pyRT_DISORT.surface.HapkeHG2Roughness" href="#pyRT_DISORT.surface.HapkeHG2Roughness">HapkeHG2Roughness</a></code></h4>
+</li>
+<li>
 <h4><code><a title="pyRT_DISORT.surface.Lambertian" href="#pyRT_DISORT.surface.Lambertian">Lambertian</a></code></h4>
-<ul class="two-column">
-<li><code><a title="pyRT_DISORT.surface.Lambertian.bemst" href="#pyRT_DISORT.surface.Lambertian.bemst">bemst</a></code></li>
-<li><code><a title="pyRT_DISORT.surface.Lambertian.emust" href="#pyRT_DISORT.surface.Lambertian.emust">emust</a></code></li>
-<li><code><a title="pyRT_DISORT.surface.Lambertian.lambertian" href="#pyRT_DISORT.surface.Lambertian.lambertian">lambertian</a></code></li>
-<li><code><a title="pyRT_DISORT.surface.Lambertian.rho_accurate" href="#pyRT_DISORT.surface.Lambertian.rho_accurate">rho_accurate</a></code></li>
-<li><code><a title="pyRT_DISORT.surface.Lambertian.rhoq" href="#pyRT_DISORT.surface.Lambertian.rhoq">rhoq</a></code></li>
-<li><code><a title="pyRT_DISORT.surface.Lambertian.rhou" href="#pyRT_DISORT.surface.Lambertian.rhou">rhou</a></code></li>
-</ul>
 </li>
 <li>
 <h4><code><a title="pyRT_DISORT.surface.Surface" href="#pyRT_DISORT.surface.Surface">Surface</a></code></h4>
-<ul class="">
+<ul class="two-column">
 <li><code><a title="pyRT_DISORT.surface.Surface.albedo" href="#pyRT_DISORT.surface.Surface.albedo">albedo</a></code></li>
+<li><code><a title="pyRT_DISORT.surface.Surface.bemst" href="#pyRT_DISORT.surface.Surface.bemst">bemst</a></code></li>
+<li><code><a title="pyRT_DISORT.surface.Surface.emust" href="#pyRT_DISORT.surface.Surface.emust">emust</a></code></li>
+<li><code><a title="pyRT_DISORT.surface.Surface.lambertian" href="#pyRT_DISORT.surface.Surface.lambertian">lambertian</a></code></li>
+<li><code><a title="pyRT_DISORT.surface.Surface.rho_accurate" href="#pyRT_DISORT.surface.Surface.rho_accurate">rho_accurate</a></code></li>
+<li><code><a title="pyRT_DISORT.surface.Surface.rhoq" href="#pyRT_DISORT.surface.Surface.rhoq">rhoq</a></code></li>
+<li><code><a title="pyRT_DISORT.surface.Surface.rhou" href="#pyRT_DISORT.surface.Surface.rhou">rhou</a></code></li>
 </ul>
 </li>
 </ul>
