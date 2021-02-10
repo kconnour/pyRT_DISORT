@@ -1,3 +1,5 @@
+# I believe this is only needed to make the documentation but I really want
+# to get rid of this
 import os
 
 
