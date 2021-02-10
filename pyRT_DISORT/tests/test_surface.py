@@ -107,3 +107,7 @@ class TestRhou(TestLambertian):
     def test_rhou_is_read_only(self) -> None:
         with self.assertRaises(AttributeError):
             self.lamber.rhou = 0
+
+
+# TODO: I don't know how to test the Hapke classes since I don't know what
+#  values the arrays are supposed to contain.
