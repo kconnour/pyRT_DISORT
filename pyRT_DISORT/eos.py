@@ -25,7 +25,8 @@ class ModelEquationOfState:
 
     def __init__(self, altitude_grid: np.ndarray, pressure_grid: np.ndarray,
                  temperature_grid: np.ndarray, number_density_grid: np.ndarray,
-                 altitude_boundaries: np.ndarray) -> None:
+                 altitude_boundaries: np.ndarray, particle_mass: float,
+                 gravity: float) -> None:
         """
         Parameters
         ----------
@@ -41,6 +42,10 @@ class ModelEquationOfState:
             altitudes.
         altitude_boundaries: np.ndarray
             The desired altitudes [km] of the model boundaries.
+        particle_mass: float
+            The average mass [kg] of atmospheric particles.
+        gravity: float
+            The planetary gravity [kg * m / s**2].
 
         Raises
         ------
@@ -66,6 +71,8 @@ class ModelEquationOfState:
         self.__temperature_boundaries = self.__make_temperature_model()
         self.__number_density_boundaries = self.__make_number_density_model()
         self.__column_density_layers = self.__compute_column_density_layers()
+        self.__scale_height_boundaries = self.__make_scale_height_boundaries(
+            particle_mass, gravity)
 
     def __raise_error_if_input_variables_are_bad(self) -> None:
         self.__raise_error_if_altitude_grid_is_bad()
@@ -169,6 +176,11 @@ class ModelEquationOfState:
         t = np.interp(z, self.__altitude_grid, self.__temperature_grid)
         return 1 / Boltzmann * p / t
 
+    def __make_scale_height_boundaries(
+            self, particle_mass: float, gravity: float) -> np.ndarray:
+        return Boltzmann * self.__temperature_boundaries / \
+               (particle_mass * gravity) / 1000
+
     @property
     def altitude_boundaries(self) -> np.ndarray:
         """Get the input altitudes at the model boundaries.
@@ -238,11 +250,35 @@ class ModelEquationOfState:
         np.ndarray
             The boundary temperatures.
 
+        Notes
+        -----
+        In DISORT, this variable is named "TEMPER".
+
         """
         return self.__temperature_boundaries
 
+    @property
+    def scale_height_boundaries(self) -> np.ndarray:
+        """Get the scale height at the model boundaries.
 
-def eos_from_array(atm: np.ndarray, altitude_boundaries: np.ndarray) \
+        Returns
+        -------
+        np.ndarray
+            The scale heights at the boundaries
+
+        Notes
+        -----
+        In DISORT, this variable is named "H_LYR". There is no documentation for
+        this variable, so I'm assuming it to be in km. Also, the scale height
+        for each layer seems like an odd name but f2py assures me that it's
+        assumed to be of shape n_layers + 1, i.e. n_boundaries. It is only used
+        if do_pseudo_sphere (defined in ModelBehavior) == True.
+
+        """
+        return self.__scale_height_boundaries
+
+
+def eos_from_array(atm: np.ndarray, altitude_boundaries: np.ndarray, particle_mass, gravity) \
         -> ModelEquationOfState:
     """Create a ModelEquationOfState from an array containing atmospheric equation
     of state variables. The array is assumed to be a 2D array, with the columns
@@ -279,4 +315,4 @@ def eos_from_array(atm: np.ndarray, altitude_boundaries: np.ndarray) \
 
     """
     return ModelEquationOfState(atm[:, 0], atm[:, 1], atm[:, 2], atm[:, 3],
-                                altitude_boundaries)
+                                altitude_boundaries, particle_mass, gravity)

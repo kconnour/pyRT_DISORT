@@ -26,7 +26,6 @@ from pyRT_DISORT.untested.vertical_profiles import Conrath
 from pyRT_DISORT.untested.phase_function import TabularLegendreCoefficients
 from pyRT_DISORT.untested.rayleigh import RayleighCo2
 from pyRT_DISORT.untested.model_atmosphere import ModelAtmosphere
-from pyRT_DISORT.untested.unsure import Unsure
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Observation
@@ -78,8 +77,9 @@ z_boundaries = np.linspace(80, 0, num=20)    # Define the boundaries to use
 # New: eos_from_array is a helper function to make a ModelEquationOfState class
 # See eos.py for more info but this replaces ModelGrid (mostly I think the name
 # is better)
-model_eos = eos_from_array(eos_file.array, z_boundaries)
+model_eos = eos_from_array(eos_file.array, z_boundaries, 3.71, 7.3*10**-26)
 temperatures = model_eos.temperature_boundaries
+h_lyr = model_eos.scale_height_boundaries
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Construct aerosol/model properties
@@ -212,12 +212,6 @@ trnmed = oa.transmissivity_medium
 # an absolute nightmare and DISORT should be tweaked to get rid of it, but
 # you're not paying me to discuss the bad decisions that went into making this
 utau = UserLevel(cp, mb).optical_depth_output
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Make the arrays I'm unsure about (for now)
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-uns = Unsure(cp)
-h_lyr = uns.h_lyr
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Surface treatment
