@@ -13,7 +13,7 @@ import os
 import numpy as np
 import disort
 from pyRT_DISORT.controller import ComputationalParameters, ModelBehavior, \
-    OutputArrays
+    OutputArrays, UserLevel
 from pyRT_DISORT.eos import eos_from_array
 from pyRT_DISORT.flux import IncidentFlux, ThermalEmission
 from pyRT_DISORT.observation import Angles, Wavelengths
@@ -206,6 +206,14 @@ uavg = oa.mean_intensity
 trnmed = oa.transmissivity_medium
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Optical depth output structure
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# I made this into its own class to handle utau. This one singular variable is
+# an absolute nightmare and DISORT should be tweaked to get rid of it, but
+# you're not paying me to discuss the bad decisions that went into making this
+utau = UserLevel(cp, mb).optical_depth_output
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Make the arrays I'm unsure about (for now)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 uns = Unsure(cp)
@@ -230,11 +238,6 @@ rhoq = lamb.rhoq
 bemst = lamb.bemst
 emust = lamb.emust
 rho_accurate = lamb.rho_accurate
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# I guess I have no idea where to put this still
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-utau = np.zeros(n_user_levels)
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Run the model
