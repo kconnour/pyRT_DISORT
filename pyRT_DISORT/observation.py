@@ -78,7 +78,7 @@ class Angles:
         return self.__compute_angle_cosine(self.__emission)
 
     def __make_phi0(self) -> np.ndarray:
-        return np.zeros(len(self.__phase))
+        return np.zeros(self.__phase.shape)
 
     # TODO: is there a less messy way to make this variable?
     def __compute_phi(self) -> np.ndarray:
