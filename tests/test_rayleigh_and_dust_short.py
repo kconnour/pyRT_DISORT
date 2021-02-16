@@ -61,14 +61,14 @@ phi0 = angles.phi0
 
 # Read in the atmosphere file
 tests_path = os.path.dirname(os.path.realpath(__file__))
-eos_file = ExternalFile(os.path.join(tests_path, 'marsatm.npy'))
+eos_file = ExternalFile(os.path.join(tests_path, 'aux/marsatm.npy'))
 
 # Read in the dust scattering properties file
-dust_file = ExternalFile(os.path.join(tests_path, 'dust_properties.fits'))
+dust_file = ExternalFile(os.path.join(tests_path, 'aux/dust_properties.fits'))
 
 # Read in the dust phase function file
 dust_phsfn_file = ExternalFile(os.path.join(tests_path,
-                                            'dust_phase_function.fits'))
+                                            'aux/dust_phase_function.fits'))
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Make the equation of state variables on a custom grid
@@ -140,9 +140,9 @@ model.add_constituent(rayleigh_info)
 # Once everything is in the model, compute the model. Then, slice off the
 # wavelength dimension since DISORT can only handle 1 wavelength at a time
 model.compute_model()
-optical_depths = model.hyperspectral_total_optical_depths[:, 1]
-ssa = model.hyperspectral_total_single_scattering_albedos[:, 1]
-polynomial_moments = model.hyperspectral_legendre_moments[:, :, 1]
+optical_depths = model.hyperspectral_total_optical_depths[:, 0]
+ssa = model.hyperspectral_total_single_scattering_albedos[:, 0]
+polynomial_moments = model.hyperspectral_legendre_moments[:, :, 0]
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Make the size of the computational parameters
@@ -246,8 +246,8 @@ rfldir, rfldn, flup, dfdt, uavg, uu, albmed, trnmed = \
                   rfldn, flup, dfdt, uavg, uu, albmed, trnmed)
 
 print(uu[0, 0, 0])   # shape: (1, 81, 1)
-# This gives          0.0415674630
-# disort_multi gives  0.0415661298
+# This gives          0.3139595
+# disort_multi gives  unsure yet
 # I'm running ./disort_multi -dust_conrath 0.5, 10 -dust_phsfn 98 -NSTR 16 < testInput.txt
 # testInput.txt is: 1, 0.5, 10, 30, 50, 40, 20, 1, 0, 0
 # And dust_phsfn has 65 moments at 1.5 micron (size) and 1.0 microns(wavelength)

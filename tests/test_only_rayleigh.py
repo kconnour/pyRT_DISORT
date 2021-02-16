@@ -52,7 +52,7 @@ phi0 = angles.phi0
 
 # Read in the atmosphere file
 tests_path = os.path.dirname(os.path.realpath(__file__))
-eos_file = ExternalFile(os.path.join(tests_path, 'marsatm.npy'))
+eos_file = ExternalFile(os.path.join(tests_path, 'aux/marsatm.npy'))
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Make the equation of state variables on a custom grid
