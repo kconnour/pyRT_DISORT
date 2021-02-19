@@ -1,6 +1,6 @@
-Flux
-====
+Surface
+=======
 
-.. automodule:: flux
+.. automodule:: surface
    :members:
    :special-members: __init__

@@ -1,0 +1,396 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Equation of State &mdash; pyRT_DISORT  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Flux" href="flux.html" />
+    <link rel="prev" title="Controller" href="controller.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> pyRT_DISORT
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="controller.html">Controller</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Equation of State</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flux.html">Flux</a></li>
+<li class="toctree-l1"><a class="reference internal" href="observation.html">Observation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="surface.html">Surface</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pyRT_DISORT</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Equation of State</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/eos.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-eos">
+<span id="equation-of-state"></span><h1>Equation of State<a class="headerlink" href="#module-eos" title="Permalink to this headline">¶</a></h1>
+<p>eos.py contains data structures to hold equation of state variables used
+throughout the model.</p>
+<dl class="py class">
+<dt id="eos.ModelEquationOfState">
+<em class="property">class </em><code class="sig-prename descclassname">eos.</code><code class="sig-name descname">ModelEquationOfState</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">altitude_grid</span></em>, <em class="sig-param"><span class="n">pressure_grid</span></em>, <em class="sig-param"><span class="n">temperature_grid</span></em>, <em class="sig-param"><span class="n">number_density_grid</span></em>, <em class="sig-param"><span class="n">altitude_boundaries</span></em>, <em class="sig-param"><span class="n">particle_mass</span></em>, <em class="sig-param"><span class="n">gravity</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eos.ModelEquationOfState" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute equation of state variables on a model grid.</p>
+<p>ModelEquationOfState accepts altitudes [km], pressures [Pa],
+temperatures [K], and number densities [particles / m**3], along with the
+altitudes where the model is defined. It linearly interpolates
+pressures and temperatures onto this new grid and assumes the ideal gas law
+to calculate the number density at the new grid. It also computes the
+column density within each layer using Gaussian quadrature.</p>
+<dl class="py method">
+<dt id="eos.ModelEquationOfState.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">altitude_grid</span></em>, <em class="sig-param"><span class="n">pressure_grid</span></em>, <em class="sig-param"><span class="n">temperature_grid</span></em>, <em class="sig-param"><span class="n">number_density_grid</span></em>, <em class="sig-param"><span class="n">altitude_boundaries</span></em>, <em class="sig-param"><span class="n">particle_mass</span></em>, <em class="sig-param"><span class="n">gravity</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eos.ModelEquationOfState.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>altitude_grid</strong> (<em>np.ndarray</em>) – The altitudes [km] at which the equation of state variables are
+defined.</p></li>
+<li><p><strong>pressure_grid</strong> (<em>np.ndarray</em>) – The pressures [Pa] at the corresponding altitudes.</p></li>
+<li><p><strong>temperature_grid</strong> (<em>np.ndarray</em>) – The temperatures [K] at the corresponding altitudes.</p></li>
+<li><p><strong>number_density_grid</strong> (<em>np.ndarray</em>) – The number densities [particles / m**3] at the corresponding
+altitudes.</p></li>
+<li><p><strong>altitude_boundaries</strong> (<em>np.ndarray</em>) – The desired altitudes [km] of the model boundaries.</p></li>
+<li><p><strong>particle_mass</strong> (<em>float</em>) – The average mass [kg] of atmospheric particles.</p></li>
+<li><p><strong>gravity</strong> (<em>float</em>) – The planetary gravity [kg * m / s**2].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>IndexError</strong> – Raised if the input grids do not have the same shape.</p></li>
+<li><p><strong>TypeError</strong> – Raised if any of the inputs are not np.ndarrays.</p></li>
+<li><p><strong>ValueError</strong> – Raised if any of the inputs have unphysical values.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eos.ModelEquationOfState.altitude_boundaries">
+<em class="property">property </em><code class="sig-name descname">altitude_boundaries</code><a class="headerlink" href="#eos.ModelEquationOfState.altitude_boundaries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the input altitudes at the model boundaries.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The boundary altitudes.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eos.ModelEquationOfState.column_density_layers">
+<em class="property">property </em><code class="sig-name descname">column_density_layers</code><a class="headerlink" href="#eos.ModelEquationOfState.column_density_layers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the column density within each of the layers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The layer column densities.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eos.ModelEquationOfState.n_layers">
+<em class="property">property </em><code class="sig-name descname">n_layers</code><a class="headerlink" href="#eos.ModelEquationOfState.n_layers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the number of layers in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The number of layers.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eos.ModelEquationOfState.number_density_boundaries">
+<em class="property">property </em><code class="sig-name descname">number_density_boundaries</code><a class="headerlink" href="#eos.ModelEquationOfState.number_density_boundaries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the number density at the model boundaries.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The boundary number densities.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eos.ModelEquationOfState.pressure_boundaries">
+<em class="property">property </em><code class="sig-name descname">pressure_boundaries</code><a class="headerlink" href="#eos.ModelEquationOfState.pressure_boundaries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the pressure at the model boundaries.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The boundary pressures.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eos.ModelEquationOfState.scale_height_boundaries">
+<em class="property">property </em><code class="sig-name descname">scale_height_boundaries</code><a class="headerlink" href="#eos.ModelEquationOfState.scale_height_boundaries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the scale height at the model boundaries.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The scale heights at the boundaries</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named “H_LYR”. There is no documentation for
+this variable, so I’m assuming it to be in km. Also, the scale height
+for each layer seems like an odd name but f2py assures me that it’s
+assumed to be of shape n_layers + 1, i.e. n_boundaries. It is only used
+if do_pseudo_sphere (defined in ModelBehavior) == True.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eos.ModelEquationOfState.temperature_boundaries">
+<em class="property">property </em><code class="sig-name descname">temperature_boundaries</code><a class="headerlink" href="#eos.ModelEquationOfState.temperature_boundaries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the temperature at the model boundaries.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The boundary temperatures.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named “TEMPER”.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="eos.eos_from_array">
+<code class="sig-prename descclassname">eos.</code><code class="sig-name descname">eos_from_array</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">atm</span></em>, <em class="sig-param"><span class="n">altitude_boundaries</span></em>, <em class="sig-param"><span class="n">particle_mass</span></em>, <em class="sig-param"><span class="n">gravity</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eos.eos_from_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a ModelEquationOfState from an array containing atmospheric equation
+of state variables. The array is assumed to be a 2D array, with the columns
+having the following meanings:</p>
+<p>0. The altitudes [km] at which the other equation of state variables are
+defined.
+1. The pressures [Pa] at the corresponding altitudes.
+2. The temperatures [K] at the corresponding altitudes.
+3. The number densities [particles / m**3] at the corresponding altitudes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>atm</strong> (<em>np.ndarray</em>) – 2D array of atmospheric equation of state variables.</p></li>
+<li><p><strong>altitude_boundaries</strong> (<em>np.ndarray</em>) – The desired altitudes [km] of the model boundaries.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The modeled equation of state object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#eos.ModelEquationOfState" title="eos.ModelEquationOfState">ModelEquationOfState</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>FileNotFoundError</strong> – Raised if the input file path does not exist.</p></li>
+<li><p><strong>IndexError</strong> – Raised in the input array does not have the expected shape.</p></li>
+<li><p><strong>TypeError</strong> – Raised if the input array path is not a string.</p></li>
+<li><p><strong>ValueError</strong> – Raised if the input array path does not lead to a .npy file.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="flux.html" class="btn btn-neutral float-right" title="Flux" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="controller.html" class="btn btn-neutral float-left" title="Controller" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, kconnour.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

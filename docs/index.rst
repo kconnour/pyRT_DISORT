@@ -7,7 +7,11 @@ for the time being.
    :maxdepth: 2
    :caption: Contents:
 
+   controller
+   eos
    flux
+   observation
+   surface
 
 
 Indices and tables

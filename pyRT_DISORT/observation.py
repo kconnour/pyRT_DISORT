@@ -12,8 +12,8 @@ from pyRT_DISORT.utilities.array_checks import ArrayChecker
 class Angles:
     """Create a data structure that contains angles required by DISORT.
 
-    Angles accepts ``observation'' angles and computes mu, mu0, phi, and phi0
-    from these angles.
+    Angles accepts observation angles and computes :math:`\mu, \mu_0, \phi`,
+    and :math:`\phi_0` from these angles.
 
     """
 
@@ -152,7 +152,8 @@ class Angles:
 
     @property
     def mu0(self) -> np.ndarray:
-        """Get mu0 where mu0 is the cosine of the input incidence angles.
+        """Get :math:`\mu_0` where :math:`\mu_0` is the cosine of the input
+        incidence angles.
 
         Returns
         -------
@@ -168,7 +169,8 @@ class Angles:
 
     @property
     def mu(self) -> np.ndarray:
-        """Get mu where mu is the cosine of the input emission angles.
+        """Get :math:`\mu` where :math:`\mu` is the cosine of the input
+        emission angles.
 
         Returns
         -------
@@ -184,7 +186,7 @@ class Angles:
 
     @property
     def phi0(self) -> np.ndarray:
-        """Get phi0. I assume this is always 0.
+        """Get :math:`\phi_0`. I assume this is always 0.
 
         Returns
         -------
@@ -200,7 +202,7 @@ class Angles:
 
     @property
     def phi(self) -> np.ndarray:
-        """Get phi where phi is the azimuth angle [degrees].
+        """Get :math:`\phi` where :math:`\phi` is the azimuth angle [degrees].
 
         Returns
         -------
@@ -218,7 +220,7 @@ class Angles:
 class Wavelengths:
     """Create a data structure that contains spectral info for DISORT.
 
-    Wavelengths accepts ``observation'' wavelengths and computes their
+    Wavelengths accepts observation wavelengths and computes their
     corresponding wavenumbers.
 
     """
@@ -264,7 +266,7 @@ class Wavelengths:
         self.__short_wavelengths = short_wavelengths
         self.__long_wavelengths = long_wavelengths
 
-        #self.__raise_error_if_input_wavelengths_are_bad()
+        # self.__raise_error_if_input_wavelengths_are_bad()
         self.__warn_if_wavelengths_are_outside_expected_range()
 
         self.__high_wavenumber = self.__calculate_high_wavenumber()
