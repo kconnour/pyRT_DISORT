@@ -1,0 +1,11 @@
+This is info I could only find after much StackExchange digging...
+
+If you install Sphinx, it gets associated with a Python version, which is bad
+if you want to upgrade system-wide Python or use virtual environments.
+
+sphinx-quickstart = <python> -m sphinx.cmd.quickstart
+make html = <python> -m sphinx.cmd.build -b html <path to conf.py> <path to where to put the html files>
+so I have to run this command to build the html from Sphinx installed in a venv:
+
+/home/kyle/repos/pyRT_DISORT/venv/bin/python -m sphinx.cmd.build -b html
+/home/kyle/repos/pyRT_DISORT/docs /home/kyle/repos/pyRT_DISORT/docs/_build/html
