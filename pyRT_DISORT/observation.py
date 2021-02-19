@@ -264,7 +264,7 @@ class Wavelengths:
         self.__short_wavelengths = short_wavelengths
         self.__long_wavelengths = long_wavelengths
 
-        self.__raise_error_if_input_wavelengths_are_bad()
+        #self.__raise_error_if_input_wavelengths_are_bad()
         self.__warn_if_wavelengths_are_outside_expected_range()
 
         self.__high_wavenumber = self.__calculate_high_wavenumber()
