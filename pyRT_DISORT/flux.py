@@ -19,7 +19,7 @@ class IncidentFlux:
         ----------
         beam_flux: float, optional
             The intensity of the incident beam at the top boundary. If
-            thermal_emission == True (defined in ThermalEmission) this is
+            thermal_emission == True (defined in :class:`.ThermalEmission`) this is
             assumed to have the same units as "PLKAVG" (which defaults to
             W / m**2) and the corresponding incident flux is umu0 * beam_flux.
             Ensure this variable and isotropic_flux have the same units. If
@@ -29,7 +29,7 @@ class IncidentFlux:
             infinitely wide beam. Default is pi.
         isotropic_flux: float, optional
             The intensity of the incident beam at the top boundary. If
-            thermal_emission == True (defined in ThermalEmission) this is
+            thermal_emission == True (defined in :class:`.ThermalEmission`) this is
             assumed to have the same units as "PLKAVG" (which defaults to
             W / m**2) and the corresponding incident flux is pi *
             isotropic_flux. Ensure this variable and beam_flux have the same

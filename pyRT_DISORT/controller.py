@@ -247,18 +247,18 @@ class ModelBehavior:
             entire medium as a function of incidence beam angle. In this case,
             the following inputs are the only ones considered by DISORT:
 
-                - n_layers (from ComputationalParameters)
-                - DTAUC
-                - SSALB
-                - PMOM
-                - n_streams (from ComputationalParameters)
-                - user_angles (from this class)
-                - n_polar (from ComputationalParameters)
-                - UMU
-                - ALBEDO
-                - print_variables (from this class)
-                - header (from this class)
-
+            - n_layers (from ComputationalParameters)
+            - DTAUC
+            - SSALB
+            - PMOM
+            - n_streams (from ComputationalParameters)
+            - user_angles (from this class)
+            - n_polar (from ComputationalParameters)
+            - UMU
+            - ALBEDO
+            - print_variables (from this class)
+            - header (from this class)
+            
             PLANK is assumed to be False, LAMBER is assumed to be True, and
             ONLYFL must be False. The only output is ALBMED and TRNMED. The
             intensities are not corrected for delta-M+ correction.
@@ -283,10 +283,8 @@ class ModelBehavior:
             1. Input variables (except PMOM)
             2. Fluxes
             3. Intensities at user levels and angles
-            4. Planar transmissivity and planar albedo as a function of solar
-            zenith angle (incidence_beam_conditions == True)
-            5. PMOM for each layer (but only if 1. == True and only for layers
-            with scattering)
+            4. Planar transmissivity and planar albedo as a function of solar zenith angle (incidence_beam_conditions == True)
+            5. PMOM for each layer (but only if 1. == True and only for layers with scattering)
 
             Default is None, which makes [False, False, False, False, False].
         radius: float, optional
