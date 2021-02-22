@@ -258,7 +258,7 @@ class ModelBehavior:
             - ALBEDO
             - print_variables (from this class)
             - header (from this class)
-            
+
             PLANK is assumed to be False, LAMBER is assumed to be True, and
             ONLYFL must be False. The only output is ALBMED and TRNMED. The
             intensities are not corrected for delta-M+ correction.
