@@ -6,6 +6,9 @@ from a set of aerosol property files. It allows the user to easily swap
 what surface parameterization, aerosol vertical profile, etc. they want to use
 in the model and then computes all of the input arrays.
 
+## Documentation
+Check out the documentation [here](https://kconnour.github.io/pyRT_DISORT/)
+
 ### Cautionary note
 This project is under active development and is _unstable_ so many aspects of
 the implementation are subject to change. 
