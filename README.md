@@ -1,28 +1,28 @@
-pyRT_DISORT makes atmospheric preprocessing much simpler when using the DISORT radiative
-transfer code. 
+## pyRT_DISORT
+This project aims to improve the lives of anyone performing retrievals with 
+DISORT by combining the readability of Python with the speed of FORTRAN. It
+provides a numpy-like toolset for creating all the inputs required by DISORT
+from a set of aerosol property files. It allows the user to easily swap
+what surface parameterization, aerosol vertical profile, etc. they want to use
+in the model and then computes all of the input arrays.
 
-Dependencies
-============
-- numpy
-- pdoc3
+### Cautionary note
+This project is under active development and is _unstable_ so many aspects of
+the implementation are subject to change. 
 
-Install
-=======
-Note that I've only tested this on Ubuntu.
-- Install gfortran. On Ubunutu it's simple: sudo apt-get install gfortran
-- Clone this repo from Github.
-- cd into the cloned repo and run `pip install .`  This will build the disort.so file 
-  and make the rest of the module importable.
+### Installation
+After cloning this repo, simply install it with pip: `pip install .` This will
+build an importable `disort.so` file so that DISORT can be run directly from
+Python. Note that this can be switched off within `setup.py`. The rest of the 
+Python code will be importable via `pyRT_DISORT`. 
 
-Conventions
-===========
+### Conventions
 The physical units follow the following conventions:
 - Altitudes are in km
 - Wavelengths are in microns
 - Wavenumbers are in 1/cm
 - Everything else is in MKS units
 
-Miscellaneous
-=============
-I got DISORT at: http://www.rtatmocn.com/disort/
-If you mess with the solar spectrum, its values are at 1AU
+### Miscellaneous
+The current DISORT distribution site [here](http://www.rtatmocn.com/disort/),
+should you want to look at the source code yourself.

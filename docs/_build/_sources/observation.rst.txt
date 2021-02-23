@@ -1,5 +1,0 @@
-Observation
-===========
-
-.. automodule:: observation
-   :members:
