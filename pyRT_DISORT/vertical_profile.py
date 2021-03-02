@@ -71,3 +71,30 @@ class Conrath:
 
         """
         return self.__profile
+
+
+class Uniform:
+    def __init__(self, altitude_grid: np.ndarray, bottom_altitude: float, top_altitude: float) -> None:
+        self.__profile = self.__make_profile(altitude_grid, bottom_altitude, top_altitude)
+
+    def __make_profile(self, altitude_grid, bottom_altitude, top_altitude) -> np.ndarray:
+        bottom_profile = self.__make_bottom_profile(altitude_grid, bottom_altitude)
+        print(bottom_profile)
+
+    def __make_bottom_profile(self, altitude_grid, bottom_altitude) -> np.ndarray:
+        bottom_index = np.argmax(altitude_grid <= bottom_altitude)
+        grid_delta = altitude_grid[bottom_index - 1] - altitude_grid[bottom_index]
+        alt_delta = altitude_grid[bottom_index - 1] - bottom_altitude
+        subgrid = alt_delta / grid_delta
+
+        bottom_profile = np.zeros(altitude_grid.shape)
+        bottom_profile[:bottom_index-1] = 1
+        bottom_profile[bottom_index] = subgrid
+        return bottom_profile
+
+
+if __name__ == '__main__':
+    a = np.linspace(80, 0, num=17)
+    print(a)
+    u = Uniform(a, 21, 51)
+
