@@ -11,6 +11,7 @@ for the time being.
    eos
    flux
    observation
+   rayleigh
    surface
    vertical_profile
 
