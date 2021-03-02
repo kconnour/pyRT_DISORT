@@ -4,8 +4,9 @@ for use in DISORT.
 import numpy as np
 
 
+# TODO: In Python3.10, these can be float | np.ndarray
 class Conrath:
-    """Compute a Conrath profile on a grid.
+    """Compute Conrath profile(s).
 
     Conrath creates Conrath profile(s) on an input grid of altitudes given a
     set of input parameters.
@@ -17,23 +18,23 @@ class Conrath:
         r"""
         Parameters
         ----------
-        altitude_grid: np.ndarray
-            The altitudes which to construct a Conrath profile. These are
+        altitude_grid
+            The altitudes at which to construct a Conrath profile. These are
             assumed to be decreasing to keep with DISORT's convention. If this
             is an MxN array, it will construct N profiles.
-        q0: np.ndarray
+        q0
             The surface mixing ratio for each of the Conrath profiles. If all
             profiles have the same q0, this can be a float; otherwise, for an
-            MxN altitude_grid, this should be of length N.
-        scale_height: np.ndarray
+            MxN altitude_grid, this should be an array of length N.
+        scale_height
             The scale height of each of the Conrath profiles. If all profiles
             have the same scale height, this can be a float; otherwise, for an
-            MxN altitude_grid, this should be of length N. It should also have
-            the same units as the altitudes in altitude_grid.
-        nu: np.ndarray
+            MxN altitude_grid, this should be an array of length N. It should
+            also have the same units as the altitudes in altitude_grid.
+        nu
             The nu parameter of each of the Conrath profiles. If all profiles
             have the same nu, this can be a float; otherwise, for an
-            MxN altitude_grid, this should be of length N.
+            MxN altitude_grid, this should be an array of length N.
 
         Raises
         ------
@@ -54,11 +55,11 @@ class Conrath:
     def __make_profile(altitude_grid: np.ndarray, q0: np.ndarray,
                        scale_height: np.ndarray, nu: np.ndarray) -> np.ndarray:
         try:
-            altitude_scale = np.true_divide(altitude_grid, scale_height)
-            return q0 * np.exp(nu * (1 - np.exp(altitude_scale)))
+            altitude_scaling = np.true_divide(altitude_grid, scale_height)
+            return q0 * np.exp(nu * (1 - np.exp(altitude_scaling)))
         except ValueError as ve:
-            raise ValueError(f'Cannot broadcast a {altitude_grid.shape} array '
-                             f'with a {scale_height} array') from ve
+            raise ValueError('The input arrays have incompatible shapes.') \
+                from ve
 
     @property
     def profile(self) -> np.ndarray:
@@ -73,28 +74,67 @@ class Conrath:
         return self.__profile
 
 
+# TODO: It'd be nice to add "subgrid" fixes. If a cloud is 80% in a grid, the
+#  profile should be 0.8
 class Uniform:
-    def __init__(self, altitude_grid: np.ndarray, bottom_altitude: float, top_altitude: float) -> None:
-        self.__profile = self.__make_profile(altitude_grid, bottom_altitude, top_altitude)
+    """Compute uniform volumetric mixing ratio profile(s).
 
-    def __make_profile(self, altitude_grid, bottom_altitude, top_altitude) -> np.ndarray:
-        bottom_profile = self.__make_bottom_profile(altitude_grid, bottom_altitude)
-        print(bottom_profile)
+    Uniform creates uniform volumetric mixing ratio profile(s) on an input
+    grid of altitudes given a set of top and bottom altitudes.
 
-    def __make_bottom_profile(self, altitude_grid, bottom_altitude) -> np.ndarray:
-        bottom_index = np.argmax(altitude_grid <= bottom_altitude)
-        grid_delta = altitude_grid[bottom_index - 1] - altitude_grid[bottom_index]
-        alt_delta = altitude_grid[bottom_index - 1] - bottom_altitude
-        subgrid = alt_delta / grid_delta
+    """
 
-        bottom_profile = np.zeros(altitude_grid.shape)
-        bottom_profile[:bottom_index-1] = 1
-        bottom_profile[bottom_index] = subgrid
-        return bottom_profile
+    def __init__(self, altitude_grid: np.ndarray, bottom_altitude: np.ndarray,
+                 top_altitude: np.ndarray) -> None:
+        """
+        Parameters
+        ----------
+        altitude_grid
+            The altitudes at which to construct a uniform profile. These are
+            assumed to be decreasing to keep with DISORT's convention. If this
+            is an MxN array, it will construct N profiles.
+        bottom_altitude
+            The bottom altitudes of each of the profiles. If all profiles have
+            the same bottom altitudes, this can be a float; otherwise, for an
+            MxN altitude_grid, this should be an array of length N.
+        top_altitude
+            The top altitudes of each of the profiles. If all profiles have
+            the same top altitudes, this can be a float; otherwise, for an
+            MxN altitude_grid, this should be an array of length N.
 
+        Raises
+        ------
+        ValueError
+            Raised if the inputs cannot be broadcast to the correct shape
+            for computations.
 
-if __name__ == '__main__':
-    a = np.linspace(80, 0, num=17)
-    print(a)
-    u = Uniform(a, 21, 51)
+        Notes
+        -----
+        Right now this only creates a uniform profile if an aerosol is
+        completely within a grid point and cuts off the aerosol otherwise.
 
+        """
+        self.__profile = \
+            self.__make_profile(altitude_grid, bottom_altitude, top_altitude)
+
+    @staticmethod
+    def __make_profile(altitude_grid: np.ndarray, bottom_altitude: np.ndarray,
+                       top_altitude: np.ndarray) -> np.ndarray:
+        try:
+            return np.where((bottom_altitude <= altitude_grid) &
+                            (altitude_grid <= top_altitude), 1, 0)
+        except ValueError as ve:
+            raise ValueError(f'The input arrays have incompatible shapes.') \
+                from ve
+
+    @property
+    def profile(self) -> np.ndarray:
+        """Get the uniform profile(s).
+
+        Returns
+        -------
+        np.ndarray
+            The uniform profile(s).
+
+        """
+        return self.__profile

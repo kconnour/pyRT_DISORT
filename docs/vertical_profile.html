@@ -166,7 +166,7 @@ for use in DISORT.</p>
 <dl class="py class">
 <dt id="vertical_profile.Conrath">
 <em class="property">class </em><code class="sig-prename descclassname">vertical_profile.</code><code class="sig-name descname">Conrath</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">altitude_grid</span></em>, <em class="sig-param"><span class="n">q0</span></em>, <em class="sig-param"><span class="n">scale_height</span></em>, <em class="sig-param"><span class="n">nu</span></em><span class="sig-paren">)</span><a class="headerlink" href="#vertical_profile.Conrath" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute a Conrath profile on a grid.</p>
+<dd><p>Compute Conrath profile(s).</p>
 <p>Conrath creates Conrath profile(s) on an input grid of altitudes given a
 set of input parameters.</p>
 <dl class="py method">
@@ -175,19 +175,19 @@ set of input parameters.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>altitude_grid</strong> (<em>np.ndarray</em>) – The altitudes which to construct a Conrath profile. These are
+<li><p><strong>altitude_grid</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The altitudes at which to construct a Conrath profile. These are
 assumed to be decreasing to keep with DISORT’s convention. If this
 is an MxN array, it will construct N profiles.</p></li>
-<li><p><strong>q0</strong> (<em>np.ndarray</em>) – The surface mixing ratio for each of the Conrath profiles. If all
+<li><p><strong>q0</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The surface mixing ratio for each of the Conrath profiles. If all
 profiles have the same q0, this can be a float; otherwise, for an
-MxN altitude_grid, this should be of length N.</p></li>
-<li><p><strong>scale_height</strong> (<em>np.ndarray</em>) – The scale height of each of the Conrath profiles. If all profiles
+MxN altitude_grid, this should be an array of length N.</p></li>
+<li><p><strong>scale_height</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The scale height of each of the Conrath profiles. If all profiles
 have the same scale height, this can be a float; otherwise, for an
-MxN altitude_grid, this should be of length N. It should also have
-the same units as the altitudes in altitude_grid.</p></li>
-<li><p><strong>nu</strong> (<em>np.ndarray</em>) – The nu parameter of each of the Conrath profiles. If all profiles
+MxN altitude_grid, this should be an array of length N. It should
+also have the same units as the altitudes in altitude_grid.</p></li>
+<li><p><strong>nu</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The nu parameter of each of the Conrath profiles. If all profiles
 have the same nu, this can be a float; otherwise, for an
-MxN altitude_grid, this should be of length N.</p></li>
+MxN altitude_grid, this should be an array of length N.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
@@ -207,6 +207,55 @@ MxN altitude_grid, this should be of length N.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>The Conrath profile(s).</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="vertical_profile.Uniform">
+<em class="property">class </em><code class="sig-prename descclassname">vertical_profile.</code><code class="sig-name descname">Uniform</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">altitude_grid</span></em>, <em class="sig-param"><span class="n">bottom_altitude</span></em>, <em class="sig-param"><span class="n">top_altitude</span></em><span class="sig-paren">)</span><a class="headerlink" href="#vertical_profile.Uniform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute uniform volumetric mixing ratio profile(s).</p>
+<p>Uniform creates a uniform volumetric mixing ratio profile(s) on an input
+grid of altitudes given a set of top and bottom altitudes.</p>
+<dl class="py method">
+<dt id="vertical_profile.Uniform.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">altitude_grid</span></em>, <em class="sig-param"><span class="n">bottom_altitude</span></em>, <em class="sig-param"><span class="n">top_altitude</span></em><span class="sig-paren">)</span><a class="headerlink" href="#vertical_profile.Uniform.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>altitude_grid</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The altitudes at which to construct a uniform profile. These are
+assumed to be decreasing to keep with DISORT’s convention. If this
+is an MxN array, it will construct N profiles.</p></li>
+<li><p><strong>bottom_altitude</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The bottom altitudes of each of the profiles. If all profiles have
+the same bottom altitudes, this can be a float; otherwise, for an
+MxN altitude_grid, this should be an array of length N.</p></li>
+<li><p><strong>top_altitude</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The top altitudes of each of the profiles. If all profiles have
+the same top altitudes, this can be a float; otherwise, for an
+MxN altitude_grid, this should be an array of length N.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – Raised if the inputs cannot be broadcast to the correct shape
+    for computations.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Right now this only creates a uniform profile if an aerosol is
+completely within a grid point and cuts off the aerosol otherwise.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vertical_profile.Uniform.profile">
+<em class="property">property </em><code class="sig-name descname">profile</code><a class="headerlink" href="#vertical_profile.Uniform.profile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the uniform profile(s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The uniform profile(s).</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>np.ndarray</p>
