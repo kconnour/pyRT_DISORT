@@ -12,6 +12,7 @@ for the time being.
    flux
    observation
    surface
+   vertical_profile
 
 
 Indices and tables

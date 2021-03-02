@@ -55,8 +55,9 @@ class SetupDISORT:
                 'astropy>=4.1',
                 'numpy>=1.20.0',
                 'pandas>=1.2.1',
-                'pdoc3>=0.9.1',
+                'pytest>=6.2.2',
                 'scipy>=1.6.0',
+                'sphinx_autodoc_typehints'
                 'sphinx-rtd-theme'
             ],
             package_data={'': ['../*.so']}
