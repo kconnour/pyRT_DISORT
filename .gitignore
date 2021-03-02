@@ -5,3 +5,4 @@ build
 venv
 pyRT_DISORT.egg-info
 *.so
+.pytest_cache
