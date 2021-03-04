@@ -1,0 +1,340 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Phase Function &mdash; pyRT_DISORT  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Rayleigh" href="rayleigh.html" />
+    <link rel="prev" title="Observation" href="observation.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> pyRT_DISORT
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">pyRT_DISORT's modules:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="controller.html">Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="eos.html">Equation of State</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flux.html">Flux</a></li>
+<li class="toctree-l1"><a class="reference internal" href="observation.html">Observation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Phase Function</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rayleigh.html">Rayleigh</a></li>
+<li class="toctree-l1"><a class="reference internal" href="surface.html">Surface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vertical_profile.html">Vertical Profile</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pyRT_DISORT</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Phase Function</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/phase_function.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-phase_function">
+<span id="phase-function"></span><h1>Phase Function<a class="headerlink" href="#module-phase_function" title="Permalink to this headline">¶</a></h1>
+<p>The phase function module contains structures to create a variety of phase
+function arrays required by DISORT.</p>
+<dl class="py class">
+<dt id="phase_function.RadialSpectralTabularLegendreCoefficients">
+<em class="property">class </em><code class="sig-prename descclassname">phase_function.</code><code class="sig-name descname">RadialSpectralTabularLegendreCoefficients</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">coefficients</span></em>, <em class="sig-param"><span class="n">particle_size_grid</span></em>, <em class="sig-param"><span class="n">wavelength_grid</span></em>, <em class="sig-param"><span class="n">altitude_grid</span></em>, <em class="sig-param"><span class="n">wavelengths</span></em>, <em class="sig-param"><span class="n">particle_size_profile</span></em>, <em class="sig-param"><span class="n">max_moments</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#phase_function.RadialSpectralTabularLegendreCoefficients" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a grid of Legendre coefficients (particle size, wavelength).</p>
+<p>StaticTabularLegendreCoefficients accepts a 3D array of Legendre polynomial
+coefficients of the phase function that depend on particle size and
+wavelength and casts them to an array of the proper shape for use in DISORT
+given a vertical particle size gradient.</p>
+<dl class="py method">
+<dt id="phase_function.RadialSpectralTabularLegendreCoefficients.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">coefficients</span></em>, <em class="sig-param"><span class="n">particle_size_grid</span></em>, <em class="sig-param"><span class="n">wavelength_grid</span></em>, <em class="sig-param"><span class="n">altitude_grid</span></em>, <em class="sig-param"><span class="n">wavelengths</span></em>, <em class="sig-param"><span class="n">particle_size_profile</span></em>, <em class="sig-param"><span class="n">max_moments</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#phase_function.RadialSpectralTabularLegendreCoefficients.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>coefficients</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – 3D array of Legendre coefficients that depend on particle
+size and wavelength. It is assumed to have shape [n_moments,
+particle_size_grid, wavelength_grid]</p></li>
+<li><p><strong>particle_size_grid</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – 1D array of particle sizes associated with the coefficients matrix.</p></li>
+<li><p><strong>wavelength_grid</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – 1D array of wavelengths associated with the coefficients matrix.</p></li>
+<li><p><strong>altitude_grid</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – 1D array of altitudes where to cast coefficients to.</p></li>
+<li><p><strong>wavelengths</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – ND array of wavelengths where to cast coefficients to.</p></li>
+<li><p><strong>particle_size_profile</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – 1D array of particle sizes.</p></li>
+<li><p><strong>max_moments</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – The maximum number of coefficients to use in the array. If None,
+all available coefficients are used.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="phase_function.RadialSpectralTabularLegendreCoefficients.phase_function">
+<em class="property">property </em><code class="sig-name descname">phase_function</code><a class="headerlink" href="#phase_function.RadialSpectralTabularLegendreCoefficients.phase_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the Legendre coefficients cast to the proper grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The Legendre coefficients on a grid.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named “PMOM”. In addition,
+The shape of this array is determined by the inputs. In general, the
+shape will be [n_moments, n_layers, (n_pixels)]. For example, if
+coefficients has shape [65, 10, 300], altitude_grid has shape [20], and
+wavelengths has shape [50, 100, 45], this array will have shape
+[65, 20, 50, 100, 45].</p>
+<p>Note that DISORT expects an array of shape [n_moments, n_layers] as the
+PMOM input, so be sure to select the correct pixel when iterating over
+pixels.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="phase_function.StaticTabularLegendreCoefficients">
+<em class="property">class </em><code class="sig-prename descclassname">phase_function.</code><code class="sig-name descname">StaticTabularLegendreCoefficients</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">coefficients</span></em>, <em class="sig-param"><span class="n">altitude_grid</span></em>, <em class="sig-param"><span class="n">wavelengths</span></em>, <em class="sig-param"><span class="n">max_moments</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#phase_function.StaticTabularLegendreCoefficients" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a grid of static Legendre coefficients.</p>
+<p>StaticTabularLegendreCoefficients accepts a 1D array of Legendre polynomial
+coefficients of the phase function that do not depend on particle size or
+wavelength and casts them to an array of the proper shape for use in DISORT.</p>
+<dl class="py method">
+<dt id="phase_function.StaticTabularLegendreCoefficients.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">coefficients</span></em>, <em class="sig-param"><span class="n">altitude_grid</span></em>, <em class="sig-param"><span class="n">wavelengths</span></em>, <em class="sig-param"><span class="n">max_moments</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#phase_function.StaticTabularLegendreCoefficients.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>coefficients</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – 1D array of Legendre coefficients that do not depend on particle
+size or wavelength.</p></li>
+<li><p><strong>altitude_grid</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – 1D array of altitudes where to cast coefficients to.</p></li>
+<li><p><strong>wavelengths</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – ND array of wavelengths where to cast coefficients to. As this class
+does not depend on wavelength, this is essentially the pixels where
+to define the phase function coefficients.</p></li>
+<li><p><strong>max_moments</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – The maximum number of coefficients to use in the array. If None,
+all available coefficients are used.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="phase_function.StaticTabularLegendreCoefficients.phase_function">
+<em class="property">property </em><code class="sig-name descname">phase_function</code><a class="headerlink" href="#phase_function.StaticTabularLegendreCoefficients.phase_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the Legendre coefficients cast to the proper grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Coefficients on a grid.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named “PMOM”. In addition,
+The shape of this array is determined by the inputs. In general, the
+shape will be [n_moments, n_layers, (n_pixels)]. For example, if
+coefficients has shape [65], altitude_grid has shape [20], and
+wavelengths has shape [50, 100, 45], this array will have shape
+[65, 20, 50, 100, 45].</p>
+<p>Note that DISORT expects an array of shape [n_moments, n_layers] as the
+PMOM input, so be sure to select the correct pixel when iterating over
+pixels.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="phase_function.TabularLegendreCoefficients">
+<em class="property">class </em><code class="sig-prename descclassname">phase_function.</code><code class="sig-name descname">TabularLegendreCoefficients</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">coefficients</span></em>, <em class="sig-param"><span class="n">altitude_grid</span></em>, <em class="sig-param"><span class="n">wavelengths</span></em>, <em class="sig-param"><span class="n">max_moments</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#phase_function.TabularLegendreCoefficients" title="Permalink to this definition">¶</a></dt>
+<dd><p>An abstract class from which all coefficient classes are derived.</p>
+<p>TabularLegendreCoefficients holds a variety of properties that are needed by
+all derived classes. It is not meant to be instantiated.</p>
+<dl class="py method">
+<dt id="phase_function.TabularLegendreCoefficients.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">coefficients</span></em>, <em class="sig-param"><span class="n">altitude_grid</span></em>, <em class="sig-param"><span class="n">wavelengths</span></em>, <em class="sig-param"><span class="n">max_moments</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#phase_function.TabularLegendreCoefficients.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="rayleigh.html" class="btn btn-neutral float-right" title="Rayleigh" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="observation.html" class="btn btn-neutral float-left" title="Observation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, kconnour.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

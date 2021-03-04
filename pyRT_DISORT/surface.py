@@ -18,6 +18,7 @@ class Surface:
     be instantiated.
 
     """
+
     def __init__(self, albedo: float, cp: ComputationalParameters) -> None:
         """
         Parameters

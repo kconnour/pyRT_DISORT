@@ -22,7 +22,7 @@ from pyRT_DISORT.untested.aerosol import ForwardScatteringProperty, \
     ForwardScatteringPropertyCollection
 from pyRT_DISORT.untested_utils.utilities.external_files import ExternalFile
 from pyRT_DISORT.untested.aerosol_column import Column
-from pyRT_DISORT.untested.vertical_profiles import Conrath
+from pyRT_DISORT.vertical_profile import Conrath
 from pyRT_DISORT.untested.phase_function import TabularLegendreCoefficients
 from pyRT_DISORT.untested.rayleigh import RayleighCo2
 from pyRT_DISORT.untested.model_atmosphere import ModelAtmosphere
@@ -102,7 +102,7 @@ dust_properties.add_property(c_ext, 'c_extinction')
 dust_properties.add_property(c_sca, 'c_scattering')
 
 # Make a dust Conrath profile
-conrath_profile = Conrath(model_eos, 10, 0.5)
+conrath_profile = Conrath(z_boundaries[:-1], model_eos.column_density_layers, 10, 0.5)
 
 # Define a smooth gradient of particle sizes. Here I'm making all particle sizes
 # = 1.5 so I can compare with disort_multi (I don't know how to include a

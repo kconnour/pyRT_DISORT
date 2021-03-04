@@ -83,12 +83,13 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption"><span class="caption-text">pyRT_DISORT's modules:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="controller.html">Controller</a></li>
 <li class="toctree-l1"><a class="reference internal" href="eos.html">Equation of State</a></li>
 <li class="toctree-l1"><a class="reference internal" href="flux.html">Flux</a></li>
 <li class="toctree-l1"><a class="reference internal" href="observation.html">Observation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="phase_function.html">Phase Function</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rayleigh.html">Rayleigh</a></li>
 <li class="toctree-l1"><a class="reference internal" href="surface.html">Surface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="vertical_profile.html">Vertical Profile</a></li>
@@ -204,6 +205,12 @@
         <li><a href="observation.html#observation.Angles.__init__">(observation.Angles method)</a>
 </li>
         <li><a href="observation.html#observation.Wavelengths.__init__">(observation.Wavelengths method)</a>
+</li>
+        <li><a href="phase_function.html#phase_function.RadialSpectralTabularLegendreCoefficients.__init__">(phase_function.RadialSpectralTabularLegendreCoefficients method)</a>
+</li>
+        <li><a href="phase_function.html#phase_function.StaticTabularLegendreCoefficients.__init__">(phase_function.StaticTabularLegendreCoefficients method)</a>
+</li>
+        <li><a href="phase_function.html#phase_function.TabularLegendreCoefficients.__init__">(phase_function.TabularLegendreCoefficients method)</a>
 </li>
         <li><a href="rayleigh.html#rayleigh.Rayleigh.__init__">(rayleigh.Rayleigh method)</a>
 </li>
@@ -409,6 +416,8 @@
 </li>
         <li><a href="observation.html#module-observation">observation</a>
 </li>
+        <li><a href="phase_function.html#module-phase_function">phase_function</a>
+</li>
         <li><a href="rayleigh.html#module-rayleigh">rayleigh</a>
 </li>
         <li><a href="surface.html#module-surface">surface</a>
@@ -477,14 +486,27 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="observation.html#observation.Angles.phase">phase() (observation.Angles property)</a>
 </li>
-      <li><a href="rayleigh.html#rayleigh.Rayleigh.phase_function">phase_function() (rayleigh.Rayleigh property)</a>
+      <li>
+    phase_function
+
+      <ul>
+        <li><a href="phase_function.html#module-phase_function">module</a>
 </li>
+      </ul></li>
+      <li><a href="phase_function.html#phase_function.RadialSpectralTabularLegendreCoefficients.phase_function">phase_function() (phase_function.RadialSpectralTabularLegendreCoefficients property)</a>
+
+      <ul>
+        <li><a href="phase_function.html#phase_function.StaticTabularLegendreCoefficients.phase_function">(phase_function.StaticTabularLegendreCoefficients property)</a>
+</li>
+        <li><a href="rayleigh.html#rayleigh.Rayleigh.phase_function">(rayleigh.Rayleigh property)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="observation.html#observation.Angles.phi">phi() (observation.Angles property)</a>
 </li>
       <li><a href="observation.html#observation.Angles.phi0">phi0() (observation.Angles property)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="eos.html#eos.ModelEquationOfState.pressure_boundaries">pressure_boundaries() (eos.ModelEquationOfState property)</a>
 </li>
       <li><a href="controller.html#controller.ModelBehavior.print_variables">print_variables() (controller.ModelBehavior property)</a>
@@ -501,6 +523,8 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="phase_function.html#phase_function.RadialSpectralTabularLegendreCoefficients">RadialSpectralTabularLegendreCoefficients (class in phase_function)</a>
+</li>
       <li><a href="controller.html#controller.ModelBehavior.radius">radius() (controller.ModelBehavior property)</a>
 </li>
       <li>
@@ -510,10 +534,10 @@
         <li><a href="rayleigh.html#module-rayleigh">module</a>
 </li>
       </ul></li>
-      <li><a href="rayleigh.html#rayleigh.Rayleigh">Rayleigh (class in rayleigh)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="rayleigh.html#rayleigh.Rayleigh">Rayleigh (class in rayleigh)</a>
+</li>
       <li><a href="rayleigh.html#rayleigh.RayleighCO2">RayleighCO2 (class in rayleigh)</a>
 </li>
       <li><a href="surface.html#surface.Surface.rho_accurate">rho_accurate() (surface.Surface property)</a>
@@ -536,6 +560,8 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="phase_function.html#phase_function.StaticTabularLegendreCoefficients">StaticTabularLegendreCoefficients (class in phase_function)</a>
+</li>
       <li>
     surface
 
@@ -551,14 +577,16 @@
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="phase_function.html#phase_function.TabularLegendreCoefficients">TabularLegendreCoefficients (class in phase_function)</a>
+</li>
       <li><a href="eos.html#eos.ModelEquationOfState.temperature_boundaries">temperature_boundaries() (eos.ModelEquationOfState property)</a>
 </li>
       <li><a href="flux.html#flux.ThermalEmission.thermal_emission">thermal_emission() (flux.ThermalEmission property)</a>
 </li>
-      <li><a href="flux.html#flux.ThermalEmission">ThermalEmission (class in flux)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="flux.html#flux.ThermalEmission">ThermalEmission (class in flux)</a>
+</li>
       <li><a href="flux.html#flux.ThermalEmission.top_emissivity">top_emissivity() (flux.ThermalEmission property)</a>
 </li>
       <li><a href="flux.html#flux.ThermalEmission.top_temperature">top_temperature() (flux.ThermalEmission property)</a>

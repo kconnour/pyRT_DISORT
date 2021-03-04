@@ -1,16 +1,18 @@
 Welcome to pyRT_DISORT's documentation
 ======================================
-I'm just now figuring out Sphinx documentation, so here's a basic structure
-for the time being.
+
+
+If you're new to pyRT_DISORT, check out the :doc:`new-users-guide`
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: pyRT_DISORT's modules:
 
    controller
    eos
    flux
    observation
+   phase_function
    rayleigh
    surface
    vertical_profile

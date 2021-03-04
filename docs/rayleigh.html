@@ -85,7 +85,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption"><span class="caption-text">pyRT_DISORT's modules:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="controller.html">Controller</a></li>
 <li class="toctree-l1"><a class="reference internal" href="eos.html">Equation of State</a></li>
@@ -202,9 +202,9 @@ to be instantiated.</p>
 <p>The shape of this array is determined by the inputs. In general, the
 shape will be [n_moments, n_layers, (n_pixels)] (here, n_moments will
 always be 3 since the 0th and 2nd terms are the only terms in the
-expansion). If altitude_grid has a length of 20, and wavenumbers
-has shape [50, 100, 45], this array will have shape
-[2, 20, 50, 100, 45].</p>
+expansion). For example, ff altitude_grid has shape [20], and
+wavenumbers has shape [50, 100, 45], this array will have shape
+[3, 20, 50, 100, 45].</p>
 </dd></dl>
 
 </dd></dl>
@@ -212,7 +212,12 @@ has shape [50, 100, 45], this array will have shape
 <dl class="py class">
 <dt id="rayleigh.RayleighCO2">
 <em class="property">class </em><code class="sig-prename descclassname">rayleigh.</code><code class="sig-name descname">RayleighCO2</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">altitude_grid</span></em>, <em class="sig-param"><span class="n">wavenumbers</span></em>, <em class="sig-param"><span class="n">column_density_layers</span></em><span class="sig-paren">)</span><a class="headerlink" href="#rayleigh.RayleighCO2" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="py method">
+<dd><p>Construct an object to hold arrays related to CO2 Rayleigh scattering.</p>
+<p>Rayleigh creates the Legendre coefficient phase function array and holds
+the wavenumbers at which scattering was observed. This is an abstract base
+class from which all other Rayleigh classes are derived; it is not meant
+to be instantiated.</p>
+<dl class="py method">
 <dt id="rayleigh.RayleighCO2.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">altitude_grid</span></em>, <em class="sig-param"><span class="n">wavenumbers</span></em>, <em class="sig-param"><span class="n">column_density_layers</span></em><span class="sig-paren">)</span><a class="headerlink" href="#rayleigh.RayleighCO2.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
@@ -247,9 +252,9 @@ using equation 13 for computing the index of refraction</p>
 </dl>
 <p class="rubric">Notes</p>
 <p>The shape of this array is determined by the inputs. In general, the
-shape will be [n_layers, (n_pixels)]. If altitude_grid has a length of
-20, and wavenumbers has shape [50, 100, 45], this array will have shape
-[20, 50, 100, 45].</p>
+shape will be [n_layers, (n_pixels)]. For example, if altitude_grid has
+shape [20] and wavenumbers has shape [50, 100, 45], this array will have
+shape [20, 50, 100, 45].</p>
 </dd></dl>
 
 </dd></dl>
