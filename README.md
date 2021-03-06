@@ -1,31 +1,24 @@
 ## pyRT_DISORT
-This project aims to improve the lives of anyone performing retrievals with 
-DISORT by combining the readability of Python with the speed of FORTRAN. It
-provides a numpy-like toolset for creating all the inputs required by DISORT
-from a set of aerosol property files. It allows the user to easily swap
-what surface parameterization, aerosol vertical profile, etc. they want to use
-in the model and then computes all of the input arrays.
-
-## Documentation
-Check out the documentation [here](https://kconnour.github.io/pyRT_DISORT/)
+pyRT_DISORT is a package for computing the arrays needed by DISORT. It 
+provides:
+* swappable vertical profiles, allowing streamlined construction of the
+optical depth, single scattering albedo, and phase function arrays
+* swappable surface profiles, including Lambertian and Hapke surface treatments
+* generic radiative transfer utilities, such as decomposing empirical phase
+functions into Legendre coefficients
+* objects to create the flags required by DISORT
+  
+## Getting started
+The best way to get started with pyRT_DISORT is to check out the documentation 
+[here](https://kconnour.github.io/pyRT_DISORT/). It provides installation
+instructions, example use cases, and documentation on everything included in
+this project.
 
 ### Cautionary note
 This project is under active development and is _unstable_ so many aspects of
-the implementation are subject to change. 
+the implementation are subject to change.
 
-### Installation
-After cloning this repo, simply install it with pip: `pip install .` This will
-build an importable `disort.so` file so that DISORT can be run directly from
-Python. Note that this can be switched off within `setup.py`. The rest of the 
-Python code will be importable via `pyRT_DISORT`. 
-
-### Conventions
-The physical units follow the following conventions:
-- Altitudes are in km
-- Wavelengths are in microns
-- Wavenumbers are in 1/cm
-- Everything else is in MKS units
-
-### Miscellaneous
-The current DISORT distribution site [here](http://www.rtatmocn.com/disort/),
-should you want to look at the source code yourself.
+### Usage
+After I'm a bit happier with the project I'll release it with a license; until
+then, contact me if you plan to use this code. If this code helps with your 
+research, please consider acknowledging the use of this package in your paper.
