@@ -1,0 +1,510 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Surface &mdash; pyRT_DISORT  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Vertical Profile" href="vertical_profile.html" />
+    <link rel="prev" title="Rayleigh" href="rayleigh.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> pyRT_DISORT
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Useful links</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting started</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../modules.html">Modules</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="controller.html">Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eos.html">Equation of State</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flux.html">Flux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="observation.html">Observation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="phase_function.html">Phase Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rayleigh.html">Rayleigh</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Surface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vertical_profile.html">Vertical Profile</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../utilities.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about-disort.html">About DISORT</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pyRT_DISORT</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../modules.html">Modules</a> &raquo;</li>
+        
+      <li>Surface</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../_sources/rst/modules/surface.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-surface">
+<span id="surface"></span><h1>Surface<a class="headerlink" href="#module-surface" title="Permalink to this headline">¶</a></h1>
+<p>The surface module contains classes for creating arrays related to DISORT’s
+surface treatment.</p>
+<dl class="py class">
+<dt id="surface.Hapke">
+<em class="property">class </em><code class="sig-prename descclassname">surface.</code><code class="sig-name descname">Hapke</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">albedo</span></em>, <em class="sig-param"><span class="n">cp</span></em>, <em class="sig-param"><span class="n">mb</span></em>, <em class="sig-param"><span class="n">flux</span></em>, <em class="sig-param"><span class="n">angles</span></em>, <em class="sig-param"><span class="n">b0</span></em>, <em class="sig-param"><span class="n">h</span></em>, <em class="sig-param"><span class="n">w</span></em>, <em class="sig-param"><span class="n">n_mug</span><span class="o">=</span><span class="default_value">200</span></em><span class="sig-paren">)</span><a class="headerlink" href="#surface.Hapke" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a basic Hapke surface.</p>
+<p>Hapke creates the bi-directional reflectivity arrays required by DISORT
+based on the input parameterization of a Hapke surface.</p>
+<dl class="py method">
+<dt id="surface.Hapke.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">albedo</span></em>, <em class="sig-param"><span class="n">cp</span></em>, <em class="sig-param"><span class="n">mb</span></em>, <em class="sig-param"><span class="n">flux</span></em>, <em class="sig-param"><span class="n">angles</span></em>, <em class="sig-param"><span class="n">b0</span></em>, <em class="sig-param"><span class="n">h</span></em>, <em class="sig-param"><span class="n">w</span></em>, <em class="sig-param"><span class="n">n_mug</span><span class="o">=</span><span class="default_value">200</span></em><span class="sig-paren">)</span><a class="headerlink" href="#surface.Hapke.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>albedo</strong> (<em>float</em>) – The surface albedo.</p></li>
+<li><p><strong>cp</strong> (<a class="reference internal" href="controller.html#controller.ComputationalParameters" title="controller.ComputationalParameters"><em>ComputationalParameters</em></a>) – The computational parameters.</p></li>
+<li><p><strong>mb</strong> (<a class="reference internal" href="controller.html#controller.ModelBehavior" title="controller.ModelBehavior"><em>ModelBehavior</em></a>) – The model behavior.</p></li>
+<li><p><strong>flux</strong> (<a class="reference internal" href="flux.html#flux.IncidentFlux" title="flux.IncidentFlux"><em>IncidentFlux</em></a>) – The incident flux.</p></li>
+<li><p><strong>angles</strong> (<a class="reference internal" href="observation.html#observation.Angles" title="observation.Angles"><em>Angles</em></a>) – The observation angles.</p></li>
+<li><p><strong>b0</strong> (<em>float</em>) – The strength of the opposition surge.</p></li>
+<li><p><strong>h</strong> (<em>float</em>) – The width of the opposition surge.</p></li>
+<li><p><strong>w</strong> (<em>float</em>) – The surface single scattering albedo.</p></li>
+<li><p><strong>n_mug</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of angle cosine quadrature points for integrating the
+bidirectional reflectivity. Default is 200.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – Raised if inputs cannot be cast to the correct type.</p></li>
+<li><p><strong>ValueError</strong> – Raised if albedo is not between 0 and 1.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="surface.HapkeHG2">
+<em class="property">class </em><code class="sig-prename descclassname">surface.</code><code class="sig-name descname">HapkeHG2</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">albedo</span></em>, <em class="sig-param"><span class="n">cp</span></em>, <em class="sig-param"><span class="n">mb</span></em>, <em class="sig-param"><span class="n">flux</span></em>, <em class="sig-param"><span class="n">angles</span></em>, <em class="sig-param"><span class="n">b0</span></em>, <em class="sig-param"><span class="n">h</span></em>, <em class="sig-param"><span class="n">w</span></em>, <em class="sig-param"><span class="n">asym</span></em>, <em class="sig-param"><span class="n">frac</span></em>, <em class="sig-param"><span class="n">n_mug</span><span class="o">=</span><span class="default_value">200</span></em><span class="sig-paren">)</span><a class="headerlink" href="#surface.HapkeHG2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a Hapke surface with a 2-lobed Henyey-Greenstein phase function.</p>
+<p>HapkeHG2 creates the bi-directional reflectivity arrays required by DISORT
+based on the input parameterization of a 2-lobed Hapke surface.</p>
+<dl class="py method">
+<dt id="surface.HapkeHG2.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">albedo</span></em>, <em class="sig-param"><span class="n">cp</span></em>, <em class="sig-param"><span class="n">mb</span></em>, <em class="sig-param"><span class="n">flux</span></em>, <em class="sig-param"><span class="n">angles</span></em>, <em class="sig-param"><span class="n">b0</span></em>, <em class="sig-param"><span class="n">h</span></em>, <em class="sig-param"><span class="n">w</span></em>, <em class="sig-param"><span class="n">asym</span></em>, <em class="sig-param"><span class="n">frac</span></em>, <em class="sig-param"><span class="n">n_mug</span><span class="o">=</span><span class="default_value">200</span></em><span class="sig-paren">)</span><a class="headerlink" href="#surface.HapkeHG2.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>albedo</strong> (<em>float</em>) – The surface albedo.</p></li>
+<li><p><strong>cp</strong> (<a class="reference internal" href="controller.html#controller.ComputationalParameters" title="controller.ComputationalParameters"><em>ComputationalParameters</em></a>) – The computational parameters.</p></li>
+<li><p><strong>mb</strong> (<a class="reference internal" href="controller.html#controller.ModelBehavior" title="controller.ModelBehavior"><em>ModelBehavior</em></a>) – The model behavior.</p></li>
+<li><p><strong>flux</strong> (<a class="reference internal" href="flux.html#flux.IncidentFlux" title="flux.IncidentFlux"><em>IncidentFlux</em></a>) – The incident flux.</p></li>
+<li><p><strong>angles</strong> (<a class="reference internal" href="observation.html#observation.Angles" title="observation.Angles"><em>Angles</em></a>) – The observation angles.</p></li>
+<li><p><strong>b0</strong> (<em>float</em>) – The strength of the opposition surge.</p></li>
+<li><p><strong>h</strong> (<em>float</em>) – The width of the opposition surge.</p></li>
+<li><p><strong>w</strong> (<em>float</em>) – The surface single scattering albedo.</p></li>
+<li><p><strong>asym</strong> (<em>float</em>) – The asymmetry parameter</p></li>
+<li><p><strong>frac</strong> (<em>float</em>) – The forward scattering fraction</p></li>
+<li><p><strong>n_mug</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of angle cosine quadrature points for integrating the
+bidirectional reflectivity. Default is 200.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – Raised if inputs cannot be cast to the correct type.</p></li>
+<li><p><strong>ValueError</strong> – Raised if albedo is not between 0 and 1.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="surface.HapkeHG2Roughness">
+<em class="property">class </em><code class="sig-prename descclassname">surface.</code><code class="sig-name descname">HapkeHG2Roughness</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">albedo</span></em>, <em class="sig-param"><span class="n">cp</span></em>, <em class="sig-param"><span class="n">mb</span></em>, <em class="sig-param"><span class="n">flux</span></em>, <em class="sig-param"><span class="n">angles</span></em>, <em class="sig-param"><span class="n">b0</span></em>, <em class="sig-param"><span class="n">h</span></em>, <em class="sig-param"><span class="n">w</span></em>, <em class="sig-param"><span class="n">asym</span></em>, <em class="sig-param"><span class="n">frac</span></em>, <em class="sig-param"><span class="n">roughness</span></em>, <em class="sig-param"><span class="n">n_mug</span><span class="o">=</span><span class="default_value">200</span></em><span class="sig-paren">)</span><a class="headerlink" href="#surface.HapkeHG2Roughness" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a Hapke surface with a 2-lobed Henyey-Greenstein phase function.</p>
+<p>HapkeHG2Roughness creates the bi-directional reflectivity arrays required by
+DISORT based on the input parameterization of a 2-lobed Hapke surface with
+roughness parameter.</p>
+<dl class="py method">
+<dt id="surface.HapkeHG2Roughness.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">albedo</span></em>, <em class="sig-param"><span class="n">cp</span></em>, <em class="sig-param"><span class="n">mb</span></em>, <em class="sig-param"><span class="n">flux</span></em>, <em class="sig-param"><span class="n">angles</span></em>, <em class="sig-param"><span class="n">b0</span></em>, <em class="sig-param"><span class="n">h</span></em>, <em class="sig-param"><span class="n">w</span></em>, <em class="sig-param"><span class="n">asym</span></em>, <em class="sig-param"><span class="n">frac</span></em>, <em class="sig-param"><span class="n">roughness</span></em>, <em class="sig-param"><span class="n">n_mug</span><span class="o">=</span><span class="default_value">200</span></em><span class="sig-paren">)</span><a class="headerlink" href="#surface.HapkeHG2Roughness.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>albedo</strong> (<em>float</em>) – The surface albedo.</p></li>
+<li><p><strong>cp</strong> (<a class="reference internal" href="controller.html#controller.ComputationalParameters" title="controller.ComputationalParameters"><em>ComputationalParameters</em></a>) – The computational parameters.</p></li>
+<li><p><strong>mb</strong> (<a class="reference internal" href="controller.html#controller.ModelBehavior" title="controller.ModelBehavior"><em>ModelBehavior</em></a>) – The model behavior.</p></li>
+<li><p><strong>flux</strong> (<a class="reference internal" href="flux.html#flux.IncidentFlux" title="flux.IncidentFlux"><em>IncidentFlux</em></a>) – The incident flux.</p></li>
+<li><p><strong>angles</strong> (<a class="reference internal" href="observation.html#observation.Angles" title="observation.Angles"><em>Angles</em></a>) – The observation angles.</p></li>
+<li><p><strong>b0</strong> (<em>float</em>) – The strength of the opposition surge.</p></li>
+<li><p><strong>h</strong> (<em>float</em>) – The width of the opposition surge.</p></li>
+<li><p><strong>w</strong> (<em>float</em>) – The surface single scattering albedo.</p></li>
+<li><p><strong>asym</strong> (<em>float</em>) – The asymmetry parameter.</p></li>
+<li><p><strong>frac</strong> (<em>float</em>) – The forward scattering fraction.</p></li>
+<li><p><strong>roughness</strong> (<em>float</em>) – The roughness parameter.</p></li>
+<li><p><strong>n_mug</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of angle cosine quadrature points for integrating the
+bidirectional reflectivity. Default is 200.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – Raised if inputs cannot be cast to the correct type.</p></li>
+<li><p><strong>ValueError</strong> – Raised if albedo is not between 0 and 1.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="surface.Lambertian">
+<em class="property">class </em><code class="sig-prename descclassname">surface.</code><code class="sig-name descname">Lambertian</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">albedo</span></em>, <em class="sig-param"><span class="n">cp</span></em><span class="sig-paren">)</span><a class="headerlink" href="#surface.Lambertian" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a Lambertian surface.</p>
+<p>Lambertian creates a boolean flag that can notify DISORT to use a Lambertian
+surface. It also creates bi-directional reflectivity arrays of 0s required
+by DISORT.</p>
+<dl class="py method">
+<dt id="surface.Lambertian.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">albedo</span></em>, <em class="sig-param"><span class="n">cp</span></em><span class="sig-paren">)</span><a class="headerlink" href="#surface.Lambertian.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>albedo</strong> (<em>float</em>) – The surface albedo.</p></li>
+<li><p><strong>cp</strong> (<a class="reference internal" href="controller.html#controller.ComputationalParameters" title="controller.ComputationalParameters"><em>ComputationalParameters</em></a>) – The computational parameters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – Raised if albedo cannot be cast to a float or if cp is not an
+    instance of ComputationalParameters.</p></li>
+<li><p><strong>ValueError</strong> – Raised if albedo is not between 0 and 1.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="surface.Surface">
+<em class="property">class </em><code class="sig-prename descclassname">surface.</code><code class="sig-name descname">Surface</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">albedo</span></em>, <em class="sig-param"><span class="n">cp</span></em><span class="sig-paren">)</span><a class="headerlink" href="#surface.Surface" title="Permalink to this definition">¶</a></dt>
+<dd><p>An abstract base “surface” class.</p>
+<p>Surface holds properties relevant to all surfaces. It is an abstract base
+class from which all other surface classes are derived; it is not meant to
+be instantiated.</p>
+<dl class="py method">
+<dt id="surface.Surface.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">albedo</span></em>, <em class="sig-param"><span class="n">cp</span></em><span class="sig-paren">)</span><a class="headerlink" href="#surface.Surface.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>albedo</strong> (<em>float</em>) – The surface albedo. Only used by DISORT if the bottom boundary is
+Lambertian (see the Lambertian class), but always used by
+pyRT_DISORT.</p></li>
+<li><p><strong>cp</strong> (<a class="reference internal" href="controller.html#controller.ComputationalParameters" title="controller.ComputationalParameters"><em>ComputationalParameters</em></a>) – The model’s computational parameters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – Raised if albedo cannot be cast to a float, or cp is not an instance
+    of ComputationalParameters</p></li>
+<li><p><strong>ValueError</strong> – Raised if albedo is not between 0 and 1.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="surface.Surface.albedo">
+<em class="property">property </em><code class="sig-name descname">albedo</code><a class="headerlink" href="#surface.Surface.albedo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the input albedo.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The albedo.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named “ALBEDO”.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="surface.Surface.bemst">
+<em class="property">property </em><code class="sig-name descname">bemst</code><a class="headerlink" href="#surface.Surface.bemst" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the directional emissivity at quadrature angles.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The directional emissivity at quadrature angles.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named “BEMST”</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="surface.Surface.emust">
+<em class="property">property </em><code class="sig-name descname">emust</code><a class="headerlink" href="#surface.Surface.emust" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the directional emissivity at user angles.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The directional emissivity at user angles.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named “EMUST”</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="surface.Surface.lambertian">
+<em class="property">property </em><code class="sig-name descname">lambertian</code><a class="headerlink" href="#surface.Surface.lambertian" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get whether the bottom boundary used in the model will be Lambertian.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>True if the class is Lambertian, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named “LAMBER”.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="surface.Surface.rho_accurate">
+<em class="property">property </em><code class="sig-name descname">rho_accurate</code><a class="headerlink" href="#surface.Surface.rho_accurate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the analytic BRDF results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The analytic BRDF results.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named “RHO_ACCURATE”.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="surface.Surface.rhoq">
+<em class="property">property </em><code class="sig-name descname">rhoq</code><a class="headerlink" href="#surface.Surface.rhoq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the quadrature fourier expanded BRDF.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The quadrature fourier expanded BRDF.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named “RHOQ”.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="surface.Surface.rhou">
+<em class="property">property </em><code class="sig-name descname">rhou</code><a class="headerlink" href="#surface.Surface.rhou" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the user defined fourier expanded BRDF.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The user-defined fourier expanded BRDF.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named “RHOU”.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="vertical_profile.html" class="btn btn-neutral float-right" title="Vertical Profile" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="rayleigh.html" class="btn btn-neutral float-left" title="Rayleigh" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, kconnour.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

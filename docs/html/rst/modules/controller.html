@@ -1,0 +1,842 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Controller &mdash; pyRT_DISORT  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Equation of State" href="eos.html" />
+    <link rel="prev" title="Modules" href="../modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> pyRT_DISORT
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Useful links</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting started</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../modules.html">Modules</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eos.html">Equation of State</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flux.html">Flux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="observation.html">Observation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="phase_function.html">Phase Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rayleigh.html">Rayleigh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="surface.html">Surface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vertical_profile.html">Vertical Profile</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../utilities.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about-disort.html">About DISORT</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pyRT_DISORT</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../modules.html">Modules</a> &raquo;</li>
+        
+      <li>Controller</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../_sources/rst/modules/controller.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-controller">
+<span id="controller"></span><h1>Controller<a class="headerlink" href="#module-controller" title="Permalink to this headline">¶</a></h1>
+<p>The controller module holds miscellaneous classes responsible for creating
+arrays that control how DISORT runs.</p>
+<dl class="py class">
+<dt id="controller.ComputationalParameters">
+<em class="property">class </em><code class="sig-prename descclassname">controller.</code><code class="sig-name descname">ComputationalParameters</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_layers</span></em>, <em class="sig-param"><span class="n">n_moments</span></em>, <em class="sig-param"><span class="n">n_streams</span></em>, <em class="sig-param"><span class="n">n_azimuth</span></em>, <em class="sig-param"><span class="n">n_polar</span></em>, <em class="sig-param"><span class="n">n_user_levels</span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.ComputationalParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a data structure for holding the size of computational parameters.</p>
+<p>ComputationalParameters holds the number of model layers, streams, moments,
+and angles. It also performs basic checks that these values are plausible.
+Objects of this class are meant to be be used as inputs to other classes.</p>
+<dl class="py method">
+<dt id="controller.ComputationalParameters.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_layers</span></em>, <em class="sig-param"><span class="n">n_moments</span></em>, <em class="sig-param"><span class="n">n_streams</span></em>, <em class="sig-param"><span class="n">n_azimuth</span></em>, <em class="sig-param"><span class="n">n_polar</span></em>, <em class="sig-param"><span class="n">n_user_levels</span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.ComputationalParameters.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_layers</strong> (<em>int</em>) – The number of layers to use in the model.</p></li>
+<li><p><strong>n_moments</strong> (<em>int</em>) – The number of polynomial moments to use in the model. This number
+should be greater than or equal to ‘n_streams’ in problems with
+scattering. In problems without scattering, this variable is not
+used by DISORT.</p></li>
+<li><p><strong>n_streams</strong> (<em>int</em>) – The number of streams (i.e. the number of computational polar
+angles) to use in the model. This number should be even and at least
+2. In general, the more streams used the more accurate DISORT’s
+computations will be.</p></li>
+<li><p><strong>n_azimuth</strong> (<em>int</em>) – The number of azimuthal angles where DISORT should return radiant
+quantities.</p></li>
+<li><p><strong>n_polar</strong> (<em>int</em>) – The number of user-specified polar angles where DISORT should return
+radiant quantities. Only used by DISORT if user_angles (from
+ModelBehavior) == True.</p></li>
+<li><p><strong>n_user_levels</strong> (<em>int</em>) – The number of user levels to use in the model.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – Raised if any of the inputs cannot be converted to an int.</p></li>
+<li><p><strong>ValueError</strong> – Raised if any of the inputs are not positive finite.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<dl class="simple">
+<dt>UserWarning</dt><dd><p>Raised if n_streams is not even or if n_streams is greater than
+n_moments.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="controller.ComputationalParameters.n_azimuth">
+<em class="property">property </em><code class="sig-name descname">n_azimuth</code><a class="headerlink" href="#controller.ComputationalParameters.n_azimuth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the input number of azimuthal angles.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The number of azimuthal angles.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="controller.ComputationalParameters.n_layers">
+<em class="property">property </em><code class="sig-name descname">n_layers</code><a class="headerlink" href="#controller.ComputationalParameters.n_layers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the input number of layers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The number of layers.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="controller.ComputationalParameters.n_moments">
+<em class="property">property </em><code class="sig-name descname">n_moments</code><a class="headerlink" href="#controller.ComputationalParameters.n_moments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the input number of moments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The number of moments.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="controller.ComputationalParameters.n_polar">
+<em class="property">property </em><code class="sig-name descname">n_polar</code><a class="headerlink" href="#controller.ComputationalParameters.n_polar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the input number of user_specified polar angles.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The number of polar angles.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="controller.ComputationalParameters.n_streams">
+<em class="property">property </em><code class="sig-name descname">n_streams</code><a class="headerlink" href="#controller.ComputationalParameters.n_streams" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the input number of streams.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The number of streams.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="controller.ComputationalParameters.n_user_levels">
+<em class="property">property </em><code class="sig-name descname">n_user_levels</code><a class="headerlink" href="#controller.ComputationalParameters.n_user_levels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the input number of user levels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The number of user levels.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="controller.ModelBehavior">
+<em class="property">class </em><code class="sig-prename descclassname">controller.</code><code class="sig-name descname">ModelBehavior</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">accuracy</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">delta_m_plus</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">do_pseudo_sphere</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">header</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">incidence_beam_conditions</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">only_fluxes</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">print_variables</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">radius</span><span class="o">=</span><span class="default_value">6371.0</span></em>, <em class="sig-param"><span class="n">user_angles</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">user_optical_depths</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.ModelBehavior" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a data structure for holding the DISORT control variables.</p>
+<p>ModelBehavior holds the control flags that dictate DISORT’s behavior. It
+also performs basic checks that the input control options are plausible.</p>
+<dl class="py method">
+<dt id="controller.ModelBehavior.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">accuracy</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">delta_m_plus</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">do_pseudo_sphere</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">header</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">incidence_beam_conditions</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">only_fluxes</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">print_variables</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">radius</span><span class="o">=</span><span class="default_value">6371.0</span></em>, <em class="sig-param"><span class="n">user_angles</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">user_optical_depths</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.ModelBehavior.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>accuracy</strong> (<em>float</em><em>, </em><em>optional</em>) – The convergence criterion for azimuthal (Fourier cosine) series.
+Will stop when the following occurs twice: largest term being added
+is less than ‘accuracy’ times total series sum (twice because
+there are cases where terms are anomalously small but azimuthal
+series has not converged). Should be between 0 and 0.01 to avoid
+risk of serious non-convergence. Has no effect on problems lacking a
+beam source, since azimuthal series has only one term in that case.
+Default is 0.0.</p></li>
+<li><p><strong>delta_m_plus</strong> (<em>bool</em><em>, </em><em>optional</em>) – Denote whether to use the delta-M+ method of Lin et al. (2018).
+Default is False.</p></li>
+<li><p><strong>do_pseudo_sphere</strong> (<em>bool</em><em>, </em><em>optional</em>) – Denote whether to use a pseudo-spherical correction. Default is
+False.</p></li>
+<li><p><strong>header</strong> (<em>str</em><em>, </em><em>optional</em>) – Use a 127- (or less) character header for prints, embedded in the
+DISORT banner. Input headers greater than 127 characters will be
+truncated. Setting header=’’ will eliminate both the banner and the
+header, and this is the only way to do so (‘header’ is not
+controlled by any of the ‘print’ flags); ‘header’ can be used
+to mark the progress of a calculation in which DISORT is called many
+times, while leaving all other printing turned off. Default is ‘’.</p></li>
+<li><p><strong>incidence_beam_conditions</strong> (<em>bool</em><em>, </em><em>optional</em>) – <p>Denote what functions of the incidence beam angle should be
+included. If True, return the albedo and transmissivity of the
+entire medium as a function of incidence beam angle. In this case,
+the following inputs are the only ones considered by DISORT:</p>
+<ul>
+<li><p>n_layers (from ComputationalParameters)</p></li>
+<li><p>DTAUC</p></li>
+<li><p>SSALB</p></li>
+<li><p>PMOM</p></li>
+<li><p>n_streams (from ComputationalParameters)</p></li>
+<li><p>user_angles (from this class)</p></li>
+<li><p>n_polar (from ComputationalParameters)</p></li>
+<li><p>UMU</p></li>
+<li><p>ALBEDO</p></li>
+<li><p>print_variables (from this class)</p></li>
+<li><p>header (from this class)</p></li>
+</ul>
+<p>PLANK is assumed to be False, LAMBER is assumed to be True, and
+ONLYFL must be False. The only output is ALBMED and TRNMED. The
+intensities are not corrected for delta-M+ correction.</p>
+<p>If False, this is accommodates any general case of boundary
+conditions including beam illumination from the top, isotropic
+illumination from the top, thermal emission from the top, internal
+thermal emission, reflection at the bottom, and/or thermal emission
+from the bottom. Default is False.</p>
+</p></li>
+<li><p><strong>only_fluxes</strong> (<em>bool</em><em>, </em><em>optional</em>) – Determine if only the fluxes are returned by the model. If True,
+return fluxes, flux divergences, and mean intensities; if False,
+return all those quantities and intensities. In addition, if True
+the number of polar angles can be 0, the number of azimuthal angles
+can be 0, phi is not used, and all values of intensity (UU) will be
+set to 0 (these are defined in ComputationalParameters). Default is
+False.</p></li>
+<li><p><strong>print_variables</strong> (<em>list</em><em>[</em><em>bool</em><em>]</em><em>, </em><em>optional</em>) – <p>Make a list of variables that control what DISORT prints. The 5
+booleans control whether each of the following is printed:</p>
+<ol class="arabic simple">
+<li><p>Input variables (except PMOM)</p></li>
+<li><p>Fluxes</p></li>
+<li><p>Intensities at user levels and angles</p></li>
+<li><p>Planar transmissivity and planar albedo as a function of solar zenith angle (incidence_beam_conditions == True)</p></li>
+<li><p>PMOM for each layer (but only if 1. == True and only for layers with scattering)</p></li>
+</ol>
+<p>Default is None, which makes [False, False, False, False, False].</p>
+</p></li>
+<li><p><strong>radius</strong> (<em>float</em><em>, </em><em>optional</em>) – The planetary radius. This is presumably only used if
+do_pseudo_sphere == True, although there is no documentation on
+this. Default is 6371.0.</p></li>
+<li><p><strong>user_angles</strong> (<em>bool</em><em>, </em><em>optional</em>) – Denote whether radiant quantities should be returned at user angles.
+If False, radiant quantities are to be returned at computational
+polar angles. Also, UMU will return the cosines of the computational
+polar angles and n_polar (from ComputationalParameters) will return
+their number ( = n_streams).UMU must
+be large enough to contain n_streams elements. If True,
+radiant quantities are to be returned at user-specified polar
+angles, as follows: NUMU No. of polar angles (zero is a legal value
+only when ‘only_fluxes’ == True ) UMU(IU) IU=1 to NUMU, cosines of
+output polar angles in increasing order—starting with negative
+(downward) values (if any) and on through positive (upward)
+values; <strong>* MUST NOT HAVE ANY ZERO VALUES *</strong>. Default is True.</p></li>
+<li><p><strong>user_optical_depths</strong> (<em>bool</em><em>, </em><em>optional</em>) – Denote whether radiant quantities are returned at user-specified
+optical depths. Default is False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – Raised if any inputs cannot be cast to the correct type.</p></li>
+<li><p><strong>ValueError</strong> – Raised if any inputs cannot be cast to the correct type or if
+    print_variables does not have 5 elements.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<dl class="simple">
+<dt>UserWarning</dt><dd><p>Raised if accuracy is not between 0 and 0.01.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="controller.ModelBehavior.accuracy">
+<em class="property">property </em><code class="sig-name descname">accuracy</code><a class="headerlink" href="#controller.ModelBehavior.accuracy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the input accuracy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The accuracy.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named “ACCUR”.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="controller.ModelBehavior.delta_m_plus">
+<em class="property">property </em><code class="sig-name descname">delta_m_plus</code><a class="headerlink" href="#controller.ModelBehavior.delta_m_plus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get whether to use delta-M+ scaling.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>True if delta-M+ scaling is requested; False otherwise.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named “DELTAMPLUS”. There is no
+documentation on this variable.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="controller.ModelBehavior.do_pseudo_sphere">
+<em class="property">property </em><code class="sig-name descname">do_pseudo_sphere</code><a class="headerlink" href="#controller.ModelBehavior.do_pseudo_sphere" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get whether to perform a pseudo-spherical correction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>True if a pseudo-spherical correction is requested; False otherwise.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named “DO_PSEUDO_SPHERE”. There is no
+documentation on this variable.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="controller.ModelBehavior.header">
+<em class="property">property </em><code class="sig-name descname">header</code><a class="headerlink" href="#controller.ModelBehavior.header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the characters that will appear in the DISORT banner.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The characters in the DISORT banner.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named “HEADER”.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="controller.ModelBehavior.incidence_beam_conditions">
+<em class="property">property </em><code class="sig-name descname">incidence_beam_conditions</code><a class="headerlink" href="#controller.ModelBehavior.incidence_beam_conditions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get whether the model will only return albedo and transmissivity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>True if DISORT should only return albedo and transmissivity; False
+otherwise.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="controller.ModelBehavior.only_fluxes">
+<em class="property">property </em><code class="sig-name descname">only_fluxes</code><a class="headerlink" href="#controller.ModelBehavior.only_fluxes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get whether DISORT should only return fluxes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>True if only fluxes are requested; False if fluxes and intensities
+are requested.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named “ONLYFL”.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="controller.ModelBehavior.print_variables">
+<em class="property">property </em><code class="sig-name descname">print_variables</code><a class="headerlink" href="#controller.ModelBehavior.print_variables" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the variables to print.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The variables to print</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list[bool]</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named “PRNT”.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="controller.ModelBehavior.radius">
+<em class="property">property </em><code class="sig-name descname">radius</code><a class="headerlink" href="#controller.ModelBehavior.radius" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the planetary radius.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The planetary radius.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named “EARTH_RADIUS”. There is no
+documentation on this variable, though I’m presuming it could be any
+planetary radius.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="controller.ModelBehavior.user_angles">
+<em class="property">property </em><code class="sig-name descname">user_angles</code><a class="headerlink" href="#controller.ModelBehavior.user_angles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get whether radiant quantities should be returned at user angles.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>True if quantities are returned at user-specified angles; False if
+they are returned at computational polar angles.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named “USRANG”.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="controller.ModelBehavior.user_optical_depths">
+<em class="property">property </em><code class="sig-name descname">user_optical_depths</code><a class="headerlink" href="#controller.ModelBehavior.user_optical_depths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get whether radiant quantities should be returned at user optical
+depths.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>True if quantities are returned at user optical depths; False if
+they are returned at the boundary of every computational layer.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named “USRTAU”.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="controller.OutputArrays">
+<em class="property">class </em><code class="sig-prename descclassname">controller.</code><code class="sig-name descname">OutputArrays</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">computational_params</span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.OutputArrays" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a data structure to make the DISORT output arrays.</p>
+<p>OutputArrays creates arrays of 0s that are designed to get populated with
+values as DISORT runs.</p>
+<dl class="py method">
+<dt id="controller.OutputArrays.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">computational_params</span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.OutputArrays.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>computational_params</strong> (<a class="reference internal" href="#controller.ComputationalParameters" title="controller.ComputationalParameters"><em>ComputationalParameters</em></a>) – Data structure holding the model computational variables.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>TypeError</strong> – Raised if input is not an instance of ComputationalParameters.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="controller.OutputArrays.albedo_medium">
+<em class="property">property </em><code class="sig-name descname">albedo_medium</code><a class="headerlink" href="#controller.OutputArrays.albedo_medium" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the albedo of the medium output array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The albedo of the medium.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named “ALBMED”.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="controller.OutputArrays.diffuse_down_flux">
+<em class="property">property </em><code class="sig-name descname">diffuse_down_flux</code><a class="headerlink" href="#controller.OutputArrays.diffuse_down_flux" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the diffuse downward flux output array, which will be the total
+downward flux minus the direct beam flux.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The diffuse downward flux.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named “RFLDN”.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="controller.OutputArrays.diffuse_up_flux">
+<em class="property">property </em><code class="sig-name descname">diffuse_up_flux</code><a class="headerlink" href="#controller.OutputArrays.diffuse_up_flux" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the diffuse upward flux output array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The diffuse upward flux.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named “FLUP”.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="controller.OutputArrays.direct_beam_flux">
+<em class="property">property </em><code class="sig-name descname">direct_beam_flux</code><a class="headerlink" href="#controller.OutputArrays.direct_beam_flux" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the direct beam flux output array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The direct beam flux.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named “RFLDIR”.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="controller.OutputArrays.flux_divergence">
+<em class="property">property </em><code class="sig-name descname">flux_divergence</code><a class="headerlink" href="#controller.OutputArrays.flux_divergence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the flux divergence output array, which is will represent
+(d(net_flux) / d(optical_depth)). This is an exact result.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The flux divergence.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named “DFDT”.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="controller.OutputArrays.intensity">
+<em class="property">property </em><code class="sig-name descname">intensity</code><a class="headerlink" href="#controller.OutputArrays.intensity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the intensity output array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The intensity.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named “UU”.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="controller.OutputArrays.mean_intensity">
+<em class="property">property </em><code class="sig-name descname">mean_intensity</code><a class="headerlink" href="#controller.OutputArrays.mean_intensity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the mean intensity output array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The mean intensity.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named “UAVG”.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="controller.OutputArrays.transmissivity_medium">
+<em class="property">property </em><code class="sig-name descname">transmissivity_medium</code><a class="headerlink" href="#controller.OutputArrays.transmissivity_medium" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the transmissivity of the medium output array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The transmissivity of the medium.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named “TRNMED”.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="controller.UserLevel">
+<em class="property">class </em><code class="sig-prename descclassname">controller.</code><code class="sig-name descname">UserLevel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cp</span></em>, <em class="sig-param"><span class="n">mb</span></em>, <em class="sig-param"><span class="n">optical_depth_output</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.UserLevel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the user levels at which radiant quantities are returned.</p>
+<p>UserLevel checks that radiant quantities can be returned at user levels.</p>
+<dl class="py method">
+<dt id="controller.UserLevel.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cp</span></em>, <em class="sig-param"><span class="n">mb</span></em>, <em class="sig-param"><span class="n">optical_depth_output</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.UserLevel.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cp</strong> (<a class="reference internal" href="#controller.ComputationalParameters" title="controller.ComputationalParameters"><em>ComputationalParameters</em></a>) – The computational parameters</p></li>
+<li><p><strong>mb</strong> (<a class="reference internal" href="#controller.ModelBehavior" title="controller.ModelBehavior"><em>ModelBehavior</em></a>) – The model behavior</p></li>
+<li><p><strong>optical_depth_output</strong> (<em>np.ndarray</em><em> or </em><em>None</em>) – If radiant quantities are to be returned at user specified optical
+depths (as specified in mb) this is the monotonically increasing 1D
+array of optical depths where they should be output. It must not
+exceed the column integrated optical depth of DTAUC. If radiant
+quantities can simply be returned at the boundary of every
+computational layer (user_optical_depths = False) this can be None,
+and this object will create an array of 0s for the output. Default
+is None.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The documentation suggests if user_optical_depths = False, this array
+is populated with optical depths at the boundaries of the computational
+layers. However, this seems equal to DTAUC to me but with a 0 appended.
+Additionally, making this case work would require changing f2py to
+make this an output array… which I’m not inclined to do if you won’t
+use it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="controller.UserLevel.optical_depth_output">
+<em class="property">property </em><code class="sig-name descname">optical_depth_output</code><a class="headerlink" href="#controller.UserLevel.optical_depth_output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the input user optical depth array at user levels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The optical depth at user levels.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named “UTAU”.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="eos.html" class="btn btn-neutral float-right" title="Equation of State" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../modules.html" class="btn btn-neutral float-left" title="Modules" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, kconnour.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,9 +1,10 @@
 Additions:
+--- When I build documentation, I want to overwrite the old. Sometimes not all
+    files are changed
 --- Add an automatic linter
 --- Add ability to run all unit/integration tests with one command
 --- Can I get Github to automatically generate documentation when I push code?
 --- Move path.py to the utilities folder
---- Update README.md
 --- It still feels messy to me to have the disort4.0.99 stuff where it is
 --- Make ice PMOM
 --- Add ozone
@@ -22,7 +23,6 @@ Tests
 --- Make sure if I have 100 particle sizes, things don't go haywire...
 
 Next steps
---- Combine docs and builddocs
 --- Update the dependencies in setup.py
 --- Make a doc folder structure for rst files
 --- Rename the integrated tests as "test1" etc. since there's really no way
