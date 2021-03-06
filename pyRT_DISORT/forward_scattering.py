@@ -60,13 +60,14 @@ class GriddedForwardScatteringProperties:
     def __init__(self,
                  forward_scattering_properties: ForwardScatteringProperties,
                  particle_size_profile: np.ndarray,
-                 wavelengths: np.ndarray) -> None:
+                 wavelengths: np.ndarray, reference_wavelength: float) -> None:
         self.__fsp = forward_scattering_properties
         self.__size_inds, self.__wavelength_inds = \
             self.__get_nearest_neighbor_values(particle_size_profile, wavelengths)
         self.__gridded_c_scattering = self.__make_gridded_c_scattering()
         self.__gridded_c_extinction = self.__make_gridded_c_extinction()
         self.__gridded_ssa = self.__make_gridded_single_scattering_albedo()
+        self.__extinction = self.__make_extinction_grid(reference_wavelength)
 
     def __get_nearest_neighbor_values(self, particle_size_profile, wavelengths):
         size_indices = self.__get_nearest_indices(self.__fsp.particle_size_grid,
@@ -90,6 +91,11 @@ class GriddedForwardScatteringProperties:
     def __make_gridded_single_scattering_albedo(self) -> np.ndarray:
         return self.__gridded_c_scattering / self.__gridded_c_extinction
 
+    def __make_extinction_grid(self, reference_wavelength) -> np.ndarray:
+        size_ind, wav_ind = self.__get_nearest_neighbor_values(self.__fsp.particle_size_grid, np.array([reference_wavelength]))
+        extinction_profile = self.__fsp.extinction_cross_section[self.__size_inds, wav_ind]
+        return (self.__gridded_c_extinction.T / extinction_profile).T
+
     @property
     def scattering_cross_section(self) -> np.ndarray:
         return self.__gridded_c_scattering
@@ -102,17 +108,6 @@ class GriddedForwardScatteringProperties:
     def single_scattering_albedo(self) -> np.ndarray:
         return self.__gridded_ssa
 
-
-if __name__ == '__main__':
-    from astropy.io import fits
-    f = '/Users/kyco2464/repos/pyRT_DISORT/tests/aux/dust_properties.fits'
-    hdul = fits.open(f)
-    cext = hdul['primary'].data[:, :, 0]
-    csca = hdul['primary'].data[:, :, 1]
-    wavs = hdul['wavelengths'].data
-    psizes = hdul['particle_sizes'].data
-    wavelengths = np.ones((10, 50))
-    z = np.linspace(1, 1.5, num=20)
-    fsp = ForwardScatteringProperties(csca, cext, psizes, wavs)
-    g = GriddedForwardScatteringProperties(fsp, z, wavelengths)
-    print(g.scattering_cross_section)
+    @property
+    def extinction(self) -> np.ndarray:
+        return self.__extinction
