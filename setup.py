@@ -5,7 +5,7 @@ import sys
 
 
 class SetupDISORT:
-    def __init__(self, install_disort: bool = False) -> None:
+    def __init__(self, install_disort: bool = True) -> None:
         self.__project_path = self.__get_project_path()
         if install_disort:
             self.__install_disort()
