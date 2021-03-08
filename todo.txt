@@ -8,6 +8,7 @@ Documentation:
 --- When I build documentation, I want to overwrite the old. Sometimes not all
     files are changed
 --- Can I get Github to automatically generate documentation when I push code?
+--- Have "next" and "previous" only go through the example
 
 Additions:
 --- Add an automatic linter

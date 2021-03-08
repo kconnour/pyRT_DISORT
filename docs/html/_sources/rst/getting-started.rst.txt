@@ -9,3 +9,4 @@ simulate reflectance spectra of an atmosphere containing Martian dust.
    :caption: Getting started
 
    getting-started/installation
+   getting-started/sample_observation

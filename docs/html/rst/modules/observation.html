@@ -172,45 +172,47 @@
             
   <div class="section" id="module-observation">
 <span id="observation"></span><h1>Observation<a class="headerlink" href="#module-observation" title="Permalink to this headline">¶</a></h1>
-<p>observation.py contains data structures to hold quantities commonly found in
-an observation.</p>
+<p>The observation module contains data structures to hold and compute
+quantities commonly found in an observation.</p>
 <dl class="py class">
 <dt id="observation.Angles">
-<em class="property">class </em><code class="sig-prename descclassname">observation.</code><code class="sig-name descname">Angles</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">incidence_angles</span></em>, <em class="sig-param"><span class="n">emission_angles</span></em>, <em class="sig-param"><span class="n">phase_angles</span></em><span class="sig-paren">)</span><a class="headerlink" href="#observation.Angles" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a data structure that contains angles required by DISORT.</p>
-<p>Angles accepts observation angles and computes <span class="math notranslate nohighlight">\(\mu, \mu_0, \phi\)</span>,
-and <span class="math notranslate nohighlight">\(\phi_0\)</span> from these angles.</p>
+<em class="property">class </em><code class="sig-prename descclassname">observation.</code><code class="sig-name descname">Angles</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">incidence_angle</span></em>, <em class="sig-param"><span class="n">emission_angle</span></em>, <em class="sig-param"><span class="n">phase_angle</span></em><span class="sig-paren">)</span><a class="headerlink" href="#observation.Angles" title="Permalink to this definition">¶</a></dt>
+<dd><p>A data structure that contains angles required by DISORT.</p>
+<p>Angles accepts the incidence, emission, and phase angles from an observation
+and computes <span class="math notranslate nohighlight">\(\mu, \mu_0, \phi\)</span>, and <span class="math notranslate nohighlight">\(\phi_0\)</span> from these angles.</p>
 <dl class="py method">
 <dt id="observation.Angles.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">incidence_angles</span></em>, <em class="sig-param"><span class="n">emission_angles</span></em>, <em class="sig-param"><span class="n">phase_angles</span></em><span class="sig-paren">)</span><a class="headerlink" href="#observation.Angles.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">incidence_angle</span></em>, <em class="sig-param"><span class="n">emission_angle</span></em>, <em class="sig-param"><span class="n">phase_angle</span></em><span class="sig-paren">)</span><a class="headerlink" href="#observation.Angles.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>incidence_angles</strong> (<em>np.ndarray</em>) – Pixel incidence angles [degrees].</p></li>
-<li><p><strong>emission_angles</strong> (<em>np.ndarray</em>) – Pixel emission angles [degrees].</p></li>
-<li><p><strong>phase_angles</strong> (<em>np.ndarray</em>) – Pixel phase angles [degrees].</p></li>
+<li><p><strong>incidence_angle</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Pixel incidence angles [degrees].</p></li>
+<li><p><strong>emission_angle</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Pixel emission angles [degrees].</p></li>
+<li><p><strong>phase_angle</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Pixel phase angles [degrees].</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p><strong>ValueError</strong> – Raised if any of the input arrays contain non-numeric values, if
-    any of the angles contain values outside of their mathematically
-    valid range, or if the input arrays do not have the same shape.</p>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – Raised if any of the inputs are not an instance of numpy.ndarray, or
+    if the arrays contain non-numeric values.</p></li>
+<li><p><strong>ValueError</strong> – Raised if any of the input arrays contain values outside of their
+    mathematically valid range, or if the arrays cannot be broadcast
+    together.</p></li>
+</ul>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>pyRT_DISORT computes all angular quantities across multiple pixels at
-once to save computation time, but each DISORT run can only be done on a
-per-pixel basis. Therefore, each element in mu, mu0, phi, and phi0 are
-the expected DISORT inputs.</p>
+<p>This class can compute all of the angular quantities required by DISORT
+at once. The properties will have the same shape as the inputs.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="observation.Angles.emission">
 <em class="property">property </em><code class="sig-name descname">emission</code><a class="headerlink" href="#observation.Angles.emission" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the input emission angles [degrees].</p>
+<dd><p>Get the input emission angle [degrees].</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The input emission angles.</p>
+<dd class="field-odd"><p>The input emission angle.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>np.ndarray</p>
@@ -221,10 +223,10 @@ the expected DISORT inputs.</p>
 <dl class="py method">
 <dt id="observation.Angles.incidence">
 <em class="property">property </em><code class="sig-name descname">incidence</code><a class="headerlink" href="#observation.Angles.incidence" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the input incidence (solar zenith) angles [degrees].</p>
+<dd><p>Get the input incidence (solar zenith) angle [degrees].</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The input incidence angles.</p>
+<dd class="field-odd"><p>The input incidence angle.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>np.ndarray</p>
@@ -236,43 +238,43 @@ the expected DISORT inputs.</p>
 <dt id="observation.Angles.mu">
 <em class="property">property </em><code class="sig-name descname">mu</code><a class="headerlink" href="#observation.Angles.mu" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get <span class="math notranslate nohighlight">\(\mu\)</span> where <span class="math notranslate nohighlight">\(\mu\)</span> is the cosine of the input
-emission angles.</p>
+emission angle.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The cosine of the input emission angles.</p>
+<dd class="field-odd"><p>The cosine of the input emission angle.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>np.ndarray</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>Each element in this variable is named “UMU” in DISORT.</p>
+<p>Each element in this variable is named <code class="code docutils literal notranslate"><span class="pre">UMU</span></code> in DISORT.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="observation.Angles.mu0">
 <em class="property">property </em><code class="sig-name descname">mu0</code><a class="headerlink" href="#observation.Angles.mu0" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get <span class="math notranslate nohighlight">\(\mu_0\)</span> where <span class="math notranslate nohighlight">\(\mu_0\)</span> is the cosine of the input
-incidence angles.</p>
+incidence angle.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The cosine of the input incidence angles.</p>
+<dd class="field-odd"><p>The cosine of the input incidence angle.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>np.ndarray</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>Each element in this variable is named “UMU0” in DISORT.</p>
+<p>Each element in this variable is named <code class="code docutils literal notranslate"><span class="pre">UMU0</span></code> in DISORT.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="observation.Angles.phase">
 <em class="property">property </em><code class="sig-name descname">phase</code><a class="headerlink" href="#observation.Angles.phase" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the input phase angles [degrees].</p>
+<dd><p>Get the input phase angle [degrees].</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The input phase angles.</p>
+<dd class="field-odd"><p>The input phase angle.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>np.ndarray</p>
@@ -286,14 +288,14 @@ incidence angles.</p>
 <dd><p>Get <span class="math notranslate nohighlight">\(\phi\)</span> where <span class="math notranslate nohighlight">\(\phi\)</span> is the azimuth angle [degrees].</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The azimuth angles.</p>
+<dd class="field-odd"><p>The azimuth angle.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>np.ndarray</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>Each element in this variable is named “PHI” in DISORT.</p>
+<p>Each element in this variable is named <code class="code docutils literal notranslate"><span class="pre">PHI</span></code> in DISORT.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -309,81 +311,71 @@ incidence angles.</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>Each element in this variable is named “PHI0” in DISORT.</p>
+<p>Each element in this variable is named <code class="code docutils literal notranslate"><span class="pre">PHI0</span></code> in DISORT.</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt id="observation.Wavelengths">
-<em class="property">class </em><code class="sig-prename descclassname">observation.</code><code class="sig-name descname">Wavelengths</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">short_wavelengths</span></em>, <em class="sig-param"><span class="n">long_wavelengths</span></em><span class="sig-paren">)</span><a class="headerlink" href="#observation.Wavelengths" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a data structure that contains spectral info for DISORT.</p>
-<p>Wavelengths accepts observation wavelengths and computes their
-corresponding wavenumbers.</p>
+<dt id="observation.Spectral">
+<em class="property">class </em><code class="sig-prename descclassname">observation.</code><code class="sig-name descname">Spectral</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">short_wavelength</span></em>, <em class="sig-param"><span class="n">long_wavelength</span></em><span class="sig-paren">)</span><a class="headerlink" href="#observation.Spectral" title="Permalink to this definition">¶</a></dt>
+<dd><p>A data structure that contains spectral info required by DISORT.</p>
+<p>Spectral accepts the short and long wavelengths from an observation and
+computes their corresponding wavenumber.</p>
 <dl class="py method">
-<dt id="observation.Wavelengths.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">short_wavelengths</span></em>, <em class="sig-param"><span class="n">long_wavelengths</span></em><span class="sig-paren">)</span><a class="headerlink" href="#observation.Wavelengths.__init__" title="Permalink to this definition">¶</a></dt>
+<dt id="observation.Spectral.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">short_wavelength</span></em>, <em class="sig-param"><span class="n">long_wavelength</span></em><span class="sig-paren">)</span><a class="headerlink" href="#observation.Spectral.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>short_wavelengths</strong> (<em>np.ndarray</em>) – The short wavelengths [microns] for each spectral bin.</p></li>
-<li><p><strong>long_wavelengths</strong> (<em>np.ndarray</em>) – The long wavelengths [microns] for each spectral bin.</p></li>
+<li><p><strong>short_wavelength</strong> (<em>np.ndarray</em>) – The short wavelength [microns] for each spectral bin.</p></li>
+<li><p><strong>long_wavelength</strong> (<em>np.ndarray</em>) – The long wavelength [microns] for each spectral bin.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>IndexError</strong> – Raised if the input wavelengths are not the same shape.</p></li>
-<li><p><strong>TypeError</strong> – Raised if any of the inputs are not np.ndarrays.</p></li>
-<li><p><strong>ValueError</strong> – Raised if any of the input spectral arrays are not 1D arrays,
-    contain non-numeric values, contain non positive finite values, if
-    they are not both the same shape, or if any value in
-    long_wavelengths is not larger than the corresponding value in
-    short_wavelengths.</p></li>
+<li><p><strong>TypeError</strong> – Raised if any of the inputs are not np.ndarrays, or if the arrays
+    contain non-numeric values.</p></li>
+<li><p><strong>ValueError</strong> – Raised if either of the input spectral arrays contain unphysical
+    values (non-positive or infinite wavelengths), if they’re not the
+    same shape, or if any values in short_wavelength are larger than the
+    corresponding values in long_wavelength.</p></li>
 </ul>
 </dd>
 </dl>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<dl class="simple">
-<dt>UserWarning</dt><dd><p>Raised if any of the input wavelengths are not between 0.1 and 50
-microns</p>
-</dd>
-</dl>
-</div>
 <p class="rubric">Notes</p>
-<p>DISORT does not require either short_wavelengths or long_wavelengths,
-but these quantities are useful to use in pyRT_DISORT in order to obtain
-the spectral dependence of aerosol radiative properties. The
-corresponding wavenumbers are only sometimes used by DISORT. See the
-instance variable docstrings for more details.</p>
+<p>The wavenumbers corresponding to the input wavelengths are only
+sometimes used by DISORT. See the instance variable docstrings for more
+information.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="observation.Wavelengths.high_wavenumber">
-<em class="property">property </em><code class="sig-name descname">high_wavenumber</code><a class="headerlink" href="#observation.Wavelengths.high_wavenumber" title="Permalink to this definition">¶</a></dt>
+<dt id="observation.Spectral.high_wavenumber">
+<em class="property">property </em><code class="sig-name descname">high_wavenumber</code><a class="headerlink" href="#observation.Spectral.high_wavenumber" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the high wavenumbers [1/cm]—the wavenumbers corresponding to
 short_wavelength.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The high wavenumbers.</p>
+<dd class="field-odd"><p>The high wavenumber.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>np.ndarray</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>In DISORT, this variable is named “WVNMHI”. It is only needed by DISORT
-if thermal_emission (defined in ThermalEmission) == True, or if
-DISORT is run multiple times and BDREF is spectrally dependent.</p>
+<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">WVNMHI</span></code>. It is only needed by
+DISORT if <code class="code docutils literal notranslate"><span class="pre">thermal_emission==True</span></code> (defined in
+<a class="reference internal" href="flux.html#flux.ThermalEmission" title="flux.ThermalEmission"><code class="xref py py-class docutils literal notranslate"><span class="pre">flux.ThermalEmission</span></code></a>), or if DISORT is run multiple times and
+BDREF is spectrally dependent.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="observation.Wavelengths.long_wavelengths">
-<em class="property">property </em><code class="sig-name descname">long_wavelengths</code><a class="headerlink" href="#observation.Wavelengths.long_wavelengths" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the input long wavelengths [microns].</p>
+<dt id="observation.Spectral.long_wavelength">
+<em class="property">property </em><code class="sig-name descname">long_wavelength</code><a class="headerlink" href="#observation.Spectral.long_wavelength" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the input long wavelength [microns].</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The long wavelengths.</p>
+<dd class="field-odd"><p>The long wavelength.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>np.ndarray</p>
@@ -392,31 +384,32 @@ DISORT is run multiple times and BDREF is spectrally dependent.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="observation.Wavelengths.low_wavenumber">
-<em class="property">property </em><code class="sig-name descname">low_wavenumber</code><a class="headerlink" href="#observation.Wavelengths.low_wavenumber" title="Permalink to this definition">¶</a></dt>
+<dt id="observation.Spectral.low_wavenumber">
+<em class="property">property </em><code class="sig-name descname">low_wavenumber</code><a class="headerlink" href="#observation.Spectral.low_wavenumber" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the low wavenumbers [1/cm]—the wavenumbers associated with
 long_wavelength.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The low wavenumbers.</p>
+<dd class="field-odd"><p>The low wavenumber.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>np.ndarray</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>In DISORT, this variable is named “WVNMLO”. It is only needed by DISORT
-if thermal_emission (defined in ThermalEmission) == True, or if
-DISORT is run multiple times and BDREF is spectrally dependent.</p>
+<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">WVNMLO</span></code>. It is only needed by
+DISORT if <code class="code docutils literal notranslate"><span class="pre">thermal_emission==True</span></code> (defined in
+<a class="reference internal" href="flux.html#flux.ThermalEmission" title="flux.ThermalEmission"><code class="xref py py-class docutils literal notranslate"><span class="pre">flux.ThermalEmission</span></code></a>), or if DISORT is run multiple times and
+BDREF is spectrally dependent.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="observation.Wavelengths.short_wavelengths">
-<em class="property">property </em><code class="sig-name descname">short_wavelengths</code><a class="headerlink" href="#observation.Wavelengths.short_wavelengths" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the input short wavelengths [microns].</p>
+<dt id="observation.Spectral.short_wavelength">
+<em class="property">property </em><code class="sig-name descname">short_wavelength</code><a class="headerlink" href="#observation.Spectral.short_wavelength" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the input short wavelength [microns].</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The short wavelengths.</p>
+<dd class="field-odd"><p>The short wavelength.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>np.ndarray</p>

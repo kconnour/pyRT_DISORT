@@ -1,283 +1,318 @@
-from unittest import TestCase
 import numpy as np
-import numpy.testing as npt
-from pyRT_DISORT.observation import Angles, Wavelengths
+import pytest
+from pyRT_DISORT.observation import Angles, Spectral
 
 
-class TestAngles(TestCase):
-    def setUp(self) -> None:
-        self.dummy_angles = np.linspace(1, 50, num=2)
+class TestAngles:
+    def setup(self) -> None:
+        self.dummy_angles = np.outer(np.linspace(5, 10, num=15),
+                                     np.linspace(5, 8, num=20))
         self.angles = Angles(self.dummy_angles, self.dummy_angles,
                              self.dummy_angles)
-        self.str_angles = np.linspace(1, 50, num=2, dtype=str)
-        self.odd = np.array([1, 2, 3])
-        self.zero = np.array([0])
-        self.one = np.array([1])
-        self.forty_five = np.array([45])
-        self.sixty = np.array([60])
-        self.ninety = np.array([90])
-        self.one_eighty = np.array([180])
-        self.small_neg = np.array([np.nextafter(0, -1)])
-        self.test_2d_array = np.ones((10, 5))
 
 
 class TestAnglesInit(TestAngles):
-    def test_incidence_angles_outside_0_to_180_raises_value_error(self) -> None:
-        Angles(self.zero, self.one, self.one)
-        Angles(self.one_eighty, self.one, self.one)
-        with self.assertRaises(ValueError):
-            Angles(self.small_neg, self.one, self.one)
-        with self.assertRaises(ValueError):
-            test_angle = np.array([np.nextafter(181, 181)])
-            Angles(test_angle, self.one, self.one)
-
-    def test_oddly_shaped_incidence_angles_raises_value_error(self) -> None:
-        with self.assertRaises(ValueError):
-            Angles(self.odd, self.dummy_angles, self.dummy_angles)
-
-    def test_array_of_strs_incidence_angles_raises_value_error(self) -> None:
-        with self.assertRaises(ValueError):
-            Angles(self.str_angles, self.dummy_angles, self.dummy_angles)
-
-    def test_emission_angles_outside_0_to_90_raises_value_error(self) -> None:
-        Angles(self.one, self.zero, self.one)
-        Angles(self.one, self.ninety, self.one)
-        with self.assertRaises(ValueError):
-            Angles(self.one, self.small_neg, self.one)
-        with self.assertRaises(ValueError):
-            test_angle = np.array([np.nextafter(90, 91)])
-            Angles(self.one, test_angle, self.one)
-
-    def test_oddly_shaped_emission_angles_raises_value_error(self) -> None:
-        with self.assertRaises(ValueError):
-            Angles(self.dummy_angles, self.odd, self.dummy_angles)
-
-    def test_array_of_strs_emission_angles_raises_value_error(self) -> None:
-        with self.assertRaises(ValueError):
-            Angles(self.dummy_angles, self.str_angles, self.dummy_angles)
-
-    def test_phase_angles_outside_0_to_180_raises_value_error(self) -> None:
-        Angles(self.one, self.one, self.zero)
-        Angles(self.one, self.one, self.one_eighty)
-        with self.assertRaises(ValueError):
-            Angles(self.one, self.one, self.small_neg)
-        with self.assertRaises(ValueError):
-            test_angle = np.array([np.nextafter(180, 181)])
-            Angles(self.one, self.one, test_angle)
-
-    def test_oddly_shaped_phase_angles_raises_value_error(self) -> None:
-        with self.assertRaises(ValueError):
-            Angles(self.dummy_angles, self.dummy_angles, self.odd)
-
-    def test_array_of_strs_phase_angles_raises_value_error(self) -> None:
-        with self.assertRaises(ValueError):
-            Angles(self.dummy_angles, self.dummy_angles, self.str_angles)
+    def test_angles_contains_7_attributes(self) -> None:
+        assert len(self.angles.__dict__.items()) == 7
 
 
 class TestIncidence(TestAngles):
-    def test_incidence_angles_is_unchanged(self) -> None:
+    def test_incidence_angle_is_unchanged(self) -> None:
         incidence_angle = self.dummy_angles + 10
-        a = Angles(incidence_angle, self.dummy_angles, self.dummy_angles)
-        self.assertTrue(np.array_equal(incidence_angle, a.incidence))
+        angles = Angles(incidence_angle, self.dummy_angles, self.dummy_angles)
+        assert np.array_equal(incidence_angle, angles.incidence)
 
-    def test_incidence_angles_is_read_only(self) -> None:
-        with self.assertRaises(AttributeError):
+    def test_incidence_angle_is_read_only(self) -> None:
+        with pytest.raises(AttributeError):
             self.angles.incidence = self.dummy_angles
+
+    def test_incidence_angle_outside_0_to_180_raises_value_error(self) -> None:
+        Angles(np.array([0]), np.array([1]), np.array([1]))
+        Angles(np.array([180]), np.array([1]), np.array([1]))
+        too_low = np.array([np.nextafter(0, -1)])
+        too_high = np.array([np.nextafter(181, 181)])
+        with pytest.raises(ValueError):
+            Angles(too_low, np.array([1]), np.array([1]))
+        with pytest.raises(ValueError):
+            Angles(too_high, np.array([1]), np.array([1]))
+
+    def test_array_of_string_incidence_angle_raises_type_error(self) -> None:
+        str_angles = self.dummy_angles.astype('str')
+        with pytest.raises(TypeError):
+            Angles(str_angles, self.dummy_angles, self.dummy_angles)
+
+    def test_list_incidence_angle_raises_type_error(self) -> None:
+        list_angles = self.dummy_angles.tolist()
+        with pytest.raises(TypeError):
+            Angles(list_angles, self.dummy_angles, self.dummy_angles)
 
 
 class TestEmission(TestAngles):
-    def test_emission_angles_is_unchanged(self) -> None:
-        emission_angle = self.dummy_angles + 10
-        a = Angles(self.dummy_angles, emission_angle, self.dummy_angles)
-        self.assertTrue(np.array_equal(emission_angle, a.emission))
+    def test_emission_angle_is_unchanged(self) -> None:
+        emission_angle = self.dummy_angles + 5
+        angles = Angles(self.dummy_angles, emission_angle, self.dummy_angles)
+        assert np.array_equal(emission_angle, angles.emission)
 
-    def test_emission_angles_is_read_only(self) -> None:
-        with self.assertRaises(AttributeError):
+    def test_emission_angle_is_read_only(self) -> None:
+        with pytest.raises(AttributeError):
             self.angles.emission = self.dummy_angles
+
+    def test_emission_angle_outside_0_to_90_raises_value_error(self) -> None:
+        Angles(np.array([1]), np.array([0]), np.array([1]))
+        Angles(np.array([1]), np.array([90]), np.array([1]))
+        too_low = np.array([np.nextafter(0, -1)])
+        too_high = np.array([np.nextafter(90, 91)])
+        with pytest.raises(ValueError):
+            Angles(np.array([1]), too_low, np.array([1]))
+        with pytest.raises(ValueError):
+            Angles(np.array([1]), too_high, np.array([1]))
+
+    def test_array_of_string_emission_angle_raises_type_error(self) -> None:
+        str_angles = self.dummy_angles.astype('str')
+        with pytest.raises(TypeError):
+            Angles(self.dummy_angles, str_angles, self.dummy_angles)
+
+    def test_list_emission_angle_raises_type_error(self) -> None:
+        list_angles = self.dummy_angles.tolist()
+        with pytest.raises(TypeError):
+            Angles(self.dummy_angles, list_angles, self.dummy_angles)
 
 
 class TestPhase(TestAngles):
-    def test_phase_angles_is_unchanged(self) -> None:
+    def test_phase_angle_is_unchanged(self) -> None:
         phase_angle = self.dummy_angles + 10
-        a = Angles(self.dummy_angles, self.dummy_angles, phase_angle)
-        self.assertTrue(np.array_equal(phase_angle, a.phase))
+        angles = Angles(self.dummy_angles, self.dummy_angles, phase_angle)
+        assert np.array_equal(phase_angle, angles.phase)
 
-    def test_phase_angles_is_read_only(self) -> None:
-        with self.assertRaises(AttributeError):
+    def test_phase_angle_is_read_only(self) -> None:
+        with pytest.raises(AttributeError):
             self.angles.phase = self.dummy_angles
+
+    def test_phase_angle_outside_0_to_180_raises_value_error(self) -> None:
+        Angles(np.array([0]), np.array([1]), np.array([1]))
+        Angles(np.array([180]), np.array([1]), np.array([1]))
+        too_low = np.array([np.nextafter(0, -1)])
+        too_high = np.array([np.nextafter(181, 181)])
+        with pytest.raises(ValueError):
+            Angles(np.array([1]), np.array([1]), too_low)
+        with pytest.raises(ValueError):
+            Angles(np.array([1]), np.array([1]), too_high)
+
+    def test_array_of_string_phase_angle_raises_type_error(self) -> None:
+        str_angles = self.dummy_angles.astype('str')
+        with pytest.raises(TypeError):
+            Angles(self.dummy_angles, self.dummy_angles, str_angles)
+
+    def test_list_phase_angle_raises_type_error(self) -> None:
+        list_angles = self.dummy_angles.tolist()
+        with pytest.raises(TypeError):
+            Angles(self.dummy_angles, self.dummy_angles, list_angles)
 
 
 class TestMu0(TestAngles):
-    def test_mu0_passes_test_cases(self):
-        a = Angles(self.zero, self.one, self.one)
-        self.assertEqual(1, a.mu0[0])
+    def test_mu0_passes_test_cases(self) -> None:
+        incidence = np.array([0, 45, 60, 90, 180])
+        expected_mu0 = np.array([1, np.sqrt(2) / 2, 0.5, 0, -1])
+        dummy_angles = np.ones(5)
+        angles = Angles(incidence, dummy_angles, dummy_angles)
+        assert np.allclose(angles.mu0, expected_mu0)
 
-        a = Angles(self.forty_five, self.one, self.one)
-        self.assertEqual(np.sqrt(2) / 2, a.mu0[0])
-
-        a = Angles(self.sixty, self.one, self.one)
-        self.assertAlmostEqual(0.5, a.mu0[0])
-
-        a = Angles(self.ninety, self.one, self.one)
-        self.assertAlmostEqual(0, a.mu0[0])
-
-        a = Angles(self.one_eighty, self.one, self.one)
-        self.assertEqual(-1, a.mu0[0])
-
-    def test_mu0_is_read_only(self):
-        with npt.assert_raises(AttributeError):
+    def test_mu0_is_read_only(self) -> None:
+        with pytest.raises(AttributeError):
             self.angles.mu0 = self.dummy_angles
 
-    def test_mu0_is_same_shape_as_incidence_angles(self):
-        self.assertEqual(self.angles.incidence.shape, self.angles.mu0.shape)
+    def test_mu0_is_same_shape_as_incidence_angles(self) -> None:
+        assert self.angles.mu0.shape == self.angles.incidence.shape
 
 
 class TestMu(TestAngles):
-    def test_mu_passes_test_cases(self):
-        a = Angles(self.one, self.zero, self.one)
-        self.assertEqual(1, a.mu[0])
+    def test_mu_passes_test_cases(self) -> None:
+        emission = np.array([0, 45, 60, 90])
+        expected_mu = np.array([1, np.sqrt(2) / 2, 0.5, 0])
+        dummy_angles = np.ones(4)
+        angles = Angles(dummy_angles, emission, dummy_angles)
+        assert np.allclose(angles.mu, expected_mu)
 
-        a = Angles(self.one, self.forty_five, self.one)
-        self.assertEqual(np.sqrt(2) / 2, a.mu[0])
-
-        a = Angles(self.one, self.sixty, self.one)
-        self.assertAlmostEqual(0.5, a.mu[0])
-
-        a = Angles(self.one, self.ninety, self.one)
-        self.assertAlmostEqual(0, a.mu[0])
-
-    def test_mu_is_read_only(self):
-        with npt.assert_raises(AttributeError):
+    def test_mu_is_read_only(self) -> None:
+        with pytest.raises(AttributeError):
             self.angles.mu = self.dummy_angles
 
-    def test_mu_is_same_shape_as_emission_angles(self):
-        self.assertEqual(self.angles.emission.shape, self.angles.mu.shape)
+    def test_mu_is_same_shape_as_emission_angles(self) -> None:
+        assert self.angles.mu.shape == self.angles.emission.shape
 
 
 class TestPhi0(TestAngles):
-    def test_phi0_is_always_0(self):
-        self.assertTrue(np.all(self.angles.phi0 == 0))
+    def test_phi0_is_always_0(self) -> None:
+        assert np.all(self.angles.phi0 == 0)
 
-    def test_phi0_is_read_only(self):
-        with npt.assert_raises(AttributeError):
+    def test_phi0_is_read_only(self) -> None:
+        with pytest.raises(AttributeError):
             self.angles.phi0 = self.dummy_angles
 
-    def test_phi0_is_same_shape_as_phase_angles(self):
-        self.assertEqual(self.angles.phase.shape, self.angles.phi0.shape)
+    def test_phi0_is_same_shape_as_phase_angles(self) -> None:
+        assert self.angles.phi0.shape == self.angles.phase.shape
 
 
 class TestPhi(TestAngles):
-    def test_phi_matches_disort_multi_computations(self):
-        a = Angles(self.zero, self.zero, self.zero)
-        self.assertEqual(0, a.phi[0])
+    # TODO: once I better understand phi, use analytic cases
+    def test_phi_matches_disort_multi_computations(self) -> None:
+        dummy_angles = np.array([0, 10, 70])
+        expected_phi = np.array([0, 119.747139, 104.764977])
+        angles = Angles(dummy_angles, dummy_angles, dummy_angles)
+        assert np.allclose(angles.phi, expected_phi)
 
-        a = Angles(np.array([10]), np.array([10]), np.array([10]))
-        self.assertAlmostEqual(119.747139, a.phi[0], places=4)
-
-        a = Angles(np.array([70]), np.array([70]), np.array([70]))
-        self.assertAlmostEqual(104.764977, a.phi[0], places=4)
-
-    def test_phi_is_read_only(self):
-        with npt.assert_raises(AttributeError):
+    def test_phi_is_read_only(self) -> None:
+        with pytest.raises(AttributeError):
             self.angles.phi = self.dummy_angles
 
-    def test_phi_is_same_shape_as_phase_angles(self):
-        self.assertEqual(self.angles.phase.shape, self.angles.phi.shape)
+    def test_phi_is_same_shape_as_phase_angles(self) -> None:
+        assert self.angles.phi.shape == self.angles.phase.shape
 
 
-class TestWavelengths(TestCase):
-    def setUp(self) -> None:
-        self.dummy_wavelengths = np.linspace(10, 20, num=50)
-        self.single_wavelength = np.array([10])
-        self.wavelengths_2d = np.broadcast_to(self.dummy_wavelengths, (10, 50))
-        self.test_wavelengths = Wavelengths(
-            self.dummy_wavelengths, self.dummy_wavelengths + 1)
-        self.known_wavelengths = np.array([10, 11])
-        self.known_wavenumbers = np.array([1000, 909.090909])
+class TestSpectral:
+    def setup(self) -> None:
+        dummy_wavelengths = np.array([1, 10, 15, 20])
+        grid = np.broadcast_to(dummy_wavelengths, (20, 15, 4))
+        width = 0.05
+        self.short_wavelength = grid - width
+        self.long_wavelength = grid + width
+        self.spectral = Spectral(self.short_wavelength, self.long_wavelength)
 
 
-class TestWavelengthsInit(TestWavelengths):
-    def test_float_short_wavelengths_raises_type_error(self):
-        with self.assertRaises(TypeError):
-            Wavelengths(10, self.single_wavelength)
-
-    def test_float_long_wavelengths_raises_type_error(self):
-        with self.assertRaises(TypeError):
-            Wavelengths(self.single_wavelength, 10)
-
-    def test_negative_short_wavelength_raises_value_error(self):
-        short = np.copy(self.dummy_wavelengths)
-        short[0] = np.nextafter(0, -1)
-        with self.assertRaises(ValueError):
-            Wavelengths(short, short + 1)
-
-    def test_infinite_long_wavelength_raises_value_error(self):
-        short = np.copy(self.dummy_wavelengths)
-        long = short + 1
-        long[-1] = np.inf
-        with self.assertRaises(ValueError):
-            Wavelengths(short, long)
-
-    def test_shorter_long_wavelength_raises_value_error(self):
-        short = np.copy(self.dummy_wavelengths)
-        long = short - 1
-        with self.assertRaises(ValueError):
-            Wavelengths(short, long)
-
-    def test_equal_input_raises_value_error(self):
-        with self.assertRaises(ValueError):
-            Wavelengths(self.dummy_wavelengths, self.dummy_wavelengths)
-
-    def test_2d_short_wavelengths_raises_value_error(self):
-        with self.assertRaises(ValueError):
-            Wavelengths(self.wavelengths_2d, self.dummy_wavelengths)
-
-    def test_2d_long_wavelengths_raises_value_error(self):
-        with self.assertRaises(ValueError):
-            Wavelengths(self.dummy_wavelengths, self.wavelengths_2d)
-
-    def test_index_error_raised_if_different_input_sizes(self):
-        short = np.copy(self.dummy_wavelengths)
-        long = short[:-1]
-        with self.assertRaises(IndexError):
-            Wavelengths(short, long)
+class TestSpectralInit(TestSpectral):
+    def test_spectral_contains_4_attributes(self) -> None:
+        assert len(self.spectral.__dict__.items()) == 4
 
 
-class TestShortWavelengths(TestWavelengths):
-    def test_short_wavelength_is_unmodified(self):
-        self.assertTrue(np.array_equal(
-            self.dummy_wavelengths, self.test_wavelengths.short_wavelengths))
+class TestShortWavelength(TestSpectral):
+    def test_short_wavelength_is_unchanged(self) -> None:
+        dummy_wavs = np.array([1, 10, 15, 20])
+        width = 0.05
+        short = dummy_wavs - width
+        long = dummy_wavs + width
+        wavelengths = Spectral(short, long)
+        assert np.array_equal(short, wavelengths.short_wavelength)
 
-    def test_short_wavelength_is_read_only(self):
-        with self.assertRaises(AttributeError):
-            self.test_wavelengths.short_wavelengths = self.dummy_wavelengths
+    def test_short_wavelength_is_read_only(self) -> None:
+        with pytest.raises(AttributeError):
+            self.spectral.short_wavelength = self.short_wavelength
+
+    def test_non_positive_short_wavelength_raises_value_error(self) -> None:
+        positive_short = np.copy(self.short_wavelength)
+        zero_short = np.copy(self.short_wavelength)
+        negative_short = np.copy(self.short_wavelength)
+        positive_short[0, 0, 0] = 1
+        zero_short[0, 0, 0] = 0
+        negative_short[0, 0, 0] = -1
+
+        Spectral(positive_short, self.long_wavelength)
+        with pytest.raises(ValueError):
+            Spectral(zero_short, self.long_wavelength)
+        with pytest.raises(ValueError):
+            Spectral(negative_short, self.long_wavelength)
+
+    def test_nan_short_wavelength_raises_value_error(self) -> None:
+        nan_short = np.copy(self.short_wavelength)
+        nan_short[0, 0, 0] = np.nan
+        with pytest.raises(ValueError):
+            Spectral(nan_short, self.long_wavelength)
+
+    def test_inf_short_wavelength_raises_value_error(self) -> None:
+        inf_short = np.copy(self.short_wavelength)
+        inf_short[0, 0, 0] = np.inf
+        with pytest.raises(ValueError):
+            Spectral(inf_short, self.long_wavelength)
+
+    def test_list_short_wavelength_raises_type_error(self) -> None:
+        list_short = np.copy(self.short_wavelength).tolist()
+        with pytest.raises(TypeError):
+            Spectral(list_short, self.long_wavelength)
+
+    def test_str_short_wavelength_raises_type_error(self) -> None:
+        str_short = np.copy(self.short_wavelength).astype('str')
+        with pytest.raises(TypeError):
+            Spectral(str_short, self.long_wavelength)
+
+    def test_differently_shaped_wavelengths_raises_value_error(self) -> None:
+        short = np.ones(10)
+        long = np.ones(11) + 1
+        with pytest.raises(ValueError):
+            Spectral(short, long)
+
+    def test_same_wavelengths_raises_value_error(self) -> None:
+        short = np.linspace(1, 50, num=50)
+        with pytest.raises(ValueError):
+            Spectral(short, short)
+
+    def test_longer_short_wavelength_raises_value_error(self) -> None:
+        short = np.linspace(1, 50, num=50)
+        with pytest.raises(ValueError):
+            Spectral(short, short - 0.5)
 
 
-class TestLongWavelengths(TestWavelengths):
-    def test_short_wavelength_is_unmodified(self):
-        self.assertTrue(np.array_equal(
-            self.dummy_wavelengths + 1, self.test_wavelengths.long_wavelengths))
+class TestLongWavelength(TestSpectral):
+    def test_long_wavelength_is_unchanged(self) -> None:
+        dummy_wavs = np.array([1, 10, 15, 20])
+        width = 0.05
+        short = dummy_wavs - width
+        long = dummy_wavs + width
+        wavelengths = Spectral(short, long)
+        assert np.array_equal(long, wavelengths.long_wavelength)
 
-    def test_short_wavelength_is_read_only(self):
-        with self.assertRaises(AttributeError):
-            self.test_wavelengths.long_wavelengths = self.dummy_wavelengths
+    def test_long_wavelength_is_read_only(self) -> None:
+        with pytest.raises(AttributeError):
+            self.spectral.long_wavelength = self.long_wavelength
+
+    def test_nan_long_wavelength_raises_value_error(self) -> None:
+        nan_long = np.copy(self.long_wavelength)
+        nan_long[0, 0, 0] = np.nan
+        with pytest.raises(ValueError):
+            Spectral(self.short_wavelength, nan_long)
+
+    def test_inf_long_wavelength_raises_value_error(self) -> None:
+        inf_long = np.copy(self.long_wavelength)
+        inf_long[0, 0, 0] = np.inf
+        with pytest.raises(ValueError):
+            Spectral(self.short_wavelength, inf_long)
+
+    def test_list_long_wavelength_raises_type_error(self) -> None:
+        list_long = np.copy(self.long_wavelength).tolist()
+        with pytest.raises(TypeError):
+            Spectral(self.short_wavelength, list_long)
+
+    def test_str_long_wavelength_raises_type_error(self) -> None:
+        str_long = np.copy(self.long_wavelength).astype('str')
+        with pytest.raises(TypeError):
+            Spectral(self.short_wavelength, str_long)
 
 
-class TestHighWavenumbers(TestWavelengths):
+class TestHighWavenumber(TestSpectral):
     def test_high_wavenumbers_match_known_values(self):
-        w = Wavelengths(self.known_wavelengths, self.known_wavelengths + 1)
-        npt.assert_almost_equal(self.known_wavenumbers, w.high_wavenumber)
+        wavelengths = np.array([1, 10, 15])
+        wavenumbers = np.array([10000, 1000, 666.66666])
+        spec = Spectral(wavelengths, wavelengths + 1)
+        assert np.allclose(spec.high_wavenumber, wavenumbers)
 
     def test_high_wavenumbers_is_read_only(self):
-        with self.assertRaises(AttributeError):
-            self.test_wavelengths.high_wavenumber = self.dummy_wavelengths
+        with pytest.raises(AttributeError):
+            self.spectral.high_wavenumber = 10**4 / self.short_wavelength
+
+    def test_high_wavenumber_is_same_shape_as_short_wavelength(self) -> None:
+        assert self.spectral.high_wavenumber.shape == \
+               self.spectral.short_wavelength.shape
 
 
-class TestLowWavenumbers(TestWavelengths):
+class TestLowWavenumber(TestSpectral):
     def test_low_wavenumbers_match_known_values(self):
-        w = Wavelengths(self.known_wavelengths - 1, self.known_wavelengths)
-        npt.assert_almost_equal(self.known_wavenumbers, w.low_wavenumber)
+        wavelengths = np.array([1, 10, 15])
+        wavenumbers = np.array([10000, 1000, 666.66666])
+        spec = Spectral(wavelengths - 0.5, wavelengths)
+        assert np.allclose(spec.low_wavenumber, wavenumbers)
 
     def test_low_wavenumbers_is_read_only(self):
-        with self.assertRaises(AttributeError):
-            self.test_wavelengths.low_wavenumber = self.dummy_wavelengths
+        with pytest.raises(AttributeError):
+            self.spectral.low_wavenumber = 10**4 / self.long_wavelength
+
+    def test_low_wavenumber_is_same_shape_as_long_wavelength(self) -> None:
+        assert self.spectral.low_wavenumber.shape == \
+               self.spectral.long_wavelength.shape
