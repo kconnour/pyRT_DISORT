@@ -46,6 +46,11 @@ class TestIncidence(TestAngles):
         with pytest.raises(TypeError):
             Angles(list_angles, self.dummy_angles, self.dummy_angles)
 
+    def test_oddly_shaped_incidence_angles_raises_value_error(self) -> None:
+        with pytest.raises(ValueError):
+            incidence = self.dummy_angles[:, :-1]
+            Angles(incidence, self.dummy_angles, self.dummy_angles)
+
 
 class TestEmission(TestAngles):
     def test_emission_angle_is_unchanged(self) -> None:
@@ -76,6 +81,11 @@ class TestEmission(TestAngles):
         list_angles = self.dummy_angles.tolist()
         with pytest.raises(TypeError):
             Angles(self.dummy_angles, list_angles, self.dummy_angles)
+
+    def test_oddly_shaped_emission_angles_raises_value_error(self) -> None:
+        with pytest.raises(ValueError):
+            emission = self.dummy_angles[:, :-1]
+            Angles(self.dummy_angles, emission, self.dummy_angles)
 
 
 class TestPhase(TestAngles):
@@ -108,9 +118,14 @@ class TestPhase(TestAngles):
         with pytest.raises(TypeError):
             Angles(self.dummy_angles, self.dummy_angles, list_angles)
 
+    def test_oddly_shaped_phase_angles_raises_value_error(self) -> None:
+        with pytest.raises(ValueError):
+            phase = self.dummy_angles[:, :-1]
+            Angles(self.dummy_angles, self.dummy_angles, phase)
+
 
 class TestMu0(TestAngles):
-    def test_mu0_passes_test_cases(self) -> None:
+    def test_mu0_matches_analytic_solution(self) -> None:
         incidence = np.array([0, 45, 60, 90, 180])
         expected_mu0 = np.array([1, np.sqrt(2) / 2, 0.5, 0, -1])
         dummy_angles = np.ones(5)
@@ -126,7 +141,7 @@ class TestMu0(TestAngles):
 
 
 class TestMu(TestAngles):
-    def test_mu_passes_test_cases(self) -> None:
+    def test_mu_matches_analytic_solution(self) -> None:
         emission = np.array([0, 45, 60, 90])
         expected_mu = np.array([1, np.sqrt(2) / 2, 0.5, 0])
         dummy_angles = np.ones(4)
@@ -287,7 +302,7 @@ class TestLongWavelength(TestSpectral):
 
 
 class TestHighWavenumber(TestSpectral):
-    def test_high_wavenumbers_match_known_values(self):
+    def test_high_wavenumber_matches_known_values(self):
         wavelengths = np.array([1, 10, 15])
         wavenumbers = np.array([10000, 1000, 666.66666])
         spec = Spectral(wavelengths, wavelengths + 1)
@@ -301,9 +316,13 @@ class TestHighWavenumber(TestSpectral):
         assert self.spectral.high_wavenumber.shape == \
                self.spectral.short_wavelength.shape
 
+    def test_all_pixels_have_same_high_wavenumber(self) -> None:
+        assert np.all(self.spectral.high_wavenumber ==
+                      self.spectral.high_wavenumber[0])
+
 
 class TestLowWavenumber(TestSpectral):
-    def test_low_wavenumbers_match_known_values(self):
+    def test_low_wavenumber_matches_known_values(self):
         wavelengths = np.array([1, 10, 15])
         wavenumbers = np.array([10000, 1000, 666.66666])
         spec = Spectral(wavelengths - 0.5, wavelengths)
@@ -316,3 +335,7 @@ class TestLowWavenumber(TestSpectral):
     def test_low_wavenumber_is_same_shape_as_long_wavelength(self) -> None:
         assert self.spectral.low_wavenumber.shape == \
                self.spectral.long_wavelength.shape
+
+    def test_all_pixels_have_same_low_wavenumber(self) -> None:
+        assert np.all(self.spectral.low_wavenumber ==
+                      self.spectral.low_wavenumber[0])

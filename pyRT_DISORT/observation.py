@@ -39,11 +39,6 @@ class Angles:
             mathematically valid range, or if the arrays cannot be broadcast
             together.
 
-        Notes
-        -----
-        This class can compute all of the angular quantities required by DISORT
-        at once. The properties will have the same shape as the inputs.
-
         """
         self.__incidence_angle = incidence_angle
         self.__emission_angle = emission_angle
@@ -84,7 +79,7 @@ class Angles:
     def __make_phi0(self) -> np.ndarray:
         return np.zeros(self.__phase_angle.shape)
 
-    # TODO: is there a less messy way to make this variable?
+    # TODO: is there a cleaner way to make this variable?
     def __compute_phi(self) -> np.ndarray:
         try:
             sin_emission_angle = np.sin(np.radians(self.__emission_angle))
@@ -210,6 +205,7 @@ class Angles:
 
 
 # TODO: These function names seem bad. raise_value_error also raises other error
+# TODO: Some wavelengths are impossibly small... filter those out
 class Spectral:
     """A data structure that contains spectral info required by DISORT.
 
@@ -223,9 +219,9 @@ class Spectral:
         """
         Parameters
         ----------
-        short_wavelength: np.ndarray
+        short_wavelength
             The short wavelength [microns] for each spectral bin.
-        long_wavelength: np.ndarray
+        long_wavelength
             The long wavelength [microns] for each spectral bin.
 
         Raises
@@ -238,12 +234,6 @@ class Spectral:
             values (non-positive or infinite wavelengths), if they're not the
             same shape, or if any values in short_wavelength are larger than the
             corresponding values in long_wavelength.
-
-        Notes
-        -----
-        The wavenumbers corresponding to the input wavelengths are only
-        sometimes used by DISORT. See the instance variable docstrings for more
-        information.
 
         """
         self.__short_wavelength = short_wavelength
