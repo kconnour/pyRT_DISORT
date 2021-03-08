@@ -65,6 +65,9 @@ model_eos = eos_from_array(eos_file.array, z_boundaries, 3.71, 7.3*10**-26)
 temperatures = model_eos.temperature_boundaries
 h_lyr = model_eos.scale_height_boundaries
 
+print(model_eos.column_density_layers)
+raise SystemExit(9)
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Construct aerosol/model properties
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

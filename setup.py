@@ -5,7 +5,7 @@ import sys
 
 
 class SetupDISORT:
-    def __init__(self, install_disort: bool = False) -> None:
+    def __init__(self, install_disort: bool = True) -> None:
         self.__project_path = self.__get_project_path()
         if install_disort:
             self.__install_disort()
@@ -52,12 +52,13 @@ class SetupDISORT:
             include_package_data=True,
             python_requires='>=3.9',
             install_requires=[
+                'Sphinx>=3.4.3',
                 'astropy>=4.1',
                 'numpy>=1.20.0',
                 'pandas>=1.2.1',
                 'pytest>=6.2.2',
                 'scipy>=1.6.0',
-                'sphinx_autodoc_typehints'
+                'sphinx_autodoc_typehints',
                 'sphinx-rtd-theme'
             ],
             package_data={'': ['../*.so']}
