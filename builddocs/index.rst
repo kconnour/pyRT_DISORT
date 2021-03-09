@@ -10,7 +10,7 @@ check out :doc:`rst/getting-started`, where I walk through an example of how use
 this package with Martian dust.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Useful links
 
    rst/getting-started

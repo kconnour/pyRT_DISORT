@@ -172,8 +172,80 @@
             
   <div class="section" id="module-eos">
 <span id="equation-of-state"></span><h1>Equation of State<a class="headerlink" href="#module-eos" title="Permalink to this headline">¶</a></h1>
-<p>eos.py contains data structures to hold equation of state variables used
-throughout the model.</p>
+<p>The eos module contains data structures to compute and hold equation of state
+variables used throughout pyRT_DISORT.</p>
+<dl class="py class">
+<dt id="eos.Hydrostatic">
+<em class="property">class </em><code class="sig-prename descclassname">eos.</code><code class="sig-name descname">Hydrostatic</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pressure</span></em>, <em class="sig-param"><span class="n">temperature</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eos.Hydrostatic" title="Permalink to this definition">¶</a></dt>
+<dd><p>A data structure computes a hydrostatic equation of state.</p>
+<p>Hydrostatic accepts pressure and temperature, and computes the
+corresponding number density to ensure the atmosphere follows the
+equation</p>
+<div class="math notranslate nohighlight">
+\[P = n k_B T\]</div>
+<p>where <span class="math notranslate nohighlight">\(P\)</span> is the pressure, <span class="math notranslate nohighlight">\(n\)</span> is the number density,
+<span class="math notranslate nohighlight">\(k_B\)</span> is Boltzmann’s constant, and <span class="math notranslate nohighlight">\(T\)</span> is the temperature.</p>
+<dl class="py method">
+<dt id="eos.Hydrostatic.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pressure</span></em>, <em class="sig-param"><span class="n">temperature</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eos.Hydrostatic.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pressure</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The pressure [Pa] of an arbitrarily sized grid.</p></li>
+<li><p><strong>temperature</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The temperature [K] of an arbitrarily sized grid.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – Raised if the input arrays cannot be broadcast together.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eos.Hydrostatic.number_density">
+<em class="property">property </em><code class="sig-name descname">number_density</code><a class="headerlink" href="#eos.Hydrostatic.number_density" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the number density computed from the input pressure and
+temperature.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The computed number density.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eos.Hydrostatic.pressure">
+<em class="property">property </em><code class="sig-name descname">pressure</code><a class="headerlink" href="#eos.Hydrostatic.pressure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the input pressure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The input pressure.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eos.Hydrostatic.temperature">
+<em class="property">property </em><code class="sig-name descname">temperature</code><a class="headerlink" href="#eos.Hydrostatic.temperature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the input temperature.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The input temperature.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="py class">
 <dt id="eos.ModelEquationOfState">
 <em class="property">class </em><code class="sig-prename descclassname">eos.</code><code class="sig-name descname">ModelEquationOfState</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">altitude_grid</span></em>, <em class="sig-param"><span class="n">pressure_grid</span></em>, <em class="sig-param"><span class="n">temperature_grid</span></em>, <em class="sig-param"><span class="n">number_density_grid</span></em>, <em class="sig-param"><span class="n">altitude_boundaries</span></em>, <em class="sig-param"><span class="n">particle_mass</span></em>, <em class="sig-param"><span class="n">gravity</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eos.ModelEquationOfState" title="Permalink to this definition">¶</a></dt>
@@ -317,41 +389,6 @@ if do_pseudo_sphere (defined in ModelBehavior) == True.</p>
 <p>In DISORT, this variable is named “TEMPER”.</p>
 </dd></dl>
 
-</dd></dl>
-
-<dl class="py function">
-<dt id="eos.eos_from_array">
-<code class="sig-prename descclassname">eos.</code><code class="sig-name descname">eos_from_array</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">atm</span></em>, <em class="sig-param"><span class="n">altitude_boundaries</span></em>, <em class="sig-param"><span class="n">particle_mass</span></em>, <em class="sig-param"><span class="n">gravity</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eos.eos_from_array" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a ModelEquationOfState from an array containing atmospheric equation
-of state variables. The array is assumed to be a 2D array, with the columns
-having the following meanings:</p>
-<p>0. The altitudes [km] at which the other equation of state variables are
-defined.
-1. The pressures [Pa] at the corresponding altitudes.
-2. The temperatures [K] at the corresponding altitudes.
-3. The number densities [particles / m**3] at the corresponding altitudes.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>atm</strong> (<em>np.ndarray</em>) – 2D array of atmospheric equation of state variables.</p></li>
-<li><p><strong>altitude_boundaries</strong> (<em>np.ndarray</em>) – The desired altitudes [km] of the model boundaries.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The modeled equation of state object.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#eos.ModelEquationOfState" title="eos.ModelEquationOfState">ModelEquationOfState</a></p>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>FileNotFoundError</strong> – Raised if the input file path does not exist.</p></li>
-<li><p><strong>IndexError</strong> – Raised in the input array does not have the expected shape.</p></li>
-<li><p><strong>TypeError</strong> – Raised if the input array path is not a string.</p></li>
-<li><p><strong>ValueError</strong> – Raised if the input array path does not lead to a .npy file.</p></li>
-</ul>
-</dd>
-</dl>
 </dd></dl>
 
 </div>

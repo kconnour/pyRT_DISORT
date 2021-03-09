@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Installation &mdash; pyRT_DISORT  documentation</title>
+  <title>Physical Grid &mdash; pyRT_DISORT  documentation</title>
   
 
   
@@ -39,8 +39,8 @@
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Sample Observation" href="sample_observation.html" />
-    <link rel="prev" title="Getting started" href="../getting-started.html" /> 
+    <link rel="next" title="Modules" href="../modules.html" />
+    <link rel="prev" title="Sample Observation" href="sample_observation.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -88,9 +88,9 @@
               <p class="caption"><span class="caption-text">Useful links</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../getting-started.html">Getting started</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sample_observation.html">Sample Observation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="physical_grid.html">Physical Grid</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Physical Grid</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../modules.html">Modules</a></li>
@@ -146,13 +146,13 @@
         
           <li><a href="../getting-started.html">Getting started</a> &raquo;</li>
         
-      <li>Installation</li>
+      <li>Physical Grid</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../../_sources/rst/getting-started/installation.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/rst/getting-started/physical_grid.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -165,23 +165,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="installation">
-<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
-<p>To install pyRT_DISORT, you must have gfortran installed on your computer.
-Assuming you have that, simply clone the repo and once you cd into that
-directory simply install it with <code class="code docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">.</span></code>. By default, this will
-create two importable packages:</p>
-<ol class="arabic simple">
-<li><p><code class="code docutils literal notranslate"><span class="pre">disort</span></code>
-This is a binarized version of the standard DISORT FORTRAN code (with very
-minor modifications for this project). This can take quite some time to
-install and since DISORT is not frequently updated, you can skip this step
-by setting <code class="code docutils literal notranslate"><span class="pre">install_disort=False</span></code> within <code class="code docutils literal notranslate"><span class="pre">setup.py</span></code>.</p></li>
-<li><p><code class="code docutils literal notranslate"><span class="pre">pyRT_DISORT</span></code>
-This is the pure Python project that will do the atmospheric pre-processing.</p></li>
-</ol>
-<p>You can now import the libraries with <code class="code docutils literal notranslate"><span class="pre">import</span> <span class="pre">disort</span></code> and/or
-<code class="code docutils literal notranslate"><span class="pre">import</span> <span class="pre">pyRT_DISORT</span> <span class="pre">as</span> <span class="pre">pyrt</span></code>.</p>
+  <div class="section" id="physical-grid">
+<h1>Physical Grid<a class="headerlink" href="#physical-grid" title="Permalink to this headline">¶</a></h1>
+<p>Now that we created the angular and spectral information, we can turn our
+attention to creating the model. Perhaps the most natural place to start is
+by defining the boundaries of the model. At each of the boundaries, we’ll also
+want to know the equation of state variables</p>
 </div>
 
 
@@ -190,8 +179,8 @@ This is the pure Python project that will do the atmospheric pre-processing.</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="sample_observation.html" class="btn btn-neutral float-right" title="Sample Observation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="../getting-started.html" class="btn btn-neutral float-left" title="Getting started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../modules.html" class="btn btn-neutral float-right" title="Modules" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="sample_observation.html" class="btn btn-neutral float-left" title="Sample Observation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

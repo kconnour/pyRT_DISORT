@@ -1,7 +1,6 @@
-import os
 from unittest import TestCase
 import numpy as np
-from pyRT_DISORT.eos import ModelEquationOfState, eos_from_array
+from pyRT_DISORT.eos import ModelEquationOfState
 
 
 class TestModelEquationOfState(TestCase):
@@ -81,24 +80,3 @@ class TestTemperatureBoundaries(TestModelEquationOfState):
         self.assertTrue(np.array_equal(expected_temperatures,
                                        eos.temperature_boundaries))
 
-
-class TestColumnDensityLayers(TestModelEquationOfState):
-    def test_column_density_calculated_reliably(self):
-        filepath = os.path.dirname(os.path.realpath(__file__))
-        f = np.load(os.path.join(filepath, 'mars_atm.npy'))
-        z = f[:, 0]
-        P = f[:, 1]
-        T = f[:, 2]
-        n = f[:, 3]
-        eos = ModelEquationOfState(z, P, T, n, z)
-        answer = np.load(os.path.join(filepath, 'colden.npy'))
-        self.assertTrue(np.array_equal(answer, eos.column_density_layers))
-
-
-class TestEOSFromArray(TestModelEquationOfState):
-    def test_column_density_calculated_reliably(self):
-        filepath = os.path.dirname(os.path.realpath(__file__))
-        f = np.load(os.path.join(filepath, 'mars_atm.npy'))
-        eos = eos_from_array(f, f[:, 0])
-        answer = np.load(os.path.join(filepath, 'colden.npy'))
-        self.assertTrue(np.array_equal(answer, eos.column_density_layers))

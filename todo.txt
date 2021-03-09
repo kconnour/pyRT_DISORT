@@ -3,8 +3,7 @@ Setup:
 --- Update the dependencies in setup.py
 
 Documentation:
---- Check I can build the docs from the html folder within the docs with Github
-    Pages
+--- try to make a dummy index.html so docs can all be on one folder
 --- When I build documentation, I want to overwrite the old. Sometimes not all
     files are changed
 --- Can I get Github to automatically generate documentation when I push code?
@@ -34,3 +33,8 @@ Tests:
     I can say what they're testing in the name. But do provide a docstring
     at the top that states specifically what it tests for. Also, now that I can
     do many pixels at once, I can combine a number of the tests.
+
+Miscellaneous:
+--- @property type hints and return types are redundant
+--- If a class inherited properties from another class, they're not showing up
+    in the documentation

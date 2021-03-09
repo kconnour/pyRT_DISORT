@@ -1,16 +1,91 @@
-"""eos.py contains data structures to hold equation of state variables used
-throughout the model.
+"""The eos module contains data structures to compute and hold equation of state
+variables used throughout pyRT_DISORT.
 """
-import warnings
 import numpy as np
 from scipy.constants import Boltzmann
-from pyRT_DISORT.utilities.array_checks import ArrayChecker
 from scipy.integrate import quadrature as quad
 
 
+class Hydrostatic:
+    r"""A data structure computes a hydrostatic equation of state.
+
+    Hydrostatic accepts pressure and temperature, and computes the
+    corresponding number density to ensure the atmosphere follows the
+    equation
+
+    .. math::
+       P = n k_B T
+
+    where :math:`P` is the pressure, :math:`n` is the number density,
+    :math:`k_B` is Boltzmann's constant, and :math:`T` is the temperature.
+
+    """
+
+    def __init__(self, pressure: np.ndarray, temperature: np.ndarray) -> None:
+        """
+        Parameters
+        ----------
+        pressure
+            The pressure [Pa] of an arbitrarily sized grid.
+        temperature
+            The temperature [K] of an arbitrarily sized grid.
+
+        Raises
+        ------
+        ValueError
+            Raised if the input arrays cannot be broadcast together.
+
+        """
+        self.__pressure = pressure
+        self.__temperature = temperature
+        self.__number_density = self.__compute_number_density()
+
+    def __compute_number_density(self) -> np.ndarray:
+        try:
+            return self.__pressure / self.__temperature / Boltzmann
+        except ValueError as ve:
+            message = 'The input arrays must have the same shape.'
+            raise ValueError(message) from ve
+
+    @property
+    def pressure(self) -> np.ndarray:
+        """Get the input pressure.
+
+        Returns
+        -------
+        np.ndarray
+            The input pressure.
+
+        """
+        return self.__pressure
+
+    @property
+    def temperature(self) -> np.ndarray:
+        """Get the input temperature.
+
+        Returns
+        -------
+        np.ndarray
+            The input temperature.
+
+        """
+        return self.__temperature
+
+    @property
+    def number_density(self) -> np.ndarray:
+        """Get the number density computed from the input pressure and
+        temperature.
+
+        Returns
+        -------
+        np.ndarray
+            The computed number density.
+
+        """
+        return self.__number_density
+
+
 # TODO: Mike said to do this in log(z) space. Is this still necessary?
-# TODO: I ask for a z grid to interpolate onto but a P grid would be a nice
-#  option
 class ModelEquationOfState:
     """Compute equation of state variables on a model grid.
 
@@ -276,43 +351,3 @@ class ModelEquationOfState:
 
         """
         return self.__scale_height_boundaries
-
-
-def eos_from_array(atm: np.ndarray, altitude_boundaries: np.ndarray, particle_mass, gravity) \
-        -> ModelEquationOfState:
-    """Create a ModelEquationOfState from an array containing atmospheric equation
-    of state variables. The array is assumed to be a 2D array, with the columns
-    having the following meanings:
-
-    0. The altitudes [km] at which the other equation of state variables are
-    defined.
-    1. The pressures [Pa] at the corresponding altitudes.
-    2. The temperatures [K] at the corresponding altitudes.
-    3. The number densities [particles / m**3] at the corresponding altitudes.
-
-    Parameters
-    ----------
-    atm: np.ndarray
-        2D array of atmospheric equation of state variables.
-    altitude_boundaries: np.ndarray
-        The desired altitudes [km] of the model boundaries.
-
-    Returns
-    -------
-    ModelEquationOfState
-        The modeled equation of state object.
-
-    Raises
-    ------
-    FileNotFoundError
-        Raised if the input file path does not exist.
-    IndexError
-        Raised in the input array does not have the expected shape.
-    TypeError
-        Raised if the input array path is not a string.
-    ValueError
-        Raised if the input array path does not lead to a .npy file.
-
-    """
-    return ModelEquationOfState(atm[:, 0], atm[:, 1], atm[:, 2], atm[:, 3],
-                                altitude_boundaries, particle_mass, gravity)
