@@ -4,4 +4,51 @@ Physical Grid
 Now that we created the angular and spectral information, we can turn our
 attention to creating the model. Perhaps the most natural place to start is
 by defining the boundaries of the model. At each of the boundaries, we'll also
-want to know the equation of state variables
+want to know the equation of state variables. We'll also want to know the
+column density within each of the layers.
+
+Hydrostatic
+-----------
+Suppose you have a generic temperature and pressure profile. This could be
+because you have limited knowledge of the atmosphere so you're using a typical
+profile, or perhaps you have measured profiles. It's important for the
+upcoming steps that we have the atmospheric number density and column density.
+:class:`eos.Hydrostatic` is a basic utility class that computes the number
+density from pressure and temperature profiles assuming the atmosphere is in
+hydrostatic equilibrium. I'll make some basic profiles here.
+
+.. literalinclude:: example_simulation.py
+   :language: python
+   :lines: 21-23
+
+We can add these profiles to :code:`Hydrostatic` and access the variables via
+the properties.
+
+.. literalinclude:: example_simulation.py
+   :language: python
+   :lines: 25-30
+
+As you'd expect, the :code:`number_density` has shape (50)---same as the input
+pressure and temperature. Now that we've created the number density, we can
+move on to the column density.
+
+.. note::
+   As with the observational quantities, this accepts ND input so in theory
+   if you have an image with :code:`MxN` pixels and happen to know the
+   pressures and temperatures at 50 points above each of the pixels, you can
+   input :code:`MxNx50` arrays and get the corresponding number densities.
+
+Equation of State
+-----------------
+Text
+
+.. note::
+   If you're lucky enough to already have pressure, temperature, *and* number
+   density (like from a GCM) you can directly input those arrays here. Whereas
+   :code:`Hydrostatic` enforced the atmosphere to be in hydrostatic equilibrium
+   there is no such restriction here. This allows you to work with fancy things
+   like supersaturation. It's also why I made these two separate classes.
+
+Scale Height
+------------
+Text

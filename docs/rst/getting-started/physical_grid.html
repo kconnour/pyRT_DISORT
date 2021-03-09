@@ -90,7 +90,11 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../getting-started.html">Getting started</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sample_observation.html">Sample Observation</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Physical Grid</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Physical Grid</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hydrostatic">Hydrostatic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#equation-of-state">Equation of State</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../modules.html">Modules</a></li>
@@ -170,7 +174,54 @@
 <p>Now that we created the angular and spectral information, we can turn our
 attention to creating the model. Perhaps the most natural place to start is
 by defining the boundaries of the model. At each of the boundaries, we’ll also
-want to know the equation of state variables</p>
+want to know the equation of state variables.</p>
+<div class="section" id="hydrostatic">
+<h2>Hydrostatic<a class="headerlink" href="#hydrostatic" title="Permalink to this headline">¶</a></h2>
+<p>Suppose you have a generic temperature and pressure profile. This could be
+because you have limited knowledge of the atmosphere so you’re using a typical
+profile, or perhaps you have a measured profile. It’s important for the
+upcoming steps that we have the atmospheric number density and column density.
+<a class="reference internal" href="../modules/eos.html#eos.Hydrostatic" title="eos.Hydrostatic"><code class="xref py py-class docutils literal notranslate"><span class="pre">eos.Hydrostatic</span></code></a> is a basic utility class that computes the number
+density from pressure and temperature profiles assuming the atmosphere is in
+hydrostatic equilibrium. I’ll make some basic profiles here.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">altitudes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">pressure_profile</span> <span class="o">=</span> <span class="mi">500</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">altitudes</span> <span class="o">/</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">temperature_profile</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">250</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We can add these profiles to <code class="code docutils literal notranslate"><span class="pre">Hydrostatic</span></code> and access the variables via
+the properties.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.eos</span> <span class="kn">import</span> <span class="n">Hydrostatic</span>
+
+<span class="n">hydro</span> <span class="o">=</span> <span class="n">Hydrostatic</span><span class="p">(</span><span class="n">pressure_profile</span><span class="p">,</span> <span class="n">temperature_profile</span><span class="p">)</span>
+<span class="n">pressure</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">pressure</span>
+<span class="n">temperature</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">temperature</span>
+<span class="n">number_density</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">number_density</span>
+</pre></div>
+</div>
+<p>As you’d expect, the <code class="code docutils literal notranslate"><span class="pre">number_density</span></code> has shape (50)—same as the input
+pressure and temperature. Now that we’ve created the number density, we can
+move on to the column density.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>As with the observational quantities, this accepts ND input so in theory
+if you have an image with <code class="code docutils literal notranslate"><span class="pre">MxN</span></code> pixels and happen to know the
+pressures and temperatures at 50 above each of the pixels, you can input
+<code class="code docutils literal notranslate"><span class="pre">MxNx50</span></code> arrays and get the corresponding number densities.</p>
+</div>
+</div>
+<div class="section" id="equation-of-state">
+<h2>Equation of State<a class="headerlink" href="#equation-of-state" title="Permalink to this headline">¶</a></h2>
+<p>Text</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you’re lucky enough to already have pressure, temperature, <em>and</em> number
+density (like from a GCM) you can directly input those arrays here. Whereas
+<code class="code docutils literal notranslate"><span class="pre">Hydrostatic</span></code> enforced the atmosphere to be in hydrostatic equilibrium
+there is no such restriction here. This allows you to work with fancy things
+like supersaturation. It’s also why I made these two separate classes.</p>
+</div>
+</div>
 </div>
 
 

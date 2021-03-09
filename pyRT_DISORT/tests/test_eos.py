@@ -1,9 +1,52 @@
-from unittest import TestCase
 import numpy as np
-from pyRT_DISORT.eos import ModelEquationOfState
+import pytest
+from scipy.constants import Boltzmann
+from pyRT_DISORT.eos import ModelEquationOfState, Hydrostatic
 
 
-class TestModelEquationOfState(TestCase):
+class TestHydrostatic:
+    def setup(self) -> None:
+        self.pressure = np.broadcast_to(np.linspace(1000, 100, num=20), (5, 20))
+        self.temper = np.broadcast_to(np.linspace(250, 100, num=20), (5, 20))
+        self.hydro = Hydrostatic(self.pressure, self.temper)
+
+
+class TestHydrostaticInit(TestHydrostatic):
+    def test_hydrostatic_contains_3_attributes(self) -> None:
+        assert len(self.hydro.__dict__.items()) == 3
+
+
+class TestPressure(TestHydrostatic):
+    def test_pressure_is_unchanged(self) -> None:
+        assert np.array_equal(self.hydro.pressure, self.pressure)
+
+    def test_pressure_is_read_only(self) -> None:
+        with pytest.raises(AttributeError):
+            self.hydro.pressure = self.pressure
+
+
+class TestTemperature(TestHydrostatic):
+    def test_temperature_is_unchanged(self) -> None:
+        assert np.array_equal(self.hydro.temperature, self.temper)
+
+    def test_temperature_is_read_only(self) -> None:
+        with pytest.raises(AttributeError):
+            self.hydro.temperature = self.temper
+
+
+class TestNumberDensity(TestHydrostatic):
+    def test_number_density_computations_match_known_values(self) -> None:
+        temperature = np.ones(50)
+        pressure = np.linspace(1, 50, num=50)
+        hydro = Hydrostatic(pressure, temperature)
+        assert np.array_equal(hydro.number_density, pressure / Boltzmann)
+
+    def test_number_density_is_read_only(self) -> None:
+        with pytest.raises(AttributeError):
+            self.hydro.number_density = 0
+
+
+'''class TestModelEquationOfState(TestCase):
     def setUp(self) -> None:
         self.eos = ModelEquationOfState
 
@@ -78,5 +121,5 @@ class TestTemperatureBoundaries(TestModelEquationOfState):
         eos = ModelEquationOfState(alts, pressure, temperatures, num_den, malts)
         expected_temperatures = np.array([155, 185])
         self.assertTrue(np.array_equal(expected_temperatures,
-                                       eos.temperature_boundaries))
+                                       eos.temperature_boundaries))'''
 

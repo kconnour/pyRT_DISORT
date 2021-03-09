@@ -7,7 +7,7 @@ from scipy.integrate import quadrature as quad
 
 
 class Hydrostatic:
-    r"""A data structure computes a hydrostatic equation of state.
+    """A data structure computes a hydrostatic equation of state.
 
     Hydrostatic accepts pressure and temperature, and computes the
     corresponding number density to ensure the atmosphere follows the

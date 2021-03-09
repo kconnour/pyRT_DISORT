@@ -17,3 +17,14 @@ mu = angles.mu
 mu0 = angles.mu0
 phi = angles.phi
 phi0 = angles.phi0
+
+altitudes = np.linspace(100, 0, num=50)
+pressure_profile = 500 * np.exp(-altitudes / 10)
+temperature_profile = np.linspace(150, 250, num=50)
+
+from pyRT_DISORT.eos import Hydrostatic
+
+hydro = Hydrostatic(pressure_profile, temperature_profile)
+pressure = hydro.pressure
+temperature = hydro.temperature
+number_density = hydro.number_density
