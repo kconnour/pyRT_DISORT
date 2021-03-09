@@ -39,7 +39,7 @@
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Modules" href="../modules.html" />
+    <link rel="next" title="Rayleigh" href="rayleigh.html" />
     <link rel="prev" title="Sample Observation" href="sample_observation.html" /> 
 </head>
 
@@ -93,8 +93,19 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Physical Grid</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#hydrostatic">Hydrostatic</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#equation-of-state">Equation of State</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#scale-height">Scale Height</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="rayleigh.html">Rayleigh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="forward_scattering.html">Forward Scattering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optical_depth.html">Optical Depth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="phase_function.html">Phase Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_build.html">Model Build</a></li>
+<li class="toctree-l2"><a class="reference internal" href="surface.html">Surface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="controller.html">Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flux.html">Flux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="running_the_model.html">Running the model</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../modules.html">Modules</a></li>
@@ -174,19 +185,20 @@
 <p>Now that we created the angular and spectral information, we can turn our
 attention to creating the model. Perhaps the most natural place to start is
 by defining the boundaries of the model. At each of the boundaries, we’ll also
-want to know the equation of state variables.</p>
+want to know the equation of state variables. We’ll also want to know the
+column density within each of the layers.</p>
 <div class="section" id="hydrostatic">
 <h2>Hydrostatic<a class="headerlink" href="#hydrostatic" title="Permalink to this headline">¶</a></h2>
 <p>Suppose you have a generic temperature and pressure profile. This could be
 because you have limited knowledge of the atmosphere so you’re using a typical
-profile, or perhaps you have a measured profile. It’s important for the
+profile, or perhaps you have measured profiles. It’s important for the
 upcoming steps that we have the atmospheric number density and column density.
 <a class="reference internal" href="../modules/eos.html#eos.Hydrostatic" title="eos.Hydrostatic"><code class="xref py py-class docutils literal notranslate"><span class="pre">eos.Hydrostatic</span></code></a> is a basic utility class that computes the number
 density from pressure and temperature profiles assuming the atmosphere is in
 hydrostatic equilibrium. I’ll make some basic profiles here.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">altitudes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
 <span class="n">pressure_profile</span> <span class="o">=</span> <span class="mi">500</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">altitudes</span> <span class="o">/</span> <span class="mi">10</span><span class="p">)</span>
-<span class="n">temperature_profile</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">250</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">temperature_profile</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">250</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>We can add these profiles to <code class="code docutils literal notranslate"><span class="pre">Hydrostatic</span></code> and access the variables via
@@ -206,8 +218,8 @@ move on to the column density.</p>
 <p class="admonition-title">Note</p>
 <p>As with the observational quantities, this accepts ND input so in theory
 if you have an image with <code class="code docutils literal notranslate"><span class="pre">MxN</span></code> pixels and happen to know the
-pressures and temperatures at 50 above each of the pixels, you can input
-<code class="code docutils literal notranslate"><span class="pre">MxNx50</span></code> arrays and get the corresponding number densities.</p>
+pressures and temperatures at 50 points above each of the pixels, you can
+input <code class="code docutils literal notranslate"><span class="pre">MxNx50</span></code> arrays and get the corresponding number densities.</p>
 </div>
 </div>
 <div class="section" id="equation-of-state">
@@ -222,6 +234,10 @@ there is no such restriction here. This allows you to work with fancy things
 like supersaturation. It’s also why I made these two separate classes.</p>
 </div>
 </div>
+<div class="section" id="scale-height">
+<h2>Scale Height<a class="headerlink" href="#scale-height" title="Permalink to this headline">¶</a></h2>
+<p>Text</p>
+</div>
 </div>
 
 
@@ -230,7 +246,7 @@ like supersaturation. It’s also why I made these two separate classes.</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="../modules.html" class="btn btn-neutral float-right" title="Modules" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="rayleigh.html" class="btn btn-neutral float-right" title="Rayleigh" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
         <a href="sample_observation.html" class="btn btn-neutral float-left" title="Sample Observation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 

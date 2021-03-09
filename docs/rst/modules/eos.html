@@ -175,6 +175,20 @@
 <p>The eos module contains data structures to compute and hold equation of state
 variables used throughout pyRT_DISORT.</p>
 <dl class="py class">
+<dt id="eos.EquationOfState">
+<em class="property">class </em><code class="sig-prename descclassname">eos.</code><code class="sig-name descname">EquationOfState</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">altitude_grid</span></em>, <em class="sig-param"><span class="n">pressure_grid</span></em>, <em class="sig-param"><span class="n">temperature_grid</span></em>, <em class="sig-param"><span class="n">number_density_grid</span></em>, <em class="sig-param"><span class="n">altitude_boundaries</span></em>, <em class="sig-param"><span class="n">particle_mass</span></em>, <em class="sig-param"><span class="n">gravity</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eos.EquationOfState" title="Permalink to this definition">¶</a></dt>
+<dd><p>A data structure that accepts equation of state variables.</p>
+<p>Equation of state accepts equation of state variables and computes both the
+column density and scale height of the atmosphere.</p>
+<dl class="py method">
+<dt id="eos.EquationOfState.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">altitude_grid</span></em>, <em class="sig-param"><span class="n">pressure_grid</span></em>, <em class="sig-param"><span class="n">temperature_grid</span></em>, <em class="sig-param"><span class="n">number_density_grid</span></em>, <em class="sig-param"><span class="n">altitude_boundaries</span></em>, <em class="sig-param"><span class="n">particle_mass</span></em>, <em class="sig-param"><span class="n">gravity</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eos.EquationOfState.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt id="eos.Hydrostatic">
 <em class="property">class </em><code class="sig-prename descclassname">eos.</code><code class="sig-name descname">Hydrostatic</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pressure</span></em>, <em class="sig-param"><span class="n">temperature</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eos.Hydrostatic" title="Permalink to this definition">¶</a></dt>
 <dd><p>A data structure computes a hydrostatic equation of state.</p>
@@ -196,7 +210,11 @@ equation</p>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p><strong>ValueError</strong> – Raised if the input arrays cannot be broadcast together.</p>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – Raised if the inputs are not numeric arrays.</p></li>
+<li><p><strong>ValueError</strong> – Raised if the input arrays cannot be broadcast together or if they
+    contain non-positive values.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>

@@ -24,6 +24,24 @@ class TestPressure(TestHydrostatic):
         with pytest.raises(AttributeError):
             self.hydro.pressure = self.pressure
 
+    def test_non_positive_pressure_raises_value_error(self) -> None:
+        pressure = np.copy(self.pressure)
+        pressure[0] = np.nextafter(0, 1)
+        Hydrostatic(pressure, self.temper)
+
+        pressure[0] = 0
+        with pytest.raises(ValueError):
+            Hydrostatic(pressure, self.temper)
+
+        pressure[0] = np.nextafter(0, -1)
+        with pytest.raises(ValueError):
+            Hydrostatic(pressure, self.temper)
+
+    def test_pressure_array_of_strs_raises_type_error(self) -> None:
+        pressure = np.copy(self.pressure).astype('str')
+        with pytest.raises(TypeError):
+            Hydrostatic(pressure, self.temper)
+
 
 class TestTemperature(TestHydrostatic):
     def test_temperature_is_unchanged(self) -> None:
@@ -32,6 +50,24 @@ class TestTemperature(TestHydrostatic):
     def test_temperature_is_read_only(self) -> None:
         with pytest.raises(AttributeError):
             self.hydro.temperature = self.temper
+
+    def test_non_positive_temperature_raises_value_error(self) -> None:
+        temperature = np.copy(self.temper)
+        temperature[0] = np.nextafter(0, 1)
+        Hydrostatic(temperature, self.temper)
+
+        temperature[0] = 0
+        with pytest.raises(ValueError):
+            Hydrostatic(temperature, self.temper)
+
+        temperature[0] = np.nextafter(0, -1)
+        with pytest.raises(ValueError):
+            Hydrostatic(temperature, self.temper)
+
+    def test_temperature_array_of_strs_raises_type_error(self) -> None:
+        temperature = np.copy(self.temper).astype('str')
+        with pytest.raises(TypeError):
+            Hydrostatic(self.pressure, temperature)
 
 
 class TestNumberDensity(TestHydrostatic):
@@ -44,6 +80,8 @@ class TestNumberDensity(TestHydrostatic):
     def test_number_density_is_read_only(self) -> None:
         with pytest.raises(AttributeError):
             self.hydro.number_density = 0
+
+
 
 
 '''class TestModelEquationOfState(TestCase):
