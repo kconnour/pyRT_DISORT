@@ -5,50 +5,59 @@ Now that we created the angular and spectral information, we can turn our
 attention to creating the model. Perhaps the most natural place to start is
 by defining the boundaries of the model. At each of the boundaries, we'll also
 want to know the equation of state variables. We'll also want to know the
-column density within each of the layers.
+column density within each of the layers for use later on.
 
 Hydrostatic
 -----------
-Suppose you have a generic temperature and pressure profile. This could be
-because you have limited knowledge of the atmosphere so you're using a typical
-profile, or perhaps you have measured profiles. It's important for the
-upcoming steps that we have the atmospheric number density and column density.
-:class:`eos.Hydrostatic` is a basic utility class that computes the number
-density from pressure and temperature profiles assuming the atmosphere is in
-hydrostatic equilibrium. I'll make some basic profiles here.
+Suppose you have a temperature and pressure profile, or a set of profiles,
+and the altitude where those quantities are defined. If you think the
+atmosphere is in hydrostatic equilibrium, you can use :class:`eos.Hydrostatic`
+to compute the number density, column density,
+and scale height---just about all the quantities you'd care about when doing
+a retrieval. I'll go ahead and import :code:`Hydrostatic` and make some
+profiles here, along with some miscellaneous variables.
 
 .. literalinclude:: example_simulation.py
    :language: python
-   :lines: 21-23
+   :lines: 21-28
 
-We can add these profiles to :code:`Hydrostatic` and access the variables via
-the properties.
+Even though you might have great resolution for the pressure and temperature
+(here, 2 km), that doesn't mean that want to run a model with 50 layers in it.
+That's where :code:`z_grid` comes in handy---it allows you to specify the
+altitude grid you want the model to have. :code:`Hydrostatic` will regrid
+these quantities onto :code:`z_grid`.
+
+.. note::
+   To keep with DISORT's convention that altitudes start from the top of the
+   atmosphere, the input altitudes and grid must be *decreasing*.
+
+Now we can add these to :code:`Hydrostatic` and access atmospheric properties
+via the class properties:
 
 .. literalinclude:: example_simulation.py
    :language: python
-   :lines: 25-30
+   :lines: 30-38
 
-As you'd expect, the :code:`number_density` has shape (50)---same as the input
-pressure and temperature. Now that we've created the number density, we can
-move on to the column density.
+Most of these aren't required by DISORT (:code:`temperature` and
+:code:`scale_height` are required under certain conditions) but several of
+these variables will be needed in a few steps. Regardless, you may find a
+number of these "unnecessary" variables to be handy when playing with your
+retrievals.
 
 .. note::
    As with the observational quantities, this accepts ND input so in theory
    if you have an image with :code:`MxN` pixels and happen to know the
    pressures and temperatures at 50 points above each of the pixels, you can
-   input :code:`MxNx50` arrays and get the corresponding number densities.
+   input :code:`50xMxN` arrays and get the corresponding values. In this
+   scenario, :code:`z_grid` should be :code:`ZxMxN` where Z is the number
+   of desired altitudes.
 
-Equation of State
------------------
-Text
+As you'd expect, the equation of state variables have the same shape as
+:code:`z_grid`. The one exception is :code:`column_density` which is one
+element shorter than the rest since it's only defined within each of the
+*layers*. That's all there is to it.
 
 .. note::
-   If you're lucky enough to already have pressure, temperature, *and* number
-   density (like from a GCM) you can directly input those arrays here. Whereas
-   :code:`Hydrostatic` enforced the atmosphere to be in hydrostatic equilibrium
-   there is no such restriction here. This allows you to work with fancy things
-   like supersaturation. It's also why I made these two separate classes.
-
-Scale Height
-------------
-Text
+   If you're lucky enough to already have the values for all of these
+   quantities (like from a GCM) you can skip making this object and directly
+   input these values later on.

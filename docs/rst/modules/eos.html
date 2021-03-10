@@ -175,46 +175,82 @@
 <p>The eos module contains data structures to compute and hold equation of state
 variables used throughout pyRT_DISORT.</p>
 <dl class="py class">
-<dt id="eos.EquationOfState">
-<em class="property">class </em><code class="sig-prename descclassname">eos.</code><code class="sig-name descname">EquationOfState</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">altitude_grid</span></em>, <em class="sig-param"><span class="n">pressure_grid</span></em>, <em class="sig-param"><span class="n">temperature_grid</span></em>, <em class="sig-param"><span class="n">number_density_grid</span></em>, <em class="sig-param"><span class="n">altitude_boundaries</span></em>, <em class="sig-param"><span class="n">particle_mass</span></em>, <em class="sig-param"><span class="n">gravity</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eos.EquationOfState" title="Permalink to this definition">¶</a></dt>
-<dd><p>A data structure that accepts equation of state variables.</p>
-<p>Equation of state accepts equation of state variables and computes both the
-column density and scale height of the atmosphere.</p>
-<dl class="py method">
-<dt id="eos.EquationOfState.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">altitude_grid</span></em>, <em class="sig-param"><span class="n">pressure_grid</span></em>, <em class="sig-param"><span class="n">temperature_grid</span></em>, <em class="sig-param"><span class="n">number_density_grid</span></em>, <em class="sig-param"><span class="n">altitude_boundaries</span></em>, <em class="sig-param"><span class="n">particle_mass</span></em>, <em class="sig-param"><span class="n">gravity</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eos.EquationOfState.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
 <dt id="eos.Hydrostatic">
-<em class="property">class </em><code class="sig-prename descclassname">eos.</code><code class="sig-name descname">Hydrostatic</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pressure</span></em>, <em class="sig-param"><span class="n">temperature</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eos.Hydrostatic" title="Permalink to this definition">¶</a></dt>
-<dd><p>A data structure computes a hydrostatic equation of state.</p>
-<p>Hydrostatic accepts pressure and temperature, and computes the
-corresponding number density to ensure the atmosphere follows the
-equation</p>
-<div class="math notranslate nohighlight">
-\[P = n k_B T\]</div>
+<em class="property">class </em><code class="sig-prename descclassname">eos.</code><code class="sig-name descname">Hydrostatic</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">altitude_grid</span></em>, <em class="sig-param"><span class="n">pressure_grid</span></em>, <em class="sig-param"><span class="n">temperature_grid</span></em>, <em class="sig-param"><span class="n">altitude_boundaries</span></em>, <em class="sig-param"><span class="n">particle_mass</span></em>, <em class="sig-param"><span class="n">gravity</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eos.Hydrostatic" title="Permalink to this definition">¶</a></dt>
+<dd><p>A data structure that computes a hydrostatic equation of state.</p>
+<p>Hydrostatic accepts equation of state variables and computes atmospheric
+properties from them, assuming the atmosphere follows the equation</p>
+<div class="math notranslate nohighlight" id="equation-hydrostatic-equation">
+<span class="eqno">(1)<a class="headerlink" href="#equation-hydrostatic-equation" title="Permalink to this equation">¶</a></span>\[P = n k_B T\]</div>
 <p>where <span class="math notranslate nohighlight">\(P\)</span> is the pressure, <span class="math notranslate nohighlight">\(n\)</span> is the number density,
 <span class="math notranslate nohighlight">\(k_B\)</span> is Boltzmann’s constant, and <span class="math notranslate nohighlight">\(T\)</span> is the temperature.</p>
 <dl class="py method">
 <dt id="eos.Hydrostatic.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pressure</span></em>, <em class="sig-param"><span class="n">temperature</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eos.Hydrostatic.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">altitude_grid</span></em>, <em class="sig-param"><span class="n">pressure_grid</span></em>, <em class="sig-param"><span class="n">temperature_grid</span></em>, <em class="sig-param"><span class="n">altitude_boundaries</span></em>, <em class="sig-param"><span class="n">particle_mass</span></em>, <em class="sig-param"><span class="n">gravity</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eos.Hydrostatic.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>pressure</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The pressure [Pa] of an arbitrarily sized grid.</p></li>
-<li><p><strong>temperature</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The temperature [K] of an arbitrarily sized grid.</p></li>
+<li><p><strong>altitude_grid</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The altitude grid [km] over which the equation of state variables
+are defined. To keep with DISORT’s conventions, <em>these must be
+decreasing</em> over the 0 <sup>th</sup> dimension.</p></li>
+<li><p><strong>pressure_grid</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The pressure [Pa] at all values in <code class="code docutils literal notranslate"><span class="pre">altitude_grid</span></code>.</p></li>
+<li><p><strong>temperature_grid</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The temperature [K] at all values in <code class="code docutils literal notranslate"><span class="pre">altitude_grid</span></code>.</p></li>
+<li><p><strong>altitude_boundaries</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The altitude to interpolate the pressure and temperature.</p></li>
+<li><p><strong>particle_mass</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The average mass [kg] of atmospheric particles.</p></li>
+<li><p><strong>gravity</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The gravitational acceleration
+[<span class="math notranslate nohighlight">\(\frac{\text{kg m}}{\text{s}^2}\)</span>] of the atmosphere.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>TypeError</strong> – Raised if the inputs are not numeric arrays.</p></li>
-<li><p><strong>ValueError</strong> – Raised if the input arrays cannot be broadcast together or if they
-    contain non-positive values.</p></li>
-</ul>
+</dl>
+<p class="rubric">Notes</p>
+<p>The input can be ND arrays, as long as they have compatible shapes. In
+this scenario, <code class="code docutils literal notranslate"><span class="pre">altitude_grid</span></code>, <code class="code docutils literal notranslate"><span class="pre">pressure_grid</span></code>, and
+<code class="code docutils literal notranslate"><span class="pre">temperature_grid</span></code> must be of shape Mx(pixels) whereas
+<code class="code docutils literal notranslate"><span class="pre">altitude_boundaries</span></code> must be of shape Nx(pixels).</p>
+<p>Also, scipy’s Gaussian quadrature routine becomes less accurate the
+larger the atmosphere’s scale height is. I’m working to reduce the
+errors. In the meantime the column density is fairly close to analytical
+results but should be improved.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eos.Hydrostatic.altitude">
+<em class="property">property </em><code class="sig-name descname">altitude</code><a class="headerlink" href="#eos.Hydrostatic.altitude" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the input boundary altitude [km].</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eos.Hydrostatic.column_density">
+<em class="property">property </em><code class="sig-name descname">column_density</code><a class="headerlink" href="#eos.Hydrostatic.column_density" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the column density [<span class="math notranslate nohighlight">\(\frac{\text{particles}}{\text{m}^2}\)</span>]
+at the boundary <em>layers</em>. This array is obtained by linearly
+interpolating the input pressure and temperature of each pixel, then
+integrating (using Gaussian quadrature) between the pixel’s boundary
+altitude such that</p>
+<div class="math notranslate nohighlight">
+\[N = \int n(z) dz\]</div>
+<p>is satisfied, where <span class="math notranslate nohighlight">\(N\)</span> is the column density and <span class="math notranslate nohighlight">\(n(z)\)</span> is
+the number density.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eos.Hydrostatic.n_layers">
+<em class="property">property </em><code class="sig-name descname">n_layers</code><a class="headerlink" href="#eos.Hydrostatic.n_layers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the number of layers in the model. This value is inferred from
+the 0 <sup>th</sup> dimension of <code class="code docutils literal notranslate"><span class="pre">altitude_boundaries</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -222,14 +258,13 @@ equation</p>
 <dl class="py method">
 <dt id="eos.Hydrostatic.number_density">
 <em class="property">property </em><code class="sig-name descname">number_density</code><a class="headerlink" href="#eos.Hydrostatic.number_density" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the number density computed from the input pressure and
-temperature.</p>
+<dd><p>Get the number density [<span class="math notranslate nohighlight">\(\frac{\text{particles}}{\text{m}^3}\)</span>]
+at the boundary altitude. This variable is obtained by getting the
+pressure and temperature at the boundary altitude, then solving
+<a class="reference internal" href="#equation-hydrostatic-equation">(1)</a>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The computed number density.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>np.ndarray</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -237,13 +272,34 @@ temperature.</p>
 <dl class="py method">
 <dt id="eos.Hydrostatic.pressure">
 <em class="property">property </em><code class="sig-name descname">pressure</code><a class="headerlink" href="#eos.Hydrostatic.pressure" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the input pressure.</p>
+<dd><p>Get the pressure [Pa] at the boundary altitude. This variable is
+obtained by linearly interpolating the input pressure onto
+<code class="code docutils literal notranslate"><span class="pre">altitude_boundaries</span></code> for each pixel.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The input pressure.</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>np.ndarray</p>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eos.Hydrostatic.scale_height">
+<em class="property">property </em><code class="sig-name descname">scale_height</code><a class="headerlink" href="#eos.Hydrostatic.scale_height" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the scale height [km] at the boundary altitude. For a
+hydrostatic atmosphere, the scale height is defined as</p>
+<div class="math notranslate nohighlight">
+\[H = \frac{k_B T}{mg}\]</div>
+<p>where <span class="math notranslate nohighlight">\(H\)</span> is the scale height, <span class="math notranslate nohighlight">\(k_B\)</span> is Boltzmann’s
+constant, <span class="math notranslate nohighlight">\(T\)</span> is the temperature, <span class="math notranslate nohighlight">\(m\)</span> is the average mass
+of an atmospheric particle, and <span class="math notranslate nohighlight">\(g\)</span> is the planetary gravity.</p>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">H_LYR</span></code>. Despite the name, this
+variable should have length of <code class="code docutils literal notranslate"><span class="pre">n_layers</span> <span class="pre">+</span> <span class="pre">1</span></code>. It is only used if
+<code class="code docutils literal notranslate"><span class="pre">do_pseudo_sphere==True</span></code> (defined in
+<a class="reference internal" href="controller.html#controller.ModelBehavior" title="controller.ModelBehavior"><code class="xref py py-class docutils literal notranslate"><span class="pre">controller.ModelBehavior</span></code></a>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -251,160 +307,16 @@ temperature.</p>
 <dl class="py method">
 <dt id="eos.Hydrostatic.temperature">
 <em class="property">property </em><code class="sig-name descname">temperature</code><a class="headerlink" href="#eos.Hydrostatic.temperature" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the input temperature.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The input temperature.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>np.ndarray</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt id="eos.ModelEquationOfState">
-<em class="property">class </em><code class="sig-prename descclassname">eos.</code><code class="sig-name descname">ModelEquationOfState</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">altitude_grid</span></em>, <em class="sig-param"><span class="n">pressure_grid</span></em>, <em class="sig-param"><span class="n">temperature_grid</span></em>, <em class="sig-param"><span class="n">number_density_grid</span></em>, <em class="sig-param"><span class="n">altitude_boundaries</span></em>, <em class="sig-param"><span class="n">particle_mass</span></em>, <em class="sig-param"><span class="n">gravity</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eos.ModelEquationOfState" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute equation of state variables on a model grid.</p>
-<p>ModelEquationOfState accepts altitudes [km], pressures [Pa],
-temperatures [K], and number densities [particles / m**3], along with the
-altitudes where the model is defined. It linearly interpolates
-pressures and temperatures onto this new grid and assumes the ideal gas law
-to calculate the number density at the new grid. It also computes the
-column density within each layer using Gaussian quadrature.</p>
-<dl class="py method">
-<dt id="eos.ModelEquationOfState.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">altitude_grid</span></em>, <em class="sig-param"><span class="n">pressure_grid</span></em>, <em class="sig-param"><span class="n">temperature_grid</span></em>, <em class="sig-param"><span class="n">number_density_grid</span></em>, <em class="sig-param"><span class="n">altitude_boundaries</span></em>, <em class="sig-param"><span class="n">particle_mass</span></em>, <em class="sig-param"><span class="n">gravity</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eos.ModelEquationOfState.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>altitude_grid</strong> (<em>np.ndarray</em>) – The altitudes [km] at which the equation of state variables are
-defined.</p></li>
-<li><p><strong>pressure_grid</strong> (<em>np.ndarray</em>) – The pressures [Pa] at the corresponding altitudes.</p></li>
-<li><p><strong>temperature_grid</strong> (<em>np.ndarray</em>) – The temperatures [K] at the corresponding altitudes.</p></li>
-<li><p><strong>number_density_grid</strong> (<em>np.ndarray</em>) – The number densities [particles / m**3] at the corresponding
-altitudes.</p></li>
-<li><p><strong>altitude_boundaries</strong> (<em>np.ndarray</em>) – The desired altitudes [km] of the model boundaries.</p></li>
-<li><p><strong>particle_mass</strong> (<em>float</em>) – The average mass [kg] of atmospheric particles.</p></li>
-<li><p><strong>gravity</strong> (<em>float</em>) – The planetary gravity [kg * m / s**2].</p></li>
-</ul>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>IndexError</strong> – Raised if the input grids do not have the same shape.</p></li>
-<li><p><strong>TypeError</strong> – Raised if any of the inputs are not np.ndarrays.</p></li>
-<li><p><strong>ValueError</strong> – Raised if any of the inputs have unphysical values.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="eos.ModelEquationOfState.altitude_boundaries">
-<em class="property">property </em><code class="sig-name descname">altitude_boundaries</code><a class="headerlink" href="#eos.ModelEquationOfState.altitude_boundaries" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the input altitudes at the model boundaries.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The boundary altitudes.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>np.ndarray</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="eos.ModelEquationOfState.column_density_layers">
-<em class="property">property </em><code class="sig-name descname">column_density_layers</code><a class="headerlink" href="#eos.ModelEquationOfState.column_density_layers" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the column density within each of the layers.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The layer column densities.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>np.ndarray</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="eos.ModelEquationOfState.n_layers">
-<em class="property">property </em><code class="sig-name descname">n_layers</code><a class="headerlink" href="#eos.ModelEquationOfState.n_layers" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the number of layers in the model.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The number of layers.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>int</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="eos.ModelEquationOfState.number_density_boundaries">
-<em class="property">property </em><code class="sig-name descname">number_density_boundaries</code><a class="headerlink" href="#eos.ModelEquationOfState.number_density_boundaries" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the number density at the model boundaries.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The boundary number densities.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>np.ndarray</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="eos.ModelEquationOfState.pressure_boundaries">
-<em class="property">property </em><code class="sig-name descname">pressure_boundaries</code><a class="headerlink" href="#eos.ModelEquationOfState.pressure_boundaries" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the pressure at the model boundaries.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The boundary pressures.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>np.ndarray</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="eos.ModelEquationOfState.scale_height_boundaries">
-<em class="property">property </em><code class="sig-name descname">scale_height_boundaries</code><a class="headerlink" href="#eos.ModelEquationOfState.scale_height_boundaries" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the scale height at the model boundaries.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The scale heights at the boundaries</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>np.ndarray</p>
-</dd>
-</dl>
+<dd><p>Get the temperature [K] at the boundary altitude. This variable is
+obtained by linearly interpolating the input temperature onto
+<code class="code docutils literal notranslate"><span class="pre">altitude_boundaries</span></code> for each pixel.</p>
 <p class="rubric">Notes</p>
-<p>In DISORT, this variable is named “H_LYR”. There is no documentation for
-this variable, so I’m assuming it to be in km. Also, the scale height
-for each layer seems like an odd name but f2py assures me that it’s
-assumed to be of shape n_layers + 1, i.e. n_boundaries. It is only used
-if do_pseudo_sphere (defined in ModelBehavior) == True.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="eos.ModelEquationOfState.temperature_boundaries">
-<em class="property">property </em><code class="sig-name descname">temperature_boundaries</code><a class="headerlink" href="#eos.ModelEquationOfState.temperature_boundaries" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the temperature at the model boundaries.</p>
+<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">TEMPER</span></code>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The boundary temperatures.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>np.ndarray</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p>In DISORT, this variable is named “TEMPER”.</p>
 </dd></dl>
 
 </dd></dl>
