@@ -12,3 +12,13 @@ step shows how to use one of the modules included in pyRT_DISORT.
    getting-started/installation
    getting-started/sample_observation
    getting-started/physical_grid
+   getting-started/rayleigh
+   getting-started/forward_scattering
+   getting-started/optical_depth
+   getting-started/phase_function
+   getting-started/model_build
+   getting-started/surface
+   getting-started/controller
+   getting-started/flux
+   getting-started/output
+   getting-started/running_the_model

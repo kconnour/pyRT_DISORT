@@ -105,22 +105,12 @@ class Angles:
     def incidence(self) -> np.ndarray:
         """Get the input incidence (solar zenith) angle [degrees].
 
-        Returns
-        -------
-        np.ndarray
-            The input incidence angle.
-
         """
         return self.__incidence_angle
 
     @property
     def emission(self) -> np.ndarray:
         """Get the input emission angle [degrees].
-
-        Returns
-        -------
-        np.ndarray
-            The input emission angle.
 
         """
         return self.__emission_angle
@@ -129,11 +119,6 @@ class Angles:
     def phase(self) -> np.ndarray:
         """Get the input phase angle [degrees].
 
-        Returns
-        -------
-        np.ndarray
-            The input phase angle.
-
         """
         return self.__phase_angle
 
@@ -141,11 +126,6 @@ class Angles:
     def mu0(self) -> np.ndarray:
         r"""Get :math:`\mu_0` where :math:`\mu_0` is the cosine of the input
         incidence angle.
-
-        Returns
-        -------
-        np.ndarray
-            The cosine of the input incidence angle.
 
         Notes
         -----
@@ -159,11 +139,6 @@ class Angles:
         r"""Get :math:`\mu` where :math:`\mu` is the cosine of the input
         emission angle.
 
-        Returns
-        -------
-        np.ndarray
-            The cosine of the input emission angle.
-
         Notes
         -----
         Each element in this variable is named :code:`UMU` in DISORT.
@@ -173,12 +148,7 @@ class Angles:
 
     @property
     def phi0(self) -> np.ndarray:
-        r"""Get :math:`\phi_0`. I assume this is always 0.
-
-        Returns
-        -------
-        np.ndarray
-            All 0s.
+        r"""Get :math:`\phi_0`. I assume this is always an array of 0s.
 
         Notes
         -----
@@ -190,11 +160,6 @@ class Angles:
     @property
     def phi(self) -> np.ndarray:
         r"""Get :math:`\phi` where :math:`\phi` is the azimuth angle [degrees].
-
-        Returns
-        -------
-        np.ndarray
-            The azimuth angle.
 
         Notes
         -----
@@ -312,22 +277,12 @@ class Spectral:
     def short_wavelength(self) -> np.ndarray:
         """Get the input short wavelength [microns].
 
-        Returns
-        -------
-        np.ndarray
-            The short wavelength.
-
         """
         return self.__short_wavelength
 
     @property
     def long_wavelength(self) -> np.ndarray:
         """Get the input long wavelength [microns].
-
-        Returns
-        -------
-        np.ndarray
-            The long wavelength.
 
         """
         return self.__long_wavelength
@@ -336,11 +291,6 @@ class Spectral:
     def high_wavenumber(self) -> np.ndarray:
         """Get the high wavenumbers [1/cm]---the wavenumbers corresponding to
         short_wavelength.
-
-        Returns
-        -------
-        np.ndarray
-            The high wavenumber.
 
         Notes
         -----
@@ -356,11 +306,6 @@ class Spectral:
     def low_wavenumber(self) -> np.ndarray:
         """Get the low wavenumbers [1/cm]---the wavenumbers associated with
         long_wavelength.
-
-        Returns
-        -------
-        np.ndarray
-            The low wavenumber.
 
         Notes
         -----
