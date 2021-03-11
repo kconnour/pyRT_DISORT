@@ -17,8 +17,8 @@ step shows how to use one of the modules included in pyRT_DISORT.
    getting-started/optical_depth
    getting-started/phase_function
    getting-started/model_build
-   getting-started/surface
    getting-started/controller
-   getting-started/flux
+   getting-started/surface
+   getting-started/radiation
    getting-started/output
    getting-started/running_the_model

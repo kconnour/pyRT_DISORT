@@ -32,7 +32,6 @@
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -40,7 +39,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Surface" href="surface.html" />
-    <link rel="prev" title="Phase Function" href="phase_function.html" /> 
+    <link rel="prev" title="Radiation" href="radiation.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -91,9 +90,9 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../modules.html">Modules</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="controller.html">Controller</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eos.html">Equation of State</a></li>
-<li class="toctree-l2"><a class="reference internal" href="flux.html">Flux</a></li>
 <li class="toctree-l2"><a class="reference internal" href="observation.html">Observation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="phase_function.html">Phase Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radiation.html">Radiation</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Rayleigh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="surface.html">Surface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="vertical_profile.html">Vertical Profile</a></li>
@@ -175,7 +174,7 @@
 <p>The rayleigh module contains structures for computing Rayleigh scattering.</p>
 <dl class="py class">
 <dt id="rayleigh.Rayleigh">
-<em class="property">class </em><code class="sig-prename descclassname">rayleigh.</code><code class="sig-name descname">Rayleigh</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">altitude_grid</span></em>, <em class="sig-param"><span class="n">wavenumbers</span></em><span class="sig-paren">)</span><a class="headerlink" href="#rayleigh.Rayleigh" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">rayleigh.</span></code><code class="sig-name descname"><span class="pre">Rayleigh</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">altitude_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavenumbers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rayleigh.Rayleigh" title="Permalink to this definition">¶</a></dt>
 <dd><p>An abstract base class for Rayleigh scattering.</p>
 <p>Rayleigh creates the Legendre coefficient phase function array and holds
 the wavenumbers at which scattering was observed. This is an abstract base
@@ -183,7 +182,7 @@ class from which all other Rayleigh classes are derived; it is not meant
 to be instantiated.</p>
 <dl class="py method">
 <dt id="rayleigh.Rayleigh.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">altitude_grid</span></em>, <em class="sig-param"><span class="n">wavenumbers</span></em><span class="sig-paren">)</span><a class="headerlink" href="#rayleigh.Rayleigh.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">altitude_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavenumbers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rayleigh.Rayleigh.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -197,7 +196,7 @@ to be instantiated.</p>
 
 <dl class="py method">
 <dt id="rayleigh.Rayleigh.phase_function">
-<em class="property">property </em><code class="sig-name descname">phase_function</code><a class="headerlink" href="#rayleigh.Rayleigh.phase_function" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">phase_function</span></code><a class="headerlink" href="#rayleigh.Rayleigh.phase_function" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the Legendre decomposition of the phase function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -220,7 +219,7 @@ wavenumbers has shape [50, 100, 45], this array will have shape
 
 <dl class="py class">
 <dt id="rayleigh.RayleighCO2">
-<em class="property">class </em><code class="sig-prename descclassname">rayleigh.</code><code class="sig-name descname">RayleighCO2</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">altitude_grid</span></em>, <em class="sig-param"><span class="n">wavenumbers</span></em>, <em class="sig-param"><span class="n">column_density_layers</span></em><span class="sig-paren">)</span><a class="headerlink" href="#rayleigh.RayleighCO2" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">rayleigh.</span></code><code class="sig-name descname"><span class="pre">RayleighCO2</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">altitude_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavenumbers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_density_layers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rayleigh.RayleighCO2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct an object to hold arrays related to CO2 Rayleigh scattering.</p>
 <p>Rayleigh creates the Legendre coefficient phase function array and holds
 the wavenumbers at which scattering was observed. This is an abstract base
@@ -228,7 +227,7 @@ class from which all other Rayleigh classes are derived; it is not meant
 to be instantiated.</p>
 <dl class="py method">
 <dt id="rayleigh.RayleighCO2.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">altitude_grid</span></em>, <em class="sig-param"><span class="n">wavenumbers</span></em>, <em class="sig-param"><span class="n">column_density_layers</span></em><span class="sig-paren">)</span><a class="headerlink" href="#rayleigh.RayleighCO2.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">altitude_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavenumbers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_density_layers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rayleigh.RayleighCO2.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -249,7 +248,7 @@ using equation 13 for computing the index of refraction</p>
 
 <dl class="py method">
 <dt id="rayleigh.RayleighCO2.scattering_optical_depth">
-<em class="property">property </em><code class="sig-name descname">scattering_optical_depth</code><a class="headerlink" href="#rayleigh.RayleighCO2.scattering_optical_depth" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">scattering_optical_depth</span></code><a class="headerlink" href="#rayleigh.RayleighCO2.scattering_optical_depth" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the Rayleigh scattering optical depth.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -277,7 +276,7 @@ shape [20, 50, 100, 45].</p>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
         <a href="surface.html" class="btn btn-neutral float-right" title="Surface" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="phase_function.html" class="btn btn-neutral float-left" title="Phase Function" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="radiation.html" class="btn btn-neutral float-left" title="Radiation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

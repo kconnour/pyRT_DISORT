@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Installation &mdash; pyRT_DISORT  documentation</title>
+  <title>Radiation &mdash; pyRT_DISORT  documentation</title>
   
 
   
@@ -38,8 +38,8 @@
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Sample Observation" href="sample_observation.html" />
-    <link rel="prev" title="Getting started" href="../getting-started.html" /> 
+    <link rel="next" title="Output" href="output.html" />
+    <link rel="prev" title="Surface" href="surface.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -87,7 +87,7 @@
               <p class="caption"><span class="caption-text">Useful links</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../getting-started.html">Getting started</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sample_observation.html">Sample Observation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="physical_grid.html">Physical Grid</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rayleigh.html">Rayleigh</a></li>
@@ -97,7 +97,11 @@
 <li class="toctree-l2"><a class="reference internal" href="model_build.html">Model Build</a></li>
 <li class="toctree-l2"><a class="reference internal" href="controller.html">Controller</a></li>
 <li class="toctree-l2"><a class="reference internal" href="surface.html">Surface</a></li>
-<li class="toctree-l2"><a class="reference internal" href="radiation_and_flux.html">Radiation and Flux</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Radiation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#incident-flux">Incident Flux</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#thermal-emission">Thermal Emission</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="output.html">Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="running_the_model.html">Running the model</a></li>
 </ul>
@@ -155,13 +159,13 @@
         
           <li><a href="../getting-started.html">Getting started</a> &raquo;</li>
         
-      <li>Installation</li>
+      <li>Radiation</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../../_sources/rst/getting-started/installation.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/rst/getting-started/radiation.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -174,23 +178,42 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="installation">
-<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
-<p>To install pyRT_DISORT, you must have gfortran installed on your computer.
-Assuming you have that, simply clone the repo and once you cd into that
-directory simply install it with <code class="code docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">.</span></code>. By default, this will
-create two importable packages:</p>
-<ol class="arabic simple">
-<li><p><code class="code docutils literal notranslate"><span class="pre">disort</span></code>
-This is a binarized version of the standard DISORT FORTRAN code (with very
-minor modifications for this project). This can take quite some time to
-install and since DISORT is not frequently updated, you can skip this step
-by setting <code class="code docutils literal notranslate"><span class="pre">install_disort=False</span></code> within <code class="code docutils literal notranslate"><span class="pre">setup.py</span></code>.</p></li>
-<li><p><code class="code docutils literal notranslate"><span class="pre">pyRT_DISORT</span></code>
-This is the pure Python project that will do the atmospheric pre-processing.</p></li>
-</ol>
-<p>You can now import the libraries with <code class="code docutils literal notranslate"><span class="pre">import</span> <span class="pre">disort</span></code> and/or
-<code class="code docutils literal notranslate"><span class="pre">import</span> <span class="pre">pyRT_DISORT</span> <span class="pre">as</span> <span class="pre">pyrt</span></code>.</p>
+  <div class="section" id="radiation">
+<h1>Radiation<a class="headerlink" href="#radiation" title="Permalink to this headline">¶</a></h1>
+<p>We need to specify the flux and thermal quantities used in the model, so let’s
+get right to it.</p>
+<div class="section" id="incident-flux">
+<h2>Incident Flux<a class="headerlink" href="#incident-flux" title="Permalink to this headline">¶</a></h2>
+<p>We can define the beam flux and the isotropic flux at the top of the atmosphere
+in the <a class="reference internal" href="../modules/radiation.html#radiation.IncidentFlux" title="radiation.IncidentFlux"><code class="xref py py-class docutils literal notranslate"><span class="pre">radiation.IncidentFlux</span></code></a> class. Instances of this class don’t do
+anything but containerize your desired flux, and provide some default values.
+I’ll go ahead and make an object and show its parameters.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.radiation</span> <span class="kn">import</span> <span class="n">IncidentFlux</span><span class="p">,</span> <span class="n">ThermalEmission</span>
+
+<span class="n">flux</span> <span class="o">=</span> <span class="n">IncidentFlux</span><span class="p">()</span>
+<span class="n">beam_flux</span> <span class="o">=</span> <span class="n">flux</span><span class="o">.</span><span class="n">beam_flux</span>
+<span class="n">iso_flux</span> <span class="o">=</span> <span class="n">flux</span><span class="o">.</span><span class="n">isotropic_flux</span>
+</pre></div>
+</div>
+<p>By default, <code class="code docutils literal notranslate"><span class="pre">beam_flux</span></code> is pi, and <code class="code docutils literal notranslate"><span class="pre">isotropic_flux</span></code> is 0. At least
+for our Martian simulation, there’s no real need to worry about the isotropic
+flux from space.</p>
+</div>
+<div class="section" id="thermal-emission">
+<h2>Thermal Emission<a class="headerlink" href="#thermal-emission" title="Permalink to this headline">¶</a></h2>
+<p>We can also define whether thermal emission is used in the model with the
+<a class="reference internal" href="../modules/radiation.html#radiation.ThermalEmission" title="radiation.ThermalEmission"><code class="xref py py-class docutils literal notranslate"><span class="pre">radiation.ThermalEmission</span></code></a> class. As before, pyRT_DISORT has default
+values to get you up and running, though you can easily override them.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">te</span> <span class="o">=</span> <span class="n">ThermalEmission</span><span class="p">()</span>
+<span class="n">thermal_emission</span> <span class="o">=</span> <span class="n">te</span><span class="o">.</span><span class="n">thermal_emission</span>
+<span class="n">bottom_temp</span> <span class="o">=</span> <span class="n">te</span><span class="o">.</span><span class="n">bottom_temperature</span>
+<span class="n">top_temp</span> <span class="o">=</span> <span class="n">te</span><span class="o">.</span><span class="n">top_temperature</span>
+<span class="n">top_emissivity</span> <span class="o">=</span> <span class="n">te</span><span class="o">.</span><span class="n">top_emissivity</span>
+</pre></div>
+</div>
+<p>By default, <code class="code docutils literal notranslate"><span class="pre">thermal_emission==False</span></code> and no other values are used. But
+you’re free to turn thermal emission on and add values for the boundaries.</p>
+</div>
 </div>
 
 
@@ -199,8 +222,8 @@ This is the pure Python project that will do the atmospheric pre-processing.</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="sample_observation.html" class="btn btn-neutral float-right" title="Sample Observation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="../getting-started.html" class="btn btn-neutral float-left" title="Getting started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="output.html" class="btn btn-neutral float-right" title="Output" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="surface.html" class="btn btn-neutral float-left" title="Surface" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

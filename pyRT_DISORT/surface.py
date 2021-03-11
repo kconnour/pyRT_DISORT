@@ -3,8 +3,9 @@ surface treatment.
 """
 import numpy as np
 from pyRT_DISORT.controller import ComputationalParameters, ModelBehavior
-from pyRT_DISORT.flux import IncidentFlux
 from pyRT_DISORT.observation import Angles
+#from pyRT_DISORT.radiation import IncidentFlux
+from radiation import IncidentFlux
 from disort import disobrdf
 
 
@@ -233,7 +234,6 @@ class Surface:
 
 class Lambertian(Surface):
     """Create a Lambertian surface.
-
 
     Lambertian creates a boolean flag that can notify DISORT to use a Lambertian
     surface. It also creates bi-directional reflectivity arrays of 0s required

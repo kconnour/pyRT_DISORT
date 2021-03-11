@@ -1,6 +1,6 @@
 from unittest import TestCase
 import numpy as np
-from pyRT_DISORT.flux import IncidentFlux, ThermalEmission
+from pyRT_DISORT.radiation import IncidentFlux, ThermalEmission
 
 
 class TestIncidentFlux(TestCase):

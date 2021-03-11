@@ -91,9 +91,9 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../modules.html">Modules</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="controller.html">Controller</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eos.html">Equation of State</a></li>
-<li class="toctree-l2"><a class="reference internal" href="flux.html">Flux</a></li>
 <li class="toctree-l2"><a class="reference internal" href="observation.html">Observation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="phase_function.html">Phase Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radiation.html">Radiation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rayleigh.html">Rayleigh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="surface.html">Surface</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Vertical Profile</a></li>
@@ -176,13 +176,13 @@
 for use in DISORT.</p>
 <dl class="py class">
 <dt id="vertical_profile.Conrath">
-<em class="property">class </em><code class="sig-prename descclassname">vertical_profile.</code><code class="sig-name descname">Conrath</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">altitude_grid</span></em>, <em class="sig-param"><span class="n">q0</span></em>, <em class="sig-param"><span class="n">scale_height</span></em>, <em class="sig-param"><span class="n">nu</span></em><span class="sig-paren">)</span><a class="headerlink" href="#vertical_profile.Conrath" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">vertical_profile.</span></code><code class="sig-name descname"><span class="pre">Conrath</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">altitude_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nu</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vertical_profile.Conrath" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute Conrath profile(s).</p>
 <p>Conrath creates Conrath profile(s) on an input grid of altitudes given a
 set of input parameters.</p>
 <dl class="py method">
 <dt id="vertical_profile.Conrath.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">altitude_grid</span></em>, <em class="sig-param"><span class="n">q0</span></em>, <em class="sig-param"><span class="n">scale_height</span></em>, <em class="sig-param"><span class="n">nu</span></em><span class="sig-paren">)</span><a class="headerlink" href="#vertical_profile.Conrath.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">altitude_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nu</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vertical_profile.Conrath.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -213,7 +213,7 @@ MxN altitude_grid, this should be an array of length N.</p></li>
 
 <dl class="py method">
 <dt id="vertical_profile.Conrath.profile">
-<em class="property">property </em><code class="sig-name descname">profile</code><a class="headerlink" href="#vertical_profile.Conrath.profile" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">profile</span></code><a class="headerlink" href="#vertical_profile.Conrath.profile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the Conrath profile(s).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -229,13 +229,13 @@ MxN altitude_grid, this should be an array of length N.</p></li>
 
 <dl class="py class">
 <dt id="vertical_profile.Uniform">
-<em class="property">class </em><code class="sig-prename descclassname">vertical_profile.</code><code class="sig-name descname">Uniform</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">altitude_grid</span></em>, <em class="sig-param"><span class="n">bottom_altitude</span></em>, <em class="sig-param"><span class="n">top_altitude</span></em><span class="sig-paren">)</span><a class="headerlink" href="#vertical_profile.Uniform" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">vertical_profile.</span></code><code class="sig-name descname"><span class="pre">Uniform</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">altitude_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bottom_altitude</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_altitude</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vertical_profile.Uniform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute uniform volumetric mixing ratio profile(s).</p>
 <p>Uniform creates uniform volumetric mixing ratio profile(s) on an input
 grid of altitudes given a set of top and bottom altitudes.</p>
 <dl class="py method">
 <dt id="vertical_profile.Uniform.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">altitude_grid</span></em>, <em class="sig-param"><span class="n">bottom_altitude</span></em>, <em class="sig-param"><span class="n">top_altitude</span></em><span class="sig-paren">)</span><a class="headerlink" href="#vertical_profile.Uniform.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">altitude_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bottom_altitude</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_altitude</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vertical_profile.Uniform.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -262,7 +262,7 @@ completely within a grid point and cuts off the aerosol otherwise.</p>
 
 <dl class="py method">
 <dt id="vertical_profile.Uniform.profile">
-<em class="property">property </em><code class="sig-name descname">profile</code><a class="headerlink" href="#vertical_profile.Uniform.profile" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">profile</span></code><a class="headerlink" href="#vertical_profile.Uniform.profile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the uniform profile(s).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>

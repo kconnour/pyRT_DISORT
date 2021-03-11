@@ -32,7 +32,6 @@
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -91,9 +90,9 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../modules.html">Modules</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Controller</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eos.html">Equation of State</a></li>
-<li class="toctree-l2"><a class="reference internal" href="flux.html">Flux</a></li>
 <li class="toctree-l2"><a class="reference internal" href="observation.html">Observation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="phase_function.html">Phase Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radiation.html">Radiation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rayleigh.html">Rayleigh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="surface.html">Surface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="vertical_profile.html">Vertical Profile</a></li>
@@ -176,14 +175,14 @@
 arrays that control how DISORT runs.</p>
 <dl class="py class">
 <dt id="controller.ComputationalParameters">
-<em class="property">class </em><code class="sig-prename descclassname">controller.</code><code class="sig-name descname">ComputationalParameters</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_layers</span></em>, <em class="sig-param"><span class="n">n_moments</span></em>, <em class="sig-param"><span class="n">n_streams</span></em>, <em class="sig-param"><span class="n">n_azimuth</span></em>, <em class="sig-param"><span class="n">n_polar</span></em>, <em class="sig-param"><span class="n">n_user_levels</span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.ComputationalParameters" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">controller.</span></code><code class="sig-name descname"><span class="pre">ComputationalParameters</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_moments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_streams</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_azimuth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_polar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_user_levels</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.ComputationalParameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a data structure for holding the size of computational parameters.</p>
 <p>ComputationalParameters holds the number of model layers, streams, moments,
 and angles. It also performs basic checks that these values are plausible.
 Objects of this class are meant to be be used as inputs to other classes.</p>
 <dl class="py method">
 <dt id="controller.ComputationalParameters.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_layers</span></em>, <em class="sig-param"><span class="n">n_moments</span></em>, <em class="sig-param"><span class="n">n_streams</span></em>, <em class="sig-param"><span class="n">n_azimuth</span></em>, <em class="sig-param"><span class="n">n_polar</span></em>, <em class="sig-param"><span class="n">n_user_levels</span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.ComputationalParameters.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_moments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_streams</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_azimuth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_polar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_user_levels</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.ComputationalParameters.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -223,7 +222,7 @@ n_moments.</p>
 
 <dl class="py method">
 <dt id="controller.ComputationalParameters.n_azimuth">
-<em class="property">property </em><code class="sig-name descname">n_azimuth</code><a class="headerlink" href="#controller.ComputationalParameters.n_azimuth" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">n_azimuth</span></code><a class="headerlink" href="#controller.ComputationalParameters.n_azimuth" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input number of azimuthal angles.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -237,7 +236,7 @@ n_moments.</p>
 
 <dl class="py method">
 <dt id="controller.ComputationalParameters.n_layers">
-<em class="property">property </em><code class="sig-name descname">n_layers</code><a class="headerlink" href="#controller.ComputationalParameters.n_layers" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">n_layers</span></code><a class="headerlink" href="#controller.ComputationalParameters.n_layers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input number of layers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -251,7 +250,7 @@ n_moments.</p>
 
 <dl class="py method">
 <dt id="controller.ComputationalParameters.n_moments">
-<em class="property">property </em><code class="sig-name descname">n_moments</code><a class="headerlink" href="#controller.ComputationalParameters.n_moments" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">n_moments</span></code><a class="headerlink" href="#controller.ComputationalParameters.n_moments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input number of moments.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -265,7 +264,7 @@ n_moments.</p>
 
 <dl class="py method">
 <dt id="controller.ComputationalParameters.n_polar">
-<em class="property">property </em><code class="sig-name descname">n_polar</code><a class="headerlink" href="#controller.ComputationalParameters.n_polar" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">n_polar</span></code><a class="headerlink" href="#controller.ComputationalParameters.n_polar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input number of user_specified polar angles.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -279,7 +278,7 @@ n_moments.</p>
 
 <dl class="py method">
 <dt id="controller.ComputationalParameters.n_streams">
-<em class="property">property </em><code class="sig-name descname">n_streams</code><a class="headerlink" href="#controller.ComputationalParameters.n_streams" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">n_streams</span></code><a class="headerlink" href="#controller.ComputationalParameters.n_streams" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input number of streams.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -293,7 +292,7 @@ n_moments.</p>
 
 <dl class="py method">
 <dt id="controller.ComputationalParameters.n_user_levels">
-<em class="property">property </em><code class="sig-name descname">n_user_levels</code><a class="headerlink" href="#controller.ComputationalParameters.n_user_levels" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">n_user_levels</span></code><a class="headerlink" href="#controller.ComputationalParameters.n_user_levels" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input number of user levels.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -309,13 +308,13 @@ n_moments.</p>
 
 <dl class="py class">
 <dt id="controller.ModelBehavior">
-<em class="property">class </em><code class="sig-prename descclassname">controller.</code><code class="sig-name descname">ModelBehavior</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">accuracy</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">delta_m_plus</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">do_pseudo_sphere</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">header</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">incidence_beam_conditions</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">only_fluxes</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">print_variables</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">radius</span><span class="o">=</span><span class="default_value">6371.0</span></em>, <em class="sig-param"><span class="n">user_angles</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">user_optical_depths</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.ModelBehavior" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">controller.</span></code><code class="sig-name descname"><span class="pre">ModelBehavior</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">accuracy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_m_plus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_pseudo_sphere</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incidence_beam_conditions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_fluxes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_variables</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6371.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_angles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_optical_depths</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.ModelBehavior" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a data structure for holding the DISORT control variables.</p>
 <p>ModelBehavior holds the control flags that dictate DISORT’s behavior. It
 also performs basic checks that the input control options are plausible.</p>
 <dl class="py method">
 <dt id="controller.ModelBehavior.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">accuracy</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">delta_m_plus</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">do_pseudo_sphere</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">header</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">incidence_beam_conditions</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">only_fluxes</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">print_variables</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">radius</span><span class="o">=</span><span class="default_value">6371.0</span></em>, <em class="sig-param"><span class="n">user_angles</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">user_optical_depths</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.ModelBehavior.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">accuracy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_m_plus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_pseudo_sphere</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incidence_beam_conditions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_fluxes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_variables</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6371.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_angles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_optical_depths</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.ModelBehavior.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -420,7 +419,7 @@ optical depths. Default is False.</p></li>
 
 <dl class="py method">
 <dt id="controller.ModelBehavior.accuracy">
-<em class="property">property </em><code class="sig-name descname">accuracy</code><a class="headerlink" href="#controller.ModelBehavior.accuracy" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">accuracy</span></code><a class="headerlink" href="#controller.ModelBehavior.accuracy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input accuracy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -436,7 +435,7 @@ optical depths. Default is False.</p></li>
 
 <dl class="py method">
 <dt id="controller.ModelBehavior.delta_m_plus">
-<em class="property">property </em><code class="sig-name descname">delta_m_plus</code><a class="headerlink" href="#controller.ModelBehavior.delta_m_plus" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">delta_m_plus</span></code><a class="headerlink" href="#controller.ModelBehavior.delta_m_plus" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get whether to use delta-M+ scaling.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -453,7 +452,7 @@ documentation on this variable.</p>
 
 <dl class="py method">
 <dt id="controller.ModelBehavior.do_pseudo_sphere">
-<em class="property">property </em><code class="sig-name descname">do_pseudo_sphere</code><a class="headerlink" href="#controller.ModelBehavior.do_pseudo_sphere" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">do_pseudo_sphere</span></code><a class="headerlink" href="#controller.ModelBehavior.do_pseudo_sphere" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get whether to perform a pseudo-spherical correction.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -470,7 +469,7 @@ documentation on this variable.</p>
 
 <dl class="py method">
 <dt id="controller.ModelBehavior.header">
-<em class="property">property </em><code class="sig-name descname">header</code><a class="headerlink" href="#controller.ModelBehavior.header" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">header</span></code><a class="headerlink" href="#controller.ModelBehavior.header" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the characters that will appear in the DISORT banner.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -486,7 +485,7 @@ documentation on this variable.</p>
 
 <dl class="py method">
 <dt id="controller.ModelBehavior.incidence_beam_conditions">
-<em class="property">property </em><code class="sig-name descname">incidence_beam_conditions</code><a class="headerlink" href="#controller.ModelBehavior.incidence_beam_conditions" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">incidence_beam_conditions</span></code><a class="headerlink" href="#controller.ModelBehavior.incidence_beam_conditions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get whether the model will only return albedo and transmissivity.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -501,7 +500,7 @@ otherwise.</p>
 
 <dl class="py method">
 <dt id="controller.ModelBehavior.only_fluxes">
-<em class="property">property </em><code class="sig-name descname">only_fluxes</code><a class="headerlink" href="#controller.ModelBehavior.only_fluxes" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">only_fluxes</span></code><a class="headerlink" href="#controller.ModelBehavior.only_fluxes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get whether DISORT should only return fluxes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -518,7 +517,7 @@ are requested.</p>
 
 <dl class="py method">
 <dt id="controller.ModelBehavior.print_variables">
-<em class="property">property </em><code class="sig-name descname">print_variables</code><a class="headerlink" href="#controller.ModelBehavior.print_variables" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">print_variables</span></code><a class="headerlink" href="#controller.ModelBehavior.print_variables" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the variables to print.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -534,7 +533,7 @@ are requested.</p>
 
 <dl class="py method">
 <dt id="controller.ModelBehavior.radius">
-<em class="property">property </em><code class="sig-name descname">radius</code><a class="headerlink" href="#controller.ModelBehavior.radius" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">radius</span></code><a class="headerlink" href="#controller.ModelBehavior.radius" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the planetary radius.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -552,7 +551,7 @@ planetary radius.</p>
 
 <dl class="py method">
 <dt id="controller.ModelBehavior.user_angles">
-<em class="property">property </em><code class="sig-name descname">user_angles</code><a class="headerlink" href="#controller.ModelBehavior.user_angles" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">user_angles</span></code><a class="headerlink" href="#controller.ModelBehavior.user_angles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get whether radiant quantities should be returned at user angles.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -569,7 +568,7 @@ they are returned at computational polar angles.</p>
 
 <dl class="py method">
 <dt id="controller.ModelBehavior.user_optical_depths">
-<em class="property">property </em><code class="sig-name descname">user_optical_depths</code><a class="headerlink" href="#controller.ModelBehavior.user_optical_depths" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">user_optical_depths</span></code><a class="headerlink" href="#controller.ModelBehavior.user_optical_depths" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get whether radiant quantities should be returned at user optical
 depths.</p>
 <dl class="field-list simple">
@@ -589,13 +588,13 @@ they are returned at the boundary of every computational layer.</p>
 
 <dl class="py class">
 <dt id="controller.OutputArrays">
-<em class="property">class </em><code class="sig-prename descclassname">controller.</code><code class="sig-name descname">OutputArrays</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">computational_params</span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.OutputArrays" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">controller.</span></code><code class="sig-name descname"><span class="pre">OutputArrays</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">computational_params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.OutputArrays" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a data structure to make the DISORT output arrays.</p>
 <p>OutputArrays creates arrays of 0s that are designed to get populated with
 values as DISORT runs.</p>
 <dl class="py method">
 <dt id="controller.OutputArrays.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">computational_params</span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.OutputArrays.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">computational_params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.OutputArrays.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>computational_params</strong> (<a class="reference internal" href="#controller.ComputationalParameters" title="controller.ComputationalParameters"><em>ComputationalParameters</em></a>) – Data structure holding the model computational variables.</p>
@@ -608,7 +607,7 @@ values as DISORT runs.</p>
 
 <dl class="py method">
 <dt id="controller.OutputArrays.albedo_medium">
-<em class="property">property </em><code class="sig-name descname">albedo_medium</code><a class="headerlink" href="#controller.OutputArrays.albedo_medium" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">albedo_medium</span></code><a class="headerlink" href="#controller.OutputArrays.albedo_medium" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the albedo of the medium output array.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -624,7 +623,7 @@ values as DISORT runs.</p>
 
 <dl class="py method">
 <dt id="controller.OutputArrays.diffuse_down_flux">
-<em class="property">property </em><code class="sig-name descname">diffuse_down_flux</code><a class="headerlink" href="#controller.OutputArrays.diffuse_down_flux" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">diffuse_down_flux</span></code><a class="headerlink" href="#controller.OutputArrays.diffuse_down_flux" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the diffuse downward flux output array, which will be the total
 downward flux minus the direct beam flux.</p>
 <dl class="field-list simple">
@@ -641,7 +640,7 @@ downward flux minus the direct beam flux.</p>
 
 <dl class="py method">
 <dt id="controller.OutputArrays.diffuse_up_flux">
-<em class="property">property </em><code class="sig-name descname">diffuse_up_flux</code><a class="headerlink" href="#controller.OutputArrays.diffuse_up_flux" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">diffuse_up_flux</span></code><a class="headerlink" href="#controller.OutputArrays.diffuse_up_flux" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the diffuse upward flux output array.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -657,7 +656,7 @@ downward flux minus the direct beam flux.</p>
 
 <dl class="py method">
 <dt id="controller.OutputArrays.direct_beam_flux">
-<em class="property">property </em><code class="sig-name descname">direct_beam_flux</code><a class="headerlink" href="#controller.OutputArrays.direct_beam_flux" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">direct_beam_flux</span></code><a class="headerlink" href="#controller.OutputArrays.direct_beam_flux" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the direct beam flux output array.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -673,7 +672,7 @@ downward flux minus the direct beam flux.</p>
 
 <dl class="py method">
 <dt id="controller.OutputArrays.flux_divergence">
-<em class="property">property </em><code class="sig-name descname">flux_divergence</code><a class="headerlink" href="#controller.OutputArrays.flux_divergence" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">flux_divergence</span></code><a class="headerlink" href="#controller.OutputArrays.flux_divergence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the flux divergence output array, which is will represent
 (d(net_flux) / d(optical_depth)). This is an exact result.</p>
 <dl class="field-list simple">
@@ -690,7 +689,7 @@ downward flux minus the direct beam flux.</p>
 
 <dl class="py method">
 <dt id="controller.OutputArrays.intensity">
-<em class="property">property </em><code class="sig-name descname">intensity</code><a class="headerlink" href="#controller.OutputArrays.intensity" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">intensity</span></code><a class="headerlink" href="#controller.OutputArrays.intensity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the intensity output array.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -706,7 +705,7 @@ downward flux minus the direct beam flux.</p>
 
 <dl class="py method">
 <dt id="controller.OutputArrays.mean_intensity">
-<em class="property">property </em><code class="sig-name descname">mean_intensity</code><a class="headerlink" href="#controller.OutputArrays.mean_intensity" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">mean_intensity</span></code><a class="headerlink" href="#controller.OutputArrays.mean_intensity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the mean intensity output array.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -722,7 +721,7 @@ downward flux minus the direct beam flux.</p>
 
 <dl class="py method">
 <dt id="controller.OutputArrays.transmissivity_medium">
-<em class="property">property </em><code class="sig-name descname">transmissivity_medium</code><a class="headerlink" href="#controller.OutputArrays.transmissivity_medium" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">transmissivity_medium</span></code><a class="headerlink" href="#controller.OutputArrays.transmissivity_medium" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the transmissivity of the medium output array.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -740,12 +739,12 @@ downward flux minus the direct beam flux.</p>
 
 <dl class="py class">
 <dt id="controller.UserLevel">
-<em class="property">class </em><code class="sig-prename descclassname">controller.</code><code class="sig-name descname">UserLevel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cp</span></em>, <em class="sig-param"><span class="n">mb</span></em>, <em class="sig-param"><span class="n">optical_depth_output</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.UserLevel" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">controller.</span></code><code class="sig-name descname"><span class="pre">UserLevel</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optical_depth_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.UserLevel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the user levels at which radiant quantities are returned.</p>
 <p>UserLevel checks that radiant quantities can be returned at user levels.</p>
 <dl class="py method">
 <dt id="controller.UserLevel.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cp</span></em>, <em class="sig-param"><span class="n">mb</span></em>, <em class="sig-param"><span class="n">optical_depth_output</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.UserLevel.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optical_depth_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.UserLevel.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -773,7 +772,7 @@ use it.</p>
 
 <dl class="py method">
 <dt id="controller.UserLevel.optical_depth_output">
-<em class="property">property </em><code class="sig-name descname">optical_depth_output</code><a class="headerlink" href="#controller.UserLevel.optical_depth_output" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">optical_depth_output</span></code><a class="headerlink" href="#controller.UserLevel.optical_depth_output" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input user optical depth array at user levels.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>

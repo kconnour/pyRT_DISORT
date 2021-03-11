@@ -39,7 +39,7 @@
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Flux" href="flux.html" />
+    <link rel="next" title="Observation" href="observation.html" />
     <link rel="prev" title="Controller" href="controller.html" /> 
 </head>
 
@@ -91,9 +91,9 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../modules.html">Modules</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="controller.html">Controller</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Equation of State</a></li>
-<li class="toctree-l2"><a class="reference internal" href="flux.html">Flux</a></li>
 <li class="toctree-l2"><a class="reference internal" href="observation.html">Observation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="phase_function.html">Phase Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radiation.html">Radiation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rayleigh.html">Rayleigh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="surface.html">Surface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="vertical_profile.html">Vertical Profile</a></li>
@@ -176,7 +176,7 @@
 variables used throughout pyRT_DISORT.</p>
 <dl class="py class">
 <dt id="eos.Hydrostatic">
-<em class="property">class </em><code class="sig-prename descclassname">eos.</code><code class="sig-name descname">Hydrostatic</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">altitude_grid</span></em>, <em class="sig-param"><span class="n">pressure_grid</span></em>, <em class="sig-param"><span class="n">temperature_grid</span></em>, <em class="sig-param"><span class="n">altitude_boundaries</span></em>, <em class="sig-param"><span class="n">particle_mass</span></em>, <em class="sig-param"><span class="n">gravity</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eos.Hydrostatic" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">eos.</span></code><code class="sig-name descname"><span class="pre">Hydrostatic</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">altitude_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude_boundaries</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_mass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gravity</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eos.Hydrostatic" title="Permalink to this definition">¶</a></dt>
 <dd><p>A data structure that computes a hydrostatic equation of state.</p>
 <p>Hydrostatic accepts equation of state variables and computes atmospheric
 properties from them, assuming the atmosphere follows the equation</p>
@@ -186,7 +186,7 @@ properties from them, assuming the atmosphere follows the equation</p>
 <span class="math notranslate nohighlight">\(k_B\)</span> is Boltzmann’s constant, and <span class="math notranslate nohighlight">\(T\)</span> is the temperature.</p>
 <dl class="py method">
 <dt id="eos.Hydrostatic.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">altitude_grid</span></em>, <em class="sig-param"><span class="n">pressure_grid</span></em>, <em class="sig-param"><span class="n">temperature_grid</span></em>, <em class="sig-param"><span class="n">altitude_boundaries</span></em>, <em class="sig-param"><span class="n">particle_mass</span></em>, <em class="sig-param"><span class="n">gravity</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eos.Hydrostatic.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">altitude_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude_boundaries</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_mass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gravity</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eos.Hydrostatic.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -215,7 +215,7 @@ results but should be improved.</p>
 
 <dl class="py method">
 <dt id="eos.Hydrostatic.altitude">
-<em class="property">property </em><code class="sig-name descname">altitude</code><a class="headerlink" href="#eos.Hydrostatic.altitude" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">altitude</span></code><a class="headerlink" href="#eos.Hydrostatic.altitude" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input boundary altitude [km].</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -226,7 +226,7 @@ results but should be improved.</p>
 
 <dl class="py method">
 <dt id="eos.Hydrostatic.column_density">
-<em class="property">property </em><code class="sig-name descname">column_density</code><a class="headerlink" href="#eos.Hydrostatic.column_density" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">column_density</span></code><a class="headerlink" href="#eos.Hydrostatic.column_density" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the column density [<span class="math notranslate nohighlight">\(\frac{\text{particles}}{\text{m}^2}\)</span>]
 at the boundary <em>layers</em>. This array is obtained by linearly
 interpolating the input pressure and temperature of each pixel, then
@@ -245,7 +245,7 @@ the number density.</p>
 
 <dl class="py method">
 <dt id="eos.Hydrostatic.n_layers">
-<em class="property">property </em><code class="sig-name descname">n_layers</code><a class="headerlink" href="#eos.Hydrostatic.n_layers" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">n_layers</span></code><a class="headerlink" href="#eos.Hydrostatic.n_layers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the number of layers in the model. This value is inferred from
 the 0 <sup>th</sup> dimension of <code class="code docutils literal notranslate"><span class="pre">altitude_boundaries</span></code>.</p>
 <dl class="field-list simple">
@@ -257,7 +257,7 @@ the 0 <sup>th</sup> dimension of <code class="code docutils literal notranslate"
 
 <dl class="py method">
 <dt id="eos.Hydrostatic.number_density">
-<em class="property">property </em><code class="sig-name descname">number_density</code><a class="headerlink" href="#eos.Hydrostatic.number_density" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">number_density</span></code><a class="headerlink" href="#eos.Hydrostatic.number_density" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the number density [<span class="math notranslate nohighlight">\(\frac{\text{particles}}{\text{m}^3}\)</span>]
 at the boundary altitude. This variable is obtained by getting the
 pressure and temperature at the boundary altitude, then solving
@@ -271,7 +271,7 @@ pressure and temperature at the boundary altitude, then solving
 
 <dl class="py method">
 <dt id="eos.Hydrostatic.pressure">
-<em class="property">property </em><code class="sig-name descname">pressure</code><a class="headerlink" href="#eos.Hydrostatic.pressure" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">pressure</span></code><a class="headerlink" href="#eos.Hydrostatic.pressure" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the pressure [Pa] at the boundary altitude. This variable is
 obtained by linearly interpolating the input pressure onto
 <code class="code docutils literal notranslate"><span class="pre">altitude_boundaries</span></code> for each pixel.</p>
@@ -284,7 +284,7 @@ obtained by linearly interpolating the input pressure onto
 
 <dl class="py method">
 <dt id="eos.Hydrostatic.scale_height">
-<em class="property">property </em><code class="sig-name descname">scale_height</code><a class="headerlink" href="#eos.Hydrostatic.scale_height" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">scale_height</span></code><a class="headerlink" href="#eos.Hydrostatic.scale_height" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the scale height [km] at the boundary altitude. For a
 hydrostatic atmosphere, the scale height is defined as</p>
 <div class="math notranslate nohighlight">
@@ -306,7 +306,7 @@ variable should have length of <code class="code docutils literal notranslate"><
 
 <dl class="py method">
 <dt id="eos.Hydrostatic.temperature">
-<em class="property">property </em><code class="sig-name descname">temperature</code><a class="headerlink" href="#eos.Hydrostatic.temperature" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">temperature</span></code><a class="headerlink" href="#eos.Hydrostatic.temperature" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the temperature [K] at the boundary altitude. This variable is
 obtained by linearly interpolating the input temperature onto
 <code class="code docutils literal notranslate"><span class="pre">altitude_boundaries</span></code> for each pixel.</p>
@@ -329,7 +329,7 @@ obtained by linearly interpolating the input temperature onto
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="flux.html" class="btn btn-neutral float-right" title="Flux" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="observation.html" class="btn btn-neutral float-right" title="Observation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
         <a href="controller.html" class="btn btn-neutral float-left" title="Controller" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 

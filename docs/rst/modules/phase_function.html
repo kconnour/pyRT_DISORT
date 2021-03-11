@@ -32,14 +32,13 @@
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Rayleigh" href="rayleigh.html" />
+    <link rel="next" title="Radiation" href="radiation.html" />
     <link rel="prev" title="Observation" href="observation.html" /> 
 </head>
 
@@ -91,9 +90,9 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../modules.html">Modules</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="controller.html">Controller</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eos.html">Equation of State</a></li>
-<li class="toctree-l2"><a class="reference internal" href="flux.html">Flux</a></li>
 <li class="toctree-l2"><a class="reference internal" href="observation.html">Observation</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Phase Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radiation.html">Radiation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rayleigh.html">Rayleigh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="surface.html">Surface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="vertical_profile.html">Vertical Profile</a></li>
@@ -176,7 +175,7 @@
 function arrays required by DISORT.</p>
 <dl class="py class">
 <dt id="phase_function.RadialSpectralTabularLegendreCoefficients">
-<em class="property">class </em><code class="sig-prename descclassname">phase_function.</code><code class="sig-name descname">RadialSpectralTabularLegendreCoefficients</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">coefficients</span></em>, <em class="sig-param"><span class="n">particle_size_grid</span></em>, <em class="sig-param"><span class="n">wavelength_grid</span></em>, <em class="sig-param"><span class="n">altitude_grid</span></em>, <em class="sig-param"><span class="n">wavelengths</span></em>, <em class="sig-param"><span class="n">particle_size_profile</span></em>, <em class="sig-param"><span class="n">max_moments</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#phase_function.RadialSpectralTabularLegendreCoefficients" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">phase_function.</span></code><code class="sig-name descname"><span class="pre">RadialSpectralTabularLegendreCoefficients</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coefficients</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_size_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelength_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelengths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_size_profile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_moments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#phase_function.RadialSpectralTabularLegendreCoefficients" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a grid of Legendre coefficients (particle size, wavelength).</p>
 <p>StaticTabularLegendreCoefficients accepts a 3D array of Legendre polynomial
 coefficients of the phase function that depend on particle size and
@@ -184,7 +183,7 @@ wavelength and casts them to an array of the proper shape for use in DISORT
 given a vertical particle size gradient.</p>
 <dl class="py method">
 <dt id="phase_function.RadialSpectralTabularLegendreCoefficients.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">coefficients</span></em>, <em class="sig-param"><span class="n">particle_size_grid</span></em>, <em class="sig-param"><span class="n">wavelength_grid</span></em>, <em class="sig-param"><span class="n">altitude_grid</span></em>, <em class="sig-param"><span class="n">wavelengths</span></em>, <em class="sig-param"><span class="n">particle_size_profile</span></em>, <em class="sig-param"><span class="n">max_moments</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#phase_function.RadialSpectralTabularLegendreCoefficients.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coefficients</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_size_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelength_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelengths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_size_profile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_moments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#phase_function.RadialSpectralTabularLegendreCoefficients.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -205,7 +204,7 @@ all available coefficients are used.</p></li>
 
 <dl class="py method">
 <dt id="phase_function.RadialSpectralTabularLegendreCoefficients.phase_function">
-<em class="property">property </em><code class="sig-name descname">phase_function</code><a class="headerlink" href="#phase_function.RadialSpectralTabularLegendreCoefficients.phase_function" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">phase_function</span></code><a class="headerlink" href="#phase_function.RadialSpectralTabularLegendreCoefficients.phase_function" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the Legendre coefficients cast to the proper grid.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -231,14 +230,14 @@ pixels.</p>
 
 <dl class="py class">
 <dt id="phase_function.StaticTabularLegendreCoefficients">
-<em class="property">class </em><code class="sig-prename descclassname">phase_function.</code><code class="sig-name descname">StaticTabularLegendreCoefficients</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">coefficients</span></em>, <em class="sig-param"><span class="n">altitude_grid</span></em>, <em class="sig-param"><span class="n">wavelengths</span></em>, <em class="sig-param"><span class="n">max_moments</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#phase_function.StaticTabularLegendreCoefficients" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">phase_function.</span></code><code class="sig-name descname"><span class="pre">StaticTabularLegendreCoefficients</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coefficients</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelengths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_moments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#phase_function.StaticTabularLegendreCoefficients" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a grid of static Legendre coefficients.</p>
 <p>StaticTabularLegendreCoefficients accepts a 1D array of Legendre polynomial
 coefficients of the phase function that do not depend on particle size or
 wavelength and casts them to an array of the proper shape for use in DISORT.</p>
 <dl class="py method">
 <dt id="phase_function.StaticTabularLegendreCoefficients.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">coefficients</span></em>, <em class="sig-param"><span class="n">altitude_grid</span></em>, <em class="sig-param"><span class="n">wavelengths</span></em>, <em class="sig-param"><span class="n">max_moments</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#phase_function.StaticTabularLegendreCoefficients.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coefficients</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelengths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_moments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#phase_function.StaticTabularLegendreCoefficients.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -257,7 +256,7 @@ all available coefficients are used.</p></li>
 
 <dl class="py method">
 <dt id="phase_function.StaticTabularLegendreCoefficients.phase_function">
-<em class="property">property </em><code class="sig-name descname">phase_function</code><a class="headerlink" href="#phase_function.StaticTabularLegendreCoefficients.phase_function" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">phase_function</span></code><a class="headerlink" href="#phase_function.StaticTabularLegendreCoefficients.phase_function" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the Legendre coefficients cast to the proper grid.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -283,13 +282,13 @@ pixels.</p>
 
 <dl class="py class">
 <dt id="phase_function.TabularLegendreCoefficients">
-<em class="property">class </em><code class="sig-prename descclassname">phase_function.</code><code class="sig-name descname">TabularLegendreCoefficients</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">coefficients</span></em>, <em class="sig-param"><span class="n">altitude_grid</span></em>, <em class="sig-param"><span class="n">wavelengths</span></em>, <em class="sig-param"><span class="n">max_moments</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#phase_function.TabularLegendreCoefficients" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">phase_function.</span></code><code class="sig-name descname"><span class="pre">TabularLegendreCoefficients</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coefficients</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelengths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_moments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#phase_function.TabularLegendreCoefficients" title="Permalink to this definition">¶</a></dt>
 <dd><p>An abstract class from which all coefficient classes are derived.</p>
 <p>TabularLegendreCoefficients holds a variety of properties that are needed by
 all derived classes. It is not meant to be instantiated.</p>
 <dl class="py method">
 <dt id="phase_function.TabularLegendreCoefficients.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">coefficients</span></em>, <em class="sig-param"><span class="n">altitude_grid</span></em>, <em class="sig-param"><span class="n">wavelengths</span></em>, <em class="sig-param"><span class="n">max_moments</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#phase_function.TabularLegendreCoefficients.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coefficients</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelengths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_moments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#phase_function.TabularLegendreCoefficients.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
 </dd></dl>
 
@@ -303,7 +302,7 @@ all derived classes. It is not meant to be instantiated.</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="rayleigh.html" class="btn btn-neutral float-right" title="Rayleigh" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="radiation.html" class="btn btn-neutral float-right" title="Radiation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
         <a href="observation.html" class="btn btn-neutral float-left" title="Observation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 

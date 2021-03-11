@@ -36,3 +36,15 @@ number_density = hydro.number_density
 column_density = hydro.column_density
 n_layers = hydro.n_layers
 scale_height = hydro.scale_height
+
+from pyRT_DISORT.radiation import IncidentFlux, ThermalEmission
+
+flux = IncidentFlux()
+beam_flux = flux.beam_flux
+iso_flux = flux.isotropic_flux
+
+te = ThermalEmission()
+thermal_emission = te.thermal_emission
+bottom_temp = te.bottom_temperature
+top_temp = te.top_temperature
+top_emissivity = te.top_emissivity

@@ -8,9 +8,9 @@ Here you can find documentation on the included modules with pyRT_DISORT.
 
    modules/controller
    modules/eos
-   modules/flux
    modules/observation
    modules/phase_function
+   modules/radiation
    modules/rayleigh
    modules/surface
    modules/vertical_profile

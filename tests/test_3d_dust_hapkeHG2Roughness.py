@@ -10,7 +10,7 @@ from pyRT_DISORT.untested.phase_function import TabularLegendreCoefficients
 from pyRT_DISORT.untested.rayleigh import RayleighCo2
 from pyRT_DISORT.untested.model_atmosphere import ModelAtmosphere
 from pyRT_DISORT.controller import ComputationalParameters, ModelBehavior, OutputArrays
-from pyRT_DISORT.flux import IncidentFlux, ThermalEmission
+from pyRT_DISORT.radiation import IncidentFlux, ThermalEmission
 from pyRT_DISORT.untested.unsure import Unsure
 from pyRT_DISORT.surface import HapkeHG2Roughness
 import disort

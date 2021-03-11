@@ -296,8 +296,8 @@ class Spectral:
         -----
         In DISORT, this variable is named :code:`WVNMHI`. It is only needed by
         DISORT if :code:`thermal_emission==True` (defined in
-        :class:`flux.ThermalEmission`), or if DISORT is run multiple times and
-        BDREF is spectrally dependent.
+        :class:`radiation.ThermalEmission`), or if DISORT is run multiple times
+        and BDREF is spectrally dependent.
 
         """
         return self.__high_wavenumber
@@ -311,8 +311,8 @@ class Spectral:
         -----
         In DISORT, this variable is named :code:`WVNMLO`. It is only needed by
         DISORT if :code:`thermal_emission==True` (defined in
-        :class:`flux.ThermalEmission`), or if DISORT is run multiple times and
-        BDREF is spectrally dependent.
+        :class:`radiation.ThermalEmission`), or if DISORT is run multiple times
+        and BDREF is spectrally dependent.
 
         """
         return self.__low_wavenumber

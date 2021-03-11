@@ -11,7 +11,7 @@ import disort
 from pyRT_DISORT.controller import ComputationalParameters, ModelBehavior, \
     OutputArrays, UserLevel
 from pyRT_DISORT.eos import eos_from_array
-from pyRT_DISORT.flux import IncidentFlux, ThermalEmission
+from pyRT_DISORT.radiation import IncidentFlux, ThermalEmission
 from pyRT_DISORT.observation import Angles, Wavelengths
 from pyRT_DISORT.surface import Lambertian
 from pyRT_DISORT.untested_utils.utilities.external_files import ExternalFile

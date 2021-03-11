@@ -32,7 +32,6 @@
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -193,10 +192,6 @@
 </li>
         <li><a href="rst/modules/eos.html#eos.Hydrostatic.__init__">(eos.Hydrostatic method)</a>
 </li>
-        <li><a href="rst/modules/flux.html#flux.IncidentFlux.__init__">(flux.IncidentFlux method)</a>
-</li>
-        <li><a href="rst/modules/flux.html#flux.ThermalEmission.__init__">(flux.ThermalEmission method)</a>
-</li>
         <li><a href="rst/modules/observation.html#observation.Angles.__init__">(observation.Angles method)</a>
 </li>
         <li><a href="rst/modules/observation.html#observation.Spectral.__init__">(observation.Spectral method)</a>
@@ -206,6 +201,10 @@
         <li><a href="rst/modules/phase_function.html#phase_function.StaticTabularLegendreCoefficients.__init__">(phase_function.StaticTabularLegendreCoefficients method)</a>
 </li>
         <li><a href="rst/modules/phase_function.html#phase_function.TabularLegendreCoefficients.__init__">(phase_function.TabularLegendreCoefficients method)</a>
+</li>
+        <li><a href="rst/modules/radiation.html#radiation.IncidentFlux.__init__">(radiation.IncidentFlux method)</a>
+</li>
+        <li><a href="rst/modules/radiation.html#radiation.ThermalEmission.__init__">(radiation.ThermalEmission method)</a>
 </li>
         <li><a href="rst/modules/rayleigh.html#rayleigh.Rayleigh.__init__">(rayleigh.Rayleigh method)</a>
 </li>
@@ -250,13 +249,13 @@
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="rst/modules/flux.html#flux.IncidentFlux.beam_flux">beam_flux() (flux.IncidentFlux property)</a>
+      <li><a href="rst/modules/radiation.html#radiation.IncidentFlux.beam_flux">beam_flux() (radiation.IncidentFlux property)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="rst/modules/surface.html#surface.Surface.bemst">bemst() (surface.Surface property)</a>
 </li>
-      <li><a href="rst/modules/flux.html#flux.ThermalEmission.bottom_temperature">bottom_temperature() (flux.ThermalEmission property)</a>
+      <li><a href="rst/modules/radiation.html#radiation.ThermalEmission.bottom_temperature">bottom_temperature() (radiation.ThermalEmission property)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -322,15 +321,6 @@
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li>
-    flux
-
-      <ul>
-        <li><a href="rst/modules/flux.html#module-flux">module</a>
-</li>
-      </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="rst/modules/controller.html#controller.OutputArrays.flux_divergence">flux_divergence() (controller.OutputArrays property)</a>
 </li>
   </ul></td>
@@ -365,11 +355,11 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="rst/modules/flux.html#flux.IncidentFlux">IncidentFlux (class in flux)</a>
+      <li><a href="rst/modules/radiation.html#radiation.IncidentFlux">IncidentFlux (class in radiation)</a>
 </li>
       <li><a href="rst/modules/controller.html#controller.OutputArrays.intensity">intensity() (controller.OutputArrays property)</a>
 </li>
-      <li><a href="rst/modules/flux.html#flux.IncidentFlux.isotropic_flux">isotropic_flux() (flux.IncidentFlux property)</a>
+      <li><a href="rst/modules/radiation.html#radiation.IncidentFlux.isotropic_flux">isotropic_flux() (radiation.IncidentFlux property)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -405,11 +395,11 @@
 </li>
         <li><a href="rst/modules/eos.html#module-eos">eos</a>
 </li>
-        <li><a href="rst/modules/flux.html#module-flux">flux</a>
-</li>
         <li><a href="rst/modules/observation.html#module-observation">observation</a>
 </li>
         <li><a href="rst/modules/phase_function.html#module-phase_function">phase_function</a>
+</li>
+        <li><a href="rst/modules/radiation.html#module-radiation">radiation</a>
 </li>
         <li><a href="rst/modules/rayleigh.html#module-rayleigh">rayleigh</a>
 </li>
@@ -518,6 +508,13 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="rst/modules/phase_function.html#phase_function.RadialSpectralTabularLegendreCoefficients">RadialSpectralTabularLegendreCoefficients (class in phase_function)</a>
 </li>
+      <li>
+    radiation
+
+      <ul>
+        <li><a href="rst/modules/radiation.html#module-radiation">module</a>
+</li>
+      </ul></li>
       <li><a href="rst/modules/controller.html#controller.ModelBehavior.radius">radius() (controller.ModelBehavior property)</a>
 </li>
       <li>
@@ -576,15 +573,15 @@
 </li>
       <li><a href="rst/modules/eos.html#eos.Hydrostatic.temperature">temperature() (eos.Hydrostatic property)</a>
 </li>
-      <li><a href="rst/modules/flux.html#flux.ThermalEmission.thermal_emission">thermal_emission() (flux.ThermalEmission property)</a>
+      <li><a href="rst/modules/radiation.html#radiation.ThermalEmission.thermal_emission">thermal_emission() (radiation.ThermalEmission property)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="rst/modules/flux.html#flux.ThermalEmission">ThermalEmission (class in flux)</a>
+      <li><a href="rst/modules/radiation.html#radiation.ThermalEmission">ThermalEmission (class in radiation)</a>
 </li>
-      <li><a href="rst/modules/flux.html#flux.ThermalEmission.top_emissivity">top_emissivity() (flux.ThermalEmission property)</a>
+      <li><a href="rst/modules/radiation.html#radiation.ThermalEmission.top_emissivity">top_emissivity() (radiation.ThermalEmission property)</a>
 </li>
-      <li><a href="rst/modules/flux.html#flux.ThermalEmission.top_temperature">top_temperature() (flux.ThermalEmission property)</a>
+      <li><a href="rst/modules/radiation.html#radiation.ThermalEmission.top_temperature">top_temperature() (radiation.ThermalEmission property)</a>
 </li>
       <li><a href="rst/modules/controller.html#controller.OutputArrays.transmissivity_medium">transmissivity_medium() (controller.OutputArrays property)</a>
 </li>
