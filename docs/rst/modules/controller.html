@@ -91,6 +91,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Controller</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eos.html">Equation of State</a></li>
 <li class="toctree-l2"><a class="reference internal" href="observation.html">Observation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="phase_function.html">Phase Function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="radiation.html">Radiation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rayleigh.html">Rayleigh</a></li>
@@ -308,13 +309,13 @@ n_moments.</p>
 
 <dl class="py class">
 <dt id="controller.ModelBehavior">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">controller.</span></code><code class="sig-name descname"><span class="pre">ModelBehavior</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">accuracy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_m_plus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_pseudo_sphere</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incidence_beam_conditions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_fluxes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_variables</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6371.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_angles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_optical_depths</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.ModelBehavior" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">controller.</span></code><code class="sig-name descname"><span class="pre">ModelBehavior</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">accuracy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_m_plus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_pseudo_sphere</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_variables</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6371.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.ModelBehavior" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a data structure for holding the DISORT control variables.</p>
 <p>ModelBehavior holds the control flags that dictate DISORT’s behavior. It
 also performs basic checks that the input control options are plausible.</p>
 <dl class="py method">
 <dt id="controller.ModelBehavior.__init__">
-<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">accuracy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_m_plus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_pseudo_sphere</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incidence_beam_conditions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_fluxes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_variables</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6371.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_angles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_optical_depths</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.ModelBehavior.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">accuracy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_m_plus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_pseudo_sphere</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_variables</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6371.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.ModelBehavior.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -337,39 +338,6 @@ header, and this is the only way to do so (‘header’ is not
 controlled by any of the ‘print’ flags); ‘header’ can be used
 to mark the progress of a calculation in which DISORT is called many
 times, while leaving all other printing turned off. Default is ‘’.</p></li>
-<li><p><strong>incidence_beam_conditions</strong> (<em>bool</em><em>, </em><em>optional</em>) – <p>Denote what functions of the incidence beam angle should be
-included. If True, return the albedo and transmissivity of the
-entire medium as a function of incidence beam angle. In this case,
-the following inputs are the only ones considered by DISORT:</p>
-<ul>
-<li><p>n_layers (from ComputationalParameters)</p></li>
-<li><p>DTAUC</p></li>
-<li><p>SSALB</p></li>
-<li><p>PMOM</p></li>
-<li><p>n_streams (from ComputationalParameters)</p></li>
-<li><p>user_angles (from this class)</p></li>
-<li><p>n_polar (from ComputationalParameters)</p></li>
-<li><p>UMU</p></li>
-<li><p>ALBEDO</p></li>
-<li><p>print_variables (from this class)</p></li>
-<li><p>header (from this class)</p></li>
-</ul>
-<p>PLANK is assumed to be False, LAMBER is assumed to be True, and
-ONLYFL must be False. The only output is ALBMED and TRNMED. The
-intensities are not corrected for delta-M+ correction.</p>
-<p>If False, this is accommodates any general case of boundary
-conditions including beam illumination from the top, isotropic
-illumination from the top, thermal emission from the top, internal
-thermal emission, reflection at the bottom, and/or thermal emission
-from the bottom. Default is False.</p>
-</p></li>
-<li><p><strong>only_fluxes</strong> (<em>bool</em><em>, </em><em>optional</em>) – Determine if only the fluxes are returned by the model. If True,
-return fluxes, flux divergences, and mean intensities; if False,
-return all those quantities and intensities. In addition, if True
-the number of polar angles can be 0, the number of azimuthal angles
-can be 0, phi is not used, and all values of intensity (UU) will be
-set to 0 (these are defined in ComputationalParameters). Default is
-False.</p></li>
 <li><p><strong>print_variables</strong> (<em>list</em><em>[</em><em>bool</em><em>]</em><em>, </em><em>optional</em>) – <p>Make a list of variables that control what DISORT prints. The 5
 booleans control whether each of the following is printed:</p>
 <ol class="arabic simple">
@@ -384,20 +352,6 @@ booleans control whether each of the following is printed:</p>
 <li><p><strong>radius</strong> (<em>float</em><em>, </em><em>optional</em>) – The planetary radius. This is presumably only used if
 do_pseudo_sphere == True, although there is no documentation on
 this. Default is 6371.0.</p></li>
-<li><p><strong>user_angles</strong> (<em>bool</em><em>, </em><em>optional</em>) – Denote whether radiant quantities should be returned at user angles.
-If False, radiant quantities are to be returned at computational
-polar angles. Also, UMU will return the cosines of the computational
-polar angles and n_polar (from ComputationalParameters) will return
-their number ( = n_streams).UMU must
-be large enough to contain n_streams elements. If True,
-radiant quantities are to be returned at user-specified polar
-angles, as follows: NUMU No. of polar angles (zero is a legal value
-only when ‘only_fluxes’ == True ) UMU(IU) IU=1 to NUMU, cosines of
-output polar angles in increasing order—starting with negative
-(downward) values (if any) and on through positive (upward)
-values; <strong>* MUST NOT HAVE ANY ZERO VALUES *</strong>. Default is True.</p></li>
-<li><p><strong>user_optical_depths</strong> (<em>bool</em><em>, </em><em>optional</em>) – Denote whether radiant quantities are returned at user-specified
-optical depths. Default is False.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
@@ -484,38 +438,6 @@ documentation on this variable.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="controller.ModelBehavior.incidence_beam_conditions">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">incidence_beam_conditions</span></code><a class="headerlink" href="#controller.ModelBehavior.incidence_beam_conditions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get whether the model will only return albedo and transmissivity.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>True if DISORT should only return albedo and transmissivity; False
-otherwise.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="controller.ModelBehavior.only_fluxes">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">only_fluxes</span></code><a class="headerlink" href="#controller.ModelBehavior.only_fluxes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get whether DISORT should only return fluxes.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>True if only fluxes are requested; False if fluxes and intensities
-are requested.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>bool</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>In DISORT, this variable is named “ONLYFL”.</p>
-</dd></dl>
-
-<dl class="py method">
 <dt id="controller.ModelBehavior.print_variables">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">print_variables</span></code><a class="headerlink" href="#controller.ModelBehavior.print_variables" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the variables to print.</p>
@@ -547,192 +469,6 @@ are requested.</p>
 <p>In DISORT, this variable is named “EARTH_RADIUS”. There is no
 documentation on this variable, though I’m presuming it could be any
 planetary radius.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="controller.ModelBehavior.user_angles">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">user_angles</span></code><a class="headerlink" href="#controller.ModelBehavior.user_angles" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get whether radiant quantities should be returned at user angles.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>True if quantities are returned at user-specified angles; False if
-they are returned at computational polar angles.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>bool</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>In DISORT, this variable is named “USRANG”.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="controller.ModelBehavior.user_optical_depths">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">user_optical_depths</span></code><a class="headerlink" href="#controller.ModelBehavior.user_optical_depths" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get whether radiant quantities should be returned at user optical
-depths.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>True if quantities are returned at user optical depths; False if
-they are returned at the boundary of every computational layer.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>bool</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>In DISORT, this variable is named “USRTAU”.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt id="controller.OutputArrays">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">controller.</span></code><code class="sig-name descname"><span class="pre">OutputArrays</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">computational_params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.OutputArrays" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a data structure to make the DISORT output arrays.</p>
-<p>OutputArrays creates arrays of 0s that are designed to get populated with
-values as DISORT runs.</p>
-<dl class="py method">
-<dt id="controller.OutputArrays.__init__">
-<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">computational_params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.OutputArrays.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>computational_params</strong> (<a class="reference internal" href="#controller.ComputationalParameters" title="controller.ComputationalParameters"><em>ComputationalParameters</em></a>) – Data structure holding the model computational variables.</p>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><p><strong>TypeError</strong> – Raised if input is not an instance of ComputationalParameters.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="controller.OutputArrays.albedo_medium">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">albedo_medium</span></code><a class="headerlink" href="#controller.OutputArrays.albedo_medium" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the albedo of the medium output array.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The albedo of the medium.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>np.ndarray</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>In DISORT, this variable is named “ALBMED”.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="controller.OutputArrays.diffuse_down_flux">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">diffuse_down_flux</span></code><a class="headerlink" href="#controller.OutputArrays.diffuse_down_flux" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the diffuse downward flux output array, which will be the total
-downward flux minus the direct beam flux.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The diffuse downward flux.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>np.ndarray</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>In DISORT, this variable is named “RFLDN”.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="controller.OutputArrays.diffuse_up_flux">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">diffuse_up_flux</span></code><a class="headerlink" href="#controller.OutputArrays.diffuse_up_flux" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the diffuse upward flux output array.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The diffuse upward flux.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>np.ndarray</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>In DISORT, this variable is named “FLUP”.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="controller.OutputArrays.direct_beam_flux">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">direct_beam_flux</span></code><a class="headerlink" href="#controller.OutputArrays.direct_beam_flux" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the direct beam flux output array.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The direct beam flux.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>np.ndarray</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>In DISORT, this variable is named “RFLDIR”.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="controller.OutputArrays.flux_divergence">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">flux_divergence</span></code><a class="headerlink" href="#controller.OutputArrays.flux_divergence" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the flux divergence output array, which is will represent
-(d(net_flux) / d(optical_depth)). This is an exact result.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The flux divergence.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>np.ndarray</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>In DISORT, this variable is named “DFDT”.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="controller.OutputArrays.intensity">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">intensity</span></code><a class="headerlink" href="#controller.OutputArrays.intensity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the intensity output array.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The intensity.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>np.ndarray</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>In DISORT, this variable is named “UU”.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="controller.OutputArrays.mean_intensity">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">mean_intensity</span></code><a class="headerlink" href="#controller.OutputArrays.mean_intensity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the mean intensity output array.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The mean intensity.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>np.ndarray</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>In DISORT, this variable is named “UAVG”.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="controller.OutputArrays.transmissivity_medium">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">transmissivity_medium</span></code><a class="headerlink" href="#controller.OutputArrays.transmissivity_medium" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the transmissivity of the medium output array.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The transmissivity of the medium.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>np.ndarray</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>In DISORT, this variable is named “TRNMED”.</p>
 </dd></dl>
 
 </dd></dl>

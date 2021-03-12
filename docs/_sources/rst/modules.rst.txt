@@ -9,6 +9,7 @@ Here you can find documentation on the included modules with pyRT_DISORT.
    modules/controller
    modules/eos
    modules/observation
+   modules/output
    modules/phase_function
    modules/radiation
    modules/rayleigh
