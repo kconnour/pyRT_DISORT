@@ -296,3 +296,67 @@ class OutputBehavior:
 
         """
         return self.__user_optical_depths
+
+
+class UserLevel:
+    """Create the user levels at which radiant quantities are returned.
+
+    UserLevel checks that radiant quantities can be returned at user levels.
+
+    """
+    def __init__(self, optical_depth_output: np.ndarray = None,
+                 n_user_levels: int = 1) -> None:
+        """
+        Parameters
+        ----------
+        optical_depth_output
+            If radiant quantities are to be returned at user specified optical
+            depths (as specified in mb) this is the monotonically increasing 1D
+            array of optical depths where they should be output. It must not
+            exceed the column integrated optical depth of DTAUC. If radiant
+            quantities can simply be returned at the boundary of every
+            computational layer (user_optical_depths = False) this can be None,
+            and this object will create an array of 0s for the output. Default
+            is None.
+        n_user_levels
+            The number of user levels to instantiate. Only required if
+            :code:`optical_depth_output` is not None.
+
+        Notes
+        -----
+        The documentation suggests if user_optical_depths = False, this array
+        is populated with optical depths at the boundaries of the computational
+        layers. However, this seems equal to DTAUC to me but with a 0 appended.
+        Additionally, making this case work would require changing f2py to
+        make this an output array... which I'm not inclined to do if no one will
+        use it.
+
+        """
+        self.__optical_depth_output = self.__make_optical_depth_output(
+            optical_depth_output, n_user_levels)
+
+    @staticmethod
+    def __make_optical_depth_output(optical_depth_output, n_user_levels):
+        if optical_depth_output is not None:
+            # TODO: ensure this is monotonically increasing
+            # TODO: ensure the last element does not exceed the total optical
+            #  depth of the medium from dtauc
+            return optical_depth_output
+        else:
+            return np.zeros(n_user_levels)
+
+    @property
+    def optical_depth_output(self) -> np.ndarray:
+        """Get the input user optical depth array at user levels.
+
+        Returns
+        -------
+        np.ndarray
+            The optical depth at user levels.
+
+        Notes
+        -----
+        In DISORT, this variable is named "UTAU".
+
+        """
+        return self.__optical_depth_output

@@ -95,9 +95,13 @@
 <li class="toctree-l2"><a class="reference internal" href="optical_depth.html">Optical Depth</a></li>
 <li class="toctree-l2"><a class="reference internal" href="phase_function.html">Phase Function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="model_build.html">Model Build</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Controller</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Controller</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#computational-parameters">Computational Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#model-behavior">Model Behavior</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="surface.html">Surface</a></li>
-<li class="toctree-l2"><a class="reference internal" href="radiation_and_flux.html">Radiation and Flux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radiation.html">Radiation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="output.html">Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="running_the_model.html">Running the model</a></li>
 </ul>
@@ -176,7 +180,37 @@
             
   <div class="section" id="controller">
 <h1>Controller<a class="headerlink" href="#controller" title="Permalink to this headline">¶</a></h1>
-<p>Coming soon!</p>
+<p>Now’s the time we should should set some of the controlling parameters of the
+model. If you come up with a better module name, I’d be happy to change this.
+These variables will be necessary for defining the last part of our model.</p>
+<div class="section" id="computational-parameters">
+<h2>Computational Parameters<a class="headerlink" href="#computational-parameters" title="Permalink to this headline">¶</a></h2>
+<p>We need to set a number of computational parameters. Let’s do that with
+<a class="reference internal" href="../modules/controller.html#controller.ComputationalParameters" title="controller.ComputationalParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">controller.ComputationalParameters</span></code></a>. We can just plug the number of
+layers inferred from the number of altitudes to use from the equation of state.
+Let’s then use 64 moments, 16 streams, 1 polar and azimuthal angle, and 80
+user levels.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.rayleigh</span> <span class="kn">import</span> <span class="n">RayleighCO2</span>
+
+<span class="n">short_rayleigh</span> <span class="o">=</span> <span class="n">RayleighCO2</span><span class="p">(</span><span class="n">altitude</span><span class="p">,</span> <span class="n">high_wavenumbers</span><span class="p">,</span> <span class="n">column_density</span><span class="p">)</span>
+<span class="n">rayleigh_phase_function</span> <span class="o">=</span> <span class="n">short_rayleigh</span><span class="o">.</span><span class="n">phase_function</span>
+<span class="n">rayleigh_od</span> <span class="o">=</span> <span class="n">short_rayleigh</span><span class="o">.</span><span class="n">scattering_optical_depth</span>
+</pre></div>
+</div>
+<p>This class just holds all of these parameters and checks they’re allowable.</p>
+</div>
+<div class="section" id="model-behavior">
+<h2>Model Behavior<a class="headerlink" href="#model-behavior" title="Permalink to this headline">¶</a></h2>
+<p>Let’s also define how we want our model to run. We can do that we
+<a class="reference internal" href="../modules/controller.html#controller.ModelBehavior" title="controller.ModelBehavior"><code class="xref py py-class docutils literal notranslate"><span class="pre">controller.ModelBehavior</span></code></a>, which has some preset values.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.rayleigh</span> <span class="kn">import</span> <span class="n">RayleighCO2</span>
+
+<span class="n">short_rayleigh</span> <span class="o">=</span> <span class="n">RayleighCO2</span><span class="p">(</span><span class="n">altitude</span><span class="p">,</span> <span class="n">high_wavenumbers</span><span class="p">,</span> <span class="n">column_density</span><span class="p">)</span>
+<span class="n">rayleigh_phase_function</span> <span class="o">=</span> <span class="n">short_rayleigh</span><span class="o">.</span><span class="n">phase_function</span>
+<span class="n">rayleigh_od</span> <span class="o">=</span> <span class="n">short_rayleigh</span><span class="o">.</span><span class="n">scattering_optical_depth</span>
+</pre></div>
+</div>
+</div>
 </div>
 
 

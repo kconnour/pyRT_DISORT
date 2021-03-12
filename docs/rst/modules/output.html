@@ -425,6 +425,57 @@ depths.</p>
 
 </dd></dl>
 
+<dl class="py class">
+<dt id="output.UserLevel">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">output.</span></code><code class="sig-name descname"><span class="pre">UserLevel</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">optical_depth_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_user_levels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#output.UserLevel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the user levels at which radiant quantities are returned.</p>
+<p>UserLevel checks that radiant quantities can be returned at user levels.</p>
+<dl class="py method">
+<dt id="output.UserLevel.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">optical_depth_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_user_levels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#output.UserLevel.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>optical_depth_output</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]) – If radiant quantities are to be returned at user specified optical
+depths (as specified in mb) this is the monotonically increasing 1D
+array of optical depths where they should be output. It must not
+exceed the column integrated optical depth of DTAUC. If radiant
+quantities can simply be returned at the boundary of every
+computational layer (user_optical_depths = False) this can be None,
+and this object will create an array of 0s for the output. Default
+is None.</p></li>
+<li><p><strong>n_user_levels</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The number of user levels to instantiate. Only required if
+<code class="code docutils literal notranslate"><span class="pre">optical_depth_output</span></code> is not None.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The documentation suggests if user_optical_depths = False, this array
+is populated with optical depths at the boundaries of the computational
+layers. However, this seems equal to DTAUC to me but with a 0 appended.
+Additionally, making this case work would require changing f2py to
+make this an output array… which I’m not inclined to do if no one will
+use it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="output.UserLevel.optical_depth_output">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">optical_depth_output</span></code><a class="headerlink" href="#output.UserLevel.optical_depth_output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the input user optical depth array at user levels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The optical depth at user levels.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named “UTAU”.</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 

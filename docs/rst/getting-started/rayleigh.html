@@ -90,14 +90,18 @@
 <li class="toctree-l2"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sample_observation.html">Sample Observation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="physical_grid.html">Physical Grid</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Rayleigh</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Rayleigh</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#the-generic-rayleigh-class">The generic Rayleigh class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rayleigh-co2">Rayleigh CO2</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="forward_scattering.html">Forward Scattering</a></li>
 <li class="toctree-l2"><a class="reference internal" href="optical_depth.html">Optical Depth</a></li>
 <li class="toctree-l2"><a class="reference internal" href="phase_function.html">Phase Function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="model_build.html">Model Build</a></li>
 <li class="toctree-l2"><a class="reference internal" href="controller.html">Controller</a></li>
 <li class="toctree-l2"><a class="reference internal" href="surface.html">Surface</a></li>
-<li class="toctree-l2"><a class="reference internal" href="radiation_and_flux.html">Radiation and Flux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radiation.html">Radiation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="output.html">Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="running_the_model.html">Running the model</a></li>
 </ul>
@@ -176,7 +180,40 @@
             
   <div class="section" id="rayleigh">
 <h1>Rayleigh<a class="headerlink" href="#rayleigh" title="Permalink to this headline">¶</a></h1>
-<p>Coming soon!</p>
+<p>Let’s start building our model atmosphere. The first thing we’ll want to do
+is include Rayleigh scattering in the model. To do that, we’ll first need to
+construct arrays of the optical depth and phase function for Rayleigh
+scattering.</p>
+<div class="section" id="the-generic-rayleigh-class">
+<h2>The generic Rayleigh class<a class="headerlink" href="#the-generic-rayleigh-class" title="Permalink to this headline">¶</a></h2>
+<p>The phase function is actually the easy part of this process. All Rayleigh
+scattering has the same phase function. The phase function array is determined
+solely by the number of layers to use in the model. This is done in the
+abstract <a class="reference internal" href="../modules/rayleigh.html#rayleigh.Rayleigh" title="rayleigh.Rayleigh"><code class="xref py py-class docutils literal notranslate"><span class="pre">rayleigh.Rayleigh</span></code></a> class. I don’t mean for you to actually
+instantiate this class—instead, each atmospheric species will have its own
+way of constructing the optical depths. If pyRT_DISORT doesn’t come with the
+species you’re looking for (and right now it only comes with CO2), you’ll want
+to extend this class to the species for your application</p>
+</div>
+<div class="section" id="rayleigh-co2">
+<h2>Rayleigh CO2<a class="headerlink" href="#rayleigh-co2" title="Permalink to this headline">¶</a></h2>
+<p>Mars has a CO2 atmosphere, so let’s instantiate a <a class="reference internal" href="../modules/rayleigh.html#rayleigh.RayleighCO2" title="rayleigh.RayleighCO2"><code class="xref py py-class docutils literal notranslate"><span class="pre">rayleigh.RayleighCO2</span></code></a>
+object. This will inherit the generic Rayleigh phase function and it will also
+create the optical depths in each of the model layers. We just need to provide
+it the model layers, the column density in the layers, and the wavenumbers
+at which to make the optical depths (I choose wavenumbers instead of
+wavelengths since the original paper uses them). We’ve already created these
+inputs, so we have everything we need to make the Rayleigh arrays.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.rayleigh</span> <span class="kn">import</span> <span class="n">RayleighCO2</span>
+
+<span class="n">short_rayleigh</span> <span class="o">=</span> <span class="n">RayleighCO2</span><span class="p">(</span><span class="n">altitude</span><span class="p">,</span> <span class="n">high_wavenumbers</span><span class="p">,</span> <span class="n">column_density</span><span class="p">)</span>
+<span class="n">rayleigh_phase_function</span> <span class="o">=</span> <span class="n">short_rayleigh</span><span class="o">.</span><span class="n">phase_function</span>
+<span class="n">rayleigh_od</span> <span class="o">=</span> <span class="n">short_rayleigh</span><span class="o">.</span><span class="n">scattering_optical_depth</span>
+</pre></div>
+</div>
+<p>Since Rayleigh optical depth is completely due to scattering, there’s no
+“total_optical_depth” property.</p>
+</div>
 </div>
 
 

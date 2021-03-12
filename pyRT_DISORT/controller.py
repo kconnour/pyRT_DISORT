@@ -2,7 +2,6 @@
 arrays that control how DISORT runs.
 """
 from warnings import warn
-import numpy as np
 
 
 class ComputationalParameters:
@@ -21,26 +20,26 @@ class ComputationalParameters:
         """
         Parameters
         ----------
-        n_layers: int
+        n_layers
             The number of layers to use in the model.
-        n_moments: int
+        n_moments
             The number of polynomial moments to use in the model. This number
             should be greater than or equal to 'n_streams' in problems with
             scattering. In problems without scattering, this variable is not
             used by DISORT.
-        n_streams: int
+        n_streams
             The number of streams (i.e. the number of computational polar
             angles) to use in the model. This number should be even and at least
             2. In general, the more streams used the more accurate DISORT's
             computations will be.
-        n_azimuth: int
+        n_azimuth
             The number of azimuthal angles where DISORT should return radiant
             quantities.
-        n_polar: int
+        n_polar
             The number of user-specified polar angles where DISORT should return
-            radiant quantities. Only used by DISORT if user_angles (from
-            ModelBehavior) == True.
-        n_user_levels: int
+            radiant quantities. Only used by DISORT if
+            :py:attr:`output.OutputBehavior.user_angles` ==True.
+        n_user_levels
             The number of user levels to use in the model.
 
         Raises
@@ -132,10 +131,9 @@ class ComputationalParameters:
     def n_layers(self) -> int:
         """Get the input number of layers.
 
-        Returns
-        -------
-        int
-            The number of layers.
+        Notes
+        -----
+        In DISORT, this variable is named :code:`MAXCLY`.
 
         """
         return self.__n_layers
@@ -144,10 +142,9 @@ class ComputationalParameters:
     def n_moments(self) -> int:
         """Get the input number of moments.
 
-        Returns
-        -------
-        int
-            The number of moments.
+        Notes
+        -----
+        In DISORT, this variable is named :code:`MAXMOM`.
 
         """
         return self.__n_moments
@@ -156,10 +153,9 @@ class ComputationalParameters:
     def n_streams(self) -> int:
         """Get the input number of streams.
 
-        Returns
-        -------
-        int
-            The number of streams.
+        Notes
+        -----
+        In DISORT, this variable is named :code:`MAXCMU`.
 
         """
         return self.__n_streams
@@ -168,10 +164,9 @@ class ComputationalParameters:
     def n_azimuth(self) -> int:
         """Get the input number of azimuthal angles.
 
-        Returns
-        -------
-        int
-            The number of azimuthal angles.
+        Notes
+        -----
+        In DISORT, this variable is named :code:`MAXPHI`.
 
         """
         return self.__n_azimuth
@@ -180,10 +175,9 @@ class ComputationalParameters:
     def n_polar(self) -> int:
         """Get the input number of user_specified polar angles.
 
-        Returns
-        -------
-        int
-            The number of polar angles.
+        Notes
+        -----
+        In DISORT, this variable is named :code:`MAXUMU`.
 
         """
         return self.__n_polar
@@ -192,10 +186,9 @@ class ComputationalParameters:
     def n_user_levels(self) -> int:
         """Get the input number of user levels.
 
-        Returns
-        -------
-        int
-            The number of user levels.
+        Notes
+        -----
+        In DISORT, this variable is named :code:`MAXULV`.
 
         """
         return self.__n_user_levels
@@ -216,7 +209,7 @@ class ModelBehavior:
         """
         Parameters
         ----------
-        accuracy: float, optional
+        accuracy
             The convergence criterion for azimuthal (Fourier cosine) series.
             Will stop when the following occurs twice: largest term being added
             is less than 'accuracy' times total series sum (twice because
@@ -225,13 +218,13 @@ class ModelBehavior:
             risk of serious non-convergence. Has no effect on problems lacking a
             beam source, since azimuthal series has only one term in that case.
             Default is 0.0.
-        delta_m_plus: bool, optional
+        delta_m_plus
             Denote whether to use the delta-M+ method of Lin et al. (2018).
             Default is False.
-        do_pseudo_sphere: bool, optional
+        do_pseudo_sphere
             Denote whether to use a pseudo-spherical correction. Default is
             False.
-        header: str, optional
+        header
             Use a 127- (or less) character header for prints, embedded in the
             DISORT banner. Input headers greater than 127 characters will be
             truncated. Setting header='' will eliminate both the banner and the
@@ -239,23 +232,23 @@ class ModelBehavior:
             controlled by any of the 'print' flags); 'header' can be used
             to mark the progress of a calculation in which DISORT is called many
             times, while leaving all other printing turned off. Default is ''.
-
-        print_variables: list[bool], optional
+        print_variables
             Make a list of variables that control what DISORT prints. The 5
             booleans control whether each of the following is printed:
 
             1. Input variables (except PMOM)
             2. Fluxes
             3. Intensities at user levels and angles
-            4. Planar transmissivity and planar albedo as a function of solar zenith angle (incidence_beam_conditions == True)
-            5. PMOM for each layer (but only if 1. == True and only for layers with scattering)
+            4. Planar transmissivity and planar albedo as a function of solar
+               zenith angle (incidence_beam_conditions == True)
+            5. PMOM for each layer (but only if 1. == True and only for layers
+               with scattering)
 
             Default is None, which makes [False, False, False, False, False].
-        radius: float, optional
+        radius
             The planetary radius. This is presumably only used if
-            do_pseudo_sphere == True, although there is no documentation on
-            this. Default is 6371.0.
-
+            :code:`do_pseudo_sphere==True`, although there is no documentation
+            on this. Default is 6371.0.
 
         Raises
         ------
@@ -350,14 +343,9 @@ class ModelBehavior:
     def accuracy(self) -> float:
         """Get the input accuracy.
 
-        Returns
-        -------
-        float
-            The accuracy.
-
         Notes
         -----
-        In DISORT, this variable is named "ACCUR".
+        In DISORT, this variable is named :code:`ACCUR`.
 
         """
         return self.__accuracy
@@ -366,14 +354,9 @@ class ModelBehavior:
     def delta_m_plus(self) -> bool:
         """Get whether to use delta-M+ scaling.
 
-        Returns
-        -------
-        bool
-            True if delta-M+ scaling is requested; False otherwise.
-
         Notes
         -----
-        In DISORT, this variable is named "DELTAMPLUS". There is no
+        In DISORT, this variable is named :code:`DELTAMPLUS`. There is no
         documentation on this variable.
 
         """
@@ -383,14 +366,9 @@ class ModelBehavior:
     def do_pseudo_sphere(self) -> bool:
         """Get whether to perform a pseudo-spherical correction.
 
-        Returns
-        -------
-        bool
-            True if a pseudo-spherical correction is requested; False otherwise.
-
         Notes
         -----
-        In DISORT, this variable is named "DO_PSEUDO_SPHERE". There is no
+        In DISORT, this variable is named :code:`DO_PSEUDO_SPHERE`. There is no
         documentation on this variable.
 
         """
@@ -400,14 +378,9 @@ class ModelBehavior:
     def header(self) -> str:
         """Get the characters that will appear in the DISORT banner.
 
-        Returns
-        -------
-        str
-            The characters in the DISORT banner.
-
         Notes
         -----
-        In DISORT, this variable is named "HEADER".
+        In DISORT, this variable is named :code:`HEADER`.
 
         """
         return self.__header
@@ -416,14 +389,9 @@ class ModelBehavior:
     def print_variables(self) -> list[bool]:
         """Get the variables to print.
 
-        Returns
-        -------
-        list[bool]
-            The variables to print
-
         Notes
         -----
-        In DISORT, this variable is named "PRNT".
+        In DISORT, this variable is named :code:`PRNT`.
 
         """
         return self.__print_variables
@@ -432,87 +400,11 @@ class ModelBehavior:
     def radius(self) -> float:
         """Get the planetary radius.
 
-        Returns
-        -------
-        float
-            The planetary radius.
-
         Notes
         -----
-        In DISORT, this variable is named "EARTH_RADIUS". There is no
+        In DISORT, this variable is named :code:`EARTH_RADIUS`. There is no
         documentation on this variable, though I'm presuming it could be any
         planetary radius.
 
         """
         return self.__radius
-
-
-
-
-
-
-
-class UserLevel:
-    """Create the user levels at which radiant quantities are returned.
-
-    UserLevel checks that radiant quantities can be returned at user levels.
-
-    """
-    def __init__(self, cp: ComputationalParameters, mb: ModelBehavior,
-                 optical_depth_output=None):
-        """
-        Parameters
-        ----------
-        cp: ComputationalParameters
-            The computational parameters
-        mb: ModelBehavior
-            The model behavior
-        optical_depth_output: np.ndarray or None
-            If radiant quantities are to be returned at user specified optical
-            depths (as specified in mb) this is the monotonically increasing 1D
-            array of optical depths where they should be output. It must not
-            exceed the column integrated optical depth of DTAUC. If radiant
-            quantities can simply be returned at the boundary of every
-            computational layer (user_optical_depths = False) this can be None,
-            and this object will create an array of 0s for the output. Default
-            is None.
-
-        Notes
-        -----
-        The documentation suggests if user_optical_depths = False, this array
-        is populated with optical depths at the boundaries of the computational
-        layers. However, this seems equal to DTAUC to me but with a 0 appended.
-        Additionally, making this case work would require changing f2py to
-        make this an output array... which I'm not inclined to do if you won't
-        use it.
-
-        """
-        self.__optical_depth_output = self.__make_optical_depth_output(
-            cp, mb, optical_depth_output)
-
-    @staticmethod
-    def __make_optical_depth_output(cp: ComputationalParameters,
-                                    mb: ModelBehavior, optical_depth_output):
-        if mb.user_optical_depths and optical_depth_output is not None:
-            # TODO: ensure this is monotonically increasing
-            # TODO: ensure the last element does not exceed the total optical
-            #  depth of the medium from dtauc
-            return optical_depth_output
-        else:
-            return np.zeros(cp.n_user_levels)
-
-    @property
-    def optical_depth_output(self) -> np.ndarray:
-        """Get the input user optical depth array at user levels.
-
-        Returns
-        -------
-        np.ndarray
-            The optical depth at user levels.
-
-        Notes
-        -----
-        In DISORT, this variable is named "UTAU".
-
-        """
-        return self.__optical_depth_output

@@ -187,21 +187,21 @@ Objects of this class are meant to be be used as inputs to other classes.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>n_layers</strong> (<em>int</em>) – The number of layers to use in the model.</p></li>
-<li><p><strong>n_moments</strong> (<em>int</em>) – The number of polynomial moments to use in the model. This number
+<li><p><strong>n_layers</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The number of layers to use in the model.</p></li>
+<li><p><strong>n_moments</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The number of polynomial moments to use in the model. This number
 should be greater than or equal to ‘n_streams’ in problems with
 scattering. In problems without scattering, this variable is not
 used by DISORT.</p></li>
-<li><p><strong>n_streams</strong> (<em>int</em>) – The number of streams (i.e. the number of computational polar
+<li><p><strong>n_streams</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The number of streams (i.e. the number of computational polar
 angles) to use in the model. This number should be even and at least
 2. In general, the more streams used the more accurate DISORT’s
 computations will be.</p></li>
-<li><p><strong>n_azimuth</strong> (<em>int</em>) – The number of azimuthal angles where DISORT should return radiant
+<li><p><strong>n_azimuth</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The number of azimuthal angles where DISORT should return radiant
 quantities.</p></li>
-<li><p><strong>n_polar</strong> (<em>int</em>) – The number of user-specified polar angles where DISORT should return
-radiant quantities. Only used by DISORT if user_angles (from
-ModelBehavior) == True.</p></li>
-<li><p><strong>n_user_levels</strong> (<em>int</em>) – The number of user levels to use in the model.</p></li>
+<li><p><strong>n_polar</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The number of user-specified polar angles where DISORT should return
+radiant quantities. Only used by DISORT if
+<a class="reference internal" href="output.html#output.OutputBehavior.user_angles" title="output.OutputBehavior.user_angles"><code class="xref py py-attr docutils literal notranslate"><span class="pre">output.OutputBehavior.user_angles</span></code></a> ==True.</p></li>
+<li><p><strong>n_user_levels</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The number of user levels to use in the model.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
@@ -225,12 +225,11 @@ n_moments.</p>
 <dt id="controller.ComputationalParameters.n_azimuth">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">n_azimuth</span></code><a class="headerlink" href="#controller.ComputationalParameters.n_azimuth" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input number of azimuthal angles.</p>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">MAXPHI</span></code>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The number of azimuthal angles.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>int</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -239,12 +238,11 @@ n_moments.</p>
 <dt id="controller.ComputationalParameters.n_layers">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">n_layers</span></code><a class="headerlink" href="#controller.ComputationalParameters.n_layers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input number of layers.</p>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">MAXCLY</span></code>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The number of layers.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>int</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -253,12 +251,11 @@ n_moments.</p>
 <dt id="controller.ComputationalParameters.n_moments">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">n_moments</span></code><a class="headerlink" href="#controller.ComputationalParameters.n_moments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input number of moments.</p>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">MAXMOM</span></code>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The number of moments.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>int</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -267,12 +264,11 @@ n_moments.</p>
 <dt id="controller.ComputationalParameters.n_polar">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">n_polar</span></code><a class="headerlink" href="#controller.ComputationalParameters.n_polar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input number of user_specified polar angles.</p>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">MAXUMU</span></code>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The number of polar angles.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>int</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -281,12 +277,11 @@ n_moments.</p>
 <dt id="controller.ComputationalParameters.n_streams">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">n_streams</span></code><a class="headerlink" href="#controller.ComputationalParameters.n_streams" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input number of streams.</p>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">MAXCMU</span></code>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The number of streams.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>int</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -295,12 +290,11 @@ n_moments.</p>
 <dt id="controller.ComputationalParameters.n_user_levels">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">n_user_levels</span></code><a class="headerlink" href="#controller.ComputationalParameters.n_user_levels" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input number of user levels.</p>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">MAXULV</span></code>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The number of user levels.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>int</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -319,7 +313,7 @@ also performs basic checks that the input control options are plausible.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>accuracy</strong> (<em>float</em><em>, </em><em>optional</em>) – The convergence criterion for azimuthal (Fourier cosine) series.
+<li><p><strong>accuracy</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The convergence criterion for azimuthal (Fourier cosine) series.
 Will stop when the following occurs twice: largest term being added
 is less than ‘accuracy’ times total series sum (twice because
 there are cases where terms are anomalously small but azimuthal
@@ -327,31 +321,33 @@ series has not converged). Should be between 0 and 0.01 to avoid
 risk of serious non-convergence. Has no effect on problems lacking a
 beam source, since azimuthal series has only one term in that case.
 Default is 0.0.</p></li>
-<li><p><strong>delta_m_plus</strong> (<em>bool</em><em>, </em><em>optional</em>) – Denote whether to use the delta-M+ method of Lin et al. (2018).
+<li><p><strong>delta_m_plus</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Denote whether to use the delta-M+ method of Lin et al. (2018).
 Default is False.</p></li>
-<li><p><strong>do_pseudo_sphere</strong> (<em>bool</em><em>, </em><em>optional</em>) – Denote whether to use a pseudo-spherical correction. Default is
+<li><p><strong>do_pseudo_sphere</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Denote whether to use a pseudo-spherical correction. Default is
 False.</p></li>
-<li><p><strong>header</strong> (<em>str</em><em>, </em><em>optional</em>) – Use a 127- (or less) character header for prints, embedded in the
+<li><p><strong>header</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Use a 127- (or less) character header for prints, embedded in the
 DISORT banner. Input headers greater than 127 characters will be
 truncated. Setting header=’’ will eliminate both the banner and the
 header, and this is the only way to do so (‘header’ is not
 controlled by any of the ‘print’ flags); ‘header’ can be used
 to mark the progress of a calculation in which DISORT is called many
 times, while leaving all other printing turned off. Default is ‘’.</p></li>
-<li><p><strong>print_variables</strong> (<em>list</em><em>[</em><em>bool</em><em>]</em><em>, </em><em>optional</em>) – <p>Make a list of variables that control what DISORT prints. The 5
+<li><p><strong>print_variables</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>]]) – <p>Make a list of variables that control what DISORT prints. The 5
 booleans control whether each of the following is printed:</p>
 <ol class="arabic simple">
 <li><p>Input variables (except PMOM)</p></li>
 <li><p>Fluxes</p></li>
 <li><p>Intensities at user levels and angles</p></li>
-<li><p>Planar transmissivity and planar albedo as a function of solar zenith angle (incidence_beam_conditions == True)</p></li>
-<li><p>PMOM for each layer (but only if 1. == True and only for layers with scattering)</p></li>
+<li><p>Planar transmissivity and planar albedo as a function of solar
+zenith angle (incidence_beam_conditions == True)</p></li>
+<li><p>PMOM for each layer (but only if 1. == True and only for layers
+with scattering)</p></li>
 </ol>
 <p>Default is None, which makes [False, False, False, False, False].</p>
 </p></li>
-<li><p><strong>radius</strong> (<em>float</em><em>, </em><em>optional</em>) – The planetary radius. This is presumably only used if
-do_pseudo_sphere == True, although there is no documentation on
-this. Default is 6371.0.</p></li>
+<li><p><strong>radius</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The planetary radius. This is presumably only used if
+<code class="code docutils literal notranslate"><span class="pre">do_pseudo_sphere==True</span></code>, although there is no documentation
+on this. Default is 6371.0.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
@@ -375,151 +371,82 @@ this. Default is 6371.0.</p></li>
 <dt id="controller.ModelBehavior.accuracy">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">accuracy</span></code><a class="headerlink" href="#controller.ModelBehavior.accuracy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input accuracy.</p>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">ACCUR</span></code>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The accuracy.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>float</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p>In DISORT, this variable is named “ACCUR”.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="controller.ModelBehavior.delta_m_plus">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">delta_m_plus</span></code><a class="headerlink" href="#controller.ModelBehavior.delta_m_plus" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get whether to use delta-M+ scaling.</p>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">DELTAMPLUS</span></code>. There is no
+documentation on this variable.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>True if delta-M+ scaling is requested; False otherwise.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>bool</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p>In DISORT, this variable is named “DELTAMPLUS”. There is no
-documentation on this variable.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="controller.ModelBehavior.do_pseudo_sphere">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">do_pseudo_sphere</span></code><a class="headerlink" href="#controller.ModelBehavior.do_pseudo_sphere" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get whether to perform a pseudo-spherical correction.</p>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">DO_PSEUDO_SPHERE</span></code>. There is no
+documentation on this variable.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>True if a pseudo-spherical correction is requested; False otherwise.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>bool</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p>In DISORT, this variable is named “DO_PSEUDO_SPHERE”. There is no
-documentation on this variable.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="controller.ModelBehavior.header">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">header</span></code><a class="headerlink" href="#controller.ModelBehavior.header" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the characters that will appear in the DISORT banner.</p>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">HEADER</span></code>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The characters in the DISORT banner.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>str</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p>In DISORT, this variable is named “HEADER”.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="controller.ModelBehavior.print_variables">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">print_variables</span></code><a class="headerlink" href="#controller.ModelBehavior.print_variables" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the variables to print.</p>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">PRNT</span></code>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The variables to print</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>list[bool]</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>]</p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p>In DISORT, this variable is named “PRNT”.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="controller.ModelBehavior.radius">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">radius</span></code><a class="headerlink" href="#controller.ModelBehavior.radius" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the planetary radius.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The planetary radius.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>float</p>
-</dd>
-</dl>
 <p class="rubric">Notes</p>
-<p>In DISORT, this variable is named “EARTH_RADIUS”. There is no
+<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">EARTH_RADIUS</span></code>. There is no
 documentation on this variable, though I’m presuming it could be any
 planetary radius.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt id="controller.UserLevel">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">controller.</span></code><code class="sig-name descname"><span class="pre">UserLevel</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optical_depth_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.UserLevel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create the user levels at which radiant quantities are returned.</p>
-<p>UserLevel checks that radiant quantities can be returned at user levels.</p>
-<dl class="py method">
-<dt id="controller.UserLevel.__init__">
-<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optical_depth_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.UserLevel.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>cp</strong> (<a class="reference internal" href="#controller.ComputationalParameters" title="controller.ComputationalParameters"><em>ComputationalParameters</em></a>) – The computational parameters</p></li>
-<li><p><strong>mb</strong> (<a class="reference internal" href="#controller.ModelBehavior" title="controller.ModelBehavior"><em>ModelBehavior</em></a>) – The model behavior</p></li>
-<li><p><strong>optical_depth_output</strong> (<em>np.ndarray</em><em> or </em><em>None</em>) – If radiant quantities are to be returned at user specified optical
-depths (as specified in mb) this is the monotonically increasing 1D
-array of optical depths where they should be output. It must not
-exceed the column integrated optical depth of DTAUC. If radiant
-quantities can simply be returned at the boundary of every
-computational layer (user_optical_depths = False) this can be None,
-and this object will create an array of 0s for the output. Default
-is None.</p></li>
-</ul>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>The documentation suggests if user_optical_depths = False, this array
-is populated with optical depths at the boundaries of the computational
-layers. However, this seems equal to DTAUC to me but with a 0 appended.
-Additionally, making this case work would require changing f2py to
-make this an output array… which I’m not inclined to do if you won’t
-use it.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="controller.UserLevel.optical_depth_output">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">optical_depth_output</span></code><a class="headerlink" href="#controller.UserLevel.optical_depth_output" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the input user optical depth array at user levels.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The optical depth at user levels.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>np.ndarray</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p>In DISORT, this variable is named “UTAU”.</p>
 </dd></dl>
 
 </dd></dl>
