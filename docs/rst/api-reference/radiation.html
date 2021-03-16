@@ -1,0 +1,391 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Radiation &mdash; pyRT_DISORT  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Rayleigh" href="rayleigh.html" />
+    <link rel="prev" title="Phase Function" href="phase_function.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> pyRT_DISORT
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Useful links</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../users-guide.html">User’s Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api-reference.html">pyRT_DISORT API reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="controller.html">Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eos.html">Equation of State</a></li>
+<li class="toctree-l2"><a class="reference internal" href="observation.html">Observation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="phase_function.html">Phase Function</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Radiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rayleigh.html">Rayleigh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="surface.html">Surface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vertical_profile.html">Vertical Profile</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../about-disort.html">About DISORT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pyRT_DISORT</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../api-reference.html">pyRT_DISORT API reference</a> &raquo;</li>
+        
+      <li>Radiation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../_sources/rst/api-reference/radiation.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-radiation">
+<span id="radiation"></span><h1>Radiation<a class="headerlink" href="#module-radiation" title="Permalink to this headline">¶</a></h1>
+<p>The flux module contains data structures for holding the flux variables
+used in DISORT.</p>
+<dl class="py class">
+<dt id="radiation.IncidentFlux">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">radiation.</span></code><code class="sig-name descname"><span class="pre">IncidentFlux</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">beam_flux</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">numpy.pi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isotropic_flux</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#radiation.IncidentFlux" title="Permalink to this definition">¶</a></dt>
+<dd><p>A data structure for holding the incident fluxes.</p>
+<p>IncidentFlux creates scalars for the incident beam and isotropic fluxes and
+performs checks that the input fluxes are valid inputs to DISORT.</p>
+<dl class="py method">
+<dt id="radiation.IncidentFlux.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">beam_flux</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">numpy.pi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isotropic_flux</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#radiation.IncidentFlux.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>beam_flux</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The intensity of the incident beam at the top boundary.
+Ensure this variable and <code class="code docutils literal notranslate"><span class="pre">isotropic_flux</span></code> have the same units.
+Note that this is an infinitely wide beam. Default is pi.</p></li>
+<li><p><strong>isotropic_flux</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The intensity of the incident beam at the top boundary. Ensure this
+variable and <code class="code docutils literal notranslate"><span class="pre">beam_flux</span></code> have the same units. Default is 0.0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>TypeError</strong> – Raised if either input flux cannot be cast into a float.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>If <code class="code docutils literal notranslate"><span class="pre">thermal_emission==True</span></code> (defined in <a class="reference internal" href="#radiation.ThermalEmission" title="radiation.ThermalEmission"><code class="xref py py-class docutils literal notranslate"><span class="pre">ThermalEmission</span></code></a>)
+this is assumed to have the same units as <code class="code docutils literal notranslate"><span class="pre">PLKAVG</span></code> (which defaults
+to [<span class="math notranslate nohighlight">\(\frac{\text{W}}{\text{m}^2}\)</span>]) and the corresponding
+incident flux is <code class="code docutils literal notranslate"><span class="pre">umu0</span> <span class="pre">*</span> <span class="pre">beam_flux</span></code> and
+<code class="code docutils literal notranslate"><span class="pre">pi</span> <span class="pre">*</span> <span class="pre">isotropic_flux</span></code>. If <code class="code docutils literal notranslate"><span class="pre">thermal_emission==False</span></code>,
+<code class="code docutils literal notranslate"><span class="pre">beam_flux</span></code> and <code class="code docutils literal notranslate"><span class="pre">isotropic_flux</span></code> have arbitrary units, and
+the output fluxes and
+intensities are assumed to have the same units as these variables.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="radiation.IncidentFlux.beam_flux">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">beam_flux</span></code><a class="headerlink" href="#radiation.IncidentFlux.beam_flux" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the input flux of the incident beam at the top boundary.</p>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">FBEAM</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="radiation.IncidentFlux.isotropic_flux">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">isotropic_flux</span></code><a class="headerlink" href="#radiation.IncidentFlux.isotropic_flux" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the input flux of isotropic sources at the top boundary.</p>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">FISOT</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="radiation.ThermalEmission">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">radiation.</span></code><code class="sig-name descname"><span class="pre">ThermalEmission</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thermal_emission</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bottom_temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_emissivity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#radiation.ThermalEmission" title="Permalink to this definition">¶</a></dt>
+<dd><p>A data structure for holding thermal emission variables.</p>
+<p>ThermalEmission creates variables needs to include thermal emission in
+DISORT.</p>
+<dl class="py method">
+<dt id="radiation.ThermalEmission.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thermal_emission</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bottom_temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_emissivity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#radiation.ThermalEmission.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>thermal_emission</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – <p>Denote whether to use thermal emission. If <code class="code docutils literal notranslate"><span class="pre">True</span></code>, DISORT will
+include thermal emission and will need the following variables:</p>
+<blockquote>
+<div><ul>
+<li><p><code class="code docutils literal notranslate"><span class="pre">bottom_temperature</span></code> (from this class)</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">top_temperature</span></code> (from this class)</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">top_emissivity</span></code> (from this class)</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">low_wavenumber</span></code> (from <a class="reference internal" href="observation.html#observation.Spectral" title="observation.Spectral"><code class="xref py py-class docutils literal notranslate"><span class="pre">observation.Spectral</span></code></a>)</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">high_wavenumber</span></code> (from <a class="reference internal" href="observation.html#observation.Spectral" title="observation.Spectral"><code class="xref py py-class docutils literal notranslate"><span class="pre">observation.Spectral</span></code></a>)</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">temperature</span></code> (from class:<cite>eos.Hydrostatic</cite>)</p></li>
+</ul>
+</div></blockquote>
+<p>If <code class="code docutils literal notranslate"><span class="pre">False</span></code>, DISORT will save computation time by ignoring all
+thermal emission and all of the aforementioned variables. Default is
+False.</p>
+</p></li>
+<li><p><strong>bottom_temperature</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The temperature of the bottom boundary [K]. Only used by DISORT if
+<code class="code docutils literal notranslate"><span class="pre">thermal_emission==True</span></code>. Default is 0.0.</p></li>
+<li><p><strong>top_temperature</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The temperature of the top boundary [K]. Only used by DISORT if
+<code class="code docutils literal notranslate"><span class="pre">thermal_emission==True</span></code>. Default is 0.0.</p></li>
+<li><p><strong>top_emissivity</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The emissivity of the top boundary. Only used by DISORT if
+<code class="code docutils literal notranslate"><span class="pre">thermal_emission==True</span></code>. Default is 1.0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – Raised if bottom_temperature, top_temperature, or top_emissivity
+    cannot be cast to a float.</p></li>
+<li><p><strong>ValueError</strong> – Raised if bottom_temperature or top_temperature is negative, or if
+    top_emissivity is not between 0 and 1.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="radiation.ThermalEmission.bottom_temperature">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">bottom_temperature</span></code><a class="headerlink" href="#radiation.ThermalEmission.bottom_temperature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the input temperature at the bottom boundary.</p>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">BTEMP</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="radiation.ThermalEmission.thermal_emission">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">thermal_emission</span></code><a class="headerlink" href="#radiation.ThermalEmission.thermal_emission" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get whether thermal emission will be used in the model.</p>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">PLANK</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="radiation.ThermalEmission.top_emissivity">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">top_emissivity</span></code><a class="headerlink" href="#radiation.ThermalEmission.top_emissivity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the input emissivity at the top boundary.</p>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">TEMIS</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="radiation.ThermalEmission.top_temperature">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">top_temperature</span></code><a class="headerlink" href="#radiation.ThermalEmission.top_temperature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the input temperature at the top boundary.</p>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">TTEMP</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="rayleigh.html" class="btn btn-neutral float-right" title="Rayleigh" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="phase_function.html" class="btn btn-neutral float-left" title="Phase Function" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, kconnour.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

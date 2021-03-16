@@ -18,4 +18,4 @@ This is how you'd usually make the HTML documentation. You'd usually do
 `make html` from Terminal but again I don't find that helpful. In code
 form, `make html` = `<python> -m sphinx.cmd.build -b html <path to conf.py> 
 <path to where to put the html files>`. In my case this is 
-`/home/kyle/repos/pyRT_DISORT/venv/bin/python -m sphinx.cmd.build -b html /home/kyle/repos/pyRT_DISORT/builddocs /home/kyle/repos/pyRT_DISORT/docs`
+`/home/kyle/repos/pyRT_DISORT/venv-doc/bin/python -m sphinx.cmd.build -b html /home/kyle/repos/pyRT_DISORT/builddocs /home/kyle/repos/pyRT_DISORT/docs`

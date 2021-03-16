@@ -7,7 +7,7 @@ import sphinx_rtd_theme
 
 # -- Path setup --------------------------------------------------------------
 
-# If extensions (or modules to document with autodoc) are in another directory,
+# If extensions (or api-reference to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
@@ -63,4 +63,5 @@ napoleon_include_special_with_doc = True
 autodoc_typehints = 'none'
 
 # Mock imports so autodoc can work
-autodoc_mock_imports = ['pyRT_DISORT.utilities']
+# TODO: remove the utilities when possible
+autodoc_mock_imports = ['pyRT_DISORT.utilities', 'numpy', 'scipy', 'disort']
