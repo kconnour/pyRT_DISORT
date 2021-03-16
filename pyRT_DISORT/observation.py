@@ -8,7 +8,7 @@ import numpy as np
 #  so, raise a warning
 # TODO: Presumably a user could want phi0 that's not all 0s, so add that ability
 # TODO: If SZA, EA, and PA have standard symbols, it'd be great to update all
-#  docstrings to be equations instead of mu is the cosine of the ea.
+#  docstrings to be equations instead of "mu is the cosine of the ea".
 class Angles:
     r"""A data structure that contains angles required by DISORT.
 
@@ -17,85 +17,105 @@ class Angles:
 
     """
 
-    def __init__(self, incidence_angle: np.ndarray,
-                 emission_angle: np.ndarray, phase_angle: np.ndarray) -> None:
+    def __init__(self, incidence: np.ndarray, emission: np.ndarray,
+                 phase: np.ndarray) -> None:
         """
         Parameters
         ----------
-        incidence_angle
-            Pixel incidence angles [degrees].
-        emission_angle
-            Pixel emission angles [degrees].
-        phase_angle
+        incidence
+            Pixel incidence (solar zenith) angles [degrees].
+        emission
+            Pixel emission (emergence) angles [degrees].
+        phase
             Pixel phase angles [degrees].
 
         Raises
         ------
         TypeError
-            Raised if any of the inputs are not an instance of numpy.ndarray, or
-            if the arrays contain non-numeric values.
+            Raised if any of the inputs are not an instance of numpy.ndarray.
         ValueError
-            Raised if any of the input arrays contain values outside of their
-            mathematically valid range, or if the arrays cannot be broadcast
-            together.
+            Raised if any of the input arrays are not the same shape or if they
+            contain values outside of their mathematically valid range.
+
+        Notes
+        -----
+        The incidence, emission, and phase angles must have the same shape. This
+        structure can accommodate pixels of any shape.
 
         """
-        self.__incidence_angle = incidence_angle
-        self.__emission_angle = emission_angle
-        self.__phase_angle = phase_angle
+        self.__incidence = incidence
+        self.__emission = emission
+        self.__phase = phase
 
-        self.__raise_error_if_angles_are_unphysical()
+        self.__raise_error_if_input_angles_are_bad()
 
         self.__mu0 = self.__compute_mu0()
         self.__mu = self.__compute_mu()
         self.__phi0 = self.__make_phi0()
         self.__phi = self.__compute_phi()
 
-    def __raise_error_if_angles_are_unphysical(self) -> None:
-        self.__raise_error_if_angles_are_not_in_range(
-            self.__incidence_angle, 0, 180, 'incidence_angle')
-        self.__raise_error_if_angles_are_not_in_range(
-            self.__emission_angle, 0, 90, 'emission_angle')
-        self.__raise_error_if_angles_are_not_in_range(
-            self.__phase_angle, 0, 180, 'phase_angle')
+    def __raise_error_if_input_angles_are_bad(self) -> None:
+        self.__raise_type_error_if_angles_are_not_all_ndarray()
+        self.__raise_value_error_if_angles_are_not_all_same_shape()
+        self.__raise_value_error_if_angles_are_unphysical()
+
+    def __raise_type_error_if_angles_are_not_all_ndarray(self) -> None:
+        self.__raise_type_error_if_angle_is_not_ndarray(
+            self.__incidence, 'incidence')
+        self.__raise_type_error_if_angle_is_not_ndarray(
+            self.__emission, 'emission')
+        self.__raise_type_error_if_angle_is_not_ndarray(
+            self.__phase, 'phase')
 
     @staticmethod
-    def __raise_error_if_angles_are_not_in_range(
+    def __raise_type_error_if_angle_is_not_ndarray(angle, name) -> None:
+        if not isinstance(angle, np.ndarray):
+            message = f'{name} must be an  ndarray.'
+            raise TypeError(message)
+
+    def __raise_value_error_if_angles_are_not_all_same_shape(self) -> None:
+        if not self.__incidence.shape == self.__emission.shape == \
+               self.__phase.shape:
+            message = 'incidence, emission, and phase must all have the same ' \
+                      'shape.'
+            raise ValueError(message)
+
+    def __raise_value_error_if_angles_are_unphysical(self) -> None:
+        self.__raise_value_error_if_angles_are_not_in_range(
+            self.__incidence, 0, 180, 'incidence')
+        self.__raise_value_error_if_angles_are_not_in_range(
+            self.__emission, 0, 90, 'emission')
+        self.__raise_value_error_if_angles_are_not_in_range(
+            self.__phase, 0, 180, 'phase')
+
+    @staticmethod
+    def __raise_value_error_if_angles_are_not_in_range(
             angles: np.ndarray, low: float, high: float, name: str) -> None:
-        try:
-            if np.any(angles < low) or np.any(angles > high):
-                message = f'{name} must be between {low} and {high} degrees.'
-                raise ValueError(message)
-        except TypeError as te:
-            message = f'{name} must be a numpy.ndarray of numeric values.'
-            raise TypeError(message) from te
+        if np.any(angles < low) or np.any(angles > high):
+            message = f'{name} must be between {low} and {high} degrees.'
+            raise ValueError(message)
 
     def __compute_mu0(self) -> np.ndarray:
-        return self.__compute_angle_cosine(self.__incidence_angle)
+        return self.__compute_angle_cosine(self.__incidence)
 
     def __compute_mu(self) -> np.ndarray:
-        return self.__compute_angle_cosine(self.__emission_angle)
+        return self.__compute_angle_cosine(self.__emission)
 
     def __make_phi0(self) -> np.ndarray:
-        return np.zeros(self.__phase_angle.shape)
+        return np.zeros(self.__phase.shape)
 
     # TODO: is there a cleaner way to make this variable?
     def __compute_phi(self) -> np.ndarray:
-        try:
-            sin_emission_angle = np.sin(np.radians(self.__emission_angle))
-            sin_solar_zenith_angle = \
-                np.sin(np.radians(self.__incidence_angle))
-            cos_phase_angle = \
-                self.__compute_angle_cosine(self.__phase_angle)
-            with np.errstate(divide='ignore', invalid='ignore'):
-                tmp_arg = np.true_divide(
-                    cos_phase_angle - self.mu * self.mu0,
-                    sin_emission_angle * sin_solar_zenith_angle)
-                tmp_arg[~np.isfinite(tmp_arg)] = -1
-                d_phi = np.arccos(np.clip(tmp_arg, -1, 1))
-            return self.phi0 + 180 - np.degrees(d_phi)
-        except ValueError as ve:
-            raise ValueError('The input angles must be the same shape.') from ve
+        sin_emission_angle = np.sin(np.radians(self.__emission))
+        sin_solar_zenith_angle = np.sin(np.radians(self.__incidence))
+        cos_phase_angle = self.__compute_angle_cosine(self.__phase)
+        with np.errstate(divide='ignore', invalid='ignore'):
+            tmp_arg = np.true_divide(
+                cos_phase_angle - self.mu * self.mu0,
+                sin_emission_angle * sin_solar_zenith_angle)
+            tmp_arg[~np.isfinite(tmp_arg)] = -1
+            d_phi = np.arccos(np.clip(tmp_arg, -1, 1))
+        return self.phi0 + 180 - np.degrees(d_phi)
 
     @staticmethod
     def __compute_angle_cosine(angle: np.ndarray) -> np.ndarray:
@@ -106,21 +126,21 @@ class Angles:
         """Get the input incidence (solar zenith) angle [degrees].
 
         """
-        return self.__incidence_angle
+        return self.__incidence
 
     @property
     def emission(self) -> np.ndarray:
-        """Get the input emission angle [degrees].
+        """Get the input emission (emergence) angle [degrees].
 
         """
-        return self.__emission_angle
+        return self.__emission
 
     @property
     def phase(self) -> np.ndarray:
         """Get the input phase angle [degrees].
 
         """
-        return self.__phase_angle
+        return self.__phase
 
     @property
     def mu0(self) -> np.ndarray:

@@ -4,187 +4,268 @@ from pyRT_DISORT.observation import Angles, Spectral
 
 
 class TestAngles:
-    def setup(self) -> None:
-        self.dummy_angles = np.outer(np.linspace(5, 10, num=15),
-                                     np.linspace(5, 8, num=20))
-        self.angles = Angles(self.dummy_angles, self.dummy_angles,
-                             self.dummy_angles)
+    @pytest.fixture
+    def dummy_angles(self) -> np.ndarray:
+        yield np.outer(np.linspace(5, 10, num=15), np.linspace(5, 8, num=20))
 
 
 class TestAnglesInit(TestAngles):
-    def test_angles_contains_7_attributes(self) -> None:
-        assert len(self.angles.__dict__.items()) == 7
+    @pytest.fixture
+    def angles(self, dummy_angles: pytest.fixture) -> Angles:
+        yield Angles(dummy_angles, dummy_angles, dummy_angles)
+
+    def test_angles_contains_7_attributes(self, angles: pytest.fixture) -> None:
+        assert len(angles.__dict__.items()) == 7
 
 
 class TestIncidence(TestAngles):
-    def test_incidence_angle_is_unchanged(self) -> None:
-        incidence_angle = self.dummy_angles + 10
-        angles = Angles(incidence_angle, self.dummy_angles, self.dummy_angles)
-        assert np.array_equal(incidence_angle, angles.incidence)
+    @pytest.fixture
+    def dummy_incidence(self, dummy_angles: pytest.fixture) -> np.ndarray:
+        yield dummy_angles + 10
 
-    def test_incidence_angle_is_read_only(self) -> None:
+    @pytest.fixture
+    def incidence(self, dummy_incidence: pytest.fixture,
+                  dummy_angles: pytest.fixture) -> Angles:
+        yield Angles(dummy_incidence, dummy_angles, dummy_angles)
+
+    def test_incidence_is_unchanged(self, dummy_incidence: pytest.fixture,
+                                    incidence: pytest.fixture) -> None:
+        assert np.array_equal(dummy_incidence, incidence.incidence)
+
+    def test_incidence_is_read_only(self, incidence: pytest.fixture) -> None:
         with pytest.raises(AttributeError):
-            self.angles.incidence = self.dummy_angles
+            incidence.incidence = 0
 
-    def test_incidence_angle_outside_0_to_180_raises_value_error(self) -> None:
+    def test_incidence_of_0_raises_no_errors(self) -> None:
         Angles(np.array([0]), np.array([1]), np.array([1]))
+
+    def test_incidence_less_than_0_raises_value_error(self) -> None:
+        incidence = np.array([np.nextafter(0, -1)])
+        with pytest.raises(ValueError):
+            Angles(incidence, np.array([1]), np.array([1]))
+
+    def test_incidence_of_180_raises_no_errors(self) -> None:
         Angles(np.array([180]), np.array([1]), np.array([1]))
-        too_low = np.array([np.nextafter(0, -1)])
-        too_high = np.array([np.nextafter(181, 181)])
-        with pytest.raises(ValueError):
-            Angles(too_low, np.array([1]), np.array([1]))
-        with pytest.raises(ValueError):
-            Angles(too_high, np.array([1]), np.array([1]))
 
-    def test_array_of_string_incidence_angle_raises_type_error(self) -> None:
-        str_angles = self.dummy_angles.astype('str')
+    def test_incidence_greater_than_180_raises_value_error(self) -> None:
+        incidence = np.array([np.nextafter(180, 181)])
+        with pytest.raises(ValueError):
+            Angles(incidence, np.array([1]), np.array([1]))
+
+    def test_list_incidence_raises_type_error(
+            self, dummy_angles: pytest.fixture) -> None:
         with pytest.raises(TypeError):
-            Angles(str_angles, self.dummy_angles, self.dummy_angles)
+            Angles(dummy_angles.tolist(), dummy_angles, dummy_angles)
 
-    def test_list_incidence_angle_raises_type_error(self) -> None:
-        list_angles = self.dummy_angles.tolist()
-        with pytest.raises(TypeError):
-            Angles(list_angles, self.dummy_angles, self.dummy_angles)
-
-    def test_oddly_shaped_incidence_angles_raises_value_error(self) -> None:
+    def test_oddly_shaped_incidence_raises_value_error(
+            self, dummy_angles: pytest.fixture) -> None:
+        incidence = dummy_angles[:, :-1]
         with pytest.raises(ValueError):
-            incidence = self.dummy_angles[:, :-1]
-            Angles(incidence, self.dummy_angles, self.dummy_angles)
+            Angles(incidence, dummy_angles, dummy_angles)
 
 
 class TestEmission(TestAngles):
-    def test_emission_angle_is_unchanged(self) -> None:
-        emission_angle = self.dummy_angles + 5
-        angles = Angles(self.dummy_angles, emission_angle, self.dummy_angles)
-        assert np.array_equal(emission_angle, angles.emission)
+    @pytest.fixture
+    def dummy_emission(self, dummy_angles: pytest.fixture) -> np.ndarray:
+        yield dummy_angles + 5
 
-    def test_emission_angle_is_read_only(self) -> None:
+    @pytest.fixture
+    def emission(self, dummy_emission: pytest.fixture,
+                 dummy_angles: pytest.fixture) -> Angles:
+        yield Angles(dummy_angles, dummy_emission, dummy_angles)
+
+    def test_emission_is_unchanged(self, dummy_emission: pytest.fixture,
+                                   emission: pytest.fixture) -> None:
+        assert np.array_equal(dummy_emission, emission.emission)
+
+    def test_emission_is_read_only(self, emission: pytest.fixture) -> None:
         with pytest.raises(AttributeError):
-            self.angles.emission = self.dummy_angles
+            emission.emission = 0
 
-    def test_emission_angle_outside_0_to_90_raises_value_error(self) -> None:
+    def test_emission_of_0_raises_no_errors(self) -> None:
         Angles(np.array([1]), np.array([0]), np.array([1]))
+
+    def test_emission_less_than_0_raises_value_error(self) -> None:
+        emission = np.array([np.nextafter(0, -1)])
+        with pytest.raises(ValueError):
+            Angles(np.array([1]), emission, np.array([1]))
+
+    def test_emission_of_90_raises_no_errors(self) -> None:
         Angles(np.array([1]), np.array([90]), np.array([1]))
-        too_low = np.array([np.nextafter(0, -1)])
-        too_high = np.array([np.nextafter(90, 91)])
-        with pytest.raises(ValueError):
-            Angles(np.array([1]), too_low, np.array([1]))
-        with pytest.raises(ValueError):
-            Angles(np.array([1]), too_high, np.array([1]))
 
-    def test_array_of_string_emission_angle_raises_type_error(self) -> None:
-        str_angles = self.dummy_angles.astype('str')
+    def test_emission_greater_than_90_raises_value_error(self) -> None:
+        emission = np.array([np.nextafter(90, 91)])
+        with pytest.raises(ValueError):
+            Angles(np.array([1]), emission, np.array([1]))
+
+    def test_list_emission_raises_type_error(
+            self, dummy_angles: pytest.fixture) -> None:
         with pytest.raises(TypeError):
-            Angles(self.dummy_angles, str_angles, self.dummy_angles)
+            Angles(dummy_angles, dummy_angles.tolist(), dummy_angles)
 
-    def test_list_emission_angle_raises_type_error(self) -> None:
-        list_angles = self.dummy_angles.tolist()
-        with pytest.raises(TypeError):
-            Angles(self.dummy_angles, list_angles, self.dummy_angles)
-
-    def test_oddly_shaped_emission_angles_raises_value_error(self) -> None:
+    def test_oddly_shaped_emission_raises_value_error(
+            self, dummy_angles: pytest.fixture) -> None:
+        emission = dummy_angles[:, :-1]
         with pytest.raises(ValueError):
-            emission = self.dummy_angles[:, :-1]
-            Angles(self.dummy_angles, emission, self.dummy_angles)
+            Angles(dummy_angles, emission, dummy_angles)
 
 
 class TestPhase(TestAngles):
-    def test_phase_angle_is_unchanged(self) -> None:
-        phase_angle = self.dummy_angles + 10
-        angles = Angles(self.dummy_angles, self.dummy_angles, phase_angle)
-        assert np.array_equal(phase_angle, angles.phase)
+    @pytest.fixture
+    def dummy_phase(self, dummy_angles: pytest.fixture) -> np.ndarray:
+        yield dummy_angles + 10
 
-    def test_phase_angle_is_read_only(self) -> None:
+    @pytest.fixture
+    def phase(self, dummy_phase: pytest.fixture,
+              dummy_angles: pytest.fixture) -> Angles:
+        yield Angles(dummy_angles, dummy_angles, dummy_phase)
+
+    def test_phase_is_unchanged(self, dummy_phase: pytest.fixture,
+                                phase: pytest.fixture) -> None:
+        assert np.array_equal(dummy_phase, phase.phase)
+
+    def test_phase_is_read_only(self, phase: pytest.fixture) -> None:
         with pytest.raises(AttributeError):
-            self.angles.phase = self.dummy_angles
+            phase.phase = 0
 
-    def test_phase_angle_outside_0_to_180_raises_value_error(self) -> None:
-        Angles(np.array([0]), np.array([1]), np.array([1]))
-        Angles(np.array([180]), np.array([1]), np.array([1]))
-        too_low = np.array([np.nextafter(0, -1)])
-        too_high = np.array([np.nextafter(181, 181)])
-        with pytest.raises(ValueError):
-            Angles(np.array([1]), np.array([1]), too_low)
-        with pytest.raises(ValueError):
-            Angles(np.array([1]), np.array([1]), too_high)
+    def test_phase_of_0_raises_no_errors(self) -> None:
+        Angles(np.array([1]), np.array([1]), np.array([0]))
 
-    def test_array_of_string_phase_angle_raises_type_error(self) -> None:
-        str_angles = self.dummy_angles.astype('str')
+    def test_phase_less_than_0_raises_value_error(self) -> None:
+        phase = np.array([np.nextafter(0, -1)])
+        with pytest.raises(ValueError):
+            Angles(np.array([1]), np.array([1]), phase)
+
+    def test_phase_of_180_raises_no_errors(self) -> None:
+        Angles(np.array([1]), np.array([1]), np.array([180]))
+
+    def test_phase_greater_than_180_raises_value_error(self) -> None:
+        phase = np.array([np.nextafter(180, 181)])
+        with pytest.raises(ValueError):
+            Angles(np.array([1]), np.array([1]), phase)
+
+    def test_list_phase_raises_type_error(
+            self, dummy_angles: pytest.fixture) -> None:
         with pytest.raises(TypeError):
-            Angles(self.dummy_angles, self.dummy_angles, str_angles)
+            Angles(dummy_angles, dummy_angles, dummy_angles.tolist())
 
-    def test_list_phase_angle_raises_type_error(self) -> None:
-        list_angles = self.dummy_angles.tolist()
-        with pytest.raises(TypeError):
-            Angles(self.dummy_angles, self.dummy_angles, list_angles)
-
-    def test_oddly_shaped_phase_angles_raises_value_error(self) -> None:
+    def test_oddly_shaped_phase_raises_value_error(
+            self, dummy_angles: pytest.fixture) -> None:
+        phase = dummy_angles[:, :-1]
         with pytest.raises(ValueError):
-            phase = self.dummy_angles[:, :-1]
-            Angles(self.dummy_angles, self.dummy_angles, phase)
+            Angles(dummy_angles, dummy_angles, phase)
 
 
 class TestMu0(TestAngles):
-    def test_mu0_matches_analytic_solution(self) -> None:
-        incidence = np.array([0, 45, 60, 90, 180])
-        expected_mu0 = np.array([1, np.sqrt(2) / 2, 0.5, 0, -1])
-        dummy_angles = np.ones(5)
-        angles = Angles(incidence, dummy_angles, dummy_angles)
-        assert np.allclose(angles.mu0, expected_mu0)
+    @pytest.fixture
+    def known_incidence(self) -> np.ndarray:
+        yield np.array([0, 45, 60, 90, 180])
 
-    def test_mu0_is_read_only(self) -> None:
+    @pytest.fixture
+    def known_mu0(self) -> np.ndarray:
+        yield np.array([1, np.sqrt(2) / 2, 0.5, 0, -1])
+
+    @pytest.fixture
+    def angles(self, known_incidence: pytest.fixture) -> Angles:
+        dummy_angles = np.ones(known_incidence.shape)
+        yield Angles(known_incidence, dummy_angles, dummy_angles)
+
+    def test_mu0_matches_analytic_solution(self, angles: pytest.fixture,
+                                           known_mu0: pytest.fixture) -> None:
+        assert np.allclose(angles.mu0, known_mu0)
+
+    def test_mu0_is_read_only(self, angles: pytest.fixture) -> None:
         with pytest.raises(AttributeError):
-            self.angles.mu0 = self.dummy_angles
+            angles.mu0 = 0
 
-    def test_mu0_is_same_shape_as_incidence_angles(self) -> None:
-        assert self.angles.mu0.shape == self.angles.incidence.shape
+    def test_mu0_is_same_shape_as_incidence_angles(
+            self, angles: pytest.fixture,
+            known_incidence: pytest.fixture) -> None:
+        assert angles.mu0.shape == known_incidence.shape
 
 
 class TestMu(TestAngles):
-    def test_mu_matches_analytic_solution(self) -> None:
-        emission = np.array([0, 45, 60, 90])
-        expected_mu = np.array([1, np.sqrt(2) / 2, 0.5, 0])
-        dummy_angles = np.ones(4)
-        angles = Angles(dummy_angles, emission, dummy_angles)
-        assert np.allclose(angles.mu, expected_mu)
+    @pytest.fixture
+    def known_emission(self) -> np.ndarray:
+        yield np.array([0, 45, 60, 90])
 
-    def test_mu_is_read_only(self) -> None:
+    @pytest.fixture
+    def known_mu(self) -> np.ndarray:
+        yield np.array([1, np.sqrt(2) / 2, 0.5, 0])
+
+    @pytest.fixture
+    def angles(self, known_emission: pytest.fixture) -> Angles:
+        dummy_angles = np.ones(known_emission.shape)
+        yield Angles(dummy_angles, known_emission, dummy_angles)
+
+    def test_mu_matches_analytic_solution(self, angles: pytest.fixture,
+                                          known_mu: pytest.fixture) -> None:
+        assert np.allclose(angles.mu, known_mu)
+
+    def test_mu_is_read_only(self, angles: pytest.fixture) -> None:
         with pytest.raises(AttributeError):
-            self.angles.mu = self.dummy_angles
+            angles.mu = 0
 
-    def test_mu_is_same_shape_as_emission_angles(self) -> None:
-        assert self.angles.mu.shape == self.angles.emission.shape
+    def test_mu_is_same_shape_as_emission_angles(
+            self, angles: pytest.fixture,
+            known_emission: pytest.fixture) -> None:
+        assert angles.mu.shape == known_emission.shape
 
 
 class TestPhi0(TestAngles):
-    def test_phi0_is_always_0(self) -> None:
-        assert np.all(self.angles.phi0 == 0)
+    @pytest.fixture
+    def known_phase(self) -> np.ndarray:
+        yield np.array([0, 45, 60, 90, 180])
 
-    def test_phi0_is_read_only(self) -> None:
+    @pytest.fixture
+    def known_phi0(self, known_phase: pytest.fixture) -> np.ndarray:
+        yield np.zeros(known_phase.shape)
+
+    @pytest.fixture
+    def angles(self, known_phase: pytest.fixture) -> Angles:
+        dummy_angles = np.ones(known_phase.shape)
+        yield Angles(dummy_angles, dummy_angles, known_phase)
+
+    def test_phi0_is_always_0(self, angles: pytest.fixture) -> None:
+        assert np.all(angles.phi0 == 0)
+
+    def test_phi0_is_read_only(self, angles: pytest.fixture) -> None:
         with pytest.raises(AttributeError):
-            self.angles.phi0 = self.dummy_angles
+            angles.phi0 = 0
 
-    def test_phi0_is_same_shape_as_phase_angles(self) -> None:
-        assert self.angles.phi0.shape == self.angles.phase.shape
+    def test_phi0_is_same_shape_as_phase_angles(
+            self, angles: pytest.fixture, known_phase: pytest.fixture) -> None:
+        assert angles.phi0.shape == known_phase.shape
 
 
 class TestPhi(TestAngles):
-    # TODO: once I better understand phi, use analytic cases
-    def test_phi_matches_disort_multi_computations(self) -> None:
-        dummy_angles = np.array([0, 10, 70])
-        expected_phi = np.array([0, 119.747139, 104.764977])
-        angles = Angles(dummy_angles, dummy_angles, dummy_angles)
-        assert np.allclose(angles.phi, expected_phi)
+    @pytest.fixture
+    def known_phase(self) -> np.ndarray:
+        yield np.array([0, 10, 70])
 
-    def test_phi_is_read_only(self) -> None:
+    @pytest.fixture
+    def known_phi(self) -> np.ndarray:
+        yield np.array([0, 119.747139, 104.764977])
+
+    @pytest.fixture
+    def angles(self, known_phase: pytest.fixture) -> Angles:
+        yield Angles(known_phase, known_phase, known_phase)
+
+    # TODO: once I better understand phi, use analytic cases
+    def test_phi_matches_disort_multi_computations(
+            self, angles: pytest.fixture, known_phi: pytest.fixture) -> None:
+        assert np.allclose(angles.phi, known_phi)
+
+    def test_phi_is_read_only(self, angles: pytest.fixture) -> None:
         with pytest.raises(AttributeError):
             self.angles.phi = self.dummy_angles
 
-    def test_phi_is_same_shape_as_phase_angles(self) -> None:
-        assert self.angles.phi.shape == self.angles.phase.shape
+    def test_phi_is_same_shape_as_phase_angles(
+            self, angles: pytest.fixture, known_phase: pytest.fixture) -> None:
+        assert angles.phi.shape == known_phase.shape
 
 
-class TestSpectral:
+'''class TestSpectral:
     def setup(self) -> None:
         dummy_wavelengths = np.array([1, 10, 15, 20])
         grid = np.broadcast_to(dummy_wavelengths, (20, 15, 4))
@@ -338,4 +419,4 @@ class TestLowWavenumber(TestSpectral):
 
     def test_all_pixels_have_same_low_wavenumber(self) -> None:
         assert np.all(self.spectral.low_wavenumber ==
-                      self.spectral.low_wavenumber[0])
+                      self.spectral.low_wavenumber[0])'''

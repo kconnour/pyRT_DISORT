@@ -1,6 +1,8 @@
 Sample Observation
 ==================
 
+Let's begin by making some of the quantities found in a typical observation.
+
 Many of the modules in pyRT_DISORT are designed to operate independently, so it
 doesn't really matter what order you do many of these steps. I'm arbitrarily
 choosing to start by making up some observations. Let's start by importing
