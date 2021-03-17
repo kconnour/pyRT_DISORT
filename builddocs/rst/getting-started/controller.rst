@@ -1,3 +1,0 @@
-Controller
-==========
-Coming soon!

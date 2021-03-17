@@ -1,3 +1,0 @@
-Rayleigh
-========
-Coming soon!

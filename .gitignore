@@ -3,6 +3,7 @@
 __pycache__/
 build
 venv
+venv-doc
 pyRT_DISORT.egg-info
 *.so
 .pytest_cache

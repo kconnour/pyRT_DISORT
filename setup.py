@@ -52,15 +52,16 @@ class SetupDISORT:
             include_package_data=True,
             python_requires='>=3.9',
             install_requires=[
-                'Sphinx>=3.4.3',
-                'astropy>=4.1',
-                'numpy>=1.20.0',
-                'pandas>=1.2.1',
+                'astropy>=4.2',
+                'numpy>=1.20.1',
+                'pandas>=1.2.3',
                 'pytest>=6.2.2',
-                'scipy>=1.6.0',
-                'sphinx_autodoc_typehints',
-                'sphinx-rtd-theme'
+                'scipy>=1.6.1'
             ],
+            # If you want to make documentation, these are needed:
+            # 'Sphinx>=3.4.3',
+            # 'sphinx_autodoc_typehints',
+            # 'sphinx-rtd-theme'
             package_data={'': ['../*.so']}
         )
 

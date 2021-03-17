@@ -9,10 +9,11 @@ def get_nearest_indices(array, values):
     return indices
 
 wavgrid = np.linspace(1, 10, num=11)
-print(wavgrid)
+#print(wavgrid)
 wavs = np.array([[3, 4], [7, 8]])
 
 inds = get_nearest_indices(wavgrid, wavs)
-print(wavgrid[inds])
+#print(wavgrid[inds])
 
-
+import disort
+print(disort.disort.__doc__)
