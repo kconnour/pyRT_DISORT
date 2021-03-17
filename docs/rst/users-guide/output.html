@@ -188,11 +188,11 @@ can run DISORT is create some output parameters and arrays.</p>
 <p>Let’s start by making the output arrays. We only need a few parameters to
 create the arrays (they define the shape of the arrays), and we’ve already made
 the parameters we’ll need. Let’s add them to <a class="reference internal" href="../api-reference/output.html#output.OutputArrays" title="output.OutputArrays"><code class="xref py py-class docutils literal notranslate"><span class="pre">output.OutputArrays</span></code></a>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.rayleigh</span> <span class="kn">import</span> <span class="n">RayleighCO2</span>
-
-<span class="n">short_rayleigh</span> <span class="o">=</span> <span class="n">RayleighCO2</span><span class="p">(</span><span class="n">altitude</span><span class="p">,</span> <span class="n">high_wavenumbers</span><span class="p">,</span> <span class="n">column_density</span><span class="p">)</span>
-<span class="n">rayleigh_phase_function</span> <span class="o">=</span> <span class="n">short_rayleigh</span><span class="o">.</span><span class="n">phase_function</span>
-<span class="n">rayleigh_od</span> <span class="o">=</span> <span class="n">short_rayleigh</span><span class="o">.</span><span class="n">scattering_optical_depth</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pressure</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">pressure</span>
+<span class="n">temperature</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">temperature</span>
+<span class="n">number_density</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">number_density</span>
+<span class="n">column_density</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">column_density</span>
+<span class="n">n_layers</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">n_layers</span>
 </pre></div>
 </div>
 <p>All the arrays are set to 0 and will be populated as DISORT runs.</p>
@@ -200,11 +200,11 @@ the parameters we’ll need. Let’s add them to <a class="reference internal" h
 <div class="section" id="user-levels">
 <h2>User Levels<a class="headerlink" href="#user-levels" title="Permalink to this headline">¶</a></h2>
 <p>We need an oddball variable to make the user levels. We can do that here.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.rayleigh</span> <span class="kn">import</span> <span class="n">RayleighCO2</span>
-
-<span class="n">short_rayleigh</span> <span class="o">=</span> <span class="n">RayleighCO2</span><span class="p">(</span><span class="n">altitude</span><span class="p">,</span> <span class="n">high_wavenumbers</span><span class="p">,</span> <span class="n">column_density</span><span class="p">)</span>
-<span class="n">rayleigh_phase_function</span> <span class="o">=</span> <span class="n">short_rayleigh</span><span class="o">.</span><span class="n">phase_function</span>
-<span class="n">rayleigh_od</span> <span class="o">=</span> <span class="n">short_rayleigh</span><span class="o">.</span><span class="n">scattering_optical_depth</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pressure</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">pressure</span>
+<span class="n">temperature</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">temperature</span>
+<span class="n">number_density</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">number_density</span>
+<span class="n">column_density</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">column_density</span>
+<span class="n">n_layers</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">n_layers</span>
 </pre></div>
 </div>
 <p>This is a variable you need to completely create yourself if your run will
@@ -216,11 +216,11 @@ to appease DISORT.</p>
 <p>The final thing we need to do is set some switches to define how DISORT will
 run. This is done with <a class="reference internal" href="../api-reference/output.html#output.OutputBehavior" title="output.OutputBehavior"><code class="xref py py-class docutils literal notranslate"><span class="pre">output.OutputBehavior</span></code></a>, which sets some default
 values for how DISORT should run, but as usual you’re free to override them.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">beam_flux</span> <span class="o">=</span> <span class="n">flux</span><span class="o">.</span><span class="n">beam_flux</span>
-<span class="n">iso_flux</span> <span class="o">=</span> <span class="n">flux</span><span class="o">.</span><span class="n">isotropic_flux</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cp</span> <span class="o">=</span> <span class="n">ComputationalParameters</span><span class="p">(</span><span class="n">hydro</span><span class="o">.</span><span class="n">n_layers</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">80</span><span class="p">)</span>
+<span class="n">mb</span> <span class="o">=</span> <span class="n">ModelBehavior</span><span class="p">()</span>
 
-<span class="n">te</span> <span class="o">=</span> <span class="n">ThermalEmission</span><span class="p">()</span>
-<span class="n">thermal_emission</span> <span class="o">=</span> <span class="n">te</span><span class="o">.</span><span class="n">thermal_emission</span>
+
+<span class="kn">from</span> <span class="nn">pyRT_DISORT.radiation</span> <span class="kn">import</span> <span class="n">IncidentFlux</span><span class="p">,</span> <span class="n">ThermalEmission</span>
 </pre></div>
 </div>
 </div>

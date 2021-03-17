@@ -47,6 +47,10 @@ class TestIncidence(TestAngles):
     def test_incidence_of_180_raises_no_errors(self) -> None:
         Angles(np.array([180]), np.array([1]), np.array([1]))
 
+    def test_nan_incidence_raises_value_error(self) -> None:
+        with pytest.raises(ValueError):
+            Angles(np.array([np.nan]), np.array([1]), np.array([1]))
+
     def test_incidence_greater_than_180_raises_value_error(self) -> None:
         incidence = np.array([np.nextafter(180, 181)])
         with pytest.raises(ValueError):
@@ -98,6 +102,10 @@ class TestEmission(TestAngles):
         with pytest.raises(ValueError):
             Angles(np.array([1]), emission, np.array([1]))
 
+    def test_nan_emission_raises_value_error(self) -> None:
+        with pytest.raises(ValueError):
+            Angles(np.array([1]), np.array([np.nan]), np.array([1]))
+
     def test_list_emission_raises_type_error(
             self, dummy_angles: pytest.fixture) -> None:
         with pytest.raises(TypeError):
@@ -143,6 +151,10 @@ class TestPhase(TestAngles):
         phase = np.array([np.nextafter(180, 181)])
         with pytest.raises(ValueError):
             Angles(np.array([1]), np.array([1]), phase)
+
+    def test_nan_phase_raises_value_error(self) -> None:
+        with pytest.raises(ValueError):
+            Angles(np.array([1]), np.array([1]), np.array([np.nan]))
 
     def test_list_phase_raises_type_error(
             self, dummy_angles: pytest.fixture) -> None:
@@ -265,69 +277,82 @@ class TestPhi(TestAngles):
         assert angles.phi.shape == known_phase.shape
 
 
-'''class TestSpectral:
-    def setup(self) -> None:
-        dummy_wavelengths = np.array([1, 10, 15, 20])
-        grid = np.broadcast_to(dummy_wavelengths, (20, 15, 4))
-        width = 0.05
-        self.short_wavelength = grid - width
-        self.long_wavelength = grid + width
-        self.spectral = Spectral(self.short_wavelength, self.long_wavelength)
+class TestSpectral:
+    @pytest.fixture
+    def dummy_wavelengths(self) -> np.ndarray:
+        yield np.array([1, 10, 15, 20], dtype=float)
+
+    @pytest.fixture
+    def wavelength_grid(self, dummy_wavelengths: pytest.fixture) -> np.ndarray:
+        yield np.broadcast_to(dummy_wavelengths, (20, 15, 4)).T
+
+    @pytest.fixture
+    def width(self) -> float:
+        yield 0.05
+
+    @pytest.fixture
+    def spectral(self, wavelength_grid: pytest.fixture,
+                 width: pytest.fixture) -> Spectral:
+        yield Spectral(wavelength_grid - width, wavelength_grid + width)
+
+    @pytest.fixture
+    def known_wavelengths(self) -> np.ndarray:
+        yield np.array([1, 10, 15])
+
+    @pytest.fixture
+    def known_wavenumbers(self) -> np.ndarray:
+        yield np.array([10000, 1000, 666.66666])
 
 
 class TestSpectralInit(TestSpectral):
-    def test_spectral_contains_4_attributes(self) -> None:
-        assert len(self.spectral.__dict__.items()) == 4
+    def test_spectral_contains_4_attributes(
+            self, spectral: pytest.fixture) -> None:
+        assert len(spectral.__dict__.items()) == 4
 
 
 class TestShortWavelength(TestSpectral):
-    def test_short_wavelength_is_unchanged(self) -> None:
-        dummy_wavs = np.array([1, 10, 15, 20])
-        width = 0.05
-        short = dummy_wavs - width
-        long = dummy_wavs + width
-        wavelengths = Spectral(short, long)
-        assert np.array_equal(short, wavelengths.short_wavelength)
+    def test_short_wavelength_is_unchanged(
+            self, spectral: pytest.fixture, wavelength_grid: pytest.fixture,
+            width: pytest.fixture) -> None:
+        assert np.array_equal(wavelength_grid - width,
+                              spectral.short_wavelength)
 
-    def test_short_wavelength_is_read_only(self) -> None:
+    def test_short_wavelength_is_read_only(
+            self, spectral: pytest.fixture) -> None:
         with pytest.raises(AttributeError):
-            self.spectral.short_wavelength = self.short_wavelength
+            spectral.short_wavelength = 0
 
-    def test_non_positive_short_wavelength_raises_value_error(self) -> None:
-        positive_short = np.copy(self.short_wavelength)
-        zero_short = np.copy(self.short_wavelength)
-        negative_short = np.copy(self.short_wavelength)
-        positive_short[0, 0, 0] = 1
-        zero_short[0, 0, 0] = 0
-        negative_short[0, 0, 0] = -1
+    def test_short_wavelength_of_01_raises_no_errors(
+            self, wavelength_grid: pytest.fixture) -> None:
+        wg = np.copy(wavelength_grid)
+        wg[0, 0, 0] = 0.1
+        Spectral(wg, wg + 1)
 
-        Spectral(positive_short, self.long_wavelength)
+    def test_short_wavelength_below_01_raises_value_error(
+            self, wavelength_grid: pytest.fixture) -> None:
+        wg = np.copy(wavelength_grid)
+        wg[0, 0, 0] = np.nextafter(0.1, 0)
         with pytest.raises(ValueError):
-            Spectral(zero_short, self.long_wavelength)
-        with pytest.raises(ValueError):
-            Spectral(negative_short, self.long_wavelength)
+            Spectral(wg, wg + 1)
 
-    def test_nan_short_wavelength_raises_value_error(self) -> None:
-        nan_short = np.copy(self.short_wavelength)
+    def test_nan_short_wavelength_raises_value_error(
+            self, wavelength_grid: pytest.fixture) -> None:
+        nan_short = np.copy(wavelength_grid)
         nan_short[0, 0, 0] = np.nan
         with pytest.raises(ValueError):
-            Spectral(nan_short, self.long_wavelength)
+            Spectral(nan_short, nan_short + 1)
 
-    def test_inf_short_wavelength_raises_value_error(self) -> None:
-        inf_short = np.copy(self.short_wavelength)
+    def test_inf_short_wavelength_raises_value_error(
+            self, wavelength_grid: pytest.fixture) -> None:
+        inf_short = np.copy(wavelength_grid)
         inf_short[0, 0, 0] = np.inf
         with pytest.raises(ValueError):
-            Spectral(inf_short, self.long_wavelength)
+            Spectral(inf_short, inf_short + 1)
 
-    def test_list_short_wavelength_raises_type_error(self) -> None:
-        list_short = np.copy(self.short_wavelength).tolist()
+    def test_list_short_wavelength_raises_type_error(
+            self, wavelength_grid: pytest.fixture) -> None:
         with pytest.raises(TypeError):
-            Spectral(list_short, self.long_wavelength)
-
-    def test_str_short_wavelength_raises_type_error(self) -> None:
-        str_short = np.copy(self.short_wavelength).astype('str')
-        with pytest.raises(TypeError):
-            Spectral(str_short, self.long_wavelength)
+            Spectral(wavelength_grid.tolist(), wavelength_grid + 1)
 
     def test_differently_shaped_wavelengths_raises_value_error(self) -> None:
         short = np.ones(10)
@@ -335,88 +360,96 @@ class TestShortWavelength(TestSpectral):
         with pytest.raises(ValueError):
             Spectral(short, long)
 
-    def test_same_wavelengths_raises_value_error(self) -> None:
-        short = np.linspace(1, 50, num=50)
+    def test_same_wavelengths_raises_value_error(
+            self, wavelength_grid: pytest.fixture) -> None:
         with pytest.raises(ValueError):
-            Spectral(short, short)
+            Spectral(wavelength_grid, wavelength_grid)
 
-    def test_longer_short_wavelength_raises_value_error(self) -> None:
-        short = np.linspace(1, 50, num=50)
+    def test_longer_short_wavelength_raises_value_error(
+            self, wavelength_grid: pytest.fixture) -> None:
         with pytest.raises(ValueError):
-            Spectral(short, short - 0.5)
+            Spectral(wavelength_grid + 1, wavelength_grid)
 
 
 class TestLongWavelength(TestSpectral):
-    def test_long_wavelength_is_unchanged(self) -> None:
-        dummy_wavs = np.array([1, 10, 15, 20])
-        width = 0.05
-        short = dummy_wavs - width
-        long = dummy_wavs + width
-        wavelengths = Spectral(short, long)
-        assert np.array_equal(long, wavelengths.long_wavelength)
+    def test_long_wavelength_is_unchanged(
+            self, spectral: pytest.fixture, wavelength_grid: pytest.fixture,
+            width: pytest.fixture) -> None:
+        assert np.array_equal(wavelength_grid + width, spectral.long_wavelength)
 
-    def test_long_wavelength_is_read_only(self) -> None:
+    def test_long_wavelength_is_read_only(
+            self, spectral: pytest.fixture) -> None:
         with pytest.raises(AttributeError):
-            self.spectral.long_wavelength = self.long_wavelength
+            spectral.long_wavelength = 0
 
-    def test_nan_long_wavelength_raises_value_error(self) -> None:
-        nan_long = np.copy(self.long_wavelength)
+    def test_long_wavelength_of_50_raises_no_errors(
+            self, wavelength_grid: pytest.fixture) -> None:
+        wg = np.copy(wavelength_grid)
+        wg[-1, -1, -1] = 50.
+        Spectral(wg - 0.5, wg)
+
+    def test_long_wavelength_above_50_raises_value_error(
+            self, wavelength_grid: pytest.fixture) -> None:
+        wg = np.copy(wavelength_grid)
+        wg[0, 0, 0] = np.nextafter(50, 51)
+        with pytest.raises(ValueError):
+            Spectral(wg - 0.5, wg)
+
+    def test_nan_long_wavelength_raises_value_error(
+            self, wavelength_grid: pytest.fixture) -> None:
+        nan_long = np.copy(wavelength_grid)
         nan_long[0, 0, 0] = np.nan
         with pytest.raises(ValueError):
-            Spectral(self.short_wavelength, nan_long)
+            Spectral(nan_long - 0.5, nan_long)
 
-    def test_inf_long_wavelength_raises_value_error(self) -> None:
-        inf_long = np.copy(self.long_wavelength)
+    def test_inf_long_wavelength_raises_value_error(
+            self, wavelength_grid: pytest.fixture) -> None:
+        inf_long = np.copy(wavelength_grid)
         inf_long[0, 0, 0] = np.inf
         with pytest.raises(ValueError):
-            Spectral(self.short_wavelength, inf_long)
+            Spectral(inf_long - 1, inf_long)
 
-    def test_list_long_wavelength_raises_type_error(self) -> None:
-        list_long = np.copy(self.long_wavelength).tolist()
+    def test_list_long_wavelength_raises_type_error(
+            self, wavelength_grid: pytest.fixture) -> None:
         with pytest.raises(TypeError):
-            Spectral(self.short_wavelength, list_long)
-
-    def test_str_long_wavelength_raises_type_error(self) -> None:
-        str_long = np.copy(self.long_wavelength).astype('str')
-        with pytest.raises(TypeError):
-            Spectral(self.short_wavelength, str_long)
+            Spectral(wavelength_grid - 1, wavelength_grid.tolist())
 
 
 class TestHighWavenumber(TestSpectral):
-    def test_high_wavenumber_matches_known_values(self):
-        wavelengths = np.array([1, 10, 15])
-        wavenumbers = np.array([10000, 1000, 666.66666])
-        spec = Spectral(wavelengths, wavelengths + 1)
-        assert np.allclose(spec.high_wavenumber, wavenumbers)
+    @pytest.fixture
+    def known_spectral(self, known_wavelengths: pytest.fixture) -> Spectral:
+        yield Spectral(known_wavelengths, known_wavelengths + 1)
 
-    def test_high_wavenumbers_is_read_only(self):
+    def test_high_wavenumber_matches_known_values(
+            self, known_spectral: pytest.fixture,
+            known_wavenumbers: pytest.fixture) -> None:
+        assert np.allclose(known_spectral.high_wavenumber, known_wavenumbers)
+
+    def test_high_wavenumber_is_read_only(
+            self, spectral: pytest.fixture) -> None:
         with pytest.raises(AttributeError):
-            self.spectral.high_wavenumber = 10**4 / self.short_wavelength
+            spectral.high_wavenumber = 0
 
-    def test_high_wavenumber_is_same_shape_as_short_wavelength(self) -> None:
-        assert self.spectral.high_wavenumber.shape == \
-               self.spectral.short_wavelength.shape
-
-    def test_all_pixels_have_same_high_wavenumber(self) -> None:
-        assert np.all(self.spectral.high_wavenumber ==
-                      self.spectral.high_wavenumber[0])
+    def test_high_wavenumber_is_same_shape_as_short_wavelength(
+            self, spectral: pytest.fixture) -> None:
+        assert spectral.high_wavenumber.shape == spectral.short_wavelength.shape
 
 
 class TestLowWavenumber(TestSpectral):
-    def test_low_wavenumber_matches_known_values(self):
-        wavelengths = np.array([1, 10, 15])
-        wavenumbers = np.array([10000, 1000, 666.66666])
-        spec = Spectral(wavelengths - 0.5, wavelengths)
-        assert np.allclose(spec.low_wavenumber, wavenumbers)
+    @pytest.fixture
+    def known_spectral(self, known_wavelengths: pytest.fixture) -> Spectral:
+        yield Spectral(known_wavelengths - 0.5, known_wavelengths)
 
-    def test_low_wavenumbers_is_read_only(self):
+    def test_low_wavenumber_matches_known_values(
+            self, known_spectral: pytest.fixture,
+            known_wavenumbers: pytest.fixture) -> None:
+        assert np.allclose(known_spectral.low_wavenumber, known_wavenumbers)
+
+    def test_low_wavenumber_is_read_only(
+            self, spectral: pytest.fixture) -> None:
         with pytest.raises(AttributeError):
-            self.spectral.low_wavenumber = 10**4 / self.long_wavelength
+            spectral.low_wavenumber = 0
 
-    def test_low_wavenumber_is_same_shape_as_long_wavelength(self) -> None:
-        assert self.spectral.low_wavenumber.shape == \
-               self.spectral.long_wavelength.shape
-
-    def test_all_pixels_have_same_low_wavenumber(self) -> None:
-        assert np.all(self.spectral.low_wavenumber ==
-                      self.spectral.low_wavenumber[0])'''
+    def test_low_wavenumber_is_same_shape_as_long_wavelength(
+            self, spectral: pytest.fixture) -> None:
+        assert spectral.low_wavenumber.shape == spectral.long_wavelength.shape

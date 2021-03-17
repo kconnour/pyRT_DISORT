@@ -193,14 +193,14 @@ to compute the number density, column density,
 and scale height—just about all the quantities you’d care about when doing
 a retrieval. I’ll go ahead and import <code class="code docutils literal notranslate"><span class="pre">Hydrostatic</span></code> and make some
 profiles here, along with some miscellaneous variables.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.eos</span> <span class="kn">import</span> <span class="n">Hydrostatic</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">high_wavenumbers</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">high_wavenumber</span>
+<span class="n">low_wavenumbers</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">low_wavenumber</span>
 
-<span class="n">altitude_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">51</span><span class="p">)</span>
-<span class="n">pressure_profile</span> <span class="o">=</span> <span class="mi">500</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">altitude_grid</span> <span class="o">/</span> <span class="mi">10</span><span class="p">)</span>
-<span class="n">temperature_profile</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">250</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">51</span><span class="p">)</span>
-<span class="n">z_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
-<span class="n">mass</span> <span class="o">=</span> <span class="mf">7.3</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**-</span><span class="mi">26</span>
-<span class="n">gravity</span> <span class="o">=</span> <span class="mf">3.7</span>
+
+
+<span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">pyRT_DISORT.eos</span> <span class="kn">import</span> <span class="n">Hydrostatic</span>
 </pre></div>
 </div>
 <p>Even though you might have great resolution for the pressure and temperature
@@ -215,15 +215,15 @@ atmosphere, the input altitudes and grid must be <em>decreasing</em>.</p>
 </div>
 <p>Now we can add these to <code class="code docutils literal notranslate"><span class="pre">Hydrostatic</span></code> and access atmospheric properties
 via the class properties:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">hydro</span> <span class="o">=</span> <span class="n">Hydrostatic</span><span class="p">(</span><span class="n">altitude_grid</span><span class="p">,</span> <span class="n">pressure_profile</span><span class="p">,</span> <span class="n">temperature_profile</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">altitude_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">51</span><span class="p">)</span>
+<span class="n">pressure_profile</span> <span class="o">=</span> <span class="mi">500</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">altitude_grid</span> <span class="o">/</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">temperature_profile</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">250</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">51</span><span class="p">)</span>
+<span class="n">z_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">mass</span> <span class="o">=</span> <span class="mf">7.3</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**-</span><span class="mi">26</span>
+<span class="n">gravity</span> <span class="o">=</span> <span class="mf">3.7</span>
+
+<span class="n">hydro</span> <span class="o">=</span> <span class="n">Hydrostatic</span><span class="p">(</span><span class="n">altitude_grid</span><span class="p">,</span> <span class="n">pressure_profile</span><span class="p">,</span> <span class="n">temperature_profile</span><span class="p">,</span>
                     <span class="n">z_grid</span><span class="p">,</span> <span class="n">mass</span><span class="p">,</span> <span class="n">gravity</span><span class="p">)</span>
-<span class="n">altitude</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">altitude</span>
-<span class="n">pressure</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">pressure</span>
-<span class="n">temperature</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">temperature</span>
-<span class="n">number_density</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">number_density</span>
-<span class="n">column_density</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">column_density</span>
-<span class="n">n_layers</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">n_layers</span>
-<span class="n">scale_height</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">scale_height</span>
 </pre></div>
 </div>
 <p>Most of these aren’t required by DISORT (<code class="code docutils literal notranslate"><span class="pre">temperature</span></code> and

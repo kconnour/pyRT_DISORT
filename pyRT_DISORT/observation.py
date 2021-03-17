@@ -7,8 +7,6 @@ import numpy as np
 # TODO: I'm not sure that all combination of angles are physically realistic. If
 #  so, raise a warning
 # TODO: Presumably a user could want phi0 that's not all 0s, so add that ability
-# TODO: If SZA, EA, and PA have standard symbols, it'd be great to update all
-#  docstrings to be equations instead of "mu is the cosine of the ea".
 class Angles:
     r"""A data structure that contains angles required by DISORT.
 
@@ -23,11 +21,11 @@ class Angles:
         Parameters
         ----------
         incidence
-            Pixel incidence (solar zenith) angles [degrees].
+            Pixel incidence (solar zenith) angle [degrees].
         emission
-            Pixel emission (emergence) angles [degrees].
+            Pixel emission (emergence) angle [degrees].
         phase
-            Pixel phase angles [degrees].
+            Pixel phase angle [degrees].
 
         Raises
         ------
@@ -47,14 +45,14 @@ class Angles:
         self.__emission = emission
         self.__phase = phase
 
-        self.__raise_error_if_input_angles_are_bad()
+        self.__raise_error_if_angles_are_bad()
 
         self.__mu0 = self.__compute_mu0()
         self.__mu = self.__compute_mu()
         self.__phi0 = self.__make_phi0()
         self.__phi = self.__compute_phi()
 
-    def __raise_error_if_input_angles_are_bad(self) -> None:
+    def __raise_error_if_angles_are_bad(self) -> None:
         self.__raise_type_error_if_angles_are_not_all_ndarray()
         self.__raise_value_error_if_angles_are_not_all_same_shape()
         self.__raise_value_error_if_angles_are_unphysical()
@@ -68,9 +66,10 @@ class Angles:
             self.__phase, 'phase')
 
     @staticmethod
-    def __raise_type_error_if_angle_is_not_ndarray(angle, name) -> None:
+    def __raise_type_error_if_angle_is_not_ndarray(
+            angle: np.ndarray, name: str) -> None:
         if not isinstance(angle, np.ndarray):
-            message = f'{name} must be an  ndarray.'
+            message = f'{name} must be an ndarray.'
             raise TypeError(message)
 
     def __raise_value_error_if_angles_are_not_all_same_shape(self) -> None:
@@ -91,8 +90,9 @@ class Angles:
     @staticmethod
     def __raise_value_error_if_angles_are_not_in_range(
             angles: np.ndarray, low: float, high: float, name: str) -> None:
-        if np.any(angles < low) or np.any(angles > high):
-            message = f'{name} must be between {low} and {high} degrees.'
+        if not (np.all(low <= angles) and np.all(angles <= high)):
+            message = f'All values in {name} must be between {low} and ' \
+                      f'{high} degrees.'
             raise ValueError(message)
 
     def __compute_mu0(self) -> np.ndarray:
@@ -189,8 +189,6 @@ class Angles:
         return self.__phi
 
 
-# TODO: These function names seem bad. raise_value_error also raises other error
-# TODO: Some wavelengths are impossibly small... filter those out
 class Spectral:
     """A data structure that contains spectral info required by DISORT.
 
@@ -212,86 +210,83 @@ class Spectral:
         Raises
         ------
         TypeError
-            Raised if any of the inputs are not np.ndarrays, or if the arrays
-            contain non-numeric values.
+            Raised if any of the inputs are not an instance of numpy.ndarray.
         ValueError
-            Raised if either of the input spectral arrays contain unphysical
-            values (non-positive or infinite wavelengths), if they're not the
-            same shape, or if any values in short_wavelength are larger than the
-            corresponding values in long_wavelength.
+            Raised if either of the input arrays are not the same shape, if
+            they contain values outside of 0.1 to 50 microns (I assume this is
+            the valid range to do retrievals), or if any values in
+            :code:`short_wavelength` are larger than the corresponding values in
+            :code:`long_wavelength`.
+
+        Notes
+        -----
+        The short and long wavelengths must have the same shape. This structure
+        can accommodate pixels of any shape.
 
         """
         self.__short_wavelength = short_wavelength
         self.__long_wavelength = long_wavelength
 
-        self.__raise_error_if_wavelengths_are_unphysical()
+        self.__raise_error_if_wavelengths_are_bad()
 
         self.__high_wavenumber = self.__calculate_high_wavenumber()
         self.__low_wavenumber = self.__calculate_low_wavenumber()
 
-    def __raise_error_if_wavelengths_are_unphysical(self) -> None:
-        self.__raise_value_error_if_either_wavelength_contains_nans()
-        self.__raise_value_error_if_short_wavelength_contains_negative_values()
-        self.__raise_value_error_if_long_wavelength_contains_inf()
+    def __raise_error_if_wavelengths_are_bad(self) -> None:
+        self.__raise_type_error_if_wavelengths_are_not_all_ndarray()
+        self.__raise_value_error_if_wavelengths_are_not_all_same_shape()
+        self.__raise_value_error_if_wavelengths_are_unphysical()
         self.__raise_value_error_if_long_wavelength_is_not_larger()
 
-    def __raise_value_error_if_either_wavelength_contains_nans(self) -> None:
-        try:
-            if np.any(np.isnan(self.__short_wavelength)):
-                message = 'short_wavelength contains NaNs.'
-                raise ValueError(message)
-        except TypeError as te:
-            message = 'short_wavelength must be a numpy.ndarray of numeric ' \
-                      'values.'
-            raise TypeError(message) from te
-        try:
-            if np.any(np.isnan(self.__long_wavelength)):
-                message = 'long_wavelength contains NaNs.'
-                raise ValueError(message)
-        except TypeError as te:
-            message = 'long_wavelength must be a numpy.ndarray of numeric ' \
-                      'values.'
-            raise TypeError(message) from te
-
-    def __raise_value_error_if_short_wavelength_contains_negative_values(self) \
-            -> None:
-        if np.any(self.__short_wavelength <= 0):
-            message = 'short_wavelength contains non-positive values.'
-            raise ValueError(message)
-
-    def __raise_value_error_if_long_wavelength_contains_inf(self) -> None:
-        if np.any(np.isinf(self.__long_wavelength)):
-            message = 'long_wavelength contains infinite values.'
-            raise ValueError(message)
-
-    def __raise_value_error_if_long_wavelength_is_not_larger(self) -> None:
-        try:
-            if np.any(self.__short_wavelength >= self.__long_wavelength):
-                message = 'Some values in long_wavelength are not larger ' \
-                          'than the corresponding values in short_wavelength.'
-                raise ValueError(message)
-        except ValueError as ve:
-            message = 'The spectral arrays must have the same shape.'
-            raise ValueError(message) from ve
-
-    def __calculate_high_wavenumber(self) -> np.ndarray:
-        return self.__convert_wavelength_to_wavenumber(
+    def __raise_type_error_if_wavelengths_are_not_all_ndarray(self) -> None:
+        self.__raise_type_error_if_wavelength_is_not_ndarray(
             self.__short_wavelength, 'short_wavelength')
-
-    def __calculate_low_wavenumber(self) -> np.ndarray:
-        return self.__convert_wavelength_to_wavenumber(
+        self.__raise_type_error_if_wavelength_is_not_ndarray(
             self.__long_wavelength, 'long_wavelength')
 
     @staticmethod
-    def __convert_wavelength_to_wavenumber(wavelength: np.ndarray,
-                                           wavelength_name: str) -> np.ndarray:
-        with np.errstate(divide='raise'):
-            try:
-                return 1 / (wavelength * 10 ** -4)
-            except FloatingPointError as fpe:
-                message = f'At least one value in {wavelength_name} is too' \
-                          f'small to perform calculations!'
-                raise ValueError(message) from fpe
+    def __raise_type_error_if_wavelength_is_not_ndarray(
+            wavelength: np.ndarray, name: str) -> None:
+        if not isinstance(wavelength, np.ndarray):
+            message = f'{name} must be an ndarray.'
+            raise TypeError(message)
+
+    def __raise_value_error_if_wavelengths_are_not_all_same_shape(self) -> None:
+        if not self.__short_wavelength.shape == self.__long_wavelength.shape:
+            message = 'short_wavelength and long_wavelength must both have ' \
+                      'the same shape.'
+            raise ValueError(message)
+
+    def __raise_value_error_if_wavelengths_are_unphysical(self) -> None:
+        self.__raise_value_error_if_wavelengths_are_not_in_range(
+            self.__short_wavelength, 0.1, 50, 'short_wavelength')
+        self.__raise_value_error_if_wavelengths_are_not_in_range(
+            self.__long_wavelength, 0.1, 50, 'long_wavelength')
+
+    @staticmethod
+    def __raise_value_error_if_wavelengths_are_not_in_range(
+            angles: np.ndarray, low: float, high: float, name: str) -> None:
+        if not (np.all(low <= angles) and np.all(angles <= high)):
+            message = f'All values in {name} must be between {low} and ' \
+                      f'{high} microns.'
+            raise ValueError(message)
+
+    def __raise_value_error_if_long_wavelength_is_not_larger(self) -> None:
+        if np.any(self.__short_wavelength >= self.__long_wavelength):
+            message = 'Some values in long_wavelength are not larger ' \
+                      'than the corresponding values in short_wavelength.'
+            raise ValueError(message)
+
+    def __calculate_high_wavenumber(self) -> np.ndarray:
+        return self.__convert_wavelength_to_wavenumber(self.__short_wavelength)
+
+    def __calculate_low_wavenumber(self) -> np.ndarray:
+        return self.__convert_wavelength_to_wavenumber(self.__long_wavelength)
+
+    @staticmethod
+    def __convert_wavelength_to_wavenumber(
+            wavelength: np.ndarray) -> np.ndarray:
+        return 10 ** 4 / wavelength
 
     @property
     def short_wavelength(self) -> np.ndarray:
@@ -309,30 +304,28 @@ class Spectral:
 
     @property
     def high_wavenumber(self) -> np.ndarray:
-        """Get the high wavenumbers [1/cm]---the wavenumbers corresponding to
-        short_wavelength.
+        r"""Get the high wavenumber [cm :math:`^{-1}`]---the wavenumber
+        corresponding to :code:`short_wavelength`.
 
         Notes
         -----
         In DISORT, this variable is named :code:`WVNMHI`. It is only needed by
-        DISORT if :code:`thermal_emission==True` (defined in
-        :class:`radiation.ThermalEmission`), or if DISORT is run multiple times
-        and BDREF is spectrally dependent.
+        DISORT if :py:attr:`~radiation.ThermalEmission.thermal_emission` is set
+        to :code:`True`.
 
         """
         return self.__high_wavenumber
 
     @property
     def low_wavenumber(self) -> np.ndarray:
-        """Get the low wavenumbers [1/cm]---the wavenumbers associated with
-        long_wavelength.
+        r"""Get the low wavenumber [cm :math:`^{-1}`]---the wavenumber
+        corresponding to :code:`long_wavelength`.
 
         Notes
         -----
         In DISORT, this variable is named :code:`WVNMLO`. It is only needed by
-        DISORT if :code:`thermal_emission==True` (defined in
-        :class:`radiation.ThermalEmission`), or if DISORT is run multiple times
-        and BDREF is spectrally dependent.
+        DISORT if :py:attr:`~radiation.ThermalEmission.thermal_emission` is set
+        to :code:`True`.
 
         """
         return self.__low_wavenumber
