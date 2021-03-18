@@ -188,11 +188,11 @@ get right to it.</p>
 in the <a class="reference internal" href="../api-reference/radiation.html#radiation.IncidentFlux" title="radiation.IncidentFlux"><code class="xref py py-class docutils literal notranslate"><span class="pre">radiation.IncidentFlux</span></code></a> class. Instances of this class don’t do
 anything but containerize your desired flux, and provide some default values.
 I’ll go ahead and make an object and show its parameters.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pressure</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">pressure</span>
-<span class="n">temperature</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">temperature</span>
-<span class="n">number_density</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">number_density</span>
-<span class="n">column_density</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">column_density</span>
-<span class="n">n_layers</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">n_layers</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n_layers</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">n_layers</span>
+<span class="n">scale_height</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">scale_height</span>
+
+<span class="kn">from</span> <span class="nn">pyRT_DISORT.rayleigh</span> <span class="kn">import</span> <span class="n">RayleighCO2</span>
+
 </pre></div>
 </div>
 <p>By default, <code class="code docutils literal notranslate"><span class="pre">beam_flux</span></code> is pi, and <code class="code docutils literal notranslate"><span class="pre">isotropic_flux</span></code> is 0. At least
@@ -204,11 +204,11 @@ flux from space.</p>
 <p>We can also define whether thermal emission is used in the model with the
 <a class="reference internal" href="../api-reference/radiation.html#radiation.ThermalEmission" title="radiation.ThermalEmission"><code class="xref py py-class docutils literal notranslate"><span class="pre">radiation.ThermalEmission</span></code></a> class. As before, pyRT_DISORT has default
 values to get you up and running, though you can easily override them.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
-<span class="kn">from</span> <span class="nn">pyRT_DISORT.rayleigh</span> <span class="kn">import</span> <span class="n">RayleighCO2</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">rayleigh_phase_function</span> <span class="o">=</span> <span class="n">short_rayleigh</span><span class="o">.</span><span class="n">phase_function</span>
+<span class="n">rayleigh_od</span> <span class="o">=</span> <span class="n">short_rayleigh</span><span class="o">.</span><span class="n">scattering_optical_depth</span>
 
-<span class="n">short_rayleigh</span> <span class="o">=</span> <span class="n">RayleighCO2</span><span class="p">(</span><span class="n">altitude</span><span class="p">,</span> <span class="n">high_wavenumbers</span><span class="p">,</span> <span class="n">column_density</span><span class="p">)</span>
-<span class="n">rayleigh_phase_function</span> <span class="o">=</span> <span class="n">short_rayleigh</span><span class="o">.</span><span class="n">phase_function</span>
+<span class="kn">from</span> <span class="nn">pyRT_DISORT.controller</span> <span class="kn">import</span> <span class="n">ComputationalParameters</span><span class="p">,</span> <span class="n">ModelBehavior</span>
+
 </pre></div>
 </div>
 <p>By default, <code class="code docutils literal notranslate"><span class="pre">thermal_emission==False</span></code> and no other values are used. But

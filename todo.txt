@@ -1,5 +1,4 @@
 Refresh:
---- observation checks + tests + guide
 --- eos checks + tests + guide
 --- rayleigh checks + tests + guide
 --- forward_scattering checks + tests + guide
@@ -14,6 +13,7 @@ Refresh:
 --- disort_run checks + tests + guide
 
 Done:
+--- observation checks + tests + guide
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

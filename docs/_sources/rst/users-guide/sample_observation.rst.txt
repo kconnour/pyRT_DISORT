@@ -52,7 +52,8 @@ arrays---(15, 20)---allowing a 1-to-1 correspondence between them.
 Spectral
 --------
 If our hyperspectral imager contains W wavelengths and an image contains MxN
-pixels, the data will have shape WxMxN. I'll go ahead and make a spectral
+pixels, the data will have shape WxMxN (or at least it can be coerced into
+that shape). I'll go ahead and make a spectral
 array where each pixel took data at the same wavelength, although that's not a
 necessity. I'll also define a spectral width to each bin.
 
@@ -62,12 +63,11 @@ necessity. I'll also define a spectral width to each bin.
    pixel_wavelengths = np.broadcast_to(dummy_wavelengths, (20, 15, 5)).T
    width = 0.05
 
-.. note:: The wavelengths must be in microns. Additionally, the wavelength
-   dimension must be first; see the note below for more details.
+.. note:: The wavelengths must be in microns.
 
 Once we have these values, we can add them to :class:`~observation.Spectral`.
-It holds the input wavelengths and computes the corresponding wavenumbers. As
-before, these values can be accessed via the class properties.
+This class holds the input wavelengths and computes the corresponding
+wavenumbers. As before, these values can be accessed via the class properties.
 
 .. code-block:: python
    :emphasize-lines: 1

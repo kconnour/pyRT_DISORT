@@ -21,10 +21,6 @@ long_wavelengths = spectral.long_wavelength
 high_wavenumbers = spectral.high_wavenumber
 low_wavenumbers = spectral.low_wavenumber
 
-
-
-raise SystemExit(9)
-
 from pyRT_DISORT.eos import Hydrostatic
 
 altitude_grid = np.linspace(100, 0, num=51)

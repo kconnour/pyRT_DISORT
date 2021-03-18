@@ -1,4 +1,4 @@
-"""The observation module contains data structures to hold and compute
+"""The :code:`observation` module contains data structures to hold and compute
 quantities commonly found in an observation.
 """
 import numpy as np
@@ -21,11 +21,14 @@ class Angles:
         Parameters
         ----------
         incidence
-            Pixel incidence (solar zenith) angle [degrees].
+            Pixel incidence (solar zenith) angle [degrees]. All values must be
+            between 0 and 180 degrees.
         emission
-            Pixel emission (emergence) angle [degrees].
+            Pixel emission (emergence) angle [degrees]. All values must be
+            between 0 and 90 degrees.
         phase
-            Pixel phase angle [degrees].
+            Pixel phase angle [degrees]. All values must be between 0 and 180
+            degrees.
 
         Raises
         ------

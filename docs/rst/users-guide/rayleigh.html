@@ -204,11 +204,11 @@ it the model layers, the column density in the layers, and the wavenumbers
 at which to make the optical depths (I choose wavenumbers instead of
 wavelengths since the original paper uses them). We’ve already created these
 inputs, so we have everything we need to make the Rayleigh arrays.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pressure</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">pressure</span>
-<span class="n">temperature</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">temperature</span>
-<span class="n">number_density</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">number_density</span>
-<span class="n">column_density</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">column_density</span>
-<span class="n">n_layers</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">n_layers</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n_layers</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">n_layers</span>
+<span class="n">scale_height</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">scale_height</span>
+
+<span class="kn">from</span> <span class="nn">pyRT_DISORT.rayleigh</span> <span class="kn">import</span> <span class="n">RayleighCO2</span>
+
 </pre></div>
 </div>
 <p>Since Rayleigh optical depth is completely due to scattering, there’s no

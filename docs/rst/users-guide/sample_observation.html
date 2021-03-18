@@ -226,7 +226,8 @@ be structurally identical to how you’d apply this code to your data.</p>
 <div class="section" id="spectral">
 <h2>Spectral<a class="headerlink" href="#spectral" title="Permalink to this headline">¶</a></h2>
 <p>If our hyperspectral imager contains W wavelengths and an image contains MxN
-pixels, the data will have shape WxMxN. I’ll go ahead and make a spectral
+pixels, the data will have shape WxMxN (or at least it can be coerced into
+that shape). I’ll go ahead and make a spectral
 array where each pixel took data at the same wavelength, although that’s not a
 necessity. I’ll also define a spectral width to each bin.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dummy_wavelengths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
@@ -236,12 +237,11 @@ necessity. I’ll also define a spectral width to each bin.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The wavelengths must be in microns. Additionally, the wavelength
-dimension must be first; see the note below for more details.</p>
+<p>The wavelengths must be in microns.</p>
 </div>
 <p>Once we have these values, we can add them to <a class="reference internal" href="../api-reference/observation.html#observation.Spectral" title="observation.Spectral"><code class="xref py py-class docutils literal notranslate"><span class="pre">Spectral</span></code></a>.
-It holds the input wavelengths and computes the corresponding wavenumbers. As
-before, these values can be accessed via the class properties.</p>
+This class holds the input wavelengths and computes the corresponding
+wavenumbers. As before, these values can be accessed via the class properties.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="hll"><span class="n">spectral</span> <span class="o">=</span> <span class="n">Spectral</span><span class="p">(</span><span class="n">pixel_wavelengths</span> <span class="o">-</span> <span class="n">width</span><span class="p">,</span> <span class="n">pixel_wavelengths</span> <span class="o">+</span> <span class="n">width</span><span class="p">)</span>
 </span><span class="n">short_wavelength</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">short_wavelength</span>
 <span class="n">long_wavelength</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">long_wavelength</span>
