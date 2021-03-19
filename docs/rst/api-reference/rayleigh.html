@@ -175,7 +175,7 @@
 <p>The rayleigh module contains structures for computing Rayleigh scattering.</p>
 <dl class="py class">
 <dt id="rayleigh.Rayleigh">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">rayleigh.</span></code><code class="sig-name descname"><span class="pre">Rayleigh</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">altitude_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavenumbers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rayleigh.Rayleigh" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">rayleigh.</span></code><code class="sig-name descname"><span class="pre">Rayleigh</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavenumbers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rayleigh.Rayleigh" title="Permalink to this definition">¶</a></dt>
 <dd><p>An abstract base class for Rayleigh scattering.</p>
 <p>Rayleigh creates the Legendre coefficient phase function array and holds
 the wavenumbers at which scattering was observed. This is an abstract base
@@ -183,13 +183,12 @@ class from which all other Rayleigh classes are derived; it is not meant
 to be instantiated.</p>
 <dl class="py method">
 <dt id="rayleigh.Rayleigh.__init__">
-<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">altitude_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavenumbers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rayleigh.Rayleigh.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavenumbers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rayleigh.Rayleigh.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>altitude_grid</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – 1D array of layer altitudes where the model is defined.</p></li>
-<li><p><strong>wavenumbers</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Array of wavenumbers for the observation. These can be created in
-<code class="xref py py-class docutils literal notranslate"><span class="pre">observation.Wavelengths</span></code>.</p></li>
+<li><p><strong>n_layers</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The number of layers to use in the model.</p></li>
+<li><p><strong>wavenumbers</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Wavenumbers of each pixel in the observation.</p></li>
 </ul>
 </dd>
 </dl>
@@ -245,6 +244,27 @@ useful.</p></li>
 <p>The values used here are from <a class="reference external" href="https://doi.org/10.1016/j.jqsrt.2004.07.025">Sneep and Ubachs 2005</a></p>
 <p>Due to a typo in the paper, I changed the coefficient to 10**3 when
 using equation 13 for computing the index of refraction</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="rayleigh.RayleighCO2.phase_function">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">phase_function</span></code><a class="headerlink" href="#rayleigh.RayleighCO2.phase_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the Legendre decomposition of the phase function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The decomposed phase function.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The shape of this array is determined by the inputs. In general, the
+shape will be [n_moments, n_layers, (n_pixels)] (here, n_moments will
+always be 3 since the 0th and 2nd terms are the only terms in the
+expansion). For example, ff altitude_grid has shape [20], and
+wavenumbers has shape [50, 100, 45], this array will have shape
+[3, 20, 50, 100, 45].</p>
 </dd></dl>
 
 <dl class="py method">

@@ -4,51 +4,52 @@ from scipy.constants import Boltzmann
 from pyRT_DISORT.eos import Hydrostatic
 
 
-# TODO: these tests look awful to read
 class TestHydrostatic:
-    pass
+    @pytest.fixture
+    def altitude_grid(self):
+        yield np.broadcast_to(np.linspace(100, 0, num=20), (5, 20)).T
+
+    @pytest.fixture
+    def exp_pressure(self, altitude_grid):
+        yield 1000 * np.exp(-altitude_grid / 10)
+
+    @pytest.fixture
+    def constant_temperature(self):
+        yield np.broadcast_to(np.linspace(100, 100, num=20), (5, 20)).T
+
+    @pytest.fixture
+    def mass(self):
+        yield 7.3 * 10 ** -26
+
+    @pytest.fixture
+    def gravity(self):
+        yield 3.71
+
+    @pytest.fixture
+    def hydro_matching_altitudes(self, altitude_grid, exp_pressure, constant_temperature, mass, gravity):
+        yield Hydrostatic(altitude_grid, exp_pressure, constant_temperature, altitude_grid, mass, gravity)
 
 
 class TestAltitude(TestHydrostatic):
-    def setup(self) -> None:
-        altitude_grid = np.broadcast_to(np.linspace(100, 0, num=20),
-                                        (5, 20)).T
-        exp_pressure = 1000 * np.exp(-altitude_grid / 10)
-        const_temper = np.broadcast_to(np.linspace(100, 100, num=20),
-                                       (5, 20)).T
-        self.same_boundaries = altitude_grid
-        mass = 7.3 * 10 ** -26
-        g = 3.71
-        self.same_hydro = Hydrostatic(altitude_grid, exp_pressure, const_temper,
-                                      self.same_boundaries, mass, g)
+    def test_altitude_is_unchanged_for_same_altitudes(self, altitude_grid, hydro_matching_altitudes):
+        assert np.array_equal(altitude_grid, hydro_matching_altitudes.altitude)
 
-    def test_altitude_is_unchanged(self) -> None:
-        assert np.array_equal(self.same_boundaries, self.same_hydro.altitude)
-
-    def test_altitude_is_read_only(self) -> None:
+    def test_altitude_is_read_only(self, hydro_matching_altitudes):
         with pytest.raises(AttributeError):
-            self.same_hydro.altitude = 0
+            hydro_matching_altitudes.altitude = 0
 
 
 class TestNLayers(TestHydrostatic):
-    def setup(self) -> None:
-        altitude_grid = np.broadcast_to(np.linspace(100, 0, num=20),
-                                        (5, 20)).T
-        exp_pressure = 1000 * np.exp(-altitude_grid / 10)
-        const_temper = np.broadcast_to(np.linspace(100, 100, num=20),
-                                       (5, 20)).T
-        same_boundaries = altitude_grid
-        mass = 7.3 * 10 ** -26
-        g = 3.71
-        self.same_hydro = Hydrostatic(altitude_grid, exp_pressure,
-                                      const_temper, same_boundaries, mass, g)
+    def test_n_layers_is_determined_by_altitude_boundaries(self, hydro_matching_altitudes) -> None:
+        assert hydro_matching_altitudes.n_layers == 19
 
-    def test_n_layers_is_determined_by_altitude_boundaries(self) -> None:
-        assert self.same_hydro.n_layers == 19
-
-    def test_n_layers_is_read_only(self) -> None:
+    def test_n_layers_is_read_only(self, hydro_matching_altitudes) -> None:
         with pytest.raises(AttributeError):
-            self.same_hydro.n_layers = 19
+            hydro_matching_altitudes.n_layers = 19
+
+
+
+
 
 
 class TestPressure(TestHydrostatic):

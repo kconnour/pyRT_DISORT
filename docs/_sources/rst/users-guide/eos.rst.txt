@@ -1,5 +1,5 @@
-Physical Grid
-=============
+The eos module
+==============
 
 Now that we created the angular and spectral information, we can turn our
 attention to creating the model. Perhaps the most natural place to start is

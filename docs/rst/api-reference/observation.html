@@ -301,7 +301,7 @@ incidence angle.</p>
 <dt id="observation.Spectral">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">observation.</span></code><code class="sig-name descname"><span class="pre">Spectral</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">short_wavelength</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long_wavelength</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#observation.Spectral" title="Permalink to this definition">¶</a></dt>
 <dd><p>A data structure that contains spectral info required by DISORT.</p>
-<p>Spectral accepts the short and long wavelengths from an observation and
+<p>Spectral accepts the short and long wavelength from an observation and
 computes their corresponding wavenumber.</p>
 <dl class="py method">
 <dt id="observation.Spectral.__init__">
@@ -315,12 +315,12 @@ computes their corresponding wavenumber.</p>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>TypeError</strong> – Raised if any of the inputs are not an instance of numpy.ndarray.</p></li>
-<li><p><strong>ValueError</strong> – Raised if either of the input arrays are not the same shape, if
-    they contain values outside of 0.1 to 50 microns (I assume this is
-    the valid range to do retrievals), or if any values in
-    <code class="code docutils literal notranslate"><span class="pre">short_wavelength</span></code> are larger than the corresponding values in
-    <code class="code docutils literal notranslate"><span class="pre">long_wavelength</span></code>.</p></li>
+<li><p><strong>TypeError</strong> – Raised if either of the inputs are not an instance of numpy.ndarray.</p></li>
+<li><p><strong>ValueError</strong> – Raised if either of the input arrays contain values outside of 0.1
+    to 50 microns (I assume this is the valid range to do retrievals),
+    if they are not the same shape, or any values in
+    <code class="code docutils literal notranslate"><span class="pre">short_wavelength</span></code> are not larger than the corresponding
+    values in <code class="code docutils literal notranslate"><span class="pre">long_wavelength</span></code>.</p></li>
 </ul>
 </dd>
 </dl>
@@ -376,6 +376,53 @@ to <code class="code docutils literal notranslate"><span class="pre">True</span>
 <dt id="observation.Spectral.short_wavelength">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">short_wavelength</span></code><a class="headerlink" href="#observation.Spectral.short_wavelength" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input short wavelength [microns].</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="observation.Wavelength">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">observation.</span></code><code class="sig-name descname"><span class="pre">Wavelength</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wavelength</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#observation.Wavelength" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class to hold on to an array of wavelengths.</p>
+<p>Wavelength accepts a numpy.ndarray of wavelengths and ensures all values
+in the array are acceptable for retrievals.</p>
+<dl class="py method">
+<dt id="observation.Wavelength.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wavelength</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#observation.Wavelength.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>wavelength</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Any ND array of wavelengths [microns].</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – Raised if <code class="code docutils literal notranslate"><span class="pre">wavelength</span></code> is not an instance of numpy.ndarray.</p></li>
+<li><p><strong>ValueError</strong> – Raised if any values in <code class="code docutils literal notranslate"><span class="pre">wavelength</span></code> are not between 0.1 and
+    50 microns (I assume this is the valid range to do retrievals).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="observation.Wavelength.wavelength">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">wavelength</span></code><a class="headerlink" href="#observation.Wavelength.wavelength" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the input wavelength.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="observation.Wavelength.wavelength_to_wavenumber">
+<code class="sig-name descname"><span class="pre">wavelength_to_wavenumber</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#observation.Wavelength.wavelength_to_wavenumber" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the input wavelength to wavenumber.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>

@@ -1,5 +1,5 @@
-Sample Observation
-==================
+The observation module
+======================
 Let's begin by considering some of the quantities found in a typical
 observation---the angles and wavelengths at which some instrument collected
 data. For this example I'll consider the

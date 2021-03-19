@@ -173,7 +173,7 @@ class Hydrostatic:
     @staticmethod
     def __raise_value_error_if_altitude_is_not_monotonically_decreasing(
             var: np.ndarray, name: str) -> None:
-        if not np.all(np.diff(var) < 0):
+        if not np.all(np.diff(var, axis=0) < 0):
             message = f'{name} must be monotonically decreasing along the ' \
                       f'0th dimension.'
             raise ValueError(message)
@@ -361,3 +361,48 @@ class Hydrostatic:
 
         """
         return self.__scale_height
+
+
+class ColumnDensity:
+    """Perform checks that a given column density is plausible.
+
+    """
+    def __init__(self, column_density: np.ndarray) -> None:
+        """
+        Parameters
+        ----------
+        column_density
+            ND array of column density.
+
+        Raises
+        ------
+        TypeError
+            Raised if :code:`column_density` is not a numpy.ndarray.
+        ValueError
+            Raised if :code:`column_density` contains negative values.
+
+        """
+        self.__column_density = column_density
+
+        self.__raise_type_error_if_not_ndarray()
+
+    def __raise_error_if_input_is_bad(self) -> None:
+        self.__raise_type_error_if_not_ndarray()
+        self.__raise_value_error_if_contains_negative_values()
+
+    def __raise_type_error_if_not_ndarray(self) -> None:
+        if not isinstance(self.__column_density, np.ndarray):
+            message = 'column_density must be a numpy.ndarray.'
+            raise TypeError(message)
+
+    def __raise_value_error_if_contains_negative_values(self) -> None:
+        if np.any(self.__column_density < 0):
+            message = 'column_density contains negative values.'
+            raise ValueError(message)
+
+    @property
+    def column_density(self) -> np.ndarray:
+        """Get the input column density.
+
+        """
+        return self.__column_density

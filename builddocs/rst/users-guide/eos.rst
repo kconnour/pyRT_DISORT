@@ -1,5 +1,5 @@
-Physical Grid
-=============
+The eos module
+==============
 
 Now that we created the angular and spectral information, we can turn our
 attention to creating the model. Perhaps the most natural place to start is
@@ -45,7 +45,9 @@ the new boundaries. As before, we can access these arrays via the class
 properties.
 
 .. code-block:: python
-   :emphasize-lines: 1
+   :emphasize-lines: 3
+
+   from pyRT_DISORT.eos import Hydrostatic
 
    hydro = Hydrostatic(altitude_grid, pressure_profile, temperature_profile, z_grid, mass, gravity)
    altitude = hydro.altitude

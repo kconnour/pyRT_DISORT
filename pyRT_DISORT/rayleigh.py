@@ -1,6 +1,8 @@
 """The rayleigh module contains structures for computing Rayleigh scattering.
 """
 import numpy as np
+from pyRT_DISORT.eos import ColumnDensity
+from pyRT_DISORT.observation import Wavelength
 
 
 class Rayleigh:
@@ -8,80 +10,101 @@ class Rayleigh:
 
     Rayleigh creates the Legendre coefficient phase function array and holds
     the wavenumbers at which scattering was observed. This is an abstract base
-    class from which all other Rayleigh classes are derived; it is not meant
-    to be instantiated.
+    class from which all other Rayleigh classes are derived.
 
     """
 
-    def __init__(self, altitude_grid: np.ndarray, wavenumbers: np.ndarray) \
-            -> None:
+    def __init__(self, n_layers: int, spectral_shape: tuple) -> None:
         """
         Parameters
         ----------
-        altitude_grid
-            1D array of layer altitudes where the model is defined.
-        wavenumbers
-            Array of wavenumbers for the observation. These can be created in
-            :class:`.observation.Wavelengths`.
+        n_layers
+            The number of layers to use in the model.
+        spectral_shape
+
+        Raises
+        ------
+        TypeError
+            Raised if :code:`n_layers` is not an int, or if
+            :code:`spectral_shape` is not a tuple.
+        ValueError
+            Raised if the values in :code:`spectral_shape` are not ints.
 
         """
-        self._wavenumbers = wavenumbers
-        self._grid = altitude_grid
+        self.__n_layers = n_layers
+        self.__spectral_shape = spectral_shape
+
+        self.__raise_error_if_inputs_are_bad()
 
         self.__phase_function = self.__construct_phase_function()
 
+    def __raise_error_if_inputs_are_bad(self) -> None:
+        self.__raise_type_error_if_n_layers_is_not_int()
+        self.__raise_type_error_if_spectral_shape_is_not_tuple()
+        self.__raise_value_error_if_spectral_shape_contains_non_ints()
+
+    def __raise_type_error_if_n_layers_is_not_int(self) -> None:
+        if not isinstance(self.__n_layers, int):
+            message = 'n_layers must be an int.'
+            raise TypeError(message)
+
+    def __raise_type_error_if_spectral_shape_is_not_tuple(self) -> None:
+        if not isinstance(self.__spectral_shape, tuple):
+            message = 'spectral_shape must be a tuple.'
+            raise TypeError(message)
+
+    def __raise_value_error_if_spectral_shape_contains_non_ints(self) -> None:
+        for val in self.__spectral_shape:
+            if not isinstance(val, int):
+                message = 'At least one value in spectral_shape is not an int.'
+                raise ValueError(message)
+
     def __construct_phase_function(self) -> np.ndarray:
-        pf = np.zeros((3, len(self._grid), self._wavenumbers.size))
-        pf[0, :, :] = 1
-        pf[2, :, :] = 0.1
-        return pf.reshape(pf.shape[:-1] + self._wavenumbers.shape)
+        pf = np.zeros((3, self.__n_layers, self.__spectral_shape))
+        pf[0, :] = 1
+        pf[2, :] = 0.1
+        return pf.reshape(pf.shape[:-1] + self.__spectral_shape)
 
     @property
     def phase_function(self) -> np.ndarray:
         """Get the Legendre decomposition of the phase function.
 
-        Returns
-        -------
-        np.ndarray
-            The decomposed phase function.
-
         Notes
         -----
-        The shape of this array is determined by the inputs. In general, the
-        shape will be [n_moments, n_layers, (n_pixels)] (here, n_moments will
-        always be 3 since the 0th and 2nd terms are the only terms in the
-        expansion). For example, ff altitude_grid has shape [20], and
-        wavenumbers has shape [50, 100, 45], this array will have shape
-        [3, 20, 50, 100, 45].
+        The shape of this array is (3, n_layers, (spectral_shape)). The 0th and
+        2nd coefficient along the 0th axis will be 1 and 0.1, respectively.
 
         """
         return self.__phase_function
 
 
 class RayleighCO2(Rayleigh):
-    """Construct an object to hold arrays related to CO2 Rayleigh scattering.
+    """A structure to hold arrays related to CO2 Rayleigh scattering.
 
-    Rayleigh creates the Legendre coefficient phase function array and holds
-    the wavenumbers at which scattering was observed. This is an abstract base
-    class from which all other Rayleigh classes are derived; it is not meant
-    to be instantiated.
+    RayleighCO2 creates the Legendre coefficient phase function array and the
+    optical depths due to Rayleigh scattering by CO2 in each of the layers.
 
     """
 
-    def __init__(self, altitude_grid: np.ndarray, wavenumbers: np.ndarray,
-                 column_density_layers: np.ndarray) -> None:
+    def __init__(self, wavelength: np.ndarray,
+                 column_density: np.ndarray) -> None:
         """
         Parameters
         ----------
-        altitude_grid
-            1D array of altitudes where the model is defined.
-        wavenumbers
-            Array of wavenumbers for the observation. These can be created in
-            :class:`.observation.Wavelengths`.
-        column_density_layers
+        wavelength
+
+        column_density
             1D array of column densities (particles / m**2) for each layer of
             the model. This should be the same length as altitude_grid to be
             useful.
+
+        Raises
+        ------
+        TypeError
+            Raised if :code:`wavelength` is not an instance of numpy.ndarray.
+        ValueError
+            Raised if any values in :code:`wavelength` are not between 0.1 and
+            50 microns (I assume this is the valid range to do retrievals).
 
         Notes
         -----
@@ -92,6 +115,15 @@ class RayleighCO2(Rayleigh):
         using equation 13 for computing the index of refraction
 
         """
+        self.__wavelength = Wavelength(wavelength)
+        self.__column_density = ColumnDensity(column_density)
+
+    def __raise_error
+
+
+
+
+
         super().__init__(altitude_grid, wavenumbers)
         self.__scattering_od = \
             self.__calculate_scattering_optical_depths(column_density_layers)
