@@ -197,7 +197,7 @@ degrees.</p></li>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>TypeError</strong> – Raised if any of the inputs are not an instance of numpy.ndarray.</p></li>
+<li><p><strong>TypeError</strong> – Raised if any of the angles are not a numpy.ndarray.</p></li>
 <li><p><strong>ValueError</strong> – Raised if any of the input arrays are not the same shape or if they
     contain values outside of their mathematically valid range.</p></li>
 </ul>
@@ -233,8 +233,8 @@ structure can accommodate pixels of any shape.</p>
 <dl class="py method">
 <dt id="observation.Angles.mu">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">mu</span></code><a class="headerlink" href="#observation.Angles.mu" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get <span class="math notranslate nohighlight">\(\mu\)</span> where <span class="math notranslate nohighlight">\(\mu\)</span> is the cosine of the input
-emission angle.</p>
+<dd><p>Get <span class="math notranslate nohighlight">\(\mu\)</span> where <span class="math notranslate nohighlight">\(\mu\)</span> is the cosine of
+<code class="code docutils literal notranslate"><span class="pre">emission_angle</span></code>.</p>
 <p class="rubric">Notes</p>
 <p>Each element in this variable is named <code class="code docutils literal notranslate"><span class="pre">UMU</span></code> in DISORT.</p>
 <dl class="field-list simple">
@@ -247,8 +247,8 @@ emission angle.</p>
 <dl class="py method">
 <dt id="observation.Angles.mu0">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">mu0</span></code><a class="headerlink" href="#observation.Angles.mu0" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get <span class="math notranslate nohighlight">\(\mu_0\)</span> where <span class="math notranslate nohighlight">\(\mu_0\)</span> is the cosine of the input
-incidence angle.</p>
+<dd><p>Get <span class="math notranslate nohighlight">\(\mu_0\)</span> where <span class="math notranslate nohighlight">\(\mu_0\)</span> is the cosine of
+<code class="code docutils literal notranslate"><span class="pre">incidence_angle</span></code>.</p>
 <p class="rubric">Notes</p>
 <p>Each element in this variable is named <code class="code docutils literal notranslate"><span class="pre">UMU0</span></code> in DISORT.</p>
 <dl class="field-list simple">
@@ -315,7 +315,7 @@ computes their corresponding wavenumber.</p>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>TypeError</strong> – Raised if either of the inputs are not an instance of numpy.ndarray.</p></li>
+<li><p><strong>TypeError</strong> – Raised if either of the input wavelengths are not a numpy.ndarray.</p></li>
 <li><p><strong>ValueError</strong> – Raised if either of the input arrays contain values outside of 0.1
     to 50 microns (I assume this is the valid range to do retrievals),
     if they are not the same shape, or any values in
@@ -332,7 +332,7 @@ can accommodate pixels of any shape.</p>
 <dl class="py method">
 <dt id="observation.Spectral.high_wavenumber">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">high_wavenumber</span></code><a class="headerlink" href="#observation.Spectral.high_wavenumber" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the high wavenumber [cm <span class="math notranslate nohighlight">\(^{-1}\)</span>]—the wavenumber
+<dd><p>Get the high wavenumber [cm <sup>-1</sup>]—the wavenumber
 corresponding to <code class="code docutils literal notranslate"><span class="pre">short_wavelength</span></code>.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">WVNMHI</span></code>. It is only needed by
@@ -359,7 +359,7 @@ to <code class="code docutils literal notranslate"><span class="pre">True</span>
 <dl class="py method">
 <dt id="observation.Spectral.low_wavenumber">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">low_wavenumber</span></code><a class="headerlink" href="#observation.Spectral.low_wavenumber" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the low wavenumber [cm <span class="math notranslate nohighlight">\(^{-1}\)</span>]—the wavenumber
+<dd><p>Get the low wavenumber [cm <sup>-1</sup>]—the wavenumber
 corresponding to <code class="code docutils literal notranslate"><span class="pre">long_wavelength</span></code>.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">WVNMLO</span></code>. It is only needed by
@@ -376,53 +376,6 @@ to <code class="code docutils literal notranslate"><span class="pre">True</span>
 <dt id="observation.Spectral.short_wavelength">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">short_wavelength</span></code><a class="headerlink" href="#observation.Spectral.short_wavelength" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input short wavelength [microns].</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt id="observation.Wavelength">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">observation.</span></code><code class="sig-name descname"><span class="pre">Wavelength</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wavelength</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#observation.Wavelength" title="Permalink to this definition">¶</a></dt>
-<dd><p>A class to hold on to an array of wavelengths.</p>
-<p>Wavelength accepts a numpy.ndarray of wavelengths and ensures all values
-in the array are acceptable for retrievals.</p>
-<dl class="py method">
-<dt id="observation.Wavelength.__init__">
-<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wavelength</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#observation.Wavelength.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>wavelength</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Any ND array of wavelengths [microns].</p>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>TypeError</strong> – Raised if <code class="code docutils literal notranslate"><span class="pre">wavelength</span></code> is not an instance of numpy.ndarray.</p></li>
-<li><p><strong>ValueError</strong> – Raised if any values in <code class="code docutils literal notranslate"><span class="pre">wavelength</span></code> are not between 0.1 and
-    50 microns (I assume this is the valid range to do retrievals).</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="observation.Wavelength.wavelength">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">wavelength</span></code><a class="headerlink" href="#observation.Wavelength.wavelength" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the input wavelength.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="observation.Wavelength.wavelength_to_wavenumber">
-<code class="sig-name descname"><span class="pre">wavelength_to_wavenumber</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#observation.Wavelength.wavelength_to_wavenumber" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert the input wavelength to wavenumber.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>

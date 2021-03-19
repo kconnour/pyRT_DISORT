@@ -63,7 +63,8 @@ class Hydrostatic:
             :code:`temperature_grid` do not have the same shapes; if
             :code:`altitude_grid` or :code:`altitude_boundaries` have
             incompatible pixel dimensions; if they are not monotonically
-            decreasing along the 0th dimension; if :code:`pressure_grid`, or
+            decreasing along the 0 :sup:`th` dimension; if
+            :code:`pressure_grid`, or
             :code:`temperature_grid` contain non-positive, finite values; if
             :code:`altitude_boundaries` does not contain at least 2 boundaries;
             or if :code:`particle_mass` or :code:`gravity` are not positive,

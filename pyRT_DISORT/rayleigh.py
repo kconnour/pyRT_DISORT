@@ -8,8 +8,8 @@ from pyRT_DISORT.observation import Wavelength
 class Rayleigh:
     """An abstract base class for Rayleigh scattering.
 
-    Rayleigh creates the Legendre coefficient phase function array and holds
-    the wavenumbers at which scattering was observed. This is an abstract base
+    Rayleigh creates the Legendre coefficient phase function array given the
+    number of layers and the spectral shape. This is an abstract base
     class from which all other Rayleigh classes are derived.
 
     """
@@ -21,6 +21,7 @@ class Rayleigh:
         n_layers
             The number of layers to use in the model.
         spectral_shape
+            The pixel shape to construct a phase function.
 
         Raises
         ------
@@ -67,22 +68,24 @@ class Rayleigh:
 
     @property
     def phase_function(self) -> np.ndarray:
-        """Get the Legendre decomposition of the phase function.
+        r"""Get the Legendre decomposition of the phase function.
 
         Notes
         -----
-        The shape of this array is (3, n_layers, (spectral_shape)). The 0th and
-        2nd coefficient along the 0th axis will be 1 and 0.1, respectively.
+        The shape of this array is (3, n_layers, (spectral_shape)). The
+        0 :sup:`th` and 2 :sup:`nd` coefficient along the 0 :sup:`th` axis will
+        be 1 and 0.1, respectively.
 
         """
         return self.__phase_function
 
 
 class RayleighCO2(Rayleigh):
-    """A structure to hold arrays related to CO2 Rayleigh scattering.
+    r"""A structure to hold arrays related to CO :sub:`2` Rayleigh scattering.
 
     RayleighCO2 creates the Legendre coefficient phase function array and the
-    optical depths due to Rayleigh scattering by CO2 in each of the layers.
+    optical depths due to Rayleigh scattering by CO :sub:`2` in each of the
+    layers.
 
     """
 
@@ -92,11 +95,9 @@ class RayleighCO2(Rayleigh):
         Parameters
         ----------
         wavelength
-
+            Wavelength at which Rayleigh scattering will be computed.
         column_density
-            1D array of column densities (particles / m**2) for each layer of
-            the model. This should be the same length as altitude_grid to be
-            useful.
+            Column density in the model layers.
 
         Raises
         ------
@@ -104,17 +105,24 @@ class RayleighCO2(Rayleigh):
             Raised if :code:`wavelength` or :code:`column_density` is not a
             numpy.ndarray.
         ValueError
-            Raised if any values in :code:`wavelength` are not between 0.1 and
-            50 microns (I assume this is the valid range to do retrievals); if
-
+            Raised if any values in :code:`wavelength` or :code:`column_density`
+            are unphysical, or if they have incompatible shapes. See the note
+            below for more details.
 
         Notes
         -----
+        In the general case of a hyperspectral imager with MxN pixels and W
+        wavelengths, :code:`wavelength` can have shape WxMxN. In this case,
+        :code:`column_density` should have shape ZxMxN, where Z is the number
+        of model layers. The 0 :sup:`th` dimension can have different shapes
+        between the arrays but the subsequent dimensions (if any) should have
+        the same shape.
+
         The values used here are from `Sneep and Ubachs 2005
         <https://doi.org/10.1016/j.jqsrt.2004.07.025>`_
 
-        Due to a typo in the paper, I changed the coefficient to 10**3 when
-        using equation 13 for computing the index of refraction
+        Due to a typo in the paper, I changed the coefficient to 10 :sup:`3`
+        when using equation 13 for computing the index of refraction
 
         """
         self.__wavelength = Wavelength(wavelength)
@@ -137,8 +145,10 @@ class RayleighCO2(Rayleigh):
 
     def __calculate_scattering_optical_depths(
             self, column_density: np.ndarray) -> np.ndarray:
-        return np.multiply(column_density[:, None, :],
-                                 self.__molecular_cross_section()[None, :])
+        column_density = column_density[:, None]
+        mcs = self.__molecular_cross_section()[:, None]
+        scattering_od = np.multiply(column_density[:, None, :], mcs[None, :])
+        return np.squeeze(scattering_od)
 
     def __molecular_cross_section(self):
         number_density = 25.47 * 10 ** 18  # laboratory molecules / cm**3
@@ -167,35 +177,5 @@ class RayleighCO2(Rayleigh):
     def scattering_optical_depth(self) -> np.ndarray:
         """Get the Rayleigh scattering optical depth.
 
-        Returns
-        -------
-        np.ndarray
-            The scattering optical depth.
-
-        Notes
-        -----
-        The shape of this array is determined by the inputs. In general, the
-        shape will be [n_layers, (n_pixels)]. For example, if altitude_grid has
-        shape [20] and wavenumbers has shape [50, 100, 45], this array will have
-        shape [20, 50, 100, 45].
-
         """
         return self.__scattering_od
-
-
-if __name__ == '__main__':
-    wav = np.broadcast_to(np.array([1, 2, 3, 4, 40]), (15, 10, 5)).T
-    cd = np.array([4.31127724e+20, 6.95971530e+20, 1.13068092e+21,
-                       1.75965132e+21, 2.72941205e+21, 4.25424936e+21,
-                       6.61806947e+21, 1.02334693e+22, 1.55374107e+22,
-                       2.34710798e+22, 3.61121739e+22, 5.54481700e+22,
-                       8.47633760e+22, 1.29169149e+23, 1.93867954e+23,
-                       2.86145159e+23, 4.15075084e+23, 5.93623734e+23,
-                       8.34122953e+23])
-    colden = np.broadcast_to(cd, (15, 10, 19)).T
-    r = RayleighCO2(wav, colden)
-    od = r.scattering_optical_depth
-    pf = r.phase_function
-    print(pf.shape)
-    print(od.shape)
-    print(od[:, 4, 0, 0])

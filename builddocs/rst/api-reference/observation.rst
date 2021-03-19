@@ -2,5 +2,6 @@ Observation
 ===========
 
 .. automodule:: observation
-   :members: Angles, Spectral
+   :members:
+   :exclude-members: Wavelength
    :special-members: __init__

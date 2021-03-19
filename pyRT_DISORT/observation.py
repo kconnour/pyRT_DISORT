@@ -33,7 +33,7 @@ class Angles:
         Raises
         ------
         TypeError
-            Raised if any of the inputs are not an instance of numpy.ndarray.
+            Raised if any of the angles are not a numpy.ndarray.
         ValueError
             Raised if any of the input arrays are not the same shape or if they
             contain values outside of their mathematically valid range.
@@ -72,7 +72,7 @@ class Angles:
     def __raise_type_error_if_angle_is_not_ndarray(
             angle: np.ndarray, name: str) -> None:
         if not isinstance(angle, np.ndarray):
-            message = f'{name} must be an ndarray.'
+            message = f'{name} must be a numpy.ndarray.'
             raise TypeError(message)
 
     def __raise_value_error_if_angles_are_not_all_same_shape(self) -> None:
@@ -147,8 +147,8 @@ class Angles:
 
     @property
     def mu0(self) -> np.ndarray:
-        r"""Get :math:`\mu_0` where :math:`\mu_0` is the cosine of the input
-        incidence angle.
+        r"""Get :math:`\mu_0` where :math:`\mu_0` is the cosine of
+        :code:`incidence_angle`.
 
         Notes
         -----
@@ -159,8 +159,8 @@ class Angles:
 
     @property
     def mu(self) -> np.ndarray:
-        r"""Get :math:`\mu` where :math:`\mu` is the cosine of the input
-        emission angle.
+        r"""Get :math:`\mu` where :math:`\mu` is the cosine of
+        :code:`emission_angle`.
 
         Notes
         -----
@@ -213,7 +213,7 @@ class Spectral:
         Raises
         ------
         TypeError
-            Raised if either of the inputs are not an instance of numpy.ndarray.
+            Raised if either of the input wavelengths are not a numpy.ndarray.
         ValueError
             Raised if either of the input arrays contain values outside of 0.1
             to 50 microns (I assume this is the valid range to do retrievals),

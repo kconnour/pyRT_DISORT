@@ -4,7 +4,7 @@ Let's begin by considering some of the quantities found in a typical
 observation---the angles and wavelengths at which some instrument collected
 data. For this example I'll consider the
 most general case: a hyperspectral imager containing an MxN grid of pixels
-that took data at W wavelengths.
+that takes data at W wavelengths.
 
 Angles
 ------

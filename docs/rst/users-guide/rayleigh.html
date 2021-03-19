@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Rayleigh &mdash; pyRT_DISORT  documentation</title>
+  <title>The rayleigh module &mdash; pyRT_DISORT  documentation</title>
   
 
   
@@ -32,7 +32,6 @@
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -40,7 +39,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Forward Scattering" href="forward_scattering.html" />
-    <link rel="prev" title="Physical Grid" href="physical_grid.html" /> 
+    <link rel="prev" title="The eos module" href="eos.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -90,8 +89,8 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../users-guide.html">User’s Guide</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="observation.html">The observation module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="physical_grid.html">Physical Grid</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Rayleigh</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="eos.html">The eos module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">The rayleigh module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#the-generic-rayleigh-class">The generic Rayleigh class</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#rayleigh-co2">Rayleigh CO2</a></li>
 </ul>
@@ -160,7 +159,7 @@
         
           <li><a href="../users-guide.html">User’s Guide</a> &raquo;</li>
         
-      <li>Rayleigh</li>
+      <li>The rayleigh module</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -179,8 +178,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="rayleigh">
-<h1>Rayleigh<a class="headerlink" href="#rayleigh" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="the-rayleigh-module">
+<h1>The rayleigh module<a class="headerlink" href="#the-rayleigh-module" title="Permalink to this headline">¶</a></h1>
 <p>Let’s start building our model atmosphere. The first thing we’ll want to do
 is include Rayleigh scattering in the model. To do that, we’ll first need to
 construct arrays of the optical depth and Legendre decomposition of the phase
@@ -194,10 +193,10 @@ the array(s) required by DISORT, we just need to know the number of
 layers to use in the model.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>DISORT wants a phase function array with shape
-(n_moments, n_layers)—even if the phase function is the same within all of
-the layers. It’s important that we include the number of desired layers in
-this step.</p>
+<p>pyRT_DISORT also asks for the spectral shape so it can construct a
+phase function for each pixel. The value of this array is the same across
+all layers and pixels so you don’t <em>need</em> to include a pixel shape, but
+it makes matrix math much simpler.</p>
 </div>
 <p>While the phase function is the same between multiple atmospheric species,
 their optical depths will not be… and I can’t possibly hope to create
@@ -208,18 +207,17 @@ pyRT_DISORT comes with one example of this, as we’ll see next.</p>
 </div>
 <div class="section" id="rayleigh-co2">
 <h2>Rayleigh CO2<a class="headerlink" href="#rayleigh-co2" title="Permalink to this headline">¶</a></h2>
-<p>Mars has a CO <span class="math notranslate nohighlight">\(_2\)</span> atmosphere, so let’s instantiate a
+<p>Mars has a CO <sub>2</sub> atmosphere, so let’s instantiate a
 <a class="reference internal" href="../api-reference/rayleigh.html#rayleigh.RayleighCO2" title="rayleigh.RayleighCO2"><code class="xref py py-class docutils literal notranslate"><span class="pre">RayleighCO2</span></code></a> object—a class that extends <code class="code docutils literal notranslate"><span class="pre">Rayleigh</span></code>
 whose whole purpose is to hold the optical depth and phase function arrays for
 Rayleigh scattering from CO2. This will inherit the generic Rayleigh
 phase function and it will also create the optical depths in each of the model
-layers. We just need to provide it the number of model layers, the column
-density in the layers
-and the wavelengths at which to make the optical depths. We’ve already created
+layers. We just need to provide it the wavelengths at which to make the
+optical depths, and the column density in each of the layers. We’ve already created
 these inputs, so we have everything we need to make the relevant arrays.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.rayleigh</span> <span class="kn">import</span> <span class="n">RayleighCO2</span>
 
-<span class="hll"><span class="n">rco2</span> <span class="o">=</span> <span class="n">RayleighCO2</span><span class="p">(</span><span class="n">eos</span><span class="o">.</span><span class="n">n_layers</span><span class="p">,</span> <span class="n">pixel_wavelengths</span><span class="p">,</span> <span class="n">column_density</span><span class="p">)</span>
+<span class="hll"><span class="n">rco2</span> <span class="o">=</span> <span class="n">RayleighCO2</span><span class="p">(</span><span class="n">pixel_wavelengths</span><span class="p">,</span> <span class="n">column_density</span><span class="p">)</span>
 </span><span class="n">rayleigh_phase_function</span> <span class="o">=</span> <span class="n">rco2</span><span class="o">.</span><span class="n">phase_function</span>
 <span class="n">rayleigh_od</span> <span class="o">=</span> <span class="n">rco2</span><span class="o">.</span><span class="n">scattering_optical_depth</span>
 </pre></div>
@@ -248,7 +246,7 @@ Rayleigh scattering for an image at once.</p>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
         <a href="forward_scattering.html" class="btn btn-neutral float-right" title="Forward Scattering" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="physical_grid.html" class="btn btn-neutral float-left" title="Physical Grid" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="eos.html" class="btn btn-neutral float-left" title="The eos module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

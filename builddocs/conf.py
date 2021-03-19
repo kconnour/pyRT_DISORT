@@ -64,4 +64,4 @@ autodoc_typehints = 'none'
 
 # Mock imports so autodoc can work
 # TODO: remove the utilities when possible
-autodoc_mock_imports = ['pyRT_DISORT.utilities', 'numpy', 'scipy', 'disort']
+autodoc_mock_imports = ['pyRT_DISORT', 'numpy', 'scipy', 'disort']
