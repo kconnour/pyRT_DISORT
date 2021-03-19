@@ -275,7 +275,7 @@ class Spectral:
 
     @property
     def high_wavenumber(self) -> np.ndarray:
-        r"""Get the high wavenumber [cm :math:`^{-1}`]---the wavenumber
+        r"""Get the high wavenumber [cm :superscript:`-1`]---the wavenumber
         corresponding to :code:`short_wavelength`.
 
         Notes
@@ -289,7 +289,7 @@ class Spectral:
 
     @property
     def low_wavenumber(self) -> np.ndarray:
-        r"""Get the low wavenumber [cm :math:`^{-1}`]---the wavenumber
+        r"""Get the low wavenumber [cm :superscript:`-1`]---the wavenumber
         corresponding to :code:`long_wavelength`.
 
         Notes

@@ -60,10 +60,10 @@ class Rayleigh:
                 raise ValueError(message)
 
     def __construct_phase_function(self) -> np.ndarray:
-        pf = np.zeros((3, self.__n_layers, self.__spectral_shape))
+        pf = np.zeros((3, self.__n_layers) + self.__spectral_shape)
         pf[0, :] = 1
         pf[2, :] = 0.1
-        return pf.reshape(pf.shape[:-1] + self.__spectral_shape)
+        return pf
 
     @property
     def phase_function(self) -> np.ndarray:
@@ -101,10 +101,12 @@ class RayleighCO2(Rayleigh):
         Raises
         ------
         TypeError
-            Raised if :code:`wavelength` is not an instance of numpy.ndarray.
+            Raised if :code:`wavelength` or :code:`column_density` is not a
+            numpy.ndarray.
         ValueError
             Raised if any values in :code:`wavelength` are not between 0.1 and
-            50 microns (I assume this is the valid range to do retrievals).
+            50 microns (I assume this is the valid range to do retrievals); if
+
 
         Notes
         -----
@@ -116,42 +118,47 @@ class RayleighCO2(Rayleigh):
 
         """
         self.__wavelength = Wavelength(wavelength)
+        self.__wavenumber = self.__wavelength.wavelength_to_wavenumber()
         self.__column_density = ColumnDensity(column_density)
 
-    def __raise_error
+        self.__raise_error_if_inputs_have_incompatible_shapes()
 
+        super().__init__(column_density.shape[0], wavelength.shape)
 
-
-
-
-        super().__init__(altitude_grid, wavenumbers)
         self.__scattering_od = \
-            self.__calculate_scattering_optical_depths(column_density_layers)
+            self.__calculate_scattering_optical_depths(column_density)
+
+    def __raise_error_if_inputs_have_incompatible_shapes(self) -> None:
+        if self.__wavelength.wavelength.shape[1:] != \
+                self.__column_density.column_density.shape[1:]:
+            message = 'wavelength and column_density must have the same ' \
+                      'shape along all dimensions except the 0th.'
+            raise ValueError(message)
 
     def __calculate_scattering_optical_depths(
-            self, column_density_layers: np.ndarray) -> np.ndarray:
-        return np.multiply.outer(column_density_layers,
-                                 self.__molecular_cross_section())
+            self, column_density: np.ndarray) -> np.ndarray:
+        return np.multiply(column_density[:, None, :],
+                                 self.__molecular_cross_section()[None, :])
 
     def __molecular_cross_section(self):
         number_density = 25.47 * 10 ** 18  # laboratory molecules / cm**3
-        king_factor = 1.1364 + 25.3 * 10 ** -12 * self._wavenumbers ** 2
+        king_factor = 1.1364 + 25.3 * 10 ** -12 * self.__wavenumber ** 2
         index_of_refraction = self.__index_of_refraction()
         return self.__cross_section(
             number_density, king_factor, index_of_refraction) * 10 ** -4
 
     def __index_of_refraction(self) -> np.ndarray:
         n = 1 + 1.1427 * 10 ** 3 * (
-                    5799.25 / (128908.9 ** 2 - self._wavenumbers ** 2) +
-                    120.05 / (89223.8 ** 2 - self._wavenumbers ** 2) +
-                    5.3334 / (75037.5 ** 2 - self._wavenumbers ** 2) +
-                    4.3244 / (67837.7 ** 2 - self._wavenumbers ** 2) +
-                    0.00001218145 / (2418.136 ** 2 - self._wavenumbers ** 2))
+                    5799.25 / (128908.9 ** 2 - self.__wavenumber ** 2) +
+                    120.05 / (89223.8 ** 2 - self.__wavenumber ** 2) +
+                    5.3334 / (75037.5 ** 2 - self.__wavenumber ** 2) +
+                    4.3244 / (67837.7 ** 2 - self.__wavenumber ** 2) +
+                    0.00001218145 / (2418.136 ** 2 - self.__wavenumber ** 2))
         return n
 
     def __cross_section(self, number_density: float, king_factor: np.ndarray,
                         index_of_refraction: np.ndarray) -> np.ndarray:
-        coefficient = 24 * np.pi**3 * self._wavenumbers**4 / number_density**2
+        coefficient = 24 * np.pi**3 * self.__wavenumber**4 / number_density**2
         middle_term = ((index_of_refraction ** 2 - 1) /
                        (index_of_refraction ** 2 + 2)) ** 2
         return coefficient * middle_term * king_factor   # cm**2 / molecule
@@ -174,3 +181,21 @@ class RayleighCO2(Rayleigh):
 
         """
         return self.__scattering_od
+
+
+if __name__ == '__main__':
+    wav = np.broadcast_to(np.array([1, 2, 3, 4, 40]), (15, 10, 5)).T
+    cd = np.array([4.31127724e+20, 6.95971530e+20, 1.13068092e+21,
+                       1.75965132e+21, 2.72941205e+21, 4.25424936e+21,
+                       6.61806947e+21, 1.02334693e+22, 1.55374107e+22,
+                       2.34710798e+22, 3.61121739e+22, 5.54481700e+22,
+                       8.47633760e+22, 1.29169149e+23, 1.93867954e+23,
+                       2.86145159e+23, 4.15075084e+23, 5.93623734e+23,
+                       8.34122953e+23])
+    colden = np.broadcast_to(cd, (15, 10, 19)).T
+    r = RayleighCO2(wav, colden)
+    od = r.scattering_optical_depth
+    pf = r.phase_function
+    print(pf.shape)
+    print(od.shape)
+    print(od[:, 4, 0, 0])
