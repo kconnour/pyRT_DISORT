@@ -12,7 +12,7 @@ do radiative transfer.
 
 If you use this code in your research, please consider acknowledging the use of
 this package in your paper. If you don't that's fine too, though it would be
-nice to add your work to the known papers pyRT_DISORT helped create. 
+nice to add your work to the known papers pyRT_DISORT helped create.
 
 Papers using pyRT_DISORT
 ------------------------
