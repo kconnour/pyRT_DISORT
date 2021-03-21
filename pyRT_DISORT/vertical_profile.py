@@ -2,139 +2,200 @@
 for use in DISORT.
 """
 import numpy as np
+from pyRT_DISORT.eos import Altitude
 
 
-# TODO: In Python3.10, these can be float | np.ndarray
 class Conrath:
-    """Compute Conrath profile(s).
+    r"""A structure to compute a Conrath profile(s).
 
     Conrath creates Conrath profile(s) on an input grid of altitudes given a
-    set of input parameters.
+    volumetric mixing ratio and Conrath parameters. The Conrath profile is
+    defined as
 
+    .. math::
+
+       q(z) = q_0 * e^{\nu(1 - e^{z/H})}
+
+    where :math:`q` is a volumetric mixing ratio, :math:`z` is the altitude,
+    :math:`\nu` is the Conrath nu parameter, and :math:`H` is the scale height.
     """
 
-    def __init__(self, altitude_grid: np.ndarray, q0: np.ndarray,
+    def __init__(self, altitude: np.ndarray, q0: np.ndarray,
                  scale_height: np.ndarray, nu: np.ndarray) -> None:
         r"""
         Parameters
         ----------
-        altitude_grid
-            The altitudes at which to construct a Conrath profile. These are
-            assumed to be decreasing to keep with DISORT's convention. If this
-            is an MxN array, it will construct N profiles.
+        altitude
+            The altitude at which to construct a Conrath profile (probably the
+            midpoint altitude)
         q0
-            The surface mixing ratio for each of the Conrath profiles. If all
-            profiles have the same q0, this can be a float; otherwise, for an
-            MxN altitude_grid, this should be an array of length N.
+            The surface mixing ratio for each of the Conrath profiles.
         scale_height
-            The scale height of each of the Conrath profiles. If all profiles
-            have the same scale height, this can be a float; otherwise, for an
-            MxN altitude_grid, this should be an array of length N. It should
-            also have the same units as the altitudes in altitude_grid.
+            The scale height of each of the Conrath profiles.
         nu
-            The nu parameter of each of the Conrath profiles. If all profiles
-            have the same nu, this can be a float; otherwise, for an
-            MxN altitude_grid, this should be an array of length N.
+            The nu parameter of each of the Conrath profiles.
 
         Raises
         ------
+        TypeError
+            Raised if any of the inputs are not a numpy.ndarray.
         ValueError
-            Raised if the inputs cannot be broadcast to the correct shape
-            for computations.
+            Raised if any of the inputs do not have the same shape, or if they
+            contain physically or mathematically unrealistic values.
 
         Notes
         -----
-        A Conrath profile is defined as
-        :math:`q(z) = q_0 * e^{\nu(1 - e^{z/H})}`
+        For an MxN array of pixels, :code:`q0`, :code:`scale_height`, and
+        :code:`nu` should be of shape MxN. :code:`altitude` should have shape
+        ZxMxN, where Z is the number of altitudes. Additionally, the units of
+        :code:`altitude` and :code:`scale_height` should be the same.
 
         """
-        self.__profile = \
-            self.__make_profile(altitude_grid, q0, scale_height, nu)
+        Altitude(altitude)
+        ConrathParameterValidator(q0, 'q0', 0, np.inf)
+        ConrathParameterValidator(scale_height, 'scale_height', 0, np.inf)
+        ConrathParameterValidator(nu, 'nu', 0, np.inf)
 
-    @staticmethod
-    def __make_profile(altitude_grid: np.ndarray, q0: np.ndarray,
-                       scale_height: np.ndarray, nu: np.ndarray) -> np.ndarray:
-        try:
-            altitude_scaling = np.true_divide(altitude_grid, scale_height)
-            return q0 * np.exp(nu * (1 - np.exp(altitude_scaling)))
-        except ValueError as ve:
-            raise ValueError('The input arrays have incompatible shapes.') \
-                from ve
+        self.__altitude = altitude
+        self.__q0 = q0
+        self.__scale_height = scale_height
+        self.__nu = nu
+
+        self.__raise_value_error_if_inputs_have_differing_shapes()
+
+        self.__profile = self.__make_profile()
+
+    def __raise_value_error_if_inputs_have_differing_shapes(self) -> None:
+        if not (self.__altitude.shape[1:] == self.__q0.shape ==
+                self.__scale_height.shape == self.__nu.shape):
+            message = 'All inputs must have the same shape along the pixel ' \
+                      'dimension.'
+            raise ValueError(message)
+
+    def __make_profile(self) -> np.ndarray:
+        altitude_scaling = self.__altitude / self.__scale_height
+        return self.__q0 * np.exp(self.__nu * (1 - np.exp(altitude_scaling)))
 
     @property
     def profile(self) -> np.ndarray:
-        """Get the Conrath profile(s).
-
-        Returns
-        -------
-        np.ndarray
-            The Conrath profile(s).
+        """Get the Conrath profile(s). This will have the same shape as
+        :code:`altitude`.
 
         """
         return self.__profile
 
 
-# TODO: It'd be nice to add "subgrid" fixes. If a cloud is 80% in a grid, the
-#  profile should be 0.8
+class ConrathParameterValidator:
+    def __init__(self, parameter: np.ndarray, name: str,
+                 low: float, high: float) -> None:
+        self.__param = parameter
+        self.__name = name
+        self.__low = low
+        self.__high = high
+
+        self.__raise_error_if_param_is_bad()
+
+    def __raise_error_if_param_is_bad(self) -> None:
+        self.__raise_type_error_if_not_ndarray()
+        self.__raise_value_error_if_not_in_range()
+
+    def __raise_type_error_if_not_ndarray(self) -> None:
+        if not isinstance(self.__param, np.ndarray):
+            message = f'{self.__name} must be a numpy.ndarray.'
+            raise TypeError(message)
+
+    def __raise_value_error_if_not_in_range(self) -> None:
+        if not (np.all(self.__low <= self.__param) and
+                (np.all(self.__param <= self.__high))):
+            message = f'{self.__name} must be between {self.__low} and ' \
+                      f'{self.__high}.'
+            raise ValueError(message)
+
+
 class Uniform:
-    """Compute uniform volumetric mixing ratio profile(s).
+    """A structure to create a uniform profile(s).
 
     Uniform creates uniform volumetric mixing ratio profile(s) on an input
     grid of altitudes given a set of top and bottom altitudes.
 
     """
 
-    def __init__(self, altitude_grid: np.ndarray, bottom_altitude: np.ndarray,
-                 top_altitude: np.ndarray) -> None:
+    def __init__(self, altitude: np.ndarray, bottom: np.ndarray,
+                 top: np.ndarray) -> None:
         """
         Parameters
         ----------
-        altitude_grid
-            The altitudes at which to construct a uniform profile. These are
-            assumed to be decreasing to keep with DISORT's convention. If this
-            is an MxN array, it will construct N profiles.
-        bottom_altitude
-            The bottom altitudes of each of the profiles. If all profiles have
-            the same bottom altitudes, this can be a float; otherwise, for an
-            MxN altitude_grid, this should be an array of length N.
-        top_altitude
-            The top altitudes of each of the profiles. If all profiles have
-            the same top altitudes, this can be a float; otherwise, for an
-            MxN altitude_grid, this should be an array of length N.
+        altitude
+            The altitude *boundaries* at which to construct uniform profile(s).
+            These are assumed to be decreasing to keep with DISORT's convention.
+        bottom
+            The bottom altitudes of each of the profiles.
+        top
+            The top altitudes of each of the profiles.
 
         Raises
         ------
+        TypeError
+            Raised if any inputs are not a numpy.ndarray.
         ValueError
-            Raised if the inputs cannot be broadcast to the correct shape
-            for computations.
-
-        Notes
-        -----
-        Right now this only creates a uniform profile if an aerosol is
-        completely within a grid point and cuts off the aerosol otherwise.
+            Raised if a number of things...
 
         """
-        self.__profile = \
-            self.__make_profile(altitude_grid, bottom_altitude, top_altitude)
+        self.__altitude = altitude
+        self.__bottom = bottom
+        self.__top = top
 
-    @staticmethod
-    def __make_profile(altitude_grid: np.ndarray, bottom_altitude: np.ndarray,
-                       top_altitude: np.ndarray) -> np.ndarray:
-        try:
-            return np.where((bottom_altitude <= altitude_grid) &
-                            (altitude_grid <= top_altitude), 1, 0)
-        except ValueError as ve:
-            raise ValueError(f'The input arrays have incompatible shapes.') \
-                from ve
+        Altitude(altitude)
+        UniformParameterValidator(bottom, 'bottom')
+        UniformParameterValidator(top, 'top')
+
+        self.__profile = self.__make_profile()
+
+    def __raise_error_if_inputs_are_bad(self) -> None:
+        self.__raise_value_error_if_inputs_have_differing_shapes()
+        self.__raise_value_error_if_top_is_not_larger()
+
+    def __raise_value_error_if_inputs_have_differing_shapes(self) -> None:
+        if not (self.__altitude.shape[1:] == self.__top.shape ==
+                self.__bottom.shape):
+            message = 'All inputs must have the same shape along the pixel ' \
+                      'dimension.'
+            raise ValueError(message)
+
+    def __raise_value_error_if_top_is_not_larger(self) -> None:
+        if not np.all(self.__top > self.__bottom):
+            message = 'All values in top must be larger than the ' \
+                      'corresponding values in bottom.'
+            raise ValueError(message)
+
+    def __make_profile(self) -> np.ndarray:
+        alt_dif = np.diff(self.__altitude, axis=0)
+        top_prof = np.clip((self.__top - self.__altitude[1:]) /
+                           np.abs(alt_dif), 0, 1)
+        bottom_prof = np.clip((self.__altitude[:-1] - self.__bottom) /
+                              np.abs(alt_dif), 0, 1)
+        return top_prof + bottom_prof - 1
 
     @property
     def profile(self) -> np.ndarray:
-        """Get the uniform profile(s).
-
-        Returns
-        -------
-        np.ndarray
-            The uniform profile(s).
+        """Get the uniform profile(s). This will have the same shape as
+        :code:`altitude`.
 
         """
         return self.__profile
+
+
+class UniformParameterValidator:
+    def __init__(self, parameter: np.ndarray, name: str) -> None:
+        self.__param = parameter
+        self.__name = name
+
+        self.__raise_error_if_param_is_bad()
+
+    def __raise_error_if_param_is_bad(self) -> None:
+        self.__raise_type_error_if_not_ndarray()
+
+    def __raise_type_error_if_not_ndarray(self) -> None:
+        if not isinstance(self.__param, np.ndarray):
+            message = f'{self.__name} must be a numpy.ndarray.'
+            raise TypeError(message)

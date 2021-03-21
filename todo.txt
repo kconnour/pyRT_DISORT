@@ -1,9 +1,4 @@
 Refresh:
---- observation checks + tests + guide
---- eos checks + tests + guide
---- rayleigh checks + tests + guide
---- forward_scattering checks + tests + guide
---- vertical_profile checks + tests + guide
 --- optical_depth checks + tests + guide
 --- phase_function checks + tests + guide
 --- model_atmosphere checks + tests + guide
@@ -12,8 +7,6 @@ Refresh:
 --- radiation checks + tests + guide
 --- output checks + tests + guide
 --- disort_run checks + tests + guide
-
-Done:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

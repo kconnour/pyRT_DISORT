@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Forward Scattering &mdash; pyRT_DISORT  documentation</title>
+  <title>The vertical_profile module &mdash; pyRT_DISORT  documentation</title>
   
 
   
@@ -38,7 +38,7 @@
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Optical Depth" href="optical_depth.html" />
+    <link rel="next" title="Forward Scattering" href="forward_scattering.html" />
     <link rel="prev" title="The rayleigh module" href="rayleigh.html" /> 
 </head>
 
@@ -91,7 +91,11 @@
 <li class="toctree-l2"><a class="reference internal" href="observation.html">The observation module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eos.html">The eos module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rayleigh.html">The rayleigh module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Forward Scattering</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">The vertical_profile module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#conrath">Conrath</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="forward_scattering.html">Forward Scattering</a></li>
 <li class="toctree-l2"><a class="reference internal" href="optical_depth.html">Optical Depth</a></li>
 <li class="toctree-l2"><a class="reference internal" href="phase_function.html">Phase Function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="model_build.html">Model Build</a></li>
@@ -155,13 +159,13 @@
         
           <li><a href="../users-guide.html">User’s Guide</a> &raquo;</li>
         
-      <li>Forward Scattering</li>
+      <li>The vertical_profile module</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../../_sources/rst/users-guide/forward_scattering.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/rst/users-guide/vertical_profile.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -174,9 +178,56 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="forward-scattering">
-<h1>Forward Scattering<a class="headerlink" href="#forward-scattering" title="Permalink to this headline">¶</a></h1>
-<p>Coming soon!</p>
+  <div class="section" id="the-vertical-profile-module">
+<h1>The vertical_profile module<a class="headerlink" href="#the-vertical-profile-module" title="Permalink to this headline">¶</a></h1>
+<p>We added Rayleigh scattering so let’s now start to make the optical depth
+and phase function for dust. To do this, we’ll first have to define the
+vertical profile of dust. pyRT_DISORT provides a few tools to construct
+special vertical profiles.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you have vertical profiles, say, from a GCM, you can just directly
+input these profiles in the later steps. This module will only help
+constructing the profiles.</p>
+</div>
+<div class="section" id="conrath">
+<h2>Conrath<a class="headerlink" href="#conrath" title="Permalink to this headline">¶</a></h2>
+<p>Suppose you want to use a Conrath profile. <a class="reference internal" href="../api-reference/vertical_profile.html#vertical_profile.Conrath" title="vertical_profile.Conrath"><code class="xref py py-class docutils literal notranslate"><span class="pre">Conrath</span></code></a>
+provides the ability to construct a Conrath profile. For our retrieval, this
+profile will be used to define the aerosol weighting within the <em>layers</em>. Let’s
+assume the midpoint altitudes are a good representation of the layer altitudes
+and construct them here.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">z_midpoint</span> <span class="o">=</span> <span class="p">((</span><span class="n">z_grid</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">z_grid</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>As you’re probably tired of hearing about for now, <code class="code docutils literal notranslate"><span class="pre">Conrath</span></code> can also
+handle ND input. If we just want to a single profile, we need to make an array
+of shape (n_altitude, n_pixels) (the <code class="code docutils literal notranslate"><span class="pre">[:,</span> <span class="pre">np.newaxis]</span></code> adds a dimension).
+We should also define the relevant Conrath inputs</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">q0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">10</span><span class="p">])</span>
+<span class="n">nu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.01</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Let’s now add these to <code class="code docutils literal notranslate"><span class="pre">Conrath</span></code>, and we can access the profile via its
+profile property.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.vertical_profile</span> <span class="kn">import</span> <span class="n">Conrath</span>
+
+<span class="hll"> <span class="n">conrath</span> <span class="o">=</span> <span class="n">Conrath</span><span class="p">(</span><span class="n">z_midpoint</span><span class="p">,</span> <span class="n">q0</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">nu</span><span class="p">)</span>
+</span> <span class="n">profile</span> <span class="o">=</span> <span class="n">conrath</span><span class="o">.</span><span class="n">profile</span>
+</pre></div>
+</div>
+<p>This may feel clunky to only create one profile, but it allows you to
+simultaneously create as many profiles as you’d like all at once. But that’s
+all there is to it</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="code docutils literal notranslate"><span class="pre">vertical_profile</span></code> module also comes with
+<a class="reference internal" href="../api-reference/vertical_profile.html#vertical_profile.Uniform" title="vertical_profile.Uniform"><code class="xref py py-class docutils literal notranslate"><span class="pre">Uniform</span></code></a> to make constant mixing ratio profiles.
+This may be more applicable to water-ice clouds so we won’t use it here,
+but it’s worth mentioning its existence.</p>
+</div>
+</div>
 </div>
 
 
@@ -185,7 +236,7 @@
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="optical_depth.html" class="btn btn-neutral float-right" title="Optical Depth" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="forward_scattering.html" class="btn btn-neutral float-right" title="Forward Scattering" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
         <a href="rayleigh.html" class="btn btn-neutral float-left" title="The rayleigh module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 

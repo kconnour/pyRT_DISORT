@@ -1,3 +1,19 @@
 About pyRT_DISORT
 =================
-Coming soon!
+pyRT_DISORT originally started as a Python-based spiritual successor to
+DISORT_MULTI---the brainchild of M.J. Wolff. The goal was to make radiative
+transfer easier for myself by encapsulating logic into classes, allowing
+anyone to perform retrievals by combining classes to build a model piece by
+piece. All computations are performed using numpy, giving pyRT_DISORT the
+speed of C while retaining the convenience of Python.
+
+After some considerable work, I'm revolutionizing how approximately (1) people
+do radiative transfer.
+
+If you use this code in your research, please consider acknowledging the use of
+this package in your paper. If you don't that's fine too, though it would be
+nice to add your work to the known papers pyRT_DISORT helped create. 
+
+Papers using pyRT_DISORT
+------------------------
+None yet.

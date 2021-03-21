@@ -4,8 +4,7 @@ surface treatment.
 import numpy as np
 from pyRT_DISORT.controller import ComputationalParameters, ModelBehavior
 from pyRT_DISORT.observation import Angles
-#from pyRT_DISORT.radiation import IncidentFlux
-from radiation import IncidentFlux
+from pyRT_DISORT.radiation import IncidentFlux
 from disort import disobrdf
 
 

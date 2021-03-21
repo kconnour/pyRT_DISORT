@@ -25,9 +25,10 @@ in-depth look at them, check out :doc:`api-reference`.
    :caption: A sample retrieval
 
    users-guide/installation
-   users-guide/sample_observation
-   users-guide/physical_grid
+   users-guide/observation
+   users-guide/eos
    users-guide/rayleigh
+   users-guide/vertical_profile
    users-guide/forward_scattering
    users-guide/optical_depth
    users-guide/phase_function

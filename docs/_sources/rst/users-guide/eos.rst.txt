@@ -1,5 +1,5 @@
-Physical Grid
-=============
+The eos module
+==============
 
 Now that we created the angular and spectral information, we can turn our
 attention to creating the model. Perhaps the most natural place to start is
@@ -70,7 +70,7 @@ retrievals.
    if you have an image with MxN pixels and happen to know the
    pressures and temperatures at 50 points above each of the pixels, you can
    input 50xMxN arrays for :code:`altitude_grid`, :code:`pressure_grid`, and
-   :code:`temperature_grid`and get the corresponding values. In this
+   :code:`temperature_grid` and get the corresponding values. In this
    scenario, :code:`z_grid` should be ZxMxN where Z is the number
    of desired altitudes.
 
