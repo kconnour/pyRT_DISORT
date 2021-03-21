@@ -28,6 +28,7 @@ in-depth look at them, check out :doc:`api-reference`.
    users-guide/observation
    users-guide/eos
    users-guide/rayleigh
+   users-guide/vertical_profile
    users-guide/forward_scattering
    users-guide/optical_depth
    users-guide/phase_function

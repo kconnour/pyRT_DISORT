@@ -1,6 +1,5 @@
 Welcome to pyRT_DISORT's documentation
 ======================================
-Thank you for actually taking the time to check out my documentation!
 pyRT_DISORT is a collection of tools that help make radiative transfer easier
 by performing many of the pre-processing steps needed to create the arrays
 required by DISORT. There's no one way to do radiative transfer, so this

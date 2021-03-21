@@ -11,6 +11,8 @@ from scipy.integrate import quadrature as quad
 # TODO: the RTD theme puts the equation number *above* the equation, which is
 #  awful. There's nothing I can really do to change this but wait until they fix
 #  it (and a pull request is in the works...). This is just a reminder.
+
+
 class Hydrostatic:
     """A data structure that computes a hydrostatic equation of state.
 
@@ -368,6 +370,7 @@ class ColumnDensity:
     """Perform checks that a given column density is plausible.
 
     """
+
     def __init__(self, column_density: np.ndarray) -> None:
         """
         Parameters
@@ -407,3 +410,46 @@ class ColumnDensity:
 
         """
         return self.__column_density
+
+
+class Altitude:
+    """Perform checks that a given altitude is plausible.
+
+    """
+
+    def __init__(self, altitude: np.ndarray) -> None:
+        """
+        Parameters
+        ----------
+        altitude
+            ND array of altitudes.
+
+        Raises
+        ------
+        TypeError
+            Raised if :code:`altitude` is not a numpy.ndarray
+        ValueError
+            Raised if :code:`altitude` is not monotonically decreasing along
+            the 0th axis.
+
+        """
+        self.__altitude = altitude
+
+    def __raise_error_if_input_is_bad(self) -> None:
+        self.__raise_type_error_if_not_ndarray()
+        self.__raise_value_error_if_not_monotonically_decreasing()
+
+    def __raise_type_error_if_not_ndarray(self) -> None:
+        if not isinstance(self.__altitude, np.ndarray):
+            message = 'altitude must be a numpy.ndarray.'
+            raise TypeError(message)
+
+    def __raise_value_error_if_not_monotonically_decreasing(self) -> None:
+        if not np.all(np.diff(self.__altitude, axis=0) < 0):
+            message = 'altitude must be monotonically decreasing along the ' \
+                      '0th axis.'
+            raise ValueError(message)
+
+    @property
+    def altitude(self) -> np.ndarray:
+        return self.__altitude
