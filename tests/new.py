@@ -6,6 +6,7 @@ from pyRT_DISORT.rayleigh import RayleighCO2
 from pyRT_DISORT.vertical_profile import Conrath
 from pyRT_DISORT.forward_scattering import NearestNeighborSingleScatteringAlbedo
 from pyRT_DISORT.optical_depth import OpticalDepth
+from pyRT_DISORT.phase_function import RadialSpectralTabularLegendreCoefficients
 
 # observation module
 dummy_angles = np.outer(np.linspace(5, 10, num=15), np.linspace(5, 8, num=20))
@@ -53,4 +54,9 @@ nnssa = NearestNeighborSingleScatteringAlbedo(csca, cext, psizes, wavs, pgrad, s
 # optical_depth module
 od = OpticalDepth(np.squeeze(conrath.profile), hydro.column_density, nnssa.make_extinction_grid(9.3), 1)
 
-print(np.sum(od.total, axis=0))
+# the phase_function module
+dust_phsfn_file = fits.open('/home/kyle/repos/pyRT_DISORT/tests/aux/dust_phase_function.fits')
+coeff = dust_phsfn_file['primary'].data
+pf_wavs = dust_phsfn_file['wavelengths'].data
+pf_psizes = dust_phsfn_file['particle_sizes'].data
+pf = RadialSpectralTabularLegendreCoefficients(coeff, pf_psizes, pf_wavs, z_grid, spectral.short_wavelength[:, 0, 0], pgrad)
