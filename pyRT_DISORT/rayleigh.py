@@ -135,6 +135,7 @@ class RayleighCO2(Rayleigh):
 
         self.__scattering_od = \
             self.__calculate_scattering_optical_depths(column_density)
+        self.__ssa = self.__make_ssa()
 
     def __raise_error_if_inputs_have_incompatible_shapes(self) -> None:
         if self.__wavelength.wavelength.shape[1:] != \
@@ -173,9 +174,16 @@ class RayleighCO2(Rayleigh):
                        (index_of_refraction ** 2 + 2)) ** 2
         return coefficient * middle_term * king_factor   # cm**2 / molecule
 
+    def __make_ssa(self) -> np.ndarray:
+        return np.ones(self.__scattering_od.shape)
+
     @property
     def scattering_optical_depth(self) -> np.ndarray:
         """Get the Rayleigh scattering optical depth.
 
         """
         return self.__scattering_od
+
+    @property
+    def ssa(self):
+        return self.__ssa

@@ -7,6 +7,7 @@ from pyRT_DISORT.vertical_profile import Conrath
 from pyRT_DISORT.forward_scattering import NearestNeighborSingleScatteringAlbedo
 from pyRT_DISORT.optical_depth import OpticalDepth
 from pyRT_DISORT.phase_function import RadialSpectralTabularLegendreCoefficients
+from pyRT_DISORT.model_atmosphere import ModelAtmosphere
 
 # observation module
 dummy_angles = np.outer(np.linspace(5, 10, num=15), np.linspace(5, 8, num=20))
@@ -60,3 +61,12 @@ coeff = dust_phsfn_file['primary'].data
 pf_wavs = dust_phsfn_file['wavelengths'].data
 pf_psizes = dust_phsfn_file['particle_sizes'].data
 pf = RadialSpectralTabularLegendreCoefficients(coeff, pf_psizes, pf_wavs, z_grid, spectral.short_wavelength[:, 0, 0], pgrad)
+
+# the model_atmosphere module
+model = ModelAtmosphere()
+rayleigh_info = (rco2.scattering_optical_depth, rco2.ssa, rco2.phase_function)
+dust_info = (od.total, nnssa.single_scattering_albedo, pf.phase_function)
+model.add_constituent(rayleigh_info)
+model.add_constituent(dust_info)
+
+model.compute_model()
