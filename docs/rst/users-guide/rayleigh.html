@@ -38,7 +38,7 @@
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Forward Scattering" href="forward_scattering.html" />
+    <link rel="next" title="The vertical_profile module" href="vertical_profile.html" />
     <link rel="prev" title="The eos module" href="eos.html" /> 
 </head>
 
@@ -95,8 +95,9 @@
 <li class="toctree-l3"><a class="reference internal" href="#rayleigh-co2">Rayleigh CO2</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="forward_scattering.html">Forward Scattering</a></li>
-<li class="toctree-l2"><a class="reference internal" href="optical_depth.html">Optical Depth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vertical_profile.html">The vertical_profile module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="forward_scattering.html">The forward_scattering module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optical_depth.html">The optical_depth module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="phase_function.html">Phase Function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="model_build.html">Model Build</a></li>
 <li class="toctree-l2"><a class="reference internal" href="controller.html">Controller</a></li>
@@ -217,7 +218,7 @@ optical depths, and the column density in each of the layers. We’ve already cr
 these inputs, so we have everything we need to make the relevant arrays.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.rayleigh</span> <span class="kn">import</span> <span class="n">RayleighCO2</span>
 
-<span class="hll"><span class="n">rco2</span> <span class="o">=</span> <span class="n">RayleighCO2</span><span class="p">(</span><span class="n">pixel_wavelengths</span><span class="p">,</span> <span class="n">column_density</span><span class="p">)</span>
+<span class="hll"><span class="n">rco2</span> <span class="o">=</span> <span class="n">RayleighCO2</span><span class="p">(</span><span class="n">pixel_wavelengths</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">column_density</span><span class="p">)</span>
 </span><span class="n">rayleigh_phase_function</span> <span class="o">=</span> <span class="n">rco2</span><span class="o">.</span><span class="n">phase_function</span>
 <span class="n">rayleigh_od</span> <span class="o">=</span> <span class="n">rco2</span><span class="o">.</span><span class="n">scattering_optical_depth</span>
 </pre></div>
@@ -236,6 +237,11 @@ for all later dimensions; more on this to come. Since Rayleigh scattering
 is usually known (or fixed) beforehand, this allows you to compute all the
 Rayleigh scattering for an image at once.</p>
 </div>
+<p>Finally, a bit about where we’re going. Our goal is to create the optical depth,
+single scattering albedo, and phase function arrays required by DISORT. To do
+that, we need to know each of these arrays for all the atmospheric species in
+our model. We’ve now made all 3 arrays for Rayleigh scattering, so we’ll start
+to do the first steps for creating these arrays for dust next.</p>
 </div>
 </div>
 
@@ -245,7 +251,7 @@ Rayleigh scattering for an image at once.</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="forward_scattering.html" class="btn btn-neutral float-right" title="Forward Scattering" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="vertical_profile.html" class="btn btn-neutral float-right" title="The vertical_profile module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
         <a href="eos.html" class="btn btn-neutral float-left" title="The eos module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 

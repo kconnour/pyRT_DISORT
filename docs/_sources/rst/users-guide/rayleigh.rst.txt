@@ -41,7 +41,7 @@ these inputs, so we have everything we need to make the relevant arrays.
 
    from pyRT_DISORT.rayleigh import RayleighCO2
 
-   rco2 = RayleighCO2(pixel_wavelengths, column_density)
+   rco2 = RayleighCO2(pixel_wavelengths[:, 0, 0], column_density)
    rayleigh_phase_function = rco2.phase_function
    rayleigh_od = rco2.scattering_optical_depth
 
@@ -57,3 +57,9 @@ create the arrays DISORT wants.
    for all later dimensions; more on this to come. Since Rayleigh scattering
    is usually known (or fixed) beforehand, this allows you to compute all the
    Rayleigh scattering for an image at once.
+
+Finally, a bit about where we're going. Our goal is to create the optical depth,
+single scattering albedo, and phase function arrays required by DISORT. To do
+that, we need to know each of these arrays for all the atmospheric species in
+our model. We've now made all 3 arrays for Rayleigh scattering, so we'll start
+to do the first steps for creating these arrays for dust next.

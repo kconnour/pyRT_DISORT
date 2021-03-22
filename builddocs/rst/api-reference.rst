@@ -11,6 +11,7 @@ Here you can find documentation on the included modules with pyRT_DISORT.
    api-reference/eos
    api-reference/forward_scattering
    api-reference/observation
+   api-reference/optical_depth
    api-reference/output
    api-reference/phase_function
    api-reference/radiation

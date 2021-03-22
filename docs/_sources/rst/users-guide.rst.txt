@@ -1,6 +1,5 @@
 User's Guide
 ============
-
 This user's guide will walk you through how to install pyRT_DISORT and use it
 to simulate reflectance spectra of an atmosphere containing Martian dust. Then,
 we'll use these simulations to parallelize our code and perform a retrieval.
@@ -19,6 +18,11 @@ in-depth look at them, check out :doc:`api-reference`.
    doesn't matter. I'm going to go through them in a way that's sensible to me,
    but there's no drawback to ordering them a different way when you adapt them
    to your own code.
+
+   Additionally, it may seem kinda silly that I make a class and then
+   pipe an array it created into another class, but it's quite possible that
+   you won't want to do every time. If you do, you can always create a function
+   that does the piping.
 
 .. toctree::
    :maxdepth: 1
