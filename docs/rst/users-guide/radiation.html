@@ -91,11 +91,12 @@
 <li class="toctree-l2"><a class="reference internal" href="observation.html">The observation module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eos.html">The eos module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rayleigh.html">The rayleigh module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="forward_scattering.html">Forward Scattering</a></li>
-<li class="toctree-l2"><a class="reference internal" href="optical_depth.html">Optical Depth</a></li>
-<li class="toctree-l2"><a class="reference internal" href="phase_function.html">Phase Function</a></li>
-<li class="toctree-l2"><a class="reference internal" href="model_build.html">Model Build</a></li>
-<li class="toctree-l2"><a class="reference internal" href="controller.html">Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vertical_profile.html">The vertical_profile module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="forward_scattering.html">The forward_scattering module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optical_depth.html">The optical_depth module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="phase_function.html">The phase_function module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_atmosphere.html">The model_atmosphere module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="controller.html">The controller module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="surface.html">Surface</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Radiation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#incident-flux">Incident Flux</a></li>
@@ -188,13 +189,6 @@ get right to it.</p>
 in the <a class="reference internal" href="../api-reference/radiation.html#radiation.IncidentFlux" title="radiation.IncidentFlux"><code class="xref py py-class docutils literal notranslate"><span class="pre">radiation.IncidentFlux</span></code></a> class. Instances of this class don’t do
 anything but containerize your desired flux, and provide some default values.
 I’ll go ahead and make an object and show its parameters.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
-
-
-
-
-</pre></div>
-</div>
 <p>By default, <code class="code docutils literal notranslate"><span class="pre">beam_flux</span></code> is pi, and <code class="code docutils literal notranslate"><span class="pre">isotropic_flux</span></code> is 0. At least
 for our Martian simulation, there’s no real need to worry about the isotropic
 flux from space.</p>
@@ -204,13 +198,6 @@ flux from space.</p>
 <p>We can also define whether thermal emission is used in the model with the
 <a class="reference internal" href="../api-reference/radiation.html#radiation.ThermalEmission" title="radiation.ThermalEmission"><code class="xref py py-class docutils literal notranslate"><span class="pre">radiation.ThermalEmission</span></code></a> class. As before, pyRT_DISORT has default
 values to get you up and running, though you can easily override them.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
-
-
-
-
-</pre></div>
-</div>
 <p>By default, <code class="code docutils literal notranslate"><span class="pre">thermal_emission==False</span></code> and no other values are used. But
 you’re free to turn thermal emission on and add values for the boundaries.</p>
 </div>

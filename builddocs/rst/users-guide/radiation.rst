@@ -11,9 +11,7 @@ in the :class:`radiation.IncidentFlux` class. Instances of this class don't do
 anything but containerize your desired flux, and provide some default values.
 I'll go ahead and make an object and show its parameters.
 
-.. literalinclude:: example_simulation.py
-   :language: python
-   :lines: 40-44
+
 
 By default, :code:`beam_flux` is pi, and :code:`isotropic_flux` is 0. At least
 for our Martian simulation, there's no real need to worry about the isotropic
@@ -25,9 +23,7 @@ We can also define whether thermal emission is used in the model with the
 :class:`radiation.ThermalEmission` class. As before, pyRT_DISORT has default
 values to get you up and running, though you can easily override them.
 
-.. literalinclude:: example_simulation.py
-   :language: python
-   :lines: 46-50
+
 
 By default, :code:`thermal_emission==False` and no other values are used. But
 you're free to turn thermal emission on and add values for the boundaries.

@@ -15,6 +15,9 @@ class ModelAtmosphere:
         self.__constituent_optical_depth = []
         self.__constituent_single_scattering_albedo = []
         self.__constituent_legendre_coefficient = []
+
+        self.__uptodate = True
+
         self.__optical_depth = np.array([])
         self.__single_scattering_albedo = np.array([])
         self.__legendre_moments = np.array([])
@@ -29,6 +32,7 @@ class ModelAtmosphere:
         self.__constituent_optical_depth.append(properties[0])
         self.__constituent_single_scattering_albedo.append(properties[1])
         self.__constituent_legendre_coefficient.append(properties[2])
+        self.__uptodate = False
 
     @staticmethod
     def __check_constituent_addition(properties):
@@ -39,10 +43,12 @@ class ModelAtmosphere:
         if not all(isinstance(x, np.ndarray) for x in properties):
             raise TypeError('All elements in properties must be a np.ndarray')
 
-    def compute_model(self) -> None:
-        self.__calculate_optical_depth()
-        self.__calculate_single_scattering_albedo()
-        self.__calculate_legendre_coefficients()
+    def __compute_model(self) -> None:
+        if not self.__uptodate:
+            self.__calculate_optical_depth()
+            self.__calculate_single_scattering_albedo()
+            self.__calculate_legendre_coefficients()
+        self.__uptodate = True
 
     def __calculate_optical_depth(self):
         self.__optical_depth = sum(self.__constituent_optical_depth)
@@ -93,6 +99,7 @@ class ModelAtmosphere:
         :code:`DTAUC` in DISORT.
 
         """
+        self.__compute_model()
         return self.__optical_depth
 
     @property
@@ -113,6 +120,7 @@ class ModelAtmosphere:
         :code:`SSALB` in DISORT.
 
         """
+        self.__compute_model()
         return self.__single_scattering_albedo
 
     @property
@@ -131,4 +139,5 @@ class ModelAtmosphere:
         :code:`PMOM` in DISORT.
 
         """
+        self.__compute_model()
         return self.__legendre_moments

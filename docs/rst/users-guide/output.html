@@ -91,11 +91,12 @@
 <li class="toctree-l2"><a class="reference internal" href="observation.html">The observation module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eos.html">The eos module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rayleigh.html">The rayleigh module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="forward_scattering.html">Forward Scattering</a></li>
-<li class="toctree-l2"><a class="reference internal" href="optical_depth.html">Optical Depth</a></li>
-<li class="toctree-l2"><a class="reference internal" href="phase_function.html">Phase Function</a></li>
-<li class="toctree-l2"><a class="reference internal" href="model_build.html">Model Build</a></li>
-<li class="toctree-l2"><a class="reference internal" href="controller.html">Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vertical_profile.html">The vertical_profile module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="forward_scattering.html">The forward_scattering module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optical_depth.html">The optical_depth module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="phase_function.html">The phase_function module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_atmosphere.html">The model_atmosphere module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="controller.html">The controller module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="surface.html">Surface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="radiation.html">Radiation</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Output</a><ul>
@@ -188,25 +189,11 @@ can run DISORT is create some output parameters and arrays.</p>
 <p>Let’s start by making the output arrays. We only need a few parameters to
 create the arrays (they define the shape of the arrays), and we’ve already made
 the parameters we’ll need. Let’s add them to <a class="reference internal" href="../api-reference/output.html#output.OutputArrays" title="output.OutputArrays"><code class="xref py py-class docutils literal notranslate"><span class="pre">output.OutputArrays</span></code></a>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
-
-
-
-
-</pre></div>
-</div>
 <p>All the arrays are set to 0 and will be populated as DISORT runs.</p>
 </div>
 <div class="section" id="user-levels">
 <h2>User Levels<a class="headerlink" href="#user-levels" title="Permalink to this headline">¶</a></h2>
 <p>We need an oddball variable to make the user levels. We can do that here.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
-
-
-
-
-</pre></div>
-</div>
 <p>This is a variable you need to completely create yourself if your run will
 use it; otherwise pyRT_DISORT will make an array of 0s of the correct shape
 to appease DISORT.</p>
@@ -216,13 +203,6 @@ to appease DISORT.</p>
 <p>The final thing we need to do is set some switches to define how DISORT will
 run. This is done with <a class="reference internal" href="../api-reference/output.html#output.OutputBehavior" title="output.OutputBehavior"><code class="xref py py-class docutils literal notranslate"><span class="pre">output.OutputBehavior</span></code></a>, which sets some default
 values for how DISORT should run, but as usual you’re free to override them.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
-
-
-
-
-</pre></div>
-</div>
 </div>
 </div>
 

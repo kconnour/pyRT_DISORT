@@ -1,15 +1,3 @@
-Refresh:
---- optical_depth checks + tests + guide
---- phase_function checks + tests + guide
---- model_atmosphere checks + tests + guide
---- controller checks + tests + guide
---- surface checks + tests + guide
---- radiation checks + tests + guide
---- output checks + tests + guide
---- disort_run checks + tests + guide
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 Refresh part 2:
 --- Remake the integration tests to conform with pytest
 --- Remake the untested utilities + tests + guide
@@ -21,11 +9,7 @@ User's guide part 2:
 
 Documentation:
 --- try to make a dummy index.html so docs can all be on one folder
---- When I build documentation, I want to overwrite the old. Sometimes not all
-    files are changed
 --- Have "next" and "previous" only go through the example
---- If a class inherited properties from another class, they're not showing up
-    in the documentation
 --- Remove my computer's path from notes.md
 --- Can I remove the .pytest_cache once I'm done with all tests?
 

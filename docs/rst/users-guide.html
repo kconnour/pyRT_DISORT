@@ -95,8 +95,8 @@
 <li class="toctree-l2"><a class="reference internal" href="users-guide/forward_scattering.html">The forward_scattering module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="users-guide/optical_depth.html">The optical_depth module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="users-guide/phase_function.html">The phase_function module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="users-guide/model_build.html">Model Build</a></li>
-<li class="toctree-l2"><a class="reference internal" href="users-guide/controller.html">Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users-guide/model_atmosphere.html">The model_atmosphere module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users-guide/controller.html">The controller module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="users-guide/surface.html">Surface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="users-guide/radiation.html">Radiation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="users-guide/output.html">Output</a></li>
@@ -184,6 +184,10 @@ pyRT_DISORT that may make your life easier.</p>
 in-depth look at them, check out <a class="reference internal" href="api-reference.html"><span class="doc">pyRT_DISORT API reference</span></a>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
+<p>For efficiency, pyRT_DISORT does computations using
+<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html">ndarray</a>
+objects whenever possible.</p>
+</div>
 <p>The modules in pyRT_DISORT are designed to operate independently—that is,
 (generally speaking) you won’t need to input a class instance into another
 class. All the relevant classes can be instantiated from scratch, and you
@@ -192,11 +196,11 @@ content. That also means that the order in which you make these modules
 doesn’t matter. I’m going to go through them in a way that’s sensible to me,
 but there’s no drawback to ordering them a different way when you adapt them
 to your own code.</p>
-<p>Additionally, it may seem kinda silly that I make a class and then
-pipe an array it created into another class, but it’s quite possible that
-you won’t want to do every time. If you do, you can always create a function
-that does the piping.</p>
-</div>
+<p>As you may notice during it example, I often make a class and then input an
+array it created into another class. I do this to show off the generality of
+pyRT_DISORT, but it’s quite possible that you won’t want to do every time.
+In this scenario I recommend you create a function that puts arrays created
+from one class into another to save yourself some hassle.</p>
 <div class="toctree-wrapper compound">
 <p class="caption"><span class="caption-text">A sample retrieval</span></p>
 <ul>
@@ -208,8 +212,8 @@ that does the piping.</p>
 <li class="toctree-l1"><a class="reference internal" href="users-guide/forward_scattering.html">The forward_scattering module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="users-guide/optical_depth.html">The optical_depth module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="users-guide/phase_function.html">The phase_function module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="users-guide/model_build.html">Model Build</a></li>
-<li class="toctree-l1"><a class="reference internal" href="users-guide/controller.html">Controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="users-guide/model_atmosphere.html">The model_atmosphere module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="users-guide/controller.html">The controller module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="users-guide/surface.html">Surface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="users-guide/radiation.html">Radiation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="users-guide/output.html">Output</a></li>

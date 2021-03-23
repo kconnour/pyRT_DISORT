@@ -304,8 +304,7 @@ class UserLevel:
     UserLevel checks that radiant quantities can be returned at user levels.
 
     """
-    def __init__(self, optical_depth_output: np.ndarray = None,
-                 n_user_levels: int = 1) -> None:
+    def __init__(self, n_user_levels: int, optical_depth_output: np.ndarray = None) -> None:
         """
         Parameters
         ----------

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Welcome to pyRT_DISORT’s documentation &mdash; pyRT_DISORT  documentation</title>
+  <title>Notes on Sphinx &mdash; pyRT_DISORT  documentation</title>
   
 
   
@@ -37,8 +37,7 @@
 
     
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="User’s Guide" href="rst/users-guide.html" /> 
+    <link rel="search" title="Search" href="search.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -52,7 +51,7 @@
           
 
           
-            <a href="#" class="icon icon-home"> pyRT_DISORT
+            <a href="index.html" class="icon icon-home"> pyRT_DISORT
           
 
           
@@ -104,7 +103,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">pyRT_DISORT</a>
+          <a href="index.html">pyRT_DISORT</a>
         
       </nav>
 
@@ -135,15 +134,15 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>Welcome to pyRT_DISORT’s documentation</li>
+      <li>Notes on Sphinx</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/notes.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -156,29 +155,36 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="welcome-to-pyrt-disort-s-documentation">
-<h1>Welcome to pyRT_DISORT’s documentation<a class="headerlink" href="#welcome-to-pyrt-disort-s-documentation" title="Permalink to this headline">¶</a></h1>
-<p>Hey kid, wanna do radiative transfer in Python? Of course you do, that’s why
-you’re here… and lucky for you I created pyRT_DISORT to help you out. If
-you’re a first time user, I suggest you check out the <a class="reference internal" href="rst/users-guide.html"><span class="doc">User’s Guide</span></a>;
-otherwise check out info about the project in the links below.</p>
-<div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Useful links</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="rst/users-guide.html">User’s Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rst/api-reference.html">pyRT_DISORT API reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rst/about-disort.html">About DISORT</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rst/about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
-</ul>
+  <div class="section" id="notes-on-sphinx">
+<h1>Notes on Sphinx<a class="headerlink" href="#notes-on-sphinx" title="Permalink to this headline">¶</a></h1>
+<p>This is info I could only find after much StackExchange digging… It could
+be a result of me just not knowing things though. If you install Sphinx, it
+gets associated with the Python version that you installed it with. This means
+that if you installed it with python3.8 and then write code in python3.9,
+Sphinx will be unable (as far as I know…) to make documentation for the new
+code. Plus, it’s difficult for me to ensure I’m using the most recent version
+of Sphinx.</p>
+<div class="section" id="quickstart">
+<h2>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h2>
+<p>To get started with a project you’d usually run <code class="code docutils literal notranslate"><span class="pre">sphinx-quickstart</span></code> from
+Terminal. In code form, <code class="code docutils literal notranslate"><span class="pre">sphinx-quickstart</span></code> is equivalent to
+<code class="code docutils literal notranslate"><span class="pre">&lt;python&gt;</span> <span class="pre">-m</span> <span class="pre">sphinx.cmd.quickstart</span></code> where &lt;python&gt; is the absolute path
+to your interpreter.</p>
 </div>
+<div class="section" id="building-docs">
+<h2>Building docs<a class="headerlink" href="#building-docs" title="Permalink to this headline">¶</a></h2>
+<p>When you’re ready to build docs you’d usually run <code class="code docutils literal notranslate"><span class="pre">make</span> <span class="pre">html</span></code> from
+Terminal. In code form, <code class="code docutils literal notranslate"><span class="pre">make</span> <span class="pre">html</span></code> =
+<code class="code docutils literal notranslate"><span class="pre">&lt;python&gt;</span> <span class="pre">-m</span> <span class="pre">sphinx.cmd.build</span> <span class="pre">-b</span> <span class="pre">html</span> <span class="pre">&lt;path</span> <span class="pre">to</span> <span class="pre">conf.py&gt;</span>
+<span class="pre">&lt;path</span> <span class="pre">to</span> <span class="pre">where</span> <span class="pre">to</span> <span class="pre">put</span> <span class="pre">the</span> <span class="pre">html</span> <span class="pre">files&gt;</span></code>. You can also add a <code class="code docutils literal notranslate"><span class="pre">-E</span></code> flag
+to tell Sphinx to overwrite the old docs and rebuild them all each time. I
+prefer this, since sometimes changes to the header of one file aren’t
+registered in other files.</p>
+<p>Suppose pyRT_DISORT is in the repos directory in your home folder. The command
+will look like:
+<code class="code docutils literal notranslate"><span class="pre">~/repos/pyRT_DISORT/venv-doc/bin/python</span> <span class="pre">-m</span> <span class="pre">sphinx.cmd.build</span> <span class="pre">-b</span> <span class="pre">html</span>
+<span class="pre">~/repos/pyRT_DISORT/builddocs</span> <span class="pre">~/repos/pyRT_DISORT/docs</span> <span class="pre">-E</span></code></p>
 </div>
-<div class="section" id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
-<ul class="simple">
-<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
-<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
-<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
-</ul>
 </div>
 
 
@@ -186,9 +192,6 @@ otherwise check out info about the project in the links below.</p>
            
           </div>
           <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="rst/users-guide.html" class="btn btn-neutral float-right" title="User’s Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
 
   <hr/>
 
