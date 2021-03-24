@@ -180,9 +180,9 @@
 <dt id="rayleigh.Rayleigh">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">rayleigh.</span></code><code class="sig-name descname"><span class="pre">Rayleigh</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spectral_shape</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rayleigh.Rayleigh" title="Permalink to this definition">¶</a></dt>
 <dd><p>An abstract base class for Rayleigh scattering.</p>
-<p>Rayleigh creates the Legendre coefficient phase function array given the
-number of layers and the spectral shape. This is an abstract base
-class from which all other Rayleigh classes are derived.</p>
+<p>Rayleigh creates the single scattering albedo and Legendre coefficient
+phase function array given the number of layers and the spectral shape. This
+is an abstract base class from which all other Rayleigh classes are derived.</p>
 <dl class="py method">
 <dt id="rayleigh.Rayleigh.__init__">
 <code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spectral_shape</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rayleigh.Rayleigh.__init__" title="Permalink to this definition">¶</a></dt>
@@ -218,15 +218,29 @@ be 1 and 0.1, respectively.</p>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt id="rayleigh.Rayleigh.single_scattering_albedo">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">single_scattering_albedo</span></code><a class="headerlink" href="#rayleigh.Rayleigh.single_scattering_albedo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the Rayleigh single scattering albedo.</p>
+<p class="rubric">Notes</p>
+<p>The shape of this array is (n_layers, (spectral_shape)). It will be
+filled with all 1s.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
 <dt id="rayleigh.RayleighCO2">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">rayleigh.</span></code><code class="sig-name descname"><span class="pre">RayleighCO2</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wavelength</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_density</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rayleigh.RayleighCO2" title="Permalink to this definition">¶</a></dt>
-<dd><p>A structure to hold arrays related to CO <sub>2</sub> Rayleigh scattering.</p>
-<p>RayleighCO2 creates the Legendre coefficient phase function array and the
-optical depths due to Rayleigh scattering by CO <sub>2</sub> in each of the
-layers.</p>
+<dd><p>A structure to compute CO <sub>2</sub> Rayleigh scattering arrays.</p>
+<p>RayleighCO2 creates the optical depth, single scattering albedo, and
+Legendre coefficient decomposition phase function arrays due to Rayleigh
+scattering by CO <sub>2</sub> in each of the layers.</p>
 <dl class="py method">
 <dt id="rayleigh.RayleighCO2.__init__">
 <code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wavelength</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_density</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rayleigh.RayleighCO2.__init__" title="Permalink to this definition">¶</a></dt>
@@ -260,6 +274,17 @@ when using equation 13 for computing the index of refraction</p>
 </dd></dl>
 
 <dl class="py method">
+<dt id="rayleigh.RayleighCO2.optical_depth">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">optical_depth</span></code><a class="headerlink" href="#rayleigh.RayleighCO2.optical_depth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the Rayleigh optical depth.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt id="rayleigh.RayleighCO2.phase_function">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">phase_function</span></code><a class="headerlink" href="#rayleigh.RayleighCO2.phase_function" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the Legendre decomposition of the phase function.</p>
@@ -275,9 +300,12 @@ be 1 and 0.1, respectively.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="rayleigh.RayleighCO2.scattering_optical_depth">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">scattering_optical_depth</span></code><a class="headerlink" href="#rayleigh.RayleighCO2.scattering_optical_depth" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the Rayleigh scattering optical depth.</p>
+<dt id="rayleigh.RayleighCO2.single_scattering_albedo">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">single_scattering_albedo</span></code><a class="headerlink" href="#rayleigh.RayleighCO2.single_scattering_albedo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the Rayleigh single scattering albedo.</p>
+<p class="rubric">Notes</p>
+<p>The shape of this array is (n_layers, (spectral_shape)). It will be
+filled with all 1s.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>

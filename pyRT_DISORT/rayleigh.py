@@ -8,9 +8,9 @@ from pyRT_DISORT.observation import Wavelength
 class Rayleigh:
     """An abstract base class for Rayleigh scattering.
 
-    Rayleigh creates the Legendre coefficient phase function array given the
-    number of layers and the spectral shape. This is an abstract base
-    class from which all other Rayleigh classes are derived.
+    Rayleigh creates the single scattering albedo and Legendre coefficient
+    phase function array given the number of layers and the spectral shape. This
+    is an abstract base class from which all other Rayleigh classes are derived.
 
     """
 
@@ -37,6 +37,7 @@ class Rayleigh:
 
         self.__raise_error_if_inputs_are_bad()
 
+        self.__single_scattering_albedo = self.__make_single_scattering_albedo()
         self.__phase_function = self.__construct_phase_function()
 
     def __raise_error_if_inputs_are_bad(self) -> None:
@@ -60,11 +61,26 @@ class Rayleigh:
                 message = 'At least one value in spectral_shape is not an int.'
                 raise ValueError(message)
 
+    def __make_single_scattering_albedo(self) -> np.ndarray:
+        return np.ones((self.__n_layers,) + self.__spectral_shape)
+
     def __construct_phase_function(self) -> np.ndarray:
         pf = np.zeros((3, self.__n_layers) + self.__spectral_shape)
         pf[0, :] = 1
         pf[2, :] = 0.1
         return pf
+
+    @property
+    def single_scattering_albedo(self) -> np.ndarray:
+        r"""Get the Rayleigh single scattering albedo.
+
+        Notes
+        -----
+        The shape of this array is (n_layers, (spectral_shape)). It will be
+        filled with all 1s.
+
+        """
+        return self.__single_scattering_albedo
 
     @property
     def phase_function(self) -> np.ndarray:
@@ -81,11 +97,11 @@ class Rayleigh:
 
 
 class RayleighCO2(Rayleigh):
-    r"""A structure to hold arrays related to CO :sub:`2` Rayleigh scattering.
+    r"""A structure to compute CO :sub:`2` Rayleigh scattering arrays.
 
-    RayleighCO2 creates the Legendre coefficient phase function array and the
-    optical depths due to Rayleigh scattering by CO :sub:`2` in each of the
-    layers.
+    RayleighCO2 creates the optical depth, single scattering albedo, and
+    Legendre coefficient decomposition phase function arrays due to Rayleigh
+    scattering by CO :sub:`2` in each of the layers.
 
     """
 
@@ -135,7 +151,6 @@ class RayleighCO2(Rayleigh):
 
         self.__scattering_od = \
             self.__calculate_scattering_optical_depths(column_density)
-        self.__ssa = self.__make_ssa()
 
     def __raise_error_if_inputs_have_incompatible_shapes(self) -> None:
         if self.__wavelength.wavelength.shape[1:] != \
@@ -174,16 +189,9 @@ class RayleighCO2(Rayleigh):
                        (index_of_refraction ** 2 + 2)) ** 2
         return coefficient * middle_term * king_factor   # cm**2 / molecule
 
-    def __make_ssa(self) -> np.ndarray:
-        return np.ones(self.__scattering_od.shape)
-
     @property
-    def scattering_optical_depth(self) -> np.ndarray:
-        """Get the Rayleigh scattering optical depth.
+    def optical_depth(self) -> np.ndarray:
+        """Get the Rayleigh optical depth.
 
         """
         return self.__scattering_od
-
-    @property
-    def ssa(self):
-        return self.__ssa

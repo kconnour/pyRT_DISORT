@@ -2,7 +2,7 @@
 from astropy.io import fits
 
 
-from pyRT_DISORT.rayleigh import RayleighCO2
+
 from pyRT_DISORT.vertical_profile import Conrath
 from pyRT_DISORT.forward_scattering import NearestNeighborSingleScatteringAlbedo
 from pyRT_DISORT.optical_depth import OpticalDepth
@@ -64,10 +64,18 @@ column_density = hydro.column_density
 n_layers = hydro.n_layers
 H_LYR = hydro.scale_height
 
-'''
 # rayleigh module
-rco2 = RayleighCO2(pixel_wavelengths[:, 0, 0], hydro.column_density)
+from pyRT_DISORT.rayleigh import RayleighCO2
 
+rco2 = RayleighCO2(pixel_wavelengths, hydro.column_density)
+
+rayleigh_od = rco2.optical_depth
+rayleigh_ssa = rco2.single_scattering_albedo
+rayleigh_pf = rco2.phase_function
+
+print(np.sum(rayleigh_od, axis=0))
+
+'''
 # vertical_profile module
 z_midpoint = ((z_grid[:-1] + z_grid[1:]) / 2)[:, np.newaxis]
 q0 = np.array([1])
