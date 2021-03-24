@@ -1,19 +1,24 @@
 import numpy as np
 
+from astropy.io import fits
 
-def get_nearest_indices(array, values):
-    #diff = (values.reshape(1, -1) - array.reshape(-1, 1))
-    #indices = np.abs(diff).argmin(axis=0)
-    #return indices
-    indices = np.abs(np.subtract.outer(array, values)).argmin(0)
-    return indices
 
-#wavgrid = np.linspace(1, 10, num=11)
-#print(wavgrid)
-#wavs = np.array([[3, 4], [7, 8]])
 
-#inds = get_nearest_indices(wavgrid, wavs)
-#print(wavgrid[inds])
 
-import disort
-print(disort.disort.__doc__)
+
+f = '/home/kyle/repos/pyRT_DISORT/tests/aux/dust_properties.fits'
+hdul = fits.open(f)
+cext = hdul['primary'].data[:, :, 0]
+csca = hdul['primary'].data[:, :, 1]
+wavs = hdul['wavelengths'].data
+psizes = hdul['particle_sizes'].data
+
+pgrad = np.linspace(1, 1.5, num=10)
+wavelengths = np.array([1, 2, 3, 4, 5])
+#cext = np.broadcast_to(cext, (65,) + cext.shape)
+print(cext.shape)
+nni = NearestNeighborInterpolator(cext, psizes, wavs, pgrad, wavelengths)
+print(nni.coeff.shape)
+
+#import disort
+#print(disort.disort.__doc__)
