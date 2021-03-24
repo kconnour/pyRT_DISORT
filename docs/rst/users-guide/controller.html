@@ -38,8 +38,8 @@
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Surface" href="surface.html" />
-    <link rel="prev" title="The model_atmosphere module" href="model_atmosphere.html" /> 
+    <link rel="next" title="Radiation" href="radiation.html" />
+    <link rel="prev" title="The atmosphere module" href="atmosphere.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -93,15 +93,15 @@
 <li class="toctree-l2"><a class="reference internal" href="eos.html">The eos module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rayleigh.html">The rayleigh module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="aerosol.html">The aerosol module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="model_atmosphere.html">The model_atmosphere module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atmosphere.html">The atmosphere module</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">The controller module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#computational-parameters">Computational Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#computationalparameters">ComputationalParameters</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#model-behavior">Model Behavior</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="surface.html">Surface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="radiation.html">Radiation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="output.html">Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="surface.html">Surface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="running_the_model.html">Running the model</a></li>
 </ul>
 </li>
@@ -181,8 +181,14 @@
 <h1>The controller module<a class="headerlink" href="#the-controller-module" title="Permalink to this headline">¶</a></h1>
 <p>We’ve created nearly all of the arrays that DISORT wants, so we now just need
 to set some of the controlling parameters.</p>
-<div class="section" id="computational-parameters">
-<h2>Computational Parameters<a class="headerlink" href="#computational-parameters" title="Permalink to this headline">¶</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>To me, everything from this point onwards, with the exception of Surface,
+could be combined into one module. But I can’t think of a name. If you can
+I’ll happily make these less disjoined.</p>
+</div>
+<div class="section" id="computationalparameters">
+<h2>ComputationalParameters<a class="headerlink" href="#computationalparameters" title="Permalink to this headline">¶</a></h2>
 <p>We need to set a number of computational parameters. Let’s do that with
 <a class="reference internal" href="../api-reference/controller.html#controller.ComputationalParameters" title="controller.ComputationalParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">ComputationalParameters</span></code></a>. We can just plug the number of
 layers inferred from the number of altitudes to use from the equation of state.
@@ -190,7 +196,8 @@ Let’s then use 64 moments, 16 streams, 1 polar and azimuthal angle, and 80
 user levels.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.controller</span> <span class="kn">import</span> <span class="n">ComputationalParameters</span>
 
-<span class="n">cp</span> <span class="o">=</span> <span class="n">ComputationalParameters</span><span class="p">(</span><span class="n">hydro</span><span class="o">.</span><span class="n">n_layers</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">legendre_moments</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">80</span><span class="p">)</span>
+<span class="n">cp</span> <span class="o">=</span> <span class="n">ComputationalParameters</span><span class="p">(</span><span class="n">hydro</span><span class="o">.</span><span class="n">n_layers</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">legendre_moments</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                             <span class="mi">16</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">80</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This class just holds all of these parameters and checks they’re allowable.</p>
@@ -202,6 +209,12 @@ user levels.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.controller</span> <span class="kn">import</span> <span class="n">ModelBehavior</span>
 
 <span class="n">mb</span> <span class="o">=</span> <span class="n">ModelBehavior</span><span class="p">()</span>
+<span class="n">ACCUR</span> <span class="o">=</span> <span class="n">mb</span><span class="o">.</span><span class="n">accuracy</span>
+<span class="n">DELTAMPLUS</span> <span class="o">=</span> <span class="n">mb</span><span class="o">.</span><span class="n">delta_m_plus</span>
+<span class="n">DOPSEUDOSPHERE</span> <span class="o">=</span> <span class="n">mb</span><span class="o">.</span><span class="n">do_pseudo_sphere</span>
+<span class="n">HEADER</span> <span class="o">=</span> <span class="n">mb</span><span class="o">.</span><span class="n">header</span>
+<span class="n">PRNT</span> <span class="o">=</span> <span class="n">mb</span><span class="o">.</span><span class="n">print_variables</span>
+<span class="n">RADIUS</span> <span class="o">=</span> <span class="n">mb</span><span class="o">.</span><span class="n">radius</span>
 </pre></div>
 </div>
 </div>
@@ -213,8 +226,8 @@ user levels.</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="surface.html" class="btn btn-neutral float-right" title="Surface" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="model_atmosphere.html" class="btn btn-neutral float-left" title="The model_atmosphere module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="radiation.html" class="btn btn-neutral float-right" title="Radiation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="atmosphere.html" class="btn btn-neutral float-left" title="The atmosphere module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

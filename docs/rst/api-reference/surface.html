@@ -89,9 +89,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../users-guide.html">User’s Guide</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api-reference.html">pyRT_DISORT API reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="aerosol.html">Aerosol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atmosphere.html">Atmosphere</a></li>
 <li class="toctree-l2"><a class="reference internal" href="controller.html">Controller</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eos.html">Equation of State</a></li>
-<li class="toctree-l2"><a class="reference internal" href="model_atmosphere.html">Model Atmosphere</a></li>
 <li class="toctree-l2"><a class="reference internal" href="observation.html">Observation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="output.html">Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="radiation.html">Radiation</a></li>
@@ -316,21 +316,23 @@ by DISORT.</p>
 
 <dl class="py class">
 <dt id="surface.Surface">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">surface.</span></code><code class="sig-name descname"><span class="pre">Surface</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">albedo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cp</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surface.Surface" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">surface.</span></code><code class="sig-name descname"><span class="pre">Surface</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">albedo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_streams</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_polar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_azimuth</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surface.Surface" title="Permalink to this definition">¶</a></dt>
 <dd><p>An abstract base “surface” class.</p>
 <p>Surface holds properties relevant to all surfaces. It is an abstract base
 class from which all other surface classes are derived; it is not meant to
 be instantiated.</p>
 <dl class="py method">
 <dt id="surface.Surface.__init__">
-<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">albedo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cp</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surface.Surface.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">albedo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_streams</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_polar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_azimuth</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surface.Surface.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>albedo</strong> (<em>float</em>) – The surface albedo. Only used by DISORT if the bottom boundary is
+<li><p><strong>albedo</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The surface albedo. Only used by DISORT if the bottom boundary is
 Lambertian (see the Lambertian class), but always used by
 pyRT_DISORT.</p></li>
-<li><p><strong>cp</strong> (<a class="reference internal" href="controller.html#controller.ComputationalParameters" title="controller.ComputationalParameters"><em>ComputationalParameters</em></a>) – The model’s computational parameters.</p></li>
+<li><p><strong>n_streams</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The number of streams.</p></li>
+<li><p><strong>n_polar</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The number of polar angles.</p></li>
+<li><p><strong>n_azimuth</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The number of azimuth angles.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>

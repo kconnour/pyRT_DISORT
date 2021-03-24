@@ -87,6 +87,7 @@ wave_ref = 9.3
 from pyRT_DISORT.aerosol import NearestNeighborForwardScattering
 
 nnfs = NearestNeighborForwardScattering(csca, cext, psizes, wavs, pgrad, pixel_wavelengths, wave_ref)
+dust_ssa = nnfs.single_scattering_albedo
 
 from pyRT_DISORT.aerosol import OpticalDepth
 
@@ -102,81 +103,85 @@ pf_psizes = dust_phsfn_file['particle_sizes'].data
 
 pf = NearestNeighborTabularLegendreCoefficients(coeff, pf_psizes, pf_wavs, pgrad, pixel_wavelengths)
 dust_pf = pf.phase_function
-'''
 
+# the atmosphere module
+from pyRT_DISORT.atmosphere import ModelAtmosphere
 
-# optical_depth module
-od = OpticalDepth(np.squeeze(conrath.profile), hydro.column_density, nnssa.make_extinction_grid(9.3), 1)
-
-# the phase_function module
-
-
-# the model_atmosphere module
 model = ModelAtmosphere()
-rayleigh_info = (rco2.scattering_optical_depth, rco2.ssa, rco2.phase_function)
-dust_info = (od.total, nnssa.single_scattering_albedo, pf.phase_function)
+
+rayleigh_info = (rayleigh_od, rayleigh_ssa, rayleigh_pf)
+dust_info = (dust_od, dust_ssa, dust_pf)
+
 model.add_constituent(rayleigh_info)
 model.add_constituent(dust_info)
 
-dtauc = model.optical_depth[:, 0]
-ssalb = model.single_scattering_albedo[:, 0]
-pmom = model.legendre_moments[:, :, 0]
+DTAUC = model.optical_depth
+SSALB = model.single_scattering_albedo
+PMOM = model.legendre_moments
 
 # The controller module
-cp = ComputationalParameters(hydro.n_layers, model.legendre_moments.shape[0], 16, 1, 1, 80)
+from pyRT_DISORT.controller import ComputationalParameters, ModelBehavior
+
+cp = ComputationalParameters(hydro.n_layers, model.legendre_moments.shape[0],
+                             16, 1, 1, 80)
 
 mb = ModelBehavior()
-accur = mb.accuracy
-deltamplus = mb.delta_m_plus
-dopseudosphere = mb.do_pseudo_sphere
-header = mb.header
-prnt = mb.print_variables
-radius = mb.radius
-
-# The surface module
-lamb = Lambertian(0.1, cp)
-albedo = lamb.albedo
-lamber = lamb.lambertian
-rhou = lamb.rhou
-rhoq = lamb.rhoq
-bemst = lamb.bemst
-emust = lamb.emust
-rho_accurate = lamb.rho_accurate
+ACCUR = mb.accuracy
+DELTAMPLUS = mb.delta_m_plus
+DOPSEUDOSPHERE = mb.do_pseudo_sphere
+HEADER = mb.header
+PRNT = mb.print_variables
+RADIUS = mb.radius
 
 # the radiation module
 from pyRT_DISORT.radiation import IncidentFlux, ThermalEmission
 
 flux = IncidentFlux()
-fbeam = flux.beam_flux
-fisot = flux.isotropic_flux
+FBEAM = flux.beam_flux
+FISOT = flux.isotropic_flux
 
 te = ThermalEmission()
-plank = te.thermal_emission
-btemp = te.bottom_temperature
-ttemp = te.top_temperature
-temis = te.top_emissivity
+PLANK = te.thermal_emission
+BTEMP = te.bottom_temperature
+TTEMP = te.top_temperature
+TEMIS = te.top_emissivity
 
 # the output module
 from pyRT_DISORT.output import OutputArrays, OutputBehavior, UserLevel
 
-ob = OutputBehavior()
-ibcnd = ob.incidence_beam_conditions
-onlyfl = ob.only_fluxes
-usrang = ob.user_angles
-usrtau = ob.user_optical_depths
-
 oa = OutputArrays(cp.n_polar, cp.n_user_levels, cp.n_azimuth)
-albmed = oa.albedo_medium
-flup = oa.diffuse_up_flux
-rfldn = oa.diffuse_down_flux
-rfldir = oa.direct_beam_flux
-dfdt = oa.flux_divergence
-uu = oa.intensity
-uavg = oa.mean_intensity
-trnmed = oa.transmissivity_medium
+ALBMED = oa.albedo_medium
+FLUP = oa.diffuse_up_flux
+RFLDN = oa.diffuse_down_flux
+RFLDIR = oa.direct_beam_flux
+DRDT = oa.flux_divergence
+UU = oa.intensity
+UAVG = oa.mean_intensity
+TRNMED = oa.transmissivity_medium
+
+ob = OutputBehavior()
+IBCND = ob.incidence_beam_conditions
+ONLYFL = ob.only_fluxes
+USRANG = ob.user_angles
+USRTAU = ob.user_optical_depths
 
 ulv = UserLevel(cp.n_user_levels)
-utau = ulv.optical_depth_output
+UTAU = ulv.optical_depth_output
+
+
+'''
+# The surface module
+from pyRT_DISORT.surface import Lambertian
+
+lamb = Lambertian(0.1, cp)
+ALBEDO = lamb.albedo
+LAMBER = lamb.lambertian
+RHOU = lamb.rhou
+RHOQ = lamb.rhoq
+BEMST = lamb.bemst
+EMUST = lamb.emust
+RHO_ACCURATE = lamb.rho_accurate
+
 
 # Run the model
 import disort

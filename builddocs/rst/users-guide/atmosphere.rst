@@ -1,12 +1,12 @@
-The model_atmosphere module
-===========================
+The atmosphere module
+=====================
 We've done the hard work of creating all the atmospheric arrays for the
 individual constituents. Now we just need to put everything together.
 
 ModelAtmosphere
 ---------------
 We can construct the "big 3" arrays of the optical depth, single scattering
-albedo, and phase function with :class:`~model_atmosphere.ModelAtmosphere`.
+albedo, and phase function with :class:`~atmosphere.ModelAtmosphere`.
 Let's make one of these objects (which takes no inputs to construct)
 
 .. code-block:: python
@@ -33,9 +33,9 @@ the total atmospheric properties via the class properties.
 
 .. code-block:: python
 
-   dtauc = model.optical_depth
-   ssalb = model.single_scattering_albedo
-   pmom = model.legendre_moments
+   DTAUC = model.optical_depth
+   SSALB = model.single_scattering_albedo
+   PMOM = model.legendre_moments
 
 That's all there is to it. And with that, we've done the hard part of
 constructing our DISORT run. The upcoming modules will help us create some of

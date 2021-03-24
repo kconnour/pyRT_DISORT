@@ -19,16 +19,21 @@ class Surface:
 
     """
 
-    def __init__(self, albedo: float, cp: ComputationalParameters) -> None:
+    def __init__(self, albedo: float, n_streams: int, n_polar: int,
+                 n_azimuth: int) -> None:
         """
         Parameters
         ----------
-        albedo: float
+        albedo
             The surface albedo. Only used by DISORT if the bottom boundary is
             Lambertian (see the Lambertian class), but always used by
             pyRT_DISORT.
-        cp: ComputationalParameters
-            The model's computational parameters.
+        n_streams
+            The number of streams.
+        n_polar
+            The number of polar angles.
+        n_azimuth
+            The number of azimuth angles.
 
         Raises
         ------
@@ -40,8 +45,9 @@ class Surface:
 
         """
         self.__albedo = self.__make_albedo(albedo)
-        self.__raise_type_error_if_cp_is_not_computational_parameters(cp)
-        self._cp = cp
+        self._n_streams = n_streams
+        self._n_polar = n_polar
+        self._n_azimuth = n_azimuth
         self._lambertian = False
 
         self._bemst = self.__make_empty_bemst()
@@ -55,32 +61,25 @@ class Surface:
         self.__raise_value_error_if_albedo_is_unphysical(albedo)
         return albedo
 
-    @staticmethod
-    def __raise_type_error_if_cp_is_not_computational_parameters(
-            cp: ComputationalParameters) -> None:
-        if not isinstance(cp, ComputationalParameters):
-            raise TypeError(
-                'cp must be an instance of ComputationalParameters.')
-
     def __make_empty_bemst(self) -> np.ndarray:
-        return np.zeros(int(0.5*self._cp.n_streams))
+        return np.zeros(int(0.5*self._n_streams))
 
     def __make_empty_emust(self) -> np.ndarray:
-        return np.zeros(self._cp.n_polar)
+        return np.zeros(self._n_polar)
 
     def __make_empty_rho_accurate(self) -> np.ndarray:
-        return np.zeros((self._cp.n_polar, self._cp.n_azimuth))
+        return np.zeros((self._n_polar, self._n_azimuth))
 
     # TODO: the first dimension seems messed up to me...
     def __make_empty_rhoq(self) -> np.ndarray:
-        return np.zeros((int(0.5 * self._cp.n_streams),
-                         int(0.5 * self._cp.n_streams + 1),
-                         self._cp.n_streams))
+        return np.zeros((int(0.5 * self._n_streams),
+                         int(0.5 * self._n_streams + 1),
+                         self._n_streams))
 
     def __make_empty_rhou(self) -> np.ndarray:
-        return np.zeros((self._cp.n_streams,
-                         int(0.5 * self._cp.n_streams + 1),
-                         self._cp.n_streams))
+        return np.zeros((self._n_streams,
+                         int(0.5 * self._n_streams + 1),
+                         self._n_streams))
 
     @staticmethod
     def __cast_to_float(albedo: float) -> float:
@@ -115,8 +114,8 @@ class Surface:
                         self._emust, self._bemst, False, angles.phi,
                         angles.phi0, self._rho_accurate, phase_function_number,
                         brdf_arg,
-                        n_mug, nstr=self._cp.n_streams, numu=self._cp.n_polar,
-                        nphi=self._cp.n_azimuth)
+                        n_mug, nstr=self._n_streams, numu=self._n_polar,
+                        nphi=self._n_azimuth)
 
     @property
     def albedo(self) -> float:

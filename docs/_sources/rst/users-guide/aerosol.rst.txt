@@ -72,7 +72,7 @@ get values at undefined grid locations. For this example I'll use nearest
 neighbor.
 
 .. note::
-   I made a generic :class:`aerosol.Interpolator` class to do various different
+   I made a generic :class:`!aerosol.Interpolator` class to do various different
    kinds of interpolation. This class is almost entirely a wrapper around that
    class.
 
@@ -110,7 +110,7 @@ scaled to the wavelength reference that defined extinction.
    od = OpticalDepth(dust_profile, hydro.column_density, fs.extinction, 1)
    dust_od = od.total
 
-With that, we have the optical depth computed!
+With that, we have the optical depth computed.
 
 NearestNeighborTabularLegendreCoefficients
 ------------------------------------------
@@ -145,3 +145,4 @@ grid over which we want the phase function. Let's go ahead and do that here.
                                                    pgrad, pixel_wavelengths)
    dust_pf = pf.phase_function
 
+And before you know it, we've created all the things we need for dust!

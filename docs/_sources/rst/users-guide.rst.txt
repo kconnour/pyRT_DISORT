@@ -10,9 +10,9 @@ User's Guide
    users-guide/eos
    users-guide/rayleigh
    users-guide/aerosol
-   users-guide/model_atmosphere
+   users-guide/atmosphere
    users-guide/controller
-   users-guide/surface
    users-guide/radiation
    users-guide/output
+   users-guide/surface
    users-guide/running_the_model

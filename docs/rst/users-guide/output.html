@@ -38,7 +38,7 @@
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Running the model" href="running_the_model.html" />
+    <link rel="next" title="Surface" href="surface.html" />
     <link rel="prev" title="Radiation" href="radiation.html" /> 
 </head>
 
@@ -93,16 +93,16 @@
 <li class="toctree-l2"><a class="reference internal" href="eos.html">The eos module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rayleigh.html">The rayleigh module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="aerosol.html">The aerosol module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="model_atmosphere.html">The model_atmosphere module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atmosphere.html">The atmosphere module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="controller.html">The controller module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="surface.html">Surface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="radiation.html">Radiation</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Output</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#output-arrays">Output Arrays</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#user-levels">User Levels</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#output-behavior">Output Behavior</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#outputarrays">OutputArrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#outputbehavior">OutputBehavior</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#userlevel">UserLevel</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="surface.html">Surface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="running_the_model.html">Running the model</a></li>
 </ul>
 </li>
@@ -182,25 +182,49 @@
 <h1>Output<a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h1>
 <p>We’re nearly done with our simulation. The last thing we need to do before we
 can run DISORT is create some output parameters and arrays.</p>
-<div class="section" id="output-arrays">
-<h2>Output Arrays<a class="headerlink" href="#output-arrays" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="outputarrays">
+<h2>OutputArrays<a class="headerlink" href="#outputarrays" title="Permalink to this headline">¶</a></h2>
 <p>Let’s start by making the output arrays. We only need a few parameters to
 create the arrays (they define the shape of the arrays), and we’ve already made
-the parameters we’ll need. Let’s add them to <a class="reference internal" href="../api-reference/output.html#output.OutputArrays" title="output.OutputArrays"><code class="xref py py-class docutils literal notranslate"><span class="pre">output.OutputArrays</span></code></a>.</p>
+the parameters we’ll need. Let’s add them to <a class="reference internal" href="../api-reference/output.html#output.OutputArrays" title="output.OutputArrays"><code class="xref py py-class docutils literal notranslate"><span class="pre">OutputArrays</span></code></a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.output</span> <span class="kn">import</span> <span class="n">OutputArrays</span><span class="p">,</span> <span class="n">OutputBehavior</span><span class="p">,</span> <span class="n">UserLevel</span>
+
+<span class="n">oa</span> <span class="o">=</span> <span class="n">OutputArrays</span><span class="p">(</span><span class="n">cp</span><span class="o">.</span><span class="n">n_polar</span><span class="p">,</span> <span class="n">cp</span><span class="o">.</span><span class="n">n_user_levels</span><span class="p">,</span> <span class="n">cp</span><span class="o">.</span><span class="n">n_azimuth</span><span class="p">)</span>
+<span class="n">ALBMED</span> <span class="o">=</span> <span class="n">oa</span><span class="o">.</span><span class="n">albedo_medium</span>
+<span class="n">FLUP</span> <span class="o">=</span> <span class="n">oa</span><span class="o">.</span><span class="n">diffuse_up_flux</span>
+<span class="n">RFLDN</span> <span class="o">=</span> <span class="n">oa</span><span class="o">.</span><span class="n">diffuse_down_flux</span>
+<span class="n">RFLDIR</span> <span class="o">=</span> <span class="n">oa</span><span class="o">.</span><span class="n">direct_beam_flux</span>
+<span class="n">DRDT</span> <span class="o">=</span> <span class="n">oa</span><span class="o">.</span><span class="n">flux_divergence</span>
+<span class="n">UU</span> <span class="o">=</span> <span class="n">oa</span><span class="o">.</span><span class="n">intensity</span>
+<span class="n">UAVG</span> <span class="o">=</span> <span class="n">oa</span><span class="o">.</span><span class="n">mean_intensity</span>
+<span class="n">TRNMED</span> <span class="o">=</span> <span class="n">oa</span><span class="o">.</span><span class="n">transmissivity_medium</span>
+</pre></div>
+</div>
 <p>All the arrays are set to 0 and will be populated as DISORT runs.</p>
 </div>
-<div class="section" id="user-levels">
-<h2>User Levels<a class="headerlink" href="#user-levels" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="outputbehavior">
+<h2>OutputBehavior<a class="headerlink" href="#outputbehavior" title="Permalink to this headline">¶</a></h2>
+<p>Let’s now set some switches to define how DISORT will
+run. This is done with <a class="reference internal" href="../api-reference/output.html#output.OutputBehavior" title="output.OutputBehavior"><code class="xref py py-class docutils literal notranslate"><span class="pre">OutputBehavior</span></code></a>, which sets some default
+values for how DISORT should run, but as usual you’re free to override them.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ob</span> <span class="o">=</span> <span class="n">OutputBehavior</span><span class="p">()</span>
+<span class="n">IBCND</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">incidence_beam_conditions</span>
+<span class="n">ONLYFL</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">only_fluxes</span>
+<span class="n">USRANG</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">user_angles</span>
+<span class="n">USRTAU</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">user_optical_depths</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="userlevel">
+<h2>UserLevel<a class="headerlink" href="#userlevel" title="Permalink to this headline">¶</a></h2>
 <p>We need an oddball variable to make the user levels. We can do that here.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ulv</span> <span class="o">=</span> <span class="n">UserLevel</span><span class="p">(</span><span class="n">cp</span><span class="o">.</span><span class="n">n_user_levels</span><span class="p">)</span>
+<span class="n">UTAU</span> <span class="o">=</span> <span class="n">ulv</span><span class="o">.</span><span class="n">optical_depth_output</span>
+</pre></div>
+</div>
 <p>This is a variable you need to completely create yourself if your run will
 use it; otherwise pyRT_DISORT will make an array of 0s of the correct shape
 to appease DISORT.</p>
-</div>
-<div class="section" id="output-behavior">
-<h2>Output Behavior<a class="headerlink" href="#output-behavior" title="Permalink to this headline">¶</a></h2>
-<p>The final thing we need to do is set some switches to define how DISORT will
-run. This is done with <a class="reference internal" href="../api-reference/output.html#output.OutputBehavior" title="output.OutputBehavior"><code class="xref py py-class docutils literal notranslate"><span class="pre">output.OutputBehavior</span></code></a>, which sets some default
-values for how DISORT should run, but as usual you’re free to override them.</p>
 </div>
 </div>
 
@@ -210,7 +234,7 @@ values for how DISORT should run, but as usual you’re free to override them.</
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="running_the_model.html" class="btn btn-neutral float-right" title="Running the model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="surface.html" class="btn btn-neutral float-right" title="Surface" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
         <a href="radiation.html" class="btn btn-neutral float-left" title="Radiation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
