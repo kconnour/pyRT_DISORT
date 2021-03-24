@@ -1,18 +1,35 @@
 Installation
 ============
-
-To install pyRT_DISORT, you must have gfortran installed on your computer.
-Assuming you have that, simply clone the repo and once you cd into that
-directory simply install it with :code:`pip install .`. By default, this will
+To install pyRT_DISORT, you must have FORTRAN installed on your computer. Once
+you have that, simply clone the repo (using
+:code:`git clone https://github.com/kconnour/pyRT_DISORT.git` from Terminal, or
+clone using your favorite GUI) and move into the directory where it was cloned.
+You can then install it with :code:`pip install .`. By default, this will
 create two importable packages:
 
 1. :code:`disort`
-   This is a binarized version of the standard DISORT FORTRAN code (with very
-   minor modifications for this project). This can take quite some time to
-   install and since DISORT is not frequently updated, you can skip this step
-   by setting :code:`install_disort=False` within :code:`setup.py`.
+   This is a binarized version of the standard FORTRAN-based DISORT code. This
+   can take quite some time to install and since DISORT is not frequently
+   updated, you can skip this step by setting :code:`install_disort=False`
+   within :code:`setup.py`.
 2. :code:`pyRT_DISORT`
    This is the pure Python project that will do the atmospheric pre-processing.
 
 You can now import the libraries with :code:`import disort` and/or
 :code:`import pyRT_DISORT as pyrt`.
+
+.. note::
+   I made a minor modification to the source code in the shapes of :code:`RHOQ`
+   and :code:`RHOU` so :code:`disort` isn't precisely the same as the
+   official distribution. I'm working to resolve this discrepancy.
+
+.. note::
+   I use numpy's f2py utility to generate importable FORTRAN code. I named the
+   module :code:`disort` and all subroutines included in the distribution are
+   functions in that module. For example, within LINPAK.f, the first subroutine
+   is SGBCO. If you want to call this directly, you can do so with
+   :code:`disort.sgbco(<inputs>)`.
+
+   I imagine you'll only really be concerned with calling :code:`disort.disort`
+   but it's worth mentioning the whole distribution is available to you via
+   the :code:`disort` module.

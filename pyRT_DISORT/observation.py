@@ -40,8 +40,9 @@ class Angles:
 
         Notes
         -----
-        The incidence, emission, and phase angles must have the same shape. This
-        structure can accommodate pixels of any shape.
+        This class can accommodate arrays of any shape as long as
+        :code:`incidence`, :code:`emission`, and :code:`phase` have the same
+        shape.
 
         """
         self.__incidence = incidence
@@ -195,8 +196,8 @@ class Angles:
 class Spectral:
     """A data structure that contains spectral info required by DISORT.
 
-    Spectral accepts the short and long wavelength from an observation and
-    computes their corresponding wavenumber.
+    Spectral accepts the short and long wavelength [microns] from an observation
+    and computes their corresponding wavenumber.
 
     """
 
@@ -206,14 +207,14 @@ class Spectral:
         Parameters
         ----------
         short_wavelength
-            The short wavelength [microns] for each spectral bin.
+            The short wavelength of each spectral bin.
         long_wavelength
-            The long wavelength [microns] for each spectral bin.
+            The long wavelength of each spectral bin.
 
         Raises
         ------
         TypeError
-            Raised if either of the input wavelengths are not a numpy.ndarray.
+            Raised if either of the wavelengths are not a numpy.ndarray.
         ValueError
             Raised if either of the input arrays contain values outside of 0.1
             to 50 microns (I assume this is the valid range to do retrievals),
@@ -223,8 +224,9 @@ class Spectral:
 
         Notes
         -----
-        The short and long wavelengths must have the same shape. This structure
-        can accommodate pixels of any shape.
+        This class can accommodate arrays of any shape as long as
+        :code:`short_wavelength` and :code:`long_wavelength` have the same
+        shape.
 
         """
         self.__short_wavelength = Wavelength(short_wavelength)
@@ -275,7 +277,7 @@ class Spectral:
 
     @property
     def high_wavenumber(self) -> np.ndarray:
-        r"""Get the high wavenumber [cm :superscript:`-1`]---the wavenumber
+        r"""Get the high wavenumber [cm :sup:`-1`]---the wavenumber
         corresponding to :code:`short_wavelength`.
 
         Notes
@@ -289,8 +291,8 @@ class Spectral:
 
     @property
     def low_wavenumber(self) -> np.ndarray:
-        r"""Get the low wavenumber [cm :superscript:`-1`]---the wavenumber
-        corresponding to :code:`long_wavelength`.
+        r"""Get the low wavenumber [cm :sup:`-1`]---the wavenumber corresponding
+        to :code:`long_wavelength`.
 
         Notes
         -----
@@ -303,7 +305,7 @@ class Spectral:
 
 
 class Wavelength:
-    """A class to hold on to an array of wavelengths.
+    """A data structure to hold on to an array of wavelengths.
 
     Wavelength accepts a numpy.ndarray of wavelengths and ensures all values
     in the array are acceptable for retrievals.
@@ -315,7 +317,7 @@ class Wavelength:
         Parameters
         ----------
         wavelength
-            Any ND array of wavelengths [microns].
+            Any wavelength [microns].
 
         Raises
         ------
@@ -339,10 +341,8 @@ class Wavelength:
             message = 'wavelength must be a numpy.ndarray.'
             raise TypeError(message)
 
-    # TODO: I think this logic can be shortened
     def __raise_value_error_if_wavelength_is_not_in_valid_range(self) -> None:
-        if not (np.all(0.1 <= self.__wavelength) and
-                np.all(self.__wavelength <= 50)):
+        if not np.all((0.1 <= self.__wavelength) & (self.__wavelength <= 50)):
             message = 'All values in wavelength must be between 0.1 and 50 ' \
                       'microns.'
             raise ValueError(message)

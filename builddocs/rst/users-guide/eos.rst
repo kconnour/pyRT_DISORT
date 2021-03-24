@@ -1,18 +1,17 @@
 The eos module
 ==============
-
-Now that we created the angular and spectral information, we can turn our
-attention to creating the model. Perhaps the most natural place to start is
-by defining the boundaries of the model. At each of the boundaries, we'll also
-want to know the equation of state variables.
+Let's now turn out attention to creating the atmospheric model. This will be a
+multi-step process that will span several modules, but we can start by just
+defining the boundaries we'd like to use in the model, along with equation of
+state variables.
 
 Hydrostatic
 -----------
-Suppose we have a temperature and pressure profile, or a set of profiles,
-and the altitude where those quantities are defined. If we think the
-atmosphere is in hydrostatic equilibrium, we can use :class:`~eos.Hydrostatic`
-to compute the number density, column density, and scale height---just about
-all the equation of state quantities we'd care about when doing a retrieval.
+Suppose we have a temperature and pressure profile and the altitude where those
+quantities are defined for out pixel. If we think the atmosphere is in hydrostatic
+equilibrium, we can use :class:`~eos.Hydrostatic` to compute the number
+density, column density, and scale height---just about all the equation of
+state quantities we'd care about when doing a retrieval.
 
 Let's start by making some profiles and defining some properties of the
 atmosphere.
@@ -36,43 +35,34 @@ retrieval.
 
 .. note::
    To keep with DISORT's convention that altitudes start from the top of the
-   atmosphere, the input altitudes and grid must be *decreasing*.
+   atmosphere, the altitude and altitude grid must be *decreasing*.
 
 We can now add these to :code:`Hydrostatic`. It will start by linearly
 interpolating the input temperature and pressure onto the desired grid. Then,
-it will compute number density, column density, and scale height at or within
-the new boundaries. As before, we can access these arrays via the class
-properties.
+it will compute number density and scale height at the new boundaries, and the
+column density within the new boundaries. As before, we can access these arrays
+via the class properties.
 
 .. code-block:: python
-   :emphasize-lines: 3
 
    from pyRT_DISORT.eos import Hydrostatic
 
-   hydro = Hydrostatic(altitude_grid, pressure_profile, temperature_profile, z_grid, mass, gravity)
+   hydro = Hydrostatic(altitude_grid, pressure_profile, temperature_profile,
+                       z_grid, mass, gravity)
+
    altitude = hydro.altitude
    pressure = hydro.pressure
-   temperature = hydro.temperature
+   TEMPER = hydro.temperature
    number_density = hydro.number_density
    column_density = hydro.column_density
    n_layers = hydro.n_layers
-   scale_height = hydro.scale_height
+   H_LYR = hydro.scale_height
 
-
-Most of these properties aren't required by DISORT (:code:`temperature` and
-:code:`scale_height` are required under certain conditions) but several of
+Most of these properties aren't required by DISORT (:code:`TEMPER` and
+:code:`H_LYR` are required under certain conditions) but several of
 these variables will be needed in a few steps. Regardless, you may find a
 number of these "unnecessary" variables to be handy when playing with your
 retrievals.
-
-.. note::
-   As with the observational quantities, this accepts ND input so in theory
-   if you have an image with MxN pixels and happen to know the
-   pressures and temperatures at 50 points above each of the pixels, you can
-   input 50xMxN arrays for :code:`altitude_grid`, :code:`pressure_grid`, and
-   :code:`temperature_grid` and get the corresponding values. In this
-   scenario, :code:`z_grid` should be ZxMxN where Z is the number
-   of desired altitudes.
 
 As you'd expect, the equation of state variables have the same shape as
 :code:`z_grid`. The one exception is :code:`column_density` which is one

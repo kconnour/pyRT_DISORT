@@ -18,16 +18,9 @@ class Hydrostatic:
 
     Hydrostatic accepts equation of state variables and regrids them to a
     user-specified altitude grid using linear interpolation. Then, it computes
-    the number density, column density, and scale height at or within these new
-    boundaries assuming the atmosphere follows the equation
-
-    .. math::
-       :label: hydrostatic_equation
-
-       P = n k_B T
-
-    where :math:`P` is the pressure, :math:`n` is the number density,
-    :math:`k_B` is Boltzmann's constant, and :math:`T` is the temperature.
+    number density and scale height at the new boundaries, and the
+    column density within the new boundaries, assuming the atmosphere is in
+    hydrostatic equilibrium.
 
     """
 
@@ -65,7 +58,7 @@ class Hydrostatic:
             :code:`temperature_grid` do not have the same shapes; if
             :code:`altitude_grid` or :code:`altitude_boundaries` have
             incompatible pixel dimensions; if they are not monotonically
-            decreasing along the 0 :sup:`th` dimension; if
+            decreasing along the 0 :sup:`th` axis; if
             :code:`pressure_grid`, or
             :code:`temperature_grid` contain non-positive, finite values; if
             :code:`altitude_boundaries` does not contain at least 2 boundaries;
@@ -74,6 +67,16 @@ class Hydrostatic:
 
         Notes
         -----
+        This class assumes the atmosphere follows the equation
+
+        .. math::
+           :label: hydrostatic_equation
+
+           P = n k_B T
+
+        where :math:`P` is the pressure, :math:`n` is the number density,
+        :math:`k_B` is Boltzmann's constant, and :math:`T` is the temperature.
+
         The inputs can be ND arrays, as long as they have compatible shapes. In
         this scenario, :code:`altitude_grid`, :code:`pressure_grid`, and
         :code:`temperature_grid` must be of shape Mx(pixels) whereas
@@ -85,7 +88,7 @@ class Hydrostatic:
         are ND arrays, this condition only applies to the 0 :sup:`th` axis.
 
         Also, scipy's Gaussian quadrature routine becomes less accurate the
-        larger the atmosphere's scale height is. I'm working to reduce the
+        smaller the atmosphere's scale height is. I'm working to reduce the
         errors. In the meantime the column density is fairly close to analytical
         results but should be improved.
 
@@ -282,8 +285,12 @@ class Hydrostatic:
 
     @property
     def n_layers(self) -> int:
-        """Get the number of layers in the model. This value is inferred from
-        the 0 :sup:`th` axis of :code:`altitude_boundaries`.
+        """Get the number of layers in the model.
+
+        Notes
+        -----
+        This value is inferred from the 0 :sup:`th` axis of
+        :code:`altitude_boundaries`.
 
         """
         return self.__n_layers
@@ -297,21 +304,25 @@ class Hydrostatic:
 
     @property
     def pressure(self) -> np.ndarray:
-        """Get the pressure [Pa] at the boundary altitude. This variable is
-        obtained by linearly interpolating the input pressure onto
-        :code:`altitude_boundaries`.
+        """Get the pressure [Pa] at the boundary altitude.
+
+        Notes
+        -----
+        This variable is obtained by linearly interpolating the input pressure
+        onto :code:`altitude_boundaries`.
 
         """
         return self.__pressure
 
     @property
     def temperature(self) -> np.ndarray:
-        """Get the temperature [K] at the boundary altitude. This variable is
-        obtained by linearly interpolating the input temperature onto
-        :code:`altitude_boundaries`.
+        """Get the temperature [K] at the boundary altitude.
 
         Notes
         -----
+        This variable is obtained by linearly interpolating the input
+        temperature onto :code:`altitude_boundaries`.
+
         In DISORT, this variable is named :code:`TEMPER`.
 
         """
@@ -320,9 +331,12 @@ class Hydrostatic:
     @property
     def number_density(self) -> np.ndarray:
         r"""Get the number density [:math:`\frac{\text{particles}}{\text{m}^3}`]
-        at the boundary altitude. This variable is obtained by getting the
-        pressure and temperature at the boundary altitude, then solving
-        :eq:`hydrostatic_equation`.
+        at the boundary altitude.
+
+        Notes
+        -----
+        This variable is obtained by getting the pressure and temperature at the
+        boundary altitude, then solving :eq:`hydrostatic_equation`.
 
         """
         return self.__number_density
@@ -330,9 +344,13 @@ class Hydrostatic:
     @property
     def column_density(self) -> np.ndarray:
         r"""Get the column density [:math:`\frac{\text{particles}}{\text{m}^2}`]
-        of the boundary *layers*. This is obtained by getting the number density
-        at the boundary altitude, then integrating (using Gaussian quadrature)
-        between the boundary altitude such that
+        of the boundary *layers*.
+
+        Notes
+        -----
+        This is obtained by getting the number density at the boundary altitude,
+        then integrating (using Gaussian quadrature) between the boundary
+        altitude such that
 
         .. math::
            N = \int n(z) dz
@@ -345,8 +363,11 @@ class Hydrostatic:
 
     @property
     def scale_height(self) -> np.ndarray:
-        r"""Get the scale height [km] at the boundary altitude. For a
-        hydrostatic atmosphere, the scale height is defined as
+        r"""Get the scale height [km] at the boundary altitude.
+
+        Notes
+        -----
+        For a hydrostatic atmosphere, the scale height is defined as
 
         .. math::
            H = \frac{k_B T}{mg}
@@ -355,8 +376,6 @@ class Hydrostatic:
         constant, :math:`T` is the temperature, :math:`m` is the average mass
         of an atmospheric particle, and :math:`g` is the planetary gravity.
 
-        Notes
-        -----
         In DISORT, this variable is named :code:`H_LYR`. Despite the name, this
         variable should have length of :code:`n_layers + 1`. It is only used if
         :py:attr:`~controller.ModelBehavior.do_pseudo_sphere` is set to

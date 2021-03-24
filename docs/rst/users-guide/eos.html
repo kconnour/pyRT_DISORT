@@ -87,6 +87,7 @@
               <p class="caption"><span class="caption-text">Useful links</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../users-guide.html">User’s Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="observation.html">The observation module</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">The eos module</a><ul>
@@ -180,17 +181,17 @@
             
   <div class="section" id="the-eos-module">
 <h1>The eos module<a class="headerlink" href="#the-eos-module" title="Permalink to this headline">¶</a></h1>
-<p>Now that we created the angular and spectral information, we can turn our
-attention to creating the model. Perhaps the most natural place to start is
-by defining the boundaries of the model. At each of the boundaries, we’ll also
-want to know the equation of state variables.</p>
+<p>Let’s now turn out attention to creating the atmospheric model. This will be a
+multi-step process that will span several modules, but we can start by just
+defining the boundaries we’d like to use in the model, along with equation of
+state variables.</p>
 <div class="section" id="hydrostatic">
 <h2>Hydrostatic<a class="headerlink" href="#hydrostatic" title="Permalink to this headline">¶</a></h2>
-<p>Suppose we have a temperature and pressure profile, or a set of profiles,
-and the altitude where those quantities are defined. If we think the
-atmosphere is in hydrostatic equilibrium, we can use <a class="reference internal" href="../api-reference/eos.html#eos.Hydrostatic" title="eos.Hydrostatic"><code class="xref py py-class docutils literal notranslate"><span class="pre">Hydrostatic</span></code></a>
-to compute the number density, column density, and scale height—just about
-all the equation of state quantities we’d care about when doing a retrieval.</p>
+<p>Suppose we have a temperature and pressure profile and the altitude where those
+quantities are defined for out pixel. If we think the atmosphere is in hydrostatic
+equilibrium, we can use <a class="reference internal" href="../api-reference/eos.html#eos.Hydrostatic" title="eos.Hydrostatic"><code class="xref py py-class docutils literal notranslate"><span class="pre">Hydrostatic</span></code></a> to compute the number
+density, column density, and scale height—just about all the equation of
+state quantities we’d care about when doing a retrieval.</p>
 <p>Let’s start by making some profiles and defining some properties of the
 atmosphere.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">altitude_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">51</span><span class="p">)</span>
@@ -210,40 +211,32 @@ retrieval.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>To keep with DISORT’s convention that altitudes start from the top of the
-atmosphere, the input altitudes and grid must be <em>decreasing</em>.</p>
+atmosphere, the altitude and altitude grid must be <em>decreasing</em>.</p>
 </div>
 <p>We can now add these to <code class="code docutils literal notranslate"><span class="pre">Hydrostatic</span></code>. It will start by linearly
 interpolating the input temperature and pressure onto the desired grid. Then,
-it will compute number density, column density, and scale height at or within
-the new boundaries. As before, we can access these arrays via the class
-properties.</p>
+it will compute number density and scale height at the new boundaries, and the
+column density within the new boundaries. As before, we can access these arrays
+via the class properties.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.eos</span> <span class="kn">import</span> <span class="n">Hydrostatic</span>
 
-<span class="hll"><span class="n">hydro</span> <span class="o">=</span> <span class="n">Hydrostatic</span><span class="p">(</span><span class="n">altitude_grid</span><span class="p">,</span> <span class="n">pressure_profile</span><span class="p">,</span> <span class="n">temperature_profile</span><span class="p">,</span> <span class="n">z_grid</span><span class="p">,</span> <span class="n">mass</span><span class="p">,</span> <span class="n">gravity</span><span class="p">)</span>
-</span><span class="n">altitude</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">altitude</span>
+<span class="n">hydro</span> <span class="o">=</span> <span class="n">Hydrostatic</span><span class="p">(</span><span class="n">altitude_grid</span><span class="p">,</span> <span class="n">pressure_profile</span><span class="p">,</span> <span class="n">temperature_profile</span><span class="p">,</span>
+                    <span class="n">z_grid</span><span class="p">,</span> <span class="n">mass</span><span class="p">,</span> <span class="n">gravity</span><span class="p">)</span>
+
+<span class="n">altitude</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">altitude</span>
 <span class="n">pressure</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">pressure</span>
-<span class="n">temperature</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">temperature</span>
+<span class="n">TEMPER</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">temperature</span>
 <span class="n">number_density</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">number_density</span>
 <span class="n">column_density</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">column_density</span>
 <span class="n">n_layers</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">n_layers</span>
-<span class="n">scale_height</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">scale_height</span>
+<span class="n">H_LYR</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">scale_height</span>
 </pre></div>
 </div>
-<p>Most of these properties aren’t required by DISORT (<code class="code docutils literal notranslate"><span class="pre">temperature</span></code> and
-<code class="code docutils literal notranslate"><span class="pre">scale_height</span></code> are required under certain conditions) but several of
+<p>Most of these properties aren’t required by DISORT (<code class="code docutils literal notranslate"><span class="pre">TEMPER</span></code> and
+<code class="code docutils literal notranslate"><span class="pre">H_LYR</span></code> are required under certain conditions) but several of
 these variables will be needed in a few steps. Regardless, you may find a
 number of these “unnecessary” variables to be handy when playing with your
 retrievals.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>As with the observational quantities, this accepts ND input so in theory
-if you have an image with MxN pixels and happen to know the
-pressures and temperatures at 50 points above each of the pixels, you can
-input 50xMxN arrays for <code class="code docutils literal notranslate"><span class="pre">altitude_grid</span></code>, <code class="code docutils literal notranslate"><span class="pre">pressure_grid</span></code>, and
-<code class="code docutils literal notranslate"><span class="pre">temperature_grid</span></code> and get the corresponding values. In this
-scenario, <code class="code docutils literal notranslate"><span class="pre">z_grid</span></code> should be ZxMxN where Z is the number
-of desired altitudes.</p>
-</div>
 <p>As you’d expect, the equation of state variables have the same shape as
 <code class="code docutils literal notranslate"><span class="pre">z_grid</span></code>. The one exception is <code class="code docutils literal notranslate"><span class="pre">column_density</span></code> which is one
 element shorter than the rest since it’s only defined within each of the

@@ -1,7 +1,7 @@
-import numpy as np
+
 from astropy.io import fits
-from pyRT_DISORT.observation import Angles, Spectral
-from pyRT_DISORT.eos import Hydrostatic
+
+
 from pyRT_DISORT.rayleigh import RayleighCO2
 from pyRT_DISORT.vertical_profile import Conrath
 from pyRT_DISORT.forward_scattering import NearestNeighborSingleScatteringAlbedo
@@ -12,20 +12,35 @@ from pyRT_DISORT.controller import ComputationalParameters, ModelBehavior
 from pyRT_DISORT.surface import Lambertian
 
 # observation module
-dummy_angles = np.outer(np.linspace(5, 10, num=15), np.linspace(5, 8, num=20))
-angles = Angles(dummy_angles, dummy_angles, dummy_angles)
-mu = angles.mu[0, 0]
-mu0 = angles.mu0[0, 0]
-phi = angles.phi[0, 0]
-phi0 = angles.phi0[0, 0]
+import numpy as np
+from pyRT_DISORT.observation import Angles, Spectral
 
-dummy_wavelengths = np.array([1, 2, 3, 4, 5])
-pixel_wavelengths = np.broadcast_to(dummy_wavelengths, (20, 15, 5)).T
+dummy_angles = np.outer(np.linspace(5, 10, num=15), np.linspace(5, 8, num=20))
+
+angles = Angles(dummy_angles, dummy_angles, dummy_angles)
+
+incidence = angles.incidence
+emission = angles.emission
+phase = angles.phase
+mu = angles.mu
+mu0 = angles.mu0
+phi = angles.phi
+phi0 = angles.phi0
+
+UMU = mu[0, 0]
+UMU0 = mu0[0, 0]
+PHI = phi[0, 0]
+PHI0 = phi0[0, 0]
+
+pixel_wavelengths = np.array([1, 2, 3, 4, 5])
 width = 0.05
 
 spectral = Spectral(pixel_wavelengths - width, pixel_wavelengths + width)
-low_wavenumber = spectral.low_wavenumber[:, 0, 0]
-high_wavenumber = spectral.high_wavenumber[:, 0, 0]
+
+short_wavelength = spectral.short_wavelength
+long_wavelength = spectral.long_wavelength
+WVNMHI = spectral.high_wavenumber
+WVNMLO = spectral.low_wavenumber
 
 # eos module
 altitude_grid = np.linspace(100, 0, num=51)
@@ -35,10 +50,21 @@ mass = 7.3 * 10**-26
 gravity = 3.7
 
 z_grid = np.linspace(100, 0, num=15)
-hydro = Hydrostatic(altitude_grid, pressure_profile, temperature_profile, z_grid, mass, gravity)
-temper = hydro.temperature
-h_lyr = hydro.scale_height
 
+from pyRT_DISORT.eos import Hydrostatic
+
+hydro = Hydrostatic(altitude_grid, pressure_profile, temperature_profile,
+                    z_grid, mass, gravity)
+
+altitude = hydro.altitude
+pressure = hydro.pressure
+TEMPER = hydro.temperature
+number_density = hydro.number_density
+column_density = hydro.column_density
+n_layers = hydro.n_layers
+H_LYR = hydro.scale_height
+
+'''
 # rayleigh module
 rco2 = RayleighCO2(pixel_wavelengths[:, 0, 0], hydro.column_density)
 
@@ -151,4 +177,4 @@ rfldir, rfldn, flup, dfdt, uavg, uu, albmed, trnmed = \
                   rho_accurate, bemst, emust, accur, header, rfldir,
                   rfldn, flup, dfdt, uavg, uu, albmed, trnmed)
 
-print(uu[0, 0, 0])   # shape: (1, 81, 1)
+print(uu[0, 0, 0])   # shape: (1, 81, 1)'''

@@ -55,9 +55,12 @@ class SetupDISORT:
                 'astropy>=4.2',
                 'numpy>=1.20.1',
                 'pandas>=1.2.3',
-                'pytest>=6.2.2',
-                'scipy>=1.6.1'
+                'scipy>=1.6.1',
+                'wheel>=0.36.2'
             ],
+            # If you want to test pyRT_DISORT, these are needed:
+            # 'pytest>=6.2.2'
+
             # If you want to make documentation, these are needed:
             # 'Sphinx>=3.4.3',
             # 'sphinx_autodoc_typehints',
