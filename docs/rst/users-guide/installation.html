@@ -182,25 +182,20 @@ clone using your favorite GUI) and move into the directory where it was cloned.
 You can then install it with <code class="code docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">.</span></code>. By default, this will
 create two importable packages:</p>
 <ol class="arabic simple">
-<li><p><code class="code docutils literal notranslate"><span class="pre">disort</span></code>
+<li><p><code class="docutils literal notranslate"><span class="pre">pyRT_DISORT</span></code>
 This is a binarized version of the standard FORTRAN-based DISORT code. This
 can take quite some time to install and since DISORT is not frequently
 updated, you can skip this step by setting <code class="code docutils literal notranslate"><span class="pre">install_disort=False</span></code>
-within <code class="code docutils literal notranslate"><span class="pre">setup.py</span></code>.</p></li>
-<li><p><code class="code docutils literal notranslate"><span class="pre">pyRT_DISORT</span></code>
+within setup.py.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pyRT_DISORT</span></code>
 This is the pure Python project that will do the atmospheric pre-processing.</p></li>
 </ol>
 <p>You can now import the libraries with <code class="code docutils literal notranslate"><span class="pre">import</span> <span class="pre">disort</span></code> and/or
 <code class="code docutils literal notranslate"><span class="pre">import</span> <span class="pre">pyRT_DISORT</span> <span class="pre">as</span> <span class="pre">pyrt</span></code>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>I made a minor modification to the source code in the shapes of <code class="code docutils literal notranslate"><span class="pre">RHOQ</span></code>
-and <code class="code docutils literal notranslate"><span class="pre">RHOU</span></code> so <code class="code docutils literal notranslate"><span class="pre">disort</span></code> isn’t precisely the same as the
-official distribution. I’m working to resolve this discrepancy.</p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>I use numpy’s f2py utility to generate importable FORTRAN code. I named the
+<p>I use numpy’s <a class="reference external" href="https://numpy.org/doc/stable/f2py/">f2py</a> utility to
+generate importable FORTRAN code. I named the
 module <code class="code docutils literal notranslate"><span class="pre">disort</span></code> and all subroutines included in the distribution are
 functions in that module. For example, within LINPAK.f, the first subroutine
 is SGBCO. If you want to call this directly, you can do so with
@@ -208,6 +203,13 @@ is SGBCO. If you want to call this directly, you can do so with
 <p>I imagine you’ll only really be concerned with calling <code class="code docutils literal notranslate"><span class="pre">disort.disort</span></code>
 but it’s worth mentioning the whole distribution is available to you via
 the <code class="code docutils literal notranslate"><span class="pre">disort</span></code> module.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>I made a minor modification to the source code in the shapes of <code class="code docutils literal notranslate"><span class="pre">RHOQ</span></code>
+and <code class="code docutils literal notranslate"><span class="pre">RHOU</span></code> (without this modification, the code could not run) so
+<code class="code docutils literal notranslate"><span class="pre">disort</span></code> isn’t precisely the same as the official distribution. I’m
+working to resolve this discrepancy.</p>
 </div>
 </div>
 

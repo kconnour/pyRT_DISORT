@@ -2,7 +2,7 @@
 """
 import numpy as np
 from pyRT_DISORT.eos import ColumnDensity
-from pyRT_DISORT.observation import Wavelength
+from pyRT_DISORT.observation import _Wavelength
 
 
 class Rayleigh:
@@ -141,7 +141,7 @@ class RayleighCO2(Rayleigh):
         when using equation 13 for computing the index of refraction
 
         """
-        self.__wavelength = Wavelength(wavelength)
+        self.__wavelength = _Wavelength(wavelength, 'wavelength')
         self.__wavenumber = self.__wavelength.wavelength_to_wavenumber()
         self.__column_density = ColumnDensity(column_density)
 
@@ -153,7 +153,7 @@ class RayleighCO2(Rayleigh):
             self.__calculate_scattering_optical_depths(column_density)
 
     def __raise_error_if_inputs_have_incompatible_shapes(self) -> None:
-        if self.__wavelength.wavelength.shape[1:] != \
+        if self.__wavelength.shape[1:] != \
                 self.__column_density.column_density.shape[1:]:
             message = 'wavelength and column_density must have the same ' \
                       'shape along all dimensions except the 0th.'

@@ -190,7 +190,7 @@ emission, and phase angles that don’t depend on wavelength. This data would
 normally be found in a data product, but we need some values to play with
 for the time being. Let’s start by importing the modules we’ll need.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">pyRT_DISORT.observation</span> <span class="kn">import</span> <span class="n">Angles</span><span class="p">,</span> <span class="n">Spectral</span>
+<span class="kn">from</span> <span class="nn">pyRT_DISORT.observation</span> <span class="kn">import</span> <span class="n">Angles</span>
 </pre></div>
 </div>
 <p>We can go ahead and create some angles (for the simplicity of the example let’s
@@ -226,8 +226,8 @@ highlight the object’s properties.</p>
 <p>These newly created arrays have the same shape as the input
 arrays—(15, 20)—so there’s a 1-to-1 correspondence between them. This
 vectorization allows us to compute all of the angular quantities across the
-observation at once, which can provide some significant computational speed
-benefits. In general, pyRT_DISORT can handle ND input to its classes; however,
+observation at once, which can provide some significant computational benefits.
+In general, pyRT_DISORT can handle N-dimensional input to its classes; however,
 I want to keep things somewhat simple for this example so for the remainder of
 this retrieval I’ll only consider quantities on a per pixel basis. Let’s get
 quantities from one of the pixels.</p>
@@ -262,7 +262,9 @@ define some wavelengths here so we have some values to work with.</p>
 <p>Once we have these values, we can add them to <a class="reference internal" href="../api-reference/observation.html#observation.Spectral" title="observation.Spectral"><code class="xref py py-class docutils literal notranslate"><span class="pre">Spectral</span></code></a>.
 This class holds the input wavelengths and computes the corresponding
 wavenumbers. As before, these values can be accessed via the class properties.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">spectral</span> <span class="o">=</span> <span class="n">Spectral</span><span class="p">(</span><span class="n">pixel_wavelengths</span> <span class="o">-</span> <span class="n">width</span><span class="p">,</span> <span class="n">pixel_wavelengths</span> <span class="o">+</span> <span class="n">width</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.observation</span> <span class="kn">import</span> <span class="n">Spectral</span>
+
+<span class="n">spectral</span> <span class="o">=</span> <span class="n">Spectral</span><span class="p">(</span><span class="n">pixel_wavelengths</span> <span class="o">-</span> <span class="n">width</span><span class="p">,</span> <span class="n">pixel_wavelengths</span> <span class="o">+</span> <span class="n">width</span><span class="p">)</span>
 
 <span class="n">short_wavelength</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">short_wavelength</span>
 <span class="n">long_wavelength</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">long_wavelength</span>

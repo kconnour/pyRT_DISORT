@@ -7,24 +7,20 @@ clone using your favorite GUI) and move into the directory where it was cloned.
 You can then install it with :code:`pip install .`. By default, this will
 create two importable packages:
 
-1. :code:`disort`
+1. ``pyRT_DISORT``
    This is a binarized version of the standard FORTRAN-based DISORT code. This
    can take quite some time to install and since DISORT is not frequently
    updated, you can skip this step by setting :code:`install_disort=False`
-   within :code:`setup.py`.
-2. :code:`pyRT_DISORT`
+   within setup.py.
+2. ``pyRT_DISORT``
    This is the pure Python project that will do the atmospheric pre-processing.
 
 You can now import the libraries with :code:`import disort` and/or
 :code:`import pyRT_DISORT as pyrt`.
 
 .. note::
-   I made a minor modification to the source code in the shapes of :code:`RHOQ`
-   and :code:`RHOU` so :code:`disort` isn't precisely the same as the
-   official distribution. I'm working to resolve this discrepancy.
-
-.. note::
-   I use numpy's f2py utility to generate importable FORTRAN code. I named the
+   I use numpy's `f2py <https://numpy.org/doc/stable/f2py/>`_ utility to
+   generate importable FORTRAN code. I named the
    module :code:`disort` and all subroutines included in the distribution are
    functions in that module. For example, within LINPAK.f, the first subroutine
    is SGBCO. If you want to call this directly, you can do so with
@@ -33,3 +29,9 @@ You can now import the libraries with :code:`import disort` and/or
    I imagine you'll only really be concerned with calling :code:`disort.disort`
    but it's worth mentioning the whole distribution is available to you via
    the :code:`disort` module.
+
+.. warning::
+   I made a minor modification to the source code in the shapes of :code:`RHOQ`
+   and :code:`RHOU` (without this modification, the code could not run) so
+   :code:`disort` isn't precisely the same as the official distribution. I'm
+   working to resolve this discrepancy.

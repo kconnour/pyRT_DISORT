@@ -15,7 +15,7 @@ for the time being. Let's start by importing the modules we'll need.
 .. code-block:: python
 
    import numpy as np
-   from pyRT_DISORT.observation import Angles, Spectral
+   from pyRT_DISORT.observation import Angles
 
 We can go ahead and create some angles (for the simplicity of the example let's
 assume that the incidence, emission, and phase angles are all the same).
@@ -52,8 +52,8 @@ class properties, as shown below.
 These newly created arrays have the same shape as the input
 arrays---(15, 20)---so there's a 1-to-1 correspondence between them. This
 vectorization allows us to compute all of the angular quantities across the
-observation at once, which can provide some significant computational speed
-benefits. In general, pyRT_DISORT can handle ND input to its classes; however,
+observation at once, which can provide some significant computational benefits.
+In general, pyRT_DISORT can handle N-dimensional input to its classes; however,
 I want to keep things somewhat simple for this example so for the remainder of
 this retrieval I'll only consider quantities on a per pixel basis. Let's get
 quantities from one of the pixels.
@@ -92,6 +92,8 @@ This class holds the input wavelengths and computes the corresponding
 wavenumbers. As before, these values can be accessed via the class properties.
 
 .. code-block:: python
+
+   from pyRT_DISORT.observation import Spectral
 
    spectral = Spectral(pixel_wavelengths - width, pixel_wavelengths + width)
 
