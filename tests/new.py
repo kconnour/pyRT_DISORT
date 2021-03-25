@@ -30,9 +30,14 @@ WVNMHI = spectral.high_wavenumber
 WVNMLO = spectral.low_wavenumber
 
 # eos module
-altitude_grid = np.linspace(100, 0, num=51)
-pressure_profile = 500 * np.exp(-altitude_grid / 10)
-temperature_profile = np.linspace(150, 250, num=51)
+atmfile = np.load('/home/kyle/repos/pyRT_DISORT/tests/aux/marsatm.npy')
+altitude_grid = np.flip(atmfile[:, 0])
+pressure_profile = np.flip(atmfile[:, 1])
+temperature_profile = np.flip(atmfile[:, 2])
+
+#altitude_grid = np.linspace(100, 0, num=51)
+#pressure_profile = 500 * np.exp(-altitude_grid / 10)
+#temperature_profile = np.linspace(150, 250, num=51)
 mass = 7.3 * 10**-26
 gravity = 3.7
 
@@ -81,12 +86,13 @@ csca = hdul['primary'].data[:, :, 1]
 wavs = hdul['wavelengths'].data
 psizes = hdul['particle_sizes'].data
 
-pgrad = np.linspace(1, 1.5, num=14)
+pgrad = np.linspace(1.5, 1.5, num=14)
 wave_ref = 9.3
 
 from pyRT_DISORT.aerosol import NearestNeighborForwardScattering
 
 nnfs = NearestNeighborForwardScattering(csca, cext, psizes, wavs, pgrad, pixel_wavelengths, wave_ref)
+
 dust_ssa = nnfs.single_scattering_albedo
 
 from pyRT_DISORT.aerosol import OpticalDepth
@@ -128,10 +134,10 @@ cp = ComputationalParameters(hydro.n_layers, model.legendre_moments.shape[0],
 mb = ModelBehavior()
 ACCUR = mb.accuracy
 DELTAMPLUS = mb.delta_m_plus
-DOPSEUDOSPHERE = mb.do_pseudo_sphere
+DO_PSEUDO_SPHERE = mb.do_pseudo_sphere
 HEADER = mb.header
 PRNT = mb.print_variables
-RADIUS = mb.radius
+EARTH_RADIUS = mb.radius
 
 # the radiation module
 from pyRT_DISORT.radiation import IncidentFlux, ThermalEmission
@@ -154,7 +160,7 @@ ALBMED = oa.albedo_medium
 FLUP = oa.diffuse_up_flux
 RFLDN = oa.diffuse_down_flux
 RFLDIR = oa.direct_beam_flux
-DRDT = oa.flux_divergence
+DFDT = oa.flux_divergence
 UU = oa.intensity
 UAVG = oa.mean_intensity
 TRNMED = oa.transmissivity_medium
@@ -168,12 +174,11 @@ USRTAU = ob.user_optical_depths
 ulv = UserLevel(cp.n_user_levels)
 UTAU = ulv.optical_depth_output
 
-
-'''
 # The surface module
 from pyRT_DISORT.surface import Lambertian
 
-lamb = Lambertian(0.1, cp)
+lamb = Lambertian(0.1, cp.n_streams, cp.n_polar, cp.n_azimuth, ob.user_angles,
+                  ob.only_fluxes)
 ALBEDO = lamb.albedo
 LAMBER = lamb.lambertian
 RHOU = lamb.rhou
@@ -182,17 +187,21 @@ BEMST = lamb.bemst
 EMUST = lamb.emust
 RHO_ACCURATE = lamb.rho_accurate
 
-
 # Run the model
 import disort
 
-rfldir, rfldn, flup, dfdt, uavg, uu, albmed, trnmed = \
-    disort.disort(usrang, usrtau, ibcnd, onlyfl, prnt, plank, lamber,
-                  deltamplus, dopseudosphere, dtauc, ssalb,
-                  pmom, temper, low_wavenumber,
-                  high_wavenumber, utau, mu0, phi0, mu, phi, fbeam, fisot,
-                  albedo, btemp, ttemp, temis, radius, h_lyr, rhoq, rhou,
-                  rho_accurate, bemst, emust, accur, header, rfldir,
-                  rfldn, flup, dfdt, uavg, uu, albmed, trnmed)
+test_run = np.zeros(pixel_wavelengths.shape)
 
-print(uu[0, 0, 0])   # shape: (1, 81, 1)'''
+for ind, w in enumerate(pixel_wavelengths):
+    rfldir, rfldn, flup, dfdt, uavg, uu, albmed, trnmed = \
+        disort.disort(USRANG, USRTAU, IBCND, ONLYFL, PRNT, PLANK, LAMBER,
+                      DELTAMPLUS, DO_PSEUDO_SPHERE, DTAUC[:, ind], SSALB[:, ind],
+                      PMOM[:, :, ind], TEMPER, WVNMLO, WVNMHI,
+                      UTAU, UMU0, PHI0, UMU, PHI, FBEAM, FISOT,
+                      ALBEDO, BTEMP, TTEMP, TEMIS, EARTH_RADIUS, H_LYR, RHOQ, RHOU,
+                      RHO_ACCURATE, BEMST, EMUST, ACCUR, HEADER, RFLDIR,
+                      RFLDN, FLUP, DFDT, UAVG, UU, ALBMED, TRNMED)
+
+    test_run[ind] = uu[0, 0, 0]
+
+print(test_run)

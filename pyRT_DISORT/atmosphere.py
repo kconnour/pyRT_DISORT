@@ -67,7 +67,10 @@ class ModelAtmosphere:
                             self.__constituent_optical_depth[i] *
                             self.__constituent_legendre_coefficient[i] for i in
                             range(len(self.__constituent_optical_depth))]
-        self.__legendre_moments = sum(weighted_moments) / (self.__optical_depth * self.__single_scattering_albedo)
+        denom = [self.__constituent_single_scattering_albedo[i] *
+                            self.__constituent_optical_depth[i]
+                            for i in range(len(self.__constituent_optical_depth))]
+        self.__legendre_moments = sum(weighted_moments) / sum(denom)
 
     def __get_max_moments(self):
         return max(i.shape[0] for i in self.__constituent_legendre_coefficient)

@@ -20,7 +20,7 @@ class Surface:
     """
 
     def __init__(self, albedo: float, n_streams: int, n_polar: int,
-                 n_azimuth: int) -> None:
+                 n_azimuth: int, user_angles: bool, only_fluxes: bool) -> None:
         """
         Parameters
         ----------
@@ -48,6 +48,8 @@ class Surface:
         self._n_streams = n_streams
         self._n_polar = n_polar
         self._n_azimuth = n_azimuth
+        self._user_angles = user_angles
+        self._only_fluxes = only_fluxes
         self._lambertian = False
 
         self._bemst = self.__make_empty_bemst()
@@ -95,22 +97,21 @@ class Surface:
         if not 0 <= albedo <= 1:
             raise ValueError('albedo must be between 0 and 1.')
 
-    def _make_output_arrays(self, mb: ModelBehavior, angles: Angles,
+    def _make_output_arrays(self, angles: Angles,
                             flux: IncidentFlux, albedo,
                             phase_function_number: int, brdf_arg: np.ndarray,
                             n_mug: int):
         try:
-            return self.__call_disobrdf(
-                mb, angles, flux, albedo, phase_function_number, brdf_arg,
-                n_mug)
+            return self.__call_disobrdf(angles, flux, albedo,
+                                        phase_function_number, brdf_arg, n_mug)
         except ValueError as ve:
             raise ValueError('problem') from ve
 
-    def __call_disobrdf(self, mb: ModelBehavior, angles: Angles,
+    def __call_disobrdf(self, angles: Angles,
                         flux: IncidentFlux, albedo, phase_function_number: int,
                         brdf_arg: np.ndarray, n_mug: int):
-        return disobrdf(mb.user_angles, angles.mu, flux.beam_flux, angles.mu0,
-                        False, albedo, mb.only_fluxes, self._rhoq, self._rhou,
+        return disobrdf(self._user_angles, angles.mu, flux.beam_flux, angles.mu0,
+                        False, albedo, self._only_fluxes, self._rhoq, self._rhou,
                         self._emust, self._bemst, False, angles.phi,
                         angles.phi0, self._rho_accurate, phase_function_number,
                         brdf_arg,
@@ -238,25 +239,24 @@ class Lambertian(Surface):
     by DISORT.
 
     """
-    def __init__(self, albedo: float, cp: ComputationalParameters):
+    def __init__(self, albedo: float, n_streams: int, n_polar: int,
+                 n_azimuth: int, user_angles: bool, only_fluxes: bool):
         """
         Parameters
         ----------
         albedo: float
             The surface albedo.
-        cp: ComputationalParameters
-            The computational parameters.
 
         Raises
         ------
         TypeError
-            Raised if albedo cannot be cast to a float or if cp is not an
-            instance of ComputationalParameters.
+            Raised if albedo cannot be cast to a float.
         ValueError
             Raised if albedo is not between 0 and 1.
 
         """
-        super().__init__(albedo, cp)
+        super().__init__(albedo, n_streams, n_polar, n_azimuth, user_angles,
+                         only_fluxes)
         self._lambertian = True
 
 
@@ -268,18 +268,16 @@ class Hapke(Surface):
 
     """
 
-    def __init__(self, albedo: float, cp: ComputationalParameters,
-                 mb: ModelBehavior, flux: IncidentFlux, angles: Angles,
+    def __init__(self, albedo: float, n_streams: int, n_polar: int,
+                 n_azimuth: int, user_angles: bool, only_fluxes: bool,
+                 flux: IncidentFlux, angles: Angles,
                  b0: float, h: float, w: float, n_mug: int = 200) -> None:
         """
         Parameters
         ----------
         albedo: float
             The surface albedo.
-        cp: ComputationalParameters
-            The computational parameters.
-        mb: ModelBehavior
-            The model behavior.
+
         flux: IncidentFlux
             The incident flux.
         angles: Angles
@@ -302,12 +300,12 @@ class Hapke(Surface):
             Raised if albedo is not between 0 and 1.
 
         """
-        super().__init__(albedo, cp)
+        super().__init__(albedo, n_streams, n_polar, n_azimuth, user_angles,
+                         only_fluxes)
         brdf_arg = np.array([b0, h, w, 0, 0, 0])
 
         self._rhoq, self._rhou, self._emust, self._bemst, self._rho_accurate = \
-            self._make_output_arrays(mb, angles, flux, albedo, 1, brdf_arg,
-                                     n_mug)
+            self._make_output_arrays(angles, flux, albedo, 1, brdf_arg, n_mug)
 
 
 class HapkeHG2(Surface):
@@ -318,8 +316,9 @@ class HapkeHG2(Surface):
 
     """
 
-    def __init__(self, albedo: float, cp: ComputationalParameters,
-                 mb: ModelBehavior, flux: IncidentFlux, angles: Angles,
+    def __init__(self, albedo: float, n_streams: int, n_polar: int,
+                 n_azimuth: int, user_angles: bool, only_fluxes: bool,
+                 flux: IncidentFlux, angles: Angles,
                  b0: float, h: float, w: float, asym: float, frac: float,
                  n_mug: int = 200) -> None:
         """
@@ -327,10 +326,6 @@ class HapkeHG2(Surface):
         ----------
         albedo: float
             The surface albedo.
-        cp: ComputationalParameters
-            The computational parameters.
-        mb: ModelBehavior
-            The model behavior.
         flux: IncidentFlux
             The incident flux.
         angles: Angles
@@ -357,12 +352,12 @@ class HapkeHG2(Surface):
             Raised if albedo is not between 0 and 1.
 
         """
-        super().__init__(albedo, cp)
+        super().__init__(albedo, n_streams, n_polar, n_azimuth, user_angles,
+                         only_fluxes)
         brdf_arg = np.array([b0, h, w, asym, frac, 0])
 
         self._rhoq, self._rhou, self._emust, self._bemst, self._rho_accurate = \
-            self._make_output_arrays(mb, angles, flux, albedo, 5, brdf_arg,
-                                     n_mug)
+            self._make_output_arrays(angles, flux, albedo, 5, brdf_arg, n_mug)
 
 
 class HapkeHG2Roughness(Surface):
@@ -374,8 +369,9 @@ class HapkeHG2Roughness(Surface):
 
     """
 
-    def __init__(self, albedo: float, cp: ComputationalParameters,
-                 mb: ModelBehavior, flux: IncidentFlux, angles: Angles,
+    def __init__(self, albedo: float, n_streams: int, n_polar: int,
+                 n_azimuth: int, user_angles: bool, only_fluxes: bool,
+                 flux: IncidentFlux, angles: Angles,
                  b0: float, h: float, w: float, asym: float, frac: float,
                  roughness: float, n_mug: int = 200) -> None:
         """
@@ -383,10 +379,6 @@ class HapkeHG2Roughness(Surface):
         ----------
         albedo: float
             The surface albedo.
-        cp: ComputationalParameters
-            The computational parameters.
-        mb: ModelBehavior
-            The model behavior.
         flux: IncidentFlux
             The incident flux.
         angles: Angles
@@ -415,9 +407,9 @@ class HapkeHG2Roughness(Surface):
             Raised if albedo is not between 0 and 1.
 
         """
-        super().__init__(albedo, cp)
+        super().__init__(albedo, n_streams, n_polar, n_azimuth, user_angles,
+                         only_fluxes)
         brdf_arg = np.array([b0, h, w, asym, frac, roughness])
 
         self._rhoq, self._rhou, self._emust, self._bemst, self._rho_accurate = \
-            self._make_output_arrays(mb, angles, flux, albedo, 6, brdf_arg,
-                                     n_mug)
+            self._make_output_arrays(angles, flux, albedo, 6, brdf_arg, n_mug)

@@ -1,5 +1,5 @@
-Output
-======
+The output module
+=================
 We're nearly done with our simulation. The last thing we need to do before we
 can run DISORT is create some output parameters and arrays.
 

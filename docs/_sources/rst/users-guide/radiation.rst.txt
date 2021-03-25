@@ -1,5 +1,5 @@
-Radiation
-=========
+The radiation module
+====================
 
 We need to specify the flux and thermal quantities used in the model, so let's
 get right to it.
