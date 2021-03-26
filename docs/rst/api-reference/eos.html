@@ -192,10 +192,10 @@ hydrostatic equilibrium.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>altitude_grid</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The altitude grid [km] over which the equation of state variables
 are defined. See the note below for additional conditions.</p></li>
-<li><p><strong>pressure_grid</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The pressure [Pa] at all values in <code class="code docutils literal notranslate"><span class="pre">altitude_grid</span></code>.</p></li>
-<li><p><strong>temperature_grid</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The temperature [K] at all values in <code class="code docutils literal notranslate"><span class="pre">altitude_grid</span></code>.</p></li>
-<li><p><strong>altitude_boundaries</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The desired boundary altitude. See the note below for additional
-conditions.</p></li>
+<li><p><strong>pressure_grid</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The pressure [Pa] at all values in <code class="docutils literal notranslate"><span class="pre">altitude_grid</span></code>.</p></li>
+<li><p><strong>temperature_grid</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The temperature [K] at all values in <code class="docutils literal notranslate"><span class="pre">altitude_grid</span></code>.</p></li>
+<li><p><strong>altitude_boundaries</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The desired boundary altitude [km]. See the note below for
+additional conditions.</p></li>
 <li><p><strong>particle_mass</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The average mass [kg] of atmospheric particles.</p></li>
 <li><p><strong>gravity</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The gravitational acceleration
 [<span class="math notranslate nohighlight">\(\frac{\text{kg m}}{\text{s}^2}\)</span>] of the atmosphere.</p></li>
@@ -203,20 +203,27 @@ conditions.</p></li>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>TypeError</strong> – Raised if <code class="code docutils literal notranslate"><span class="pre">altitude_grid</span></code>, <code class="code docutils literal notranslate"><span class="pre">pressure_grid</span></code>,
-    <code class="code docutils literal notranslate"><span class="pre">temperature_grid</span></code>, or <code class="code docutils literal notranslate"><span class="pre">altitude_boundaries</span></code> are not
-    instances of numpy.ndarray; or if <code class="code docutils literal notranslate"><span class="pre">particle_mass</span></code> or
-    <code class="code docutils literal notranslate"><span class="pre">gravity</span></code> are not floats.</p></li>
-<li><p><strong>ValueError</strong> – Raised if <code class="code docutils literal notranslate"><span class="pre">altitude_grid</span></code>, <code class="code docutils literal notranslate"><span class="pre">pressure_grid</span></code>, or
-    <code class="code docutils literal notranslate"><span class="pre">temperature_grid</span></code> do not have the same shapes; if
-    <code class="code docutils literal notranslate"><span class="pre">altitude_grid</span></code> or <code class="code docutils literal notranslate"><span class="pre">altitude_boundaries</span></code> have
-    incompatible pixel dimensions; if they are not monotonically
-    decreasing along the 0 <sup>th</sup> axis; if
-    <code class="code docutils literal notranslate"><span class="pre">pressure_grid</span></code>, or
-    <code class="code docutils literal notranslate"><span class="pre">temperature_grid</span></code> contain non-positive, finite values; if
-    <code class="code docutils literal notranslate"><span class="pre">altitude_boundaries</span></code> does not contain at least 2 boundaries;
-    or if <code class="code docutils literal notranslate"><span class="pre">particle_mass</span></code> or <code class="code docutils literal notranslate"><span class="pre">gravity</span></code> are not positive,
-    finite.</p></li>
+<li><p><strong>TypeError</strong> – Raised if <code class="docutils literal notranslate"><span class="pre">altitude_grid</span></code>, <code class="docutils literal notranslate"><span class="pre">pressure_grid</span></code>,
+    <code class="docutils literal notranslate"><span class="pre">temperature_grid</span></code>, or <code class="docutils literal notranslate"><span class="pre">altitude_boundaries</span></code> are not all
+    numpy.ndarrays; or if <code class="docutils literal notranslate"><span class="pre">particle_mass</span></code> or <code class="docutils literal notranslate"><span class="pre">gravity</span></code> are not
+    floats.</p></li>
+<li><p><strong>ValueError</strong> – Raised if:
+        * <code class="docutils literal notranslate"><span class="pre">altitude_grid</span></code>, <code class="docutils literal notranslate"><span class="pre">pressure_grid</span></code>, or
+          <code class="docutils literal notranslate"><span class="pre">temperature_grid</span></code> do not have the same shapes
+    
+       * <code class="docutils literal notranslate"><span class="pre">altitude_grid</span></code> or <code class="docutils literal notranslate"><span class="pre">altitude_boundaries</span></code> have
+         incompatible pixel dimensions
+    
+       * <code class="docutils literal notranslate"><span class="pre">altitude_grid</span></code> or <code class="docutils literal notranslate"><span class="pre">altitude_boundaries</span></code> are not
+         monotonically decreasing along the 0 <sup>th</sup> axis;
+    
+       * <code class="docutils literal notranslate"><span class="pre">pressure_grid</span></code>, or <code class="docutils literal notranslate"><span class="pre">temperature_grid</span></code> contain
+         non-positive, finite values
+    
+       * <code class="docutils literal notranslate"><span class="pre">altitude_boundaries</span></code> does not contain at least 2
+         boundaries
+    
+       * <code class="docutils literal notranslate"><span class="pre">particle_mass</span></code> or <code class="docutils literal notranslate"><span class="pre">gravity</span></code> are not positive, finite</p></li>
 </ul>
 </dd>
 </dl>
@@ -277,7 +284,9 @@ the number density.</p>
 <dd><p>Get the number of layers in the model.</p>
 <p class="rubric">Notes</p>
 <p>This value is inferred from the 0 <sup>th</sup> axis of
-<code class="code docutils literal notranslate"><span class="pre">altitude_boundaries</span></code>.</p>
+<code class="docutils literal notranslate"><span class="pre">altitude_boundaries</span></code>.</p>
+<p>In DISORT, this variable is named <code class="docutils literal notranslate"><span class="pre">MAXCLY</span></code> (though in the <code class="docutils literal notranslate"><span class="pre">disort</span></code>
+package, this variable is optional).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
@@ -306,7 +315,7 @@ boundary altitude, then solving <a class="reference internal" href="#equation-hy
 <dd><p>Get the pressure [Pa] at the boundary altitude.</p>
 <p class="rubric">Notes</p>
 <p>This variable is obtained by linearly interpolating the input pressure
-onto <code class="code docutils literal notranslate"><span class="pre">altitude_boundaries</span></code>.</p>
+onto <code class="docutils literal notranslate"><span class="pre">altitude_boundaries</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
@@ -325,10 +334,10 @@ onto <code class="code docutils literal notranslate"><span class="pre">altitude_
 <p>where <span class="math notranslate nohighlight">\(H\)</span> is the scale height, <span class="math notranslate nohighlight">\(k_B\)</span> is Boltzmann’s
 constant, <span class="math notranslate nohighlight">\(T\)</span> is the temperature, <span class="math notranslate nohighlight">\(m\)</span> is the average mass
 of an atmospheric particle, and <span class="math notranslate nohighlight">\(g\)</span> is the planetary gravity.</p>
-<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">H_LYR</span></code>. Despite the name, this
-variable should have length of <code class="code docutils literal notranslate"><span class="pre">n_layers</span> <span class="pre">+</span> <span class="pre">1</span></code>. It is only used if
+<p>In DISORT, this variable is named <code class="docutils literal notranslate"><span class="pre">H_LYR</span></code>. Despite the name, this
+variable should have length of <code class="docutils literal notranslate"><span class="pre">n_layers</span> <span class="pre">+</span> <span class="pre">1</span></code>. It is only used if
 <a class="reference internal" href="controller.html#controller.ModelBehavior.do_pseudo_sphere" title="controller.ModelBehavior.do_pseudo_sphere"><code class="xref py py-attr docutils literal notranslate"><span class="pre">do_pseudo_sphere</span></code></a> is set to
-<code class="code docutils literal notranslate"><span class="pre">True</span></code>.</p>
+<code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
@@ -342,8 +351,10 @@ variable should have length of <code class="code docutils literal notranslate"><
 <dd><p>Get the temperature [K] at the boundary altitude.</p>
 <p class="rubric">Notes</p>
 <p>This variable is obtained by linearly interpolating the input
-temperature onto <code class="code docutils literal notranslate"><span class="pre">altitude_boundaries</span></code>.</p>
-<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">TEMPER</span></code>.</p>
+temperature onto <code class="docutils literal notranslate"><span class="pre">altitude_boundaries</span></code>.</p>
+<p>In DISORT, this variable is named <code class="docutils literal notranslate"><span class="pre">TEMPER</span></code>. It is only needed by
+DISORT if <a class="reference internal" href="radiation.html#radiation.ThermalEmission.thermal_emission" title="radiation.ThermalEmission.thermal_emission"><code class="xref py py-attr docutils literal notranslate"><span class="pre">thermal_emission</span></code></a> is set
+to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>

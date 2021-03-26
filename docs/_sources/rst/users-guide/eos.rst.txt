@@ -1,6 +1,6 @@
 The eos module
 ==============
-Let's now turn out attention to creating the atmospheric model. This will be a
+Let's now turn our attention to creating the atmospheric model. This will be a
 multi-step process that will span several modules, but we can start by just
 defining the boundaries we'd like to use in the model, along with equation of
 state variables.
@@ -33,11 +33,11 @@ retrieval.
 
    z_grid = np.linspace(100, 0, num=15)
 
-.. note::
+.. attention::
    To keep with DISORT's convention that altitudes start from the top of the
    atmosphere, the altitude and altitude grid must be *decreasing*.
 
-We can now add these to :code:`Hydrostatic`. It will start by linearly
+We can now add these to ``Hydrostatic``. It will start by linearly
 interpolating the input temperature and pressure onto the desired grid. Then,
 it will compute number density and scale height at the new boundaries, and the
 column density within the new boundaries. As before, we can access these arrays
@@ -58,14 +58,14 @@ via the class properties.
    n_layers = hydro.n_layers
    H_LYR = hydro.scale_height
 
-Most of these properties aren't required by DISORT (:code:`TEMPER` and
-:code:`H_LYR` are required under certain conditions) but several of
+Most of these properties aren't required by DISORT (``TEMPER`` and
+``H_LYR`` are required under certain conditions) but several of
 these variables will be needed in a few steps. Regardless, you may find a
 number of these "unnecessary" variables to be handy when playing with your
 retrievals.
 
 As you'd expect, the equation of state variables have the same shape as
-:code:`z_grid`. The one exception is :code:`column_density` which is one
+``z_grid``. The one exception is ``column_density`` which is one
 element shorter than the rest since it's only defined within each of the
 *layers*. With that, we have our boundaries all good to go.
 

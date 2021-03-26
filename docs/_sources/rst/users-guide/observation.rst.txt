@@ -41,10 +41,10 @@ class properties, as shown below.
    phi = angles.phi
    phi0 = angles.phi0
 
-.. note::
+.. attention::
    The angles must be in degrees.
 
-.. warning::
+.. caution::
    It's not memory efficient to make a new variable that's simply a copy of a
    variable you already have as part of a class. I'm only showing you this to
    highlight the object's properties.
@@ -84,7 +84,7 @@ define some wavelengths here so we have some values to work with.
    pixel_wavelengths = np.array([1, 2, 3, 4, 5])
    width = 0.05
 
-.. note::
+.. attention::
    The wavelengths must be in microns.
 
 Once we have these values, we can add them to :class:`~observation.Spectral`.

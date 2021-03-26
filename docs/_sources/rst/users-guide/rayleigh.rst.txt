@@ -57,7 +57,7 @@ make the relevant arrays.
 These arrays aren't particularly valuable by themselves but next we'll add
 these to similar arrays created from dust to create the arrays DISORT wants.
 
-.. note::
+.. tip::
    If you're investigating and want to see the total optical depth due to
    Rayleigh scattering at your input wavelengths, you can use the line
 

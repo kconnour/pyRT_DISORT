@@ -1,8 +1,10 @@
 import numpy as np
-from pyRT_DISORT.observation import Angles, Spectral
+from pyRT_DISORT.eos import Hydrostatic
 
-w = np.array([1, 2, 3])
-s = Spectral(w, w+47.0001)
+z = np.linspace(100, -1, num=50)
+
+import disort
+print(disort.disort.__doc__)
 
 '''class Foo:
     def __init__(self, a):

@@ -2,7 +2,7 @@
 required by DISORT.
 """
 import numpy as np
-from pyRT_DISORT.eos import Altitude
+from pyRT_DISORT.eos import _Altitude
 
 
 class Conrath:
@@ -54,7 +54,7 @@ class Conrath:
         :code:`altitude` and :code:`scale_height` should be the same.
 
         """
-        Altitude(altitude)
+        _Altitude(altitude, 'altitude')
         ConrathParameterValidator(q0, 'q0', 0, np.inf)
         ConrathParameterValidator(scale_height, 'scale_height', 0, np.inf)
         ConrathParameterValidator(nu, 'nu', 0, np.inf)
@@ -148,7 +148,7 @@ class Uniform:
         self.__bottom = bottom
         self.__top = top
 
-        Altitude(altitude)
+        _Altitude(altitude)
         UniformParameterValidator(bottom, 'bottom')
         UniformParameterValidator(top, 'top')
 

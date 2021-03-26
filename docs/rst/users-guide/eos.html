@@ -178,7 +178,7 @@
             
   <div class="section" id="the-eos-module">
 <h1>The eos module<a class="headerlink" href="#the-eos-module" title="Permalink to this headline">¶</a></h1>
-<p>Let’s now turn out attention to creating the atmospheric model. This will be a
+<p>Let’s now turn our attention to creating the atmospheric model. This will be a
 multi-step process that will span several modules, but we can start by just
 defining the boundaries we’d like to use in the model, along with equation of
 state variables.</p>
@@ -205,12 +205,12 @@ retrieval.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">z_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
 <p>To keep with DISORT’s convention that altitudes start from the top of the
 atmosphere, the altitude and altitude grid must be <em>decreasing</em>.</p>
 </div>
-<p>We can now add these to <code class="code docutils literal notranslate"><span class="pre">Hydrostatic</span></code>. It will start by linearly
+<p>We can now add these to <code class="docutils literal notranslate"><span class="pre">Hydrostatic</span></code>. It will start by linearly
 interpolating the input temperature and pressure onto the desired grid. Then,
 it will compute number density and scale height at the new boundaries, and the
 column density within the new boundaries. As before, we can access these arrays
@@ -229,13 +229,13 @@ via the class properties.</p>
 <span class="n">H_LYR</span> <span class="o">=</span> <span class="n">hydro</span><span class="o">.</span><span class="n">scale_height</span>
 </pre></div>
 </div>
-<p>Most of these properties aren’t required by DISORT (<code class="code docutils literal notranslate"><span class="pre">TEMPER</span></code> and
-<code class="code docutils literal notranslate"><span class="pre">H_LYR</span></code> are required under certain conditions) but several of
+<p>Most of these properties aren’t required by DISORT (<code class="docutils literal notranslate"><span class="pre">TEMPER</span></code> and
+<code class="docutils literal notranslate"><span class="pre">H_LYR</span></code> are required under certain conditions) but several of
 these variables will be needed in a few steps. Regardless, you may find a
 number of these “unnecessary” variables to be handy when playing with your
 retrievals.</p>
 <p>As you’d expect, the equation of state variables have the same shape as
-<code class="code docutils literal notranslate"><span class="pre">z_grid</span></code>. The one exception is <code class="code docutils literal notranslate"><span class="pre">column_density</span></code> which is one
+<code class="docutils literal notranslate"><span class="pre">z_grid</span></code>. The one exception is <code class="docutils literal notranslate"><span class="pre">column_density</span></code> which is one
 element shorter than the rest since it’s only defined within each of the
 <em>layers</em>. With that, we have our boundaries all good to go.</p>
 <div class="admonition note">
