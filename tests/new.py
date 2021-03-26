@@ -31,13 +31,13 @@ WVNMLO = spectral.low_wavenumber
 
 # eos module
 atmfile = np.load('/home/kyle/repos/pyRT_DISORT/tests/aux/marsatm.npy')
-altitude_grid = np.flip(atmfile[:, 0])
-pressure_profile = np.flip(atmfile[:, 1])
-temperature_profile = np.flip(atmfile[:, 2])
+#altitude_grid = np.flip(atmfile[:, 0])
+#pressure_profile = np.flip(atmfile[:, 1])
+#temperature_profile = np.flip(atmfile[:, 2])
 
-#altitude_grid = np.linspace(100, 0, num=51)
-#pressure_profile = 500 * np.exp(-altitude_grid / 10)
-#temperature_profile = np.linspace(150, 250, num=51)
+altitude_grid = np.linspace(100, 0, num=51)
+pressure_profile = 500 * np.exp(-altitude_grid / 10)
+temperature_profile = np.linspace(150, 250, num=51)
 mass = 7.3 * 10**-26
 gravity = 3.7
 
@@ -66,6 +66,9 @@ rayleigh_ssa = rco2.single_scattering_albedo
 rayleigh_pf = rco2.phase_function
 
 print(np.sum(rayleigh_od, axis=0))
+
+print(rayleigh_pf.shape, rayleigh_od.shape)
+raise SystemExit(9)
 
 # aerosol module
 from pyRT_DISORT.aerosol import Conrath

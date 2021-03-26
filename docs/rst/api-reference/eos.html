@@ -208,21 +208,16 @@ additional conditions.</p></li>
     numpy.ndarrays; or if <code class="docutils literal notranslate"><span class="pre">particle_mass</span></code> or <code class="docutils literal notranslate"><span class="pre">gravity</span></code> are not
     floats.</p></li>
 <li><p><strong>ValueError</strong> – Raised if:
-        * <code class="docutils literal notranslate"><span class="pre">altitude_grid</span></code>, <code class="docutils literal notranslate"><span class="pre">pressure_grid</span></code>, or
+       * <code class="docutils literal notranslate"><span class="pre">altitude_grid</span></code>, <code class="docutils literal notranslate"><span class="pre">pressure_grid</span></code>, or
           <code class="docutils literal notranslate"><span class="pre">temperature_grid</span></code> do not have the same shapes
-    
        * <code class="docutils literal notranslate"><span class="pre">altitude_grid</span></code> or <code class="docutils literal notranslate"><span class="pre">altitude_boundaries</span></code> have
          incompatible pixel dimensions
-    
        * <code class="docutils literal notranslate"><span class="pre">altitude_grid</span></code> or <code class="docutils literal notranslate"><span class="pre">altitude_boundaries</span></code> are not
          monotonically decreasing along the 0 <sup>th</sup> axis;
-    
        * <code class="docutils literal notranslate"><span class="pre">pressure_grid</span></code>, or <code class="docutils literal notranslate"><span class="pre">temperature_grid</span></code> contain
          non-positive, finite values
-    
        * <code class="docutils literal notranslate"><span class="pre">altitude_boundaries</span></code> does not contain at least 2
          boundaries
-    
        * <code class="docutils literal notranslate"><span class="pre">particle_mass</span></code> or <code class="docutils literal notranslate"><span class="pre">gravity</span></code> are not positive, finite</p></li>
 </ul>
 </dd>

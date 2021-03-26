@@ -1,14 +1,15 @@
-"""The rayleigh module contains structures for computing Rayleigh scattering.
+"""The ``rayleigh`` module contains structures for computing Rayleigh
+scattering.
 """
 import numpy as np
 from pyRT_DISORT.eos import _EoSVar
 from pyRT_DISORT.observation import _Wavelength
 
 
-class Rayleigh:
+class _Rayleigh:
     """An abstract base class for Rayleigh scattering.
 
-    Rayleigh creates the single scattering albedo and Legendre coefficient
+    _Rayleigh creates the single scattering albedo and Legendre coefficient
     phase function array given the number of layers and the spectral shape. This
     is an abstract base class from which all other Rayleigh classes are derived.
 
@@ -76,7 +77,7 @@ class Rayleigh:
 
         Notes
         -----
-        The shape of this array is (n_layers, (spectral_shape)). It will be
+        The shape of this array is (n_layers, (spectral_shape)). It is
         filled with all 1s.
 
         """
@@ -89,14 +90,14 @@ class Rayleigh:
         Notes
         -----
         The shape of this array is (3, n_layers, (spectral_shape)). The
-        0 :sup:`th` and 2 :sup:`nd` coefficient along the 0 :sup:`th` axis will
-        be 1 and 0.1, respectively.
+        0 :sup:`th` and 2 :sup:`nd` coefficient along the 0 :sup:`th` axis are
+        1 and 0.1, respectively.
 
         """
         return self.__phase_function
 
 
-class RayleighCO2(Rayleigh):
+class RayleighCO2(_Rayleigh):
     r"""A structure to compute CO :sub:`2` Rayleigh scattering arrays.
 
     RayleighCO2 creates the optical depth, single scattering albedo, and
@@ -128,17 +129,19 @@ class RayleighCO2(Rayleigh):
         Notes
         -----
         In the general case of a hyperspectral imager with MxN pixels and W
-        wavelengths, :code:`wavelength` can have shape WxMxN. In this case,
-        :code:`column_density` should have shape ZxMxN, where Z is the number
+        wavelengths, ``wavelength`` can have shape WxMxN. In this case,
+        ``column_density`` should have shape ZxMxN, where Z is the number
         of model layers. The 0 :sup:`th` dimension can have different shapes
         between the arrays but the subsequent dimensions (if any) should have
         the same shape.
 
+        References
+        ----------
         The values used here are from `Sneep and Ubachs 2005
         <https://doi.org/10.1016/j.jqsrt.2004.07.025>`_
 
         Due to a typo in the paper, I changed the coefficient to 10 :sup:`3`
-        when using equation 13 for computing the index of refraction
+        when using equation 13 for computing the index of refraction.
 
         """
         self.__wavelength = _Wavelength(wavelength, 'wavelength')

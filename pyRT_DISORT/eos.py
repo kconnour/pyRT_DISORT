@@ -52,21 +52,16 @@ class Hydrostatic:
             floats.
         ValueError
             Raised if:
-                * ``altitude_grid``, ``pressure_grid``, or
+               * ``altitude_grid``, ``pressure_grid``, or
                   ``temperature_grid`` do not have the same shapes
-
                * ``altitude_grid`` or ``altitude_boundaries`` have
                  incompatible pixel dimensions
-
                * ``altitude_grid`` or ``altitude_boundaries`` are not
                  monotonically decreasing along the 0 :sup:`th` axis;
-
                * ``pressure_grid``, or ``temperature_grid`` contain
                  non-positive, finite values
-
                * ``altitude_boundaries`` does not contain at least 2
                  boundaries
-
                * ``particle_mass`` or ``gravity`` are not positive, finite
 
         Notes
