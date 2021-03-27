@@ -172,12 +172,12 @@
             
   <div class="section" id="module-controller">
 <span id="controller"></span><h1>Controller<a class="headerlink" href="#module-controller" title="Permalink to this headline">¶</a></h1>
-<p>The controller module holds miscellaneous classes responsible for creating
-arrays that control how DISORT runs.</p>
+<p>The <code class="code docutils literal notranslate"><span class="pre">controller</span></code> module holds miscellaneous classes responsible for
+creating variables that control how DISORT runs.</p>
 <dl class="py class">
 <dt id="controller.ComputationalParameters">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">controller.</span></code><code class="sig-name descname"><span class="pre">ComputationalParameters</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_moments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_streams</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_azimuth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_polar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_user_levels</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.ComputationalParameters" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a data structure for holding the size of computational parameters.</p>
+<dd><p>A data structure for holding the size of computational parameters.</p>
 <p>ComputationalParameters holds the number of model layers, streams, moments,
 and angles. It also performs basic checks that these values are plausible.
 Objects of this class are meant to be be used as inputs to other classes.</p>
@@ -189,18 +189,14 @@ Objects of this class are meant to be be used as inputs to other classes.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>n_layers</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The number of layers to use in the model.</p></li>
 <li><p><strong>n_moments</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The number of polynomial moments to use in the model. This number
-should be greater than or equal to ‘n_streams’ in problems with
-scattering. In problems without scattering, this variable is not
-used by DISORT.</p></li>
+should be greater than or equal to <code class="code docutils literal notranslate"><span class="pre">n_streams</span></code>.</p></li>
 <li><p><strong>n_streams</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The number of streams (i.e. the number of computational polar
 angles) to use in the model. This number should be even and at least
-2. In general, the more streams used the more accurate DISORT’s
-computations will be.</p></li>
+2.</p></li>
 <li><p><strong>n_azimuth</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The number of azimuthal angles where DISORT should return radiant
 quantities.</p></li>
 <li><p><strong>n_polar</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The number of user-specified polar angles where DISORT should return
-radiant quantities. Only used by DISORT if
-<a class="reference internal" href="output.html#output.OutputBehavior.user_angles" title="output.OutputBehavior.user_angles"><code class="xref py py-attr docutils literal notranslate"><span class="pre">output.OutputBehavior.user_angles</span></code></a> ==True.</p></li>
+radiant quantities.</p></li>
 <li><p><strong>n_user_levels</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The number of user levels to use in the model.</p></li>
 </ul>
 </dd>
@@ -226,7 +222,8 @@ n_moments.</p>
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">n_azimuth</span></code><a class="headerlink" href="#controller.ComputationalParameters.n_azimuth" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input number of azimuthal angles.</p>
 <p class="rubric">Notes</p>
-<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">MAXPHI</span></code>.</p>
+<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">MAXPHI</span></code> (though in the
+<code class="code docutils literal notranslate"><span class="pre">disort</span></code> package, this variable is optional).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
@@ -239,7 +236,9 @@ n_moments.</p>
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">n_layers</span></code><a class="headerlink" href="#controller.ComputationalParameters.n_layers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input number of layers.</p>
 <p class="rubric">Notes</p>
-<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">MAXCLY</span></code>.</p>
+<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">MAXCLY</span></code> (though in the
+<code class="code docutils literal notranslate"><span class="pre">disort</span></code> package, this variable is optional).</p>
+<p>In problems without scattering, this variable is not used.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
@@ -252,7 +251,8 @@ n_moments.</p>
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">n_moments</span></code><a class="headerlink" href="#controller.ComputationalParameters.n_moments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input number of moments.</p>
 <p class="rubric">Notes</p>
-<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">MAXMOM</span></code>.</p>
+<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">MAXMOM</span></code> (though in the
+<code class="code docutils literal notranslate"><span class="pre">disort</span></code> package, this variable is optional).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
@@ -265,7 +265,9 @@ n_moments.</p>
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">n_polar</span></code><a class="headerlink" href="#controller.ComputationalParameters.n_polar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input number of user_specified polar angles.</p>
 <p class="rubric">Notes</p>
-<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">MAXUMU</span></code>.</p>
+<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">MAXUMU</span></code> (though in the
+<code class="code docutils literal notranslate"><span class="pre">disort</span></code> package, this variable is optional). Only used by DISORT
+if <a class="reference internal" href="output.html#output.OutputBehavior.user_angles" title="output.OutputBehavior.user_angles"><code class="xref py py-attr docutils literal notranslate"><span class="pre">user_angles</span></code></a> is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
@@ -278,7 +280,9 @@ n_moments.</p>
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">n_streams</span></code><a class="headerlink" href="#controller.ComputationalParameters.n_streams" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input number of streams.</p>
 <p class="rubric">Notes</p>
-<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">MAXCMU</span></code>.</p>
+<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">MAXCMU</span></code> (though in the
+<code class="code docutils literal notranslate"><span class="pre">disort</span></code> package, this variable is optional). In general, the more
+streams used the more accurate DISORT’s computations will be.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
@@ -291,7 +295,12 @@ n_moments.</p>
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">n_user_levels</span></code><a class="headerlink" href="#controller.ComputationalParameters.n_user_levels" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input number of user levels.</p>
 <p class="rubric">Notes</p>
-<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">MAXULV</span></code>.</p>
+<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">MAXULV</span></code> (though in the
+<code class="code docutils literal notranslate"><span class="pre">disort</span></code> package, this variable is optional).</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="output.html#output.UserLevel" title="output.UserLevel"><code class="xref py py-class docutils literal notranslate"><span class="pre">UserLevel</span></code></a></p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
@@ -304,7 +313,7 @@ n_moments.</p>
 <dl class="py class">
 <dt id="controller.ModelBehavior">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">controller.</span></code><code class="sig-name descname"><span class="pre">ModelBehavior</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">accuracy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_m_plus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_pseudo_sphere</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_variables</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6371.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.ModelBehavior" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a data structure for holding the DISORT control variables.</p>
+<dd><p>A data structure for holding the DISORT control variables.</p>
 <p>ModelBehavior holds the control flags that dictate DISORT’s behavior. It
 also performs basic checks that the input control options are plausible.</p>
 <dl class="py method">
@@ -319,35 +328,37 @@ is less than ‘accuracy’ times total series sum (twice because
 there are cases where terms are anomalously small but azimuthal
 series has not converged). Should be between 0 and 0.01 to avoid
 risk of serious non-convergence. Has no effect on problems lacking a
-beam source, since azimuthal series has only one term in that case.
-Default is 0.0.</p></li>
-<li><p><strong>delta_m_plus</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Denote whether to use the delta-M+ method of Lin et al. (2018).
-Default is False.</p></li>
-<li><p><strong>do_pseudo_sphere</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Denote whether to use a pseudo-spherical correction. Default is
-False.</p></li>
+beam source, since azimuthal series has only one term in that case.</p></li>
+<li><p><strong>delta_m_plus</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Denote whether to use the delta-M+ method of Lin et al. (2018).</p></li>
+<li><p><strong>do_pseudo_sphere</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Denote whether to use a pseudo-spherical correction.</p></li>
 <li><p><strong>header</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Use a 127- (or less) character header for prints, embedded in the
 DISORT banner. Input headers greater than 127 characters will be
-truncated. Setting header=’’ will eliminate both the banner and the
-header, and this is the only way to do so (‘header’ is not
-controlled by any of the ‘print’ flags); ‘header’ can be used
+truncated. Setting <code class="code docutils literal notranslate"><span class="pre">header=''</span></code> will eliminate both the banner
+and the
+header, and this is the only way to do so (<code class="code docutils literal notranslate"><span class="pre">header</span></code> is not
+controlled by any of the <code class="code docutils literal notranslate"><span class="pre">print_variables</span></code> flags); <code class="code docutils literal notranslate"><span class="pre">header</span></code> can be used
 to mark the progress of a calculation in which DISORT is called many
-times, while leaving all other printing turned off. Default is ‘’.</p></li>
+times, while leaving all other printing turned off.</p></li>
 <li><p><strong>print_variables</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>]]) – <p>Make a list of variables that control what DISORT prints. The 5
 booleans control whether each of the following is printed:</p>
 <ol class="arabic simple">
-<li><p>Input variables (except PMOM)</p></li>
+<li><p>Input variables (except <code class="docutils literal notranslate"><span class="pre">PMOM</span></code>)</p></li>
 <li><p>Fluxes</p></li>
 <li><p>Intensities at user levels and angles</p></li>
 <li><p>Planar transmissivity and planar albedo as a function of solar
-zenith angle (incidence_beam_conditions == True)</p></li>
+zenith angle (only used if
+<a class="reference internal" href="output.html#output.OutputBehavior.incidence_beam_conditions" title="output.OutputBehavior.incidence_beam_conditions"><code class="xref py py-attr docutils literal notranslate"><span class="pre">incidence_beam_conditions</span></code></a> is
+set to <code class="docutils literal notranslate"><span class="pre">True</span></code>)</p></li>
 <li><p>PMOM for each layer (but only if 1. == True and only for layers
 with scattering)</p></li>
 </ol>
-<p>Default is None, which makes [False, False, False, False, False].</p>
+<p>Default is <code class="code docutils literal notranslate"><span class="pre">None</span></code>, which makes
+<code class="code docutils literal notranslate"><span class="pre">[False,</span> <span class="pre">False,</span> <span class="pre">False,</span> <span class="pre">False,</span> <span class="pre">False]</span></code>.</p>
 </p></li>
 <li><p><strong>radius</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The planetary radius. This is presumably only used if
-<code class="code docutils literal notranslate"><span class="pre">do_pseudo_sphere==True</span></code>, although there is no documentation
-on this. Default is 6371.0.</p></li>
+<code class="code docutils literal notranslate"><span class="pre">do_pseudo_sphere</span></code> is set to <code class="code docutils literal notranslate"><span class="pre">True</span></code>, although there is no
+documentation
+on this</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
@@ -385,8 +396,7 @@ on this. Default is 6371.0.</p></li>
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">delta_m_plus</span></code><a class="headerlink" href="#controller.ModelBehavior.delta_m_plus" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get whether to use delta-M+ scaling.</p>
 <p class="rubric">Notes</p>
-<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">DELTAMPLUS</span></code>. There is no
-documentation on this variable.</p>
+<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">DELTAMPLUS</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
@@ -399,8 +409,7 @@ documentation on this variable.</p>
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">do_pseudo_sphere</span></code><a class="headerlink" href="#controller.ModelBehavior.do_pseudo_sphere" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get whether to perform a pseudo-spherical correction.</p>
 <p class="rubric">Notes</p>
-<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">DO_PSEUDO_SPHERE</span></code>. There is no
-documentation on this variable.</p>
+<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">DO_PSEUDO_SPHERE</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
@@ -439,9 +448,7 @@ documentation on this variable.</p>
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">radius</span></code><a class="headerlink" href="#controller.ModelBehavior.radius" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the planetary radius.</p>
 <p class="rubric">Notes</p>
-<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">EARTH_RADIUS</span></code>. There is no
-documentation on this variable, though I’m presuming it could be any
-planetary radius.</p>
+<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">EARTH_RADIUS</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>

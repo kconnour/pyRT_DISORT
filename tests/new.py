@@ -117,10 +117,10 @@ pf.make_nn_phase_function()
 dust_pf = pf.phase_function
 
 # the atmosphere module
-from pyRT_DISORT.atmosphere import Atmosphere
-
 rayleigh_info = (rayleigh_od, rayleigh_ssa, rayleigh_pf)
 dust_info = (dust_od, dust_ssa, dust_pf)
+
+from pyRT_DISORT.atmosphere import Atmosphere
 
 model = Atmosphere(rayleigh_info, dust_info)
 
@@ -133,6 +133,14 @@ from pyRT_DISORT.controller import ComputationalParameters, ModelBehavior
 
 cp = ComputationalParameters(hydro.n_layers, model.legendre_moments.shape[0],
                              16, 1, 1, 80)
+
+MAXCLY = cp.n_layers
+MAXMOM = cp.n_moments
+MAXCMU = cp.n_streams
+MAXPHI = cp.n_azimuth
+MAXUMU = cp.n_polar
+MAXULV = cp.n_user_levels
+
 
 mb = ModelBehavior()
 ACCUR = mb.accuracy

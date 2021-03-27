@@ -181,9 +181,9 @@
 <h1>The controller module<a class="headerlink" href="#the-controller-module" title="Permalink to this headline">¶</a></h1>
 <p>We’ve created nearly all of the arrays that DISORT wants, so we now just need
 to set some of the controlling parameters.</p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>To me, everything from this point onwards, with the exception of Surface,
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>To me, everything from this point onwards (with the exception of Surface)
 could be combined into one module. But I can’t think of a name. If you can
 I’ll happily make these less disjoined.</p>
 </div>
@@ -198,14 +198,29 @@ user levels.</p>
 
 <span class="n">cp</span> <span class="o">=</span> <span class="n">ComputationalParameters</span><span class="p">(</span><span class="n">hydro</span><span class="o">.</span><span class="n">n_layers</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">legendre_moments</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                              <span class="mi">16</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">80</span><span class="p">)</span>
+
+<span class="n">MAXCLY</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">n_layers</span>
+<span class="n">MAXMOM</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">n_moments</span>
+<span class="n">MAXCMU</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">n_streams</span>
+<span class="n">MAXPHI</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">n_azimuth</span>
+<span class="n">MAXUMU</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">n_polar</span>
+<span class="n">MAXULV</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">n_user_levels</span>
 </pre></div>
 </div>
-<p>This class just holds all of these parameters and checks they’re allowable.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>All of the variables created in <code class="code docutils literal notranslate"><span class="pre">ComputationalParameters</span></code> are optional
+when using the <code class="code docutils literal notranslate"><span class="pre">disort</span></code> module, since it infers these values from
+array shapes. This class is completely optional, but I find it convenient to
+bundle all of these variables together.</p>
+</div>
 </div>
 <div class="section" id="model-behavior">
 <h2>Model Behavior<a class="headerlink" href="#model-behavior" title="Permalink to this headline">¶</a></h2>
 <p>Let’s also define how we want our model to run. We can do that with
-<a class="reference internal" href="../api-reference/controller.html#controller.ModelBehavior" title="controller.ModelBehavior"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelBehavior</span></code></a>, which has some preset values.</p>
+<a class="reference internal" href="../api-reference/controller.html#controller.ModelBehavior" title="controller.ModelBehavior"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelBehavior</span></code></a>, which has some preset values—namely, not
+to do any pseudo spherical correction or delta-M correction. Of course, you
+can change these to your liking.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.controller</span> <span class="kn">import</span> <span class="n">ModelBehavior</span>
 
 <span class="n">mb</span> <span class="o">=</span> <span class="n">ModelBehavior</span><span class="p">()</span>
