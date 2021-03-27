@@ -1,6 +1,7 @@
 """The :code:`aerosol` module contains structures to make the aerosol properties
 required by DISORT.
 """
+# TODO: add parameter validators if these classes are ok
 import numpy as np
 from pyRT_DISORT.eos import _Altitude
 
@@ -19,12 +20,11 @@ class Conrath:
         Parameters
         ----------
         altitude
-            The altitude at which to construct a Conrath profile (probably the
-            midpoint altitude)
+            The altitude [km] at which to construct a Conrath profile.
         q0
             The surface mixing ratio for each of the Conrath profiles.
         scale_height
-            The scale height of each of the Conrath profiles.
+            The scale height [km] of each of the Conrath profiles.
         nu
             The nu parameter of each of the Conrath profiles.
 
@@ -33,8 +33,7 @@ class Conrath:
         TypeError
             Raised if any of the inputs are not a numpy.ndarray.
         ValueError
-            Raised if any of the inputs do not have the same shape, or if they
-            contain physically or mathematically unrealistic values.
+            Raised if many things...
 
         Notes
         -----
@@ -54,41 +53,37 @@ class Conrath:
         :code:`altitude` and :code:`scale_height` should be the same.
 
         """
-        _Altitude(altitude, 'altitude')
-        ConrathParameterValidator(q0, 'q0', 0, np.inf)
-        ConrathParameterValidator(scale_height, 'scale_height', 0, np.inf)
-        ConrathParameterValidator(nu, 'nu', 0, np.inf)
+        self.__altitude = _Altitude(altitude, 'altitude')
+        self.__q0 = _ConrathParameter(q0, 'q0', 0, np.inf)
+        self.__H = _ConrathParameter(scale_height, 'scale_height', 0, np.inf)
+        self.__nu = _ConrathParameter(nu, 'nu', 0, np.inf)
 
-        self.__altitude = altitude
-        self.__q0 = q0
-        self.__scale_height = scale_height
-        self.__nu = nu
-
-        #self.__raise_value_error_if_inputs_have_differing_shapes()
+        self.__raise_value_error_if_inputs_have_differing_shapes()
 
         self.__profile = self.__make_profile()
 
-    '''def __raise_value_error_if_inputs_have_differing_shapes(self) -> None:
+    def __raise_value_error_if_inputs_have_differing_shapes(self) -> None:
         if not (self.__altitude.shape[1:] == self.__q0.shape ==
-                self.__scale_height.shape == self.__nu.shape):
+                self.__H.shape == self.__nu.shape):
             message = 'All inputs must have the same shape along the pixel ' \
                       'dimension.'
-            raise ValueError(message)'''
+            raise ValueError(message)
 
     def __make_profile(self) -> np.ndarray:
-        altitude_scaling = self.__altitude / self.__scale_height
-        return self.__q0 * np.exp(self.__nu * (1 - np.exp(altitude_scaling)))
+        altitude_scaling = self.__altitude.val / self.__H.val
+        return self.__q0.val * np.exp(self.__nu.val *
+                                      (1 - np.exp(altitude_scaling)))
 
     @property
     def profile(self) -> np.ndarray:
         """Get the Conrath profile(s). This will have the same shape as
-        :code:`altitude`.
+        ``altitude``.
 
         """
         return self.__profile
 
 
-class ConrathParameterValidator:
+class _ConrathParameter:
     def __init__(self, parameter: np.ndarray, name: str,
                  low: float, high: float) -> None:
         self.__param = parameter
@@ -113,6 +108,16 @@ class ConrathParameterValidator:
             message = f'{self.__name} must be between {self.__low} and ' \
                       f'{self.__high}.'
             raise ValueError(message)
+
+    def __getattr__(self, method):
+        return getattr(self.val, method)
+
+    @property
+    def val(self) -> np.ndarray:
+        """Get the value of the input wavelength.
+
+        """
+        return np.squeeze(np.array([self.__param]))
 
 
 class Uniform:
@@ -144,13 +149,9 @@ class Uniform:
             Raised if a number of things...
 
         """
-        self.__altitude = altitude
-        self.__bottom = bottom
-        self.__top = top
-
-        _Altitude(altitude)
-        UniformParameterValidator(bottom, 'bottom')
-        UniformParameterValidator(top, 'top')
+        self.__altitude = _Altitude(altitude, 'altitude')
+        self.__bottom = _UniformParameter(bottom, 'bottom')
+        self.__top = _UniformParameter(top, 'top')
 
         self.__profile = self.__make_profile()
 
@@ -172,23 +173,25 @@ class Uniform:
             raise ValueError(message)
 
     def __make_profile(self) -> np.ndarray:
-        alt_dif = np.diff(self.__altitude, axis=0)
-        top_prof = np.clip((self.__top - self.__altitude[1:]) /
+        alt_dif = np.diff(self.__altitude.val, axis=0)
+        top_prof = np.clip((self.__top.val - self.__altitude.val[1:]) /
                            np.abs(alt_dif), 0, 1)
-        bottom_prof = np.clip((self.__altitude[:-1] - self.__bottom) /
+        bottom_prof = np.clip((self.__altitude.val[:-1] - self.__bottom.val) /
                               np.abs(alt_dif), 0, 1)
         return top_prof + bottom_prof - 1
 
     @property
     def profile(self) -> np.ndarray:
         """Get the uniform profile(s). This will have the same shape as
-        :code:`altitude`.
+        ``altitude``.
 
         """
         return self.__profile
 
 
-class UniformParameterValidator:
+# TODO: right now this just copies ConrathParameter. Think of a more general
+#  name or make the classes different.
+class _UniformParameter:
     def __init__(self, parameter: np.ndarray, name: str) -> None:
         self.__param = parameter
         self.__name = name
@@ -198,13 +201,23 @@ class UniformParameterValidator:
     def __raise_error_if_param_is_bad(self) -> None:
         self.__raise_type_error_if_not_ndarray()
 
-    def __raise_type_error_if_not_ndarray(self) -> None:
-        if not isinstance(self.__param, np.ndarray):
-            message = f'{self.__name} must be a numpy.ndarray.'
+    def __raise_type_error_if_not_ndarray_or_float(self) -> None:
+        if not isinstance(self.__param, (float, np.ndarray)):
+            message = f'{self.__name} must be a float or numpy.ndarray.'
             raise TypeError(message)
 
+    def __getattr__(self, method):
+        return getattr(self.val, method)
 
-class ForwardScatteringProperty:
+    @property
+    def val(self) -> np.ndarray:
+        """Get the value of the input wavelength.
+
+        """
+        return np.squeeze(np.array([self.__param]))
+
+
+class _ForwardScatteringProperty:
     """An abstract class to check something is a forward scattering property.
 
     """
@@ -251,7 +264,7 @@ class ForwardScatteringProperty:
         return self.__wavelength
 
 
-class Interpolator:
+class _Interpolator:
     """A structure to get values over a grid.
 
     Interpolator accepts an array of coefficients, along with the 1D particle
@@ -306,7 +319,14 @@ class Interpolator:
         return np.abs(np.subtract.outer(grid, values)).argmin(0)
 
 
-class NearestNeighborForwardScattering:
+class ForwardScattering:
+    """A structure to store forward scattering properties.
+
+    ForwardScattering will simply hang on to forward scattering properties and
+    provides methods to regrid them into the input particle size profile and
+    wavelengths.
+
+    """
     def __init__(self, scattering_cross_section: np.ndarray,
                  extinction_cross_section: np.ndarray,
                  particle_size_grid: np.ndarray, wavelength_grid: np.ndarray,
@@ -333,28 +353,39 @@ class NearestNeighborForwardScattering:
             1D array of wavelengths to regrid the properties onto.
 
         """
-        self.__c_sca = ForwardScatteringProperty(scattering_cross_section,
-                                                 particle_size_grid,
-                                  wavelength_grid, 'scattering')
-        self.__c_ext = ForwardScatteringProperty(extinction_cross_section,
-                                                 particle_size_grid,
-                                  wavelength_grid, 'extinction')
+        self.__c_sca = _ForwardScatteringProperty(
+            scattering_cross_section, particle_size_grid, wavelength_grid,
+            'scattering')
+        self.__c_ext = _ForwardScatteringProperty(
+            extinction_cross_section, particle_size_grid, wavelength_grid,
+            'extinction')
         self.__particle_size = particle_size
         self.__wavelength = wavelength
+        self.__wave_ref = reference_wavelength
 
+        self.__gridded_c_scattering = np.array([])
+        self.__gridded_c_extinction = np.array([])
+        self.__gridded_ssa = np.array([])
+        self.__extinction = np.array([])
+
+    def make_nn_properties(self) -> None:
+        """Make the forward scattering properties at the nearest neighbor
+        particle sizes and wavelengths.
+
+        """
         self.__gridded_c_scattering = self.__make_gridded_c_scattering()
         self.__gridded_c_extinction = self.__make_gridded_c_extinction()
         self.__gridded_ssa = self.__make_gridded_ssa()
-        self.__extinction = self.__make_extinction_grid(reference_wavelength)
+        self.__extinction = self.__make_extinction_grid()
 
     def __make_gridded_c_scattering(self):
-        nni = Interpolator(self.__c_sca.parameter, self.__c_sca.particle_size,
+        nni = _Interpolator(self.__c_sca.parameter, self.__c_sca.particle_size,
                            self.__c_sca.wavelength, self.__particle_size,
                            self.__wavelength)
         return nni.nearest_neighbor()
 
     def __make_gridded_c_extinction(self):
-        nni = Interpolator(self.__c_ext.parameter, self.__c_ext.particle_size,
+        nni = _Interpolator(self.__c_ext.parameter, self.__c_ext.particle_size,
                            self.__c_ext.wavelength, self.__particle_size,
                            self.__wavelength)
         return nni.nearest_neighbor()
@@ -362,15 +393,15 @@ class NearestNeighborForwardScattering:
     def __make_gridded_ssa(self):
         return self.__gridded_c_scattering / self.__gridded_c_extinction
 
-    def __make_extinction_grid(self, reference_wavelength: float) -> np.ndarray:
+    def __make_extinction_grid(self) -> np.ndarray:
         """Make a grid of the extinction cross section at a reference wavelength.
         This is the extinction cross section at the input wavelengths divided by
         the extinction cross section at the reference wavelength.
 
         """
-        nni = Interpolator(self.__c_ext.parameter, self.__c_ext.particle_size,
+        nni = _Interpolator(self.__c_ext.parameter, self.__c_ext.particle_size,
                            self.__c_ext.wavelength, self.__particle_size,
-                           np.array([reference_wavelength]))
+                           np.array([self.__wave_ref]))
         extinction_profile = np.squeeze(nni.nearest_neighbor())
         return (self.__gridded_c_extinction.T / extinction_profile).T
 
@@ -452,33 +483,9 @@ class OpticalDepth:
 
 
 class TabularLegendreCoefficients:
-    """An abstract class from which all coefficient classes are derived.
-
-    TabularLegendreCoefficients holds a variety of properties that are needed by
-    all derived classes. It is not meant to be instantiated.
-
-    """
-
-    def __init__(self, coefficients: np.ndarray, particle_grid: np.ndarray,
-                 wavelength_grid: np.ndarray, max_moments: int = None) -> None:
-        self._coefficients = coefficients
-        self._n_moments = coefficients.shape[0]
-        self._particle_grid = particle_grid
-        self._wavelength_grid = wavelength_grid
-        self._n_layers = len(self._particle_grid)
-
-    def _normalize_coefficients(self, unnormalized_coefficients):
-        moment_indices = np.linspace(0, self._n_moments-1, num=self._n_moments)
-        normalization = moment_indices * 2 + 1
-        return (unnormalized_coefficients.T / normalization).T
-
-
-# TODO: I almost duplicate the docstring of phase function. It'd be nice to put
-#  it in the base class
-class NearestNeighborTabularLegendreCoefficients(TabularLegendreCoefficients):
     """Create a grid of Legendre coefficients (particle size, wavelength).
 
-    NearestNeighborTabularLegendreCoefficients accepts a 3D array of Legendre polynomial
+    TabularLegendreCoefficients accepts a 3D array of Legendre polynomial
     coefficients of the phase function that depend on particle size and
     wavelength and casts them to an array of the proper shape for use in DISORT
     given a vertical particle size gradient.
@@ -508,40 +515,43 @@ class NearestNeighborTabularLegendreCoefficients(TabularLegendreCoefficients):
             all available coefficients are used.
 
         """
-        super().__init__(coefficients, particle_size_grid, wavelength_grid, max_moments)
+        self.__coefficients = coefficients
+        self.__particle_grid = particle_size_grid
+        self.__wavelength_grid = wavelength_grid
         self.__particle_profile = particle_size_profile
         self.__wavelengths = wavelengths
 
-        self.__phase_function = self.__make_phase_function()
+        self.__n_layers = self.__make_n_layers()
+        self.__n_moments = self.__make_n_moments(max_moments)
 
-    def __make_phase_function(self) -> np.ndarray:
-        nni = Interpolator(self._coefficients, self._particle_grid,
-                           self._wavelength_grid, self.__particle_profile,
+        self.__phase_function = np.array([])
+
+    def __make_n_layers(self) -> int:
+        return len(self.__particle_grid)
+
+    def __make_n_moments(self, max_moments) -> int:
+        return self.__coefficients.shape[0] if max_moments is None else max_moments
+
+    def __normalize_coefficients(self, unnormalized_coefficients):
+        coeff = unnormalized_coefficients[:self.__n_moments, :]
+        moment_indices = np.linspace(0, self.__n_moments-1, num=self.__n_moments)
+        normalization = moment_indices * 2 + 1
+        return (coeff.T / normalization).T
+
+    def make_nn_phase_function(self) -> None:
+        """Make the phase function at the nearest neighbor particle sizes and
+        wavelengths.
+
+        """
+        nni = _Interpolator(self.__coefficients, self.__particle_grid,
+                           self.__wavelength_grid, self.__particle_profile,
                            self.__wavelengths)
-        regridded_phase_function = nni.nearest_neighbor()
-        return self._normalize_coefficients(regridded_phase_function)
+        nn_pf = nni.nearest_neighbor()
+        self.__phase_function = self.__normalize_coefficients(nn_pf)
 
     @property
     def phase_function(self) -> np.ndarray:
         """Get the Legendre coefficients cast to the proper grid.
-
-        Returns
-        -------
-        np.ndarray
-            The Legendre coefficients on a grid.
-
-        Notes
-        -----
-        In DISORT, this variable is named "PMOM". In addition,
-        The shape of this array is determined by the inputs. In general, the
-        shape will be [n_moments, n_layers, (n_pixels)]. For example, if
-        coefficients has shape [65, 10, 300], altitude_grid has shape [20], and
-        wavelengths has shape [50, 100, 45], this array will have shape
-        [65, 20, 50, 100, 45].
-
-        Note that DISORT expects an array of shape [n_moments, n_layers] as the
-        PMOM input, so be sure to select the correct pixel when iterating over
-        pixels.
 
         """
         return self.__phase_function

@@ -187,18 +187,16 @@ volumetric mixing ratio and Conrath parameters.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>altitude</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The altitude at which to construct a Conrath profile (probably the
-midpoint altitude)</p></li>
+<li><p><strong>altitude</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The altitude [km] at which to construct a Conrath profile.</p></li>
 <li><p><strong>q0</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The surface mixing ratio for each of the Conrath profiles.</p></li>
-<li><p><strong>scale_height</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The scale height of each of the Conrath profiles.</p></li>
+<li><p><strong>scale_height</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The scale height [km] of each of the Conrath profiles.</p></li>
 <li><p><strong>nu</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The nu parameter of each of the Conrath profiles.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>TypeError</strong> – Raised if any of the inputs are not a numpy.ndarray.</p></li>
-<li><p><strong>ValueError</strong> – Raised if any of the inputs do not have the same shape, or if they
-    contain physically or mathematically unrealistic values.</p></li>
+<li><p><strong>ValueError</strong> – Raised if many things…</p></li>
 </ul>
 </dd>
 </dl>
@@ -219,7 +217,7 @@ ZxMxN, where Z is the number of altitudes. Additionally, the units of
 <dt id="aerosol.Conrath.profile">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">profile</span></code><a class="headerlink" href="#aerosol.Conrath.profile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the Conrath profile(s). This will have the same shape as
-<code class="code docutils literal notranslate"><span class="pre">altitude</span></code>.</p>
+<code class="docutils literal notranslate"><span class="pre">altitude</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
@@ -230,21 +228,22 @@ ZxMxN, where Z is the number of altitudes. Additionally, the units of
 </dd></dl>
 
 <dl class="py class">
-<dt id="aerosol.Interpolator">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">aerosol.</span></code><code class="sig-name descname"><span class="pre">Interpolator</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coefficient</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_size_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelength_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelength</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aerosol.Interpolator" title="Permalink to this definition">¶</a></dt>
-<dd><p>A structure to get values over a grid.</p>
-<p>Interpolator accepts an array of coefficients, along with the 1D particle
-size and wavelength grid over which they’re defined. It contains methods
-to interpolate onto a new grid.</p>
+<dt id="aerosol.ForwardScattering">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">aerosol.</span></code><code class="sig-name descname"><span class="pre">ForwardScattering</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scattering_cross_section</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extinction_cross_section</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_size_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelength_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelength</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_wavelength</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aerosol.ForwardScattering" title="Permalink to this definition">¶</a></dt>
+<dd><p>A structure to store forward scattering properties.</p>
+<p>ForwardScattering will simply hang on to forward scattering properties and
+provides methods to regrid them into the input particle size profile and
+wavelengths.</p>
 <dl class="py method">
-<dt id="aerosol.Interpolator.__init__">
-<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coefficient</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_size_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelength_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelength</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aerosol.Interpolator.__init__" title="Permalink to this definition">¶</a></dt>
+<dt id="aerosol.ForwardScattering.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scattering_cross_section</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extinction_cross_section</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_size_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelength_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelength</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_wavelength</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aerosol.ForwardScattering.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>coefficient</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – ND array of coefficients to interpolate over. axis=-1 is assumed
-to be the wavelength dimension and axis=-2 is assumed to be the
-particle size dimension.</p></li>
+<li><p><strong>scattering_cross_section</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – 2D array of the scattering cross section (the 0th axis is assumed to
+be the particle size axis, while the 1st axis is assumed to be the
+wavelength axis).</p></li>
+<li><p><strong>extinction_cross_section</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – 2D array of the extinction cross section with same dims as above.</p></li>
 <li><p><strong>particle_size_grid</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – 1D array of particle sizes over which the above properties are
 defined.</p></li>
 <li><p><strong>wavelength_grid</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – 1D array of wavelengths over which the above properties are defined.</p></li>
@@ -256,11 +255,10 @@ defined.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="aerosol.Interpolator.nearest_neighbor">
-<code class="sig-name descname"><span class="pre">nearest_neighbor</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#aerosol.Interpolator.nearest_neighbor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the input coefficients at the input particle sizes and
-wavelengths using nearest neighbor interpolation to the input particle
-size and wavelength grid.</p>
+<dt id="aerosol.ForwardScattering.extinction">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">extinction</span></code><a class="headerlink" href="#aerosol.ForwardScattering.extinction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the extinction coefficient at the reference wavelength on the new
+grid.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
@@ -268,58 +266,49 @@ size and wavelength grid.</p>
 </dl>
 </dd></dl>
 
-</dd></dl>
-
-<dl class="py class">
-<dt id="aerosol.NearestNeighborTabularLegendreCoefficients">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">aerosol.</span></code><code class="sig-name descname"><span class="pre">NearestNeighborTabularLegendreCoefficients</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coefficients</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_size_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelength_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_size_profile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelengths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_moments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aerosol.NearestNeighborTabularLegendreCoefficients" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a grid of Legendre coefficients (particle size, wavelength).</p>
-<p>NearestNeighborTabularLegendreCoefficients accepts a 3D array of Legendre polynomial
-coefficients of the phase function that depend on particle size and
-wavelength and casts them to an array of the proper shape for use in DISORT
-given a vertical particle size gradient.</p>
 <dl class="py method">
-<dt id="aerosol.NearestNeighborTabularLegendreCoefficients.__init__">
-<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coefficients</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_size_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelength_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_size_profile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelengths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_moments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aerosol.NearestNeighborTabularLegendreCoefficients.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>coefficients</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – 3D array of Legendre coefficients that depend on particle
-size and wavelength. It is assumed to have shape [n_moments,
-particle_size_grid, wavelength_grid]</p></li>
-<li><p><strong>particle_size_grid</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – 1D array of particle sizes associated with the coefficients matrix.</p></li>
-<li><p><strong>wavelength_grid</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – 1D array of wavelengths associated with the coefficients matrix.</p></li>
-<li><p><strong>wavelengths</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – ND array of wavelengths where to cast coefficients to.</p></li>
-<li><p><strong>particle_size_profile</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – 1D array of particle sizes.</p></li>
-<li><p><strong>max_moments</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – The maximum number of coefficients to use in the array. If None,
-all available coefficients are used.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="aerosol.NearestNeighborTabularLegendreCoefficients.phase_function">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">phase_function</span></code><a class="headerlink" href="#aerosol.NearestNeighborTabularLegendreCoefficients.phase_function" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the Legendre coefficients cast to the proper grid.</p>
+<dt id="aerosol.ForwardScattering.extinction_cross_section">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">extinction_cross_section</span></code><a class="headerlink" href="#aerosol.ForwardScattering.extinction_cross_section" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the extinction cross section on the new grid.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The Legendre coefficients on a grid.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>np.ndarray</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p>In DISORT, this variable is named “PMOM”. In addition,
-The shape of this array is determined by the inputs. In general, the
-shape will be [n_moments, n_layers, (n_pixels)]. For example, if
-coefficients has shape [65, 10, 300], altitude_grid has shape [20], and
-wavelengths has shape [50, 100, 45], this array will have shape
-[65, 20, 50, 100, 45].</p>
-<p>Note that DISORT expects an array of shape [n_moments, n_layers] as the
-PMOM input, so be sure to select the correct pixel when iterating over
-pixels.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="aerosol.ForwardScattering.make_nn_properties">
+<code class="sig-name descname"><span class="pre">make_nn_properties</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#aerosol.ForwardScattering.make_nn_properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make the forward scattering properties at the nearest neighbor
+particle sizes and wavelengths.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="aerosol.ForwardScattering.scattering_cross_section">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">scattering_cross_section</span></code><a class="headerlink" href="#aerosol.ForwardScattering.scattering_cross_section" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the scattering cross section on the new grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="aerosol.ForwardScattering.single_scattering_albedo">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">single_scattering_albedo</span></code><a class="headerlink" href="#aerosol.ForwardScattering.single_scattering_albedo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the single scattering albedo on the new grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -363,14 +352,53 @@ integrated optical depth.</p>
 
 <dl class="py class">
 <dt id="aerosol.TabularLegendreCoefficients">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">aerosol.</span></code><code class="sig-name descname"><span class="pre">TabularLegendreCoefficients</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coefficients</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelength_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_moments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aerosol.TabularLegendreCoefficients" title="Permalink to this definition">¶</a></dt>
-<dd><p>An abstract class from which all coefficient classes are derived.</p>
-<p>TabularLegendreCoefficients holds a variety of properties that are needed by
-all derived classes. It is not meant to be instantiated.</p>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">aerosol.</span></code><code class="sig-name descname"><span class="pre">TabularLegendreCoefficients</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coefficients</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_size_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelength_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_size_profile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelengths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_moments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aerosol.TabularLegendreCoefficients" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a grid of Legendre coefficients (particle size, wavelength).</p>
+<p>TabularLegendreCoefficients accepts a 3D array of Legendre polynomial
+coefficients of the phase function that depend on particle size and
+wavelength and casts them to an array of the proper shape for use in DISORT
+given a vertical particle size gradient.</p>
 <dl class="py method">
 <dt id="aerosol.TabularLegendreCoefficients.__init__">
-<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coefficients</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelength_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_moments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aerosol.TabularLegendreCoefficients.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coefficients</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_size_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelength_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_size_profile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelengths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_moments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aerosol.TabularLegendreCoefficients.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>coefficients</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – 3D array of Legendre coefficients that depend on particle
+size and wavelength. It is assumed to have shape [n_moments,
+particle_size_grid, wavelength_grid]</p></li>
+<li><p><strong>particle_size_grid</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – 1D array of particle sizes associated with the coefficients matrix.</p></li>
+<li><p><strong>wavelength_grid</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – 1D array of wavelengths associated with the coefficients matrix.</p></li>
+<li><p><strong>wavelengths</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – ND array of wavelengths where to cast coefficients to.</p></li>
+<li><p><strong>particle_size_profile</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – 1D array of particle sizes.</p></li>
+<li><p><strong>max_moments</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – The maximum number of coefficients to use in the array. If None,
+all available coefficients are used.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="aerosol.TabularLegendreCoefficients.make_nn_phase_function">
+<code class="sig-name descname"><span class="pre">make_nn_phase_function</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#aerosol.TabularLegendreCoefficients.make_nn_phase_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make the phase function at the nearest neighbor particle sizes and
+wavelengths.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="aerosol.TabularLegendreCoefficients.phase_function">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">phase_function</span></code><a class="headerlink" href="#aerosol.TabularLegendreCoefficients.phase_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the Legendre coefficients cast to the proper grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -406,7 +434,7 @@ These are assumed to be decreasing to keep with DISORT’s convention.</p></li>
 <dt id="aerosol.Uniform.profile">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">profile</span></code><a class="headerlink" href="#aerosol.Uniform.profile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the uniform profile(s). This will have the same shape as
-<code class="code docutils literal notranslate"><span class="pre">altitude</span></code>.</p>
+<code class="docutils literal notranslate"><span class="pre">altitude</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>

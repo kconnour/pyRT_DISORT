@@ -183,9 +183,7 @@
       <li><a href="rst/api-reference/aerosol.html#aerosol.Conrath.__init__">__init__() (aerosol.Conrath method)</a>
 
       <ul>
-        <li><a href="rst/api-reference/aerosol.html#aerosol.Interpolator.__init__">(aerosol.Interpolator method)</a>
-</li>
-        <li><a href="rst/api-reference/aerosol.html#aerosol.NearestNeighborTabularLegendreCoefficients.__init__">(aerosol.NearestNeighborTabularLegendreCoefficients method)</a>
+        <li><a href="rst/api-reference/aerosol.html#aerosol.ForwardScattering.__init__">(aerosol.ForwardScattering method)</a>
 </li>
         <li><a href="rst/api-reference/aerosol.html#aerosol.OpticalDepth.__init__">(aerosol.OpticalDepth method)</a>
 </li>
@@ -325,8 +323,6 @@
 </li>
       <li><a href="rst/api-reference/surface.html#surface.Surface.emust">emust() (surface.Surface property)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     eos
 
@@ -335,12 +331,22 @@
 </li>
       </ul></li>
   </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="rst/api-reference/aerosol.html#aerosol.ForwardScattering.extinction">extinction() (aerosol.ForwardScattering property)</a>
+</li>
+      <li><a href="rst/api-reference/aerosol.html#aerosol.ForwardScattering.extinction_cross_section">extinction_cross_section() (aerosol.ForwardScattering property)</a>
+</li>
+  </ul></td>
 </tr></table>
 
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="rst/api-reference/output.html#output.OutputArrays.flux_divergence">flux_divergence() (output.OutputArrays property)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="rst/api-reference/aerosol.html#aerosol.ForwardScattering">ForwardScattering (class in aerosol)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -372,13 +378,11 @@
 </li>
       <li><a href="rst/api-reference/output.html#output.OutputBehavior.incidence_beam_conditions">incidence_beam_conditions() (output.OutputBehavior property)</a>
 </li>
-      <li><a href="rst/api-reference/radiation.html#radiation.IncidentFlux">IncidentFlux (class in radiation)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="rst/api-reference/output.html#output.OutputArrays.intensity">intensity() (output.OutputArrays property)</a>
+      <li><a href="rst/api-reference/radiation.html#radiation.IncidentFlux">IncidentFlux (class in radiation)</a>
 </li>
-      <li><a href="rst/api-reference/aerosol.html#aerosol.Interpolator">Interpolator (class in aerosol)</a>
+      <li><a href="rst/api-reference/output.html#output.OutputArrays.intensity">intensity() (output.OutputArrays property)</a>
 </li>
       <li><a href="rst/api-reference/radiation.html#radiation.IncidentFlux.isotropic_flux">isotropic_flux() (radiation.IncidentFlux property)</a>
 </li>
@@ -406,6 +410,10 @@
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="rst/api-reference/aerosol.html#aerosol.TabularLegendreCoefficients.make_nn_phase_function">make_nn_phase_function() (aerosol.TabularLegendreCoefficients method)</a>
+</li>
+      <li><a href="rst/api-reference/aerosol.html#aerosol.ForwardScattering.make_nn_properties">make_nn_properties() (aerosol.ForwardScattering method)</a>
+</li>
       <li><a href="rst/api-reference/output.html#output.OutputArrays.mean_intensity">mean_intensity() (output.OutputArrays property)</a>
 </li>
       <li><a href="rst/api-reference/atmosphere.html#atmosphere.ModelAtmosphere">ModelAtmosphere (class in atmosphere)</a>
@@ -457,17 +465,13 @@
       </ul></li>
       <li><a href="rst/api-reference/controller.html#controller.ComputationalParameters.n_moments">n_moments() (controller.ComputationalParameters property)</a>
 </li>
-      <li><a href="rst/api-reference/controller.html#controller.ComputationalParameters.n_polar">n_polar() (controller.ComputationalParameters property)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="rst/api-reference/controller.html#controller.ComputationalParameters.n_polar">n_polar() (controller.ComputationalParameters property)</a>
+</li>
       <li><a href="rst/api-reference/controller.html#controller.ComputationalParameters.n_streams">n_streams() (controller.ComputationalParameters property)</a>
 </li>
       <li><a href="rst/api-reference/controller.html#controller.ComputationalParameters.n_user_levels">n_user_levels() (controller.ComputationalParameters property)</a>
-</li>
-      <li><a href="rst/api-reference/aerosol.html#aerosol.Interpolator.nearest_neighbor">nearest_neighbor() (aerosol.Interpolator method)</a>
-</li>
-      <li><a href="rst/api-reference/aerosol.html#aerosol.NearestNeighborTabularLegendreCoefficients">NearestNeighborTabularLegendreCoefficients (class in aerosol)</a>
 </li>
       <li><a href="rst/api-reference/eos.html#eos.Hydrostatic.number_density">number_density() (eos.Hydrostatic property)</a>
 </li>
@@ -517,7 +521,7 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="rst/api-reference/observation.html#observation.Angles.phase">phase() (observation.Angles property)</a>
 </li>
-      <li><a href="rst/api-reference/aerosol.html#aerosol.NearestNeighborTabularLegendreCoefficients.phase_function">phase_function() (aerosol.NearestNeighborTabularLegendreCoefficients property)</a>
+      <li><a href="rst/api-reference/aerosol.html#aerosol.TabularLegendreCoefficients.phase_function">phase_function() (aerosol.TabularLegendreCoefficients property)</a>
 
       <ul>
         <li><a href="rst/api-reference/rayleigh.html#rayleigh.RayleighCO2.phase_function">(rayleigh.RayleighCO2 property)</a>
@@ -579,11 +583,15 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="rst/api-reference/eos.html#eos.Hydrostatic.scale_height">scale_height() (eos.Hydrostatic property)</a>
 </li>
+      <li><a href="rst/api-reference/aerosol.html#aerosol.ForwardScattering.scattering_cross_section">scattering_cross_section() (aerosol.ForwardScattering property)</a>
+</li>
       <li><a href="rst/api-reference/observation.html#observation.Spectral.short_wavelength">short_wavelength() (observation.Spectral property)</a>
 </li>
-      <li><a href="rst/api-reference/atmosphere.html#atmosphere.ModelAtmosphere.single_scattering_albedo">single_scattering_albedo() (atmosphere.ModelAtmosphere property)</a>
+      <li><a href="rst/api-reference/aerosol.html#aerosol.ForwardScattering.single_scattering_albedo">single_scattering_albedo() (aerosol.ForwardScattering property)</a>
 
       <ul>
+        <li><a href="rst/api-reference/atmosphere.html#atmosphere.ModelAtmosphere.single_scattering_albedo">(atmosphere.ModelAtmosphere property)</a>
+</li>
         <li><a href="rst/api-reference/rayleigh.html#rayleigh.RayleighCO2.single_scattering_albedo">(rayleigh.RayleighCO2 property)</a>
 </li>
       </ul></li>

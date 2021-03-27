@@ -67,9 +67,6 @@ rayleigh_pf = rco2.phase_function
 
 print(np.sum(rayleigh_od, axis=0))
 
-print(rayleigh_pf.shape, rayleigh_od.shape)
-raise SystemExit(9)
-
 # aerosol module
 from pyRT_DISORT.aerosol import Conrath
 
@@ -92,25 +89,31 @@ psizes = hdul['particle_sizes'].data
 pgrad = np.linspace(1.5, 1.5, num=14)
 wave_ref = 9.3
 
-from pyRT_DISORT.aerosol import NearestNeighborForwardScattering
+from pyRT_DISORT.aerosol import ForwardScattering
 
-nnfs = NearestNeighborForwardScattering(csca, cext, psizes, wavs, pgrad, pixel_wavelengths, wave_ref)
+fs = ForwardScattering(csca, cext, psizes, wavs, pgrad, pixel_wavelengths, wave_ref)
+fs.make_nn_properties()
 
-dust_ssa = nnfs.single_scattering_albedo
+nn_ext_cs = fs.extinction_cross_section
+nn_sca_cs = fs.scattering_cross_section
+dust_ssa = fs.single_scattering_albedo
+dust_ext = fs.extinction
 
 from pyRT_DISORT.aerosol import OpticalDepth
 
-od = OpticalDepth(dust_profile, hydro.column_density, nnfs.extinction, 1)
+od = OpticalDepth(dust_profile, hydro.column_density, fs.extinction, 1)
 dust_od = od.total
 
-from pyRT_DISORT.aerosol import NearestNeighborTabularLegendreCoefficients
+from pyRT_DISORT.aerosol import TabularLegendreCoefficients
 
 dust_phsfn_file = fits.open('/home/kyle/repos/pyRT_DISORT/tests/aux/dust_phase_function.fits')
 coeff = dust_phsfn_file['primary'].data
 pf_wavs = dust_phsfn_file['wavelengths'].data
 pf_psizes = dust_phsfn_file['particle_sizes'].data
 
-pf = NearestNeighborTabularLegendreCoefficients(coeff, pf_psizes, pf_wavs, pgrad, pixel_wavelengths)
+pf = TabularLegendreCoefficients(coeff, pf_psizes, pf_wavs, pgrad, pixel_wavelengths)
+pf.make_nn_phase_function()
+
 dust_pf = pf.phase_function
 
 # the atmosphere module

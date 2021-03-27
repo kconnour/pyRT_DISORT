@@ -94,9 +94,9 @@
 <li class="toctree-l2"><a class="reference internal" href="rayleigh.html">The rayleigh module</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">The aerosol module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#conrath">Conrath</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#nearestneighborforwardscattering">NearestNeighborForwardScattering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#forwardscattering">ForwardScattering</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#opticaldepth">OpticalDepth</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#nearestneighbortabularlegendrecoefficients">NearestNeighborTabularLegendreCoefficients</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tabularlegendrecoefficients">TabularLegendreCoefficients</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="atmosphere.html">The atmosphere module</a></li>
@@ -185,12 +185,13 @@
 arrays for dust.</p>
 <div class="section" id="conrath">
 <h2>Conrath<a class="headerlink" href="#conrath" title="Permalink to this headline">¶</a></h2>
-<p>Suppose you want to use a Conrath profile. <a class="reference internal" href="../api-reference/aerosol.html#aerosol.Conrath" title="aerosol.Conrath"><code class="xref py py-class docutils literal notranslate"><span class="pre">Conrath</span></code></a>
-provides the ability to construct a Conrath profile. For our retrieval, this
+<p>First, we need to define a vertical volumetric mixing ratio profile for dust.
+A Conrath profile was invented specifically for Martian dust, so let’s use
+<a class="reference internal" href="../api-reference/aerosol.html#aerosol.Conrath" title="aerosol.Conrath"><code class="xref py py-class docutils literal notranslate"><span class="pre">Conrath</span></code></a> to make the profile. For our retrieval, this
 profile will be used to define the aerosol weighting within the <em>layers</em>. Let’s
 assume the midpoint altitudes are a good representation of the layer altitudes
 and construct them here.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">z_midpoint</span> <span class="o">=</span> <span class="p">((</span><span class="n">z_grid</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">z_grid</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">z_midpoint</span> <span class="o">=</span> <span class="p">(</span><span class="n">z_grid</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">z_grid</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span> <span class="o">/</span> <span class="mi">2</span>
 </pre></div>
 </div>
 <p>We can then set the Conrath parameters, and access the profile via the class
@@ -213,16 +214,17 @@ mixing ratio profiles. This may be more applicable to water-ice clouds so we
 won’t use it here, but it’s worth mentioning its existence.</p>
 </div>
 </div>
-<div class="section" id="nearestneighborforwardscattering">
-<h2>NearestNeighborForwardScattering<a class="headerlink" href="#nearestneighborforwardscattering" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="forwardscattering">
+<h2>ForwardScattering<a class="headerlink" href="#forwardscattering" title="Permalink to this headline">¶</a></h2>
 <p>The last preparation step we need to do is define the aerosol’s forward
-scattering properties.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>I assume that an aerosol’s properties are a function of particle size and
-wavelength. If you have properties that aren’t a function of both of those,
-you can use functions like <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.broadcast_to.html">np.broadcast_to()</a>
-to make 3D arrays.</p>
+scattering properties. I assume that all forward scattering properties are a
+function of both particle size and wavelength.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>If you have properties that aren’t a function of both particle size and
+wavelength, you can use functions like
+<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.broadcast_to.html">np.broadcast_to()</a>
+to make the arrays of the proper shape.</p>
 </div>
 <p>I include some dust scattering properties in the tests directory, so let’s get
 them, along with the grid over which they’re defined.</p>
@@ -238,71 +240,81 @@ them, along with the grid over which they’re defined.</p>
 </div>
 <p>Now, we simply need to define a grid of particle sizes where to get these
 properties (and the wavelengths too, but we already defined these). We should
-also define the wavelength reference—the wavelength to scale all values to.
+also define the wavelength reference—the wavelength to scale the extinction cross section.
 This value will come in handy when creating the optical depth profile.</p>
 <p>Finally, the particle sizes and wavelengths at which the properties are defined
-aren’t necessarily the ones we want to use, so we need to select how to how to
-get values at undefined grid locations. For this example I’ll use nearest
-neighbor.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>I made a generic <code class="xref py py-class docutils literal notranslate"><span class="pre">aerosol.Interpolator</span></code> class to do various different
-kinds of interpolation. This class is almost entirely a wrapper around that
-class.</p>
-</div>
+aren’t necessarily the ones we want to use, so we also need to include a grid
+of particle sizes and wavelengths to regrid the forward scattering properties
+onto. We can do this with <a class="reference internal" href="../api-reference/aerosol.html#aerosol.ForwardScattering" title="aerosol.ForwardScattering"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForwardScattering</span></code></a>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">particle_size_grad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
 <span class="n">wave_ref</span> <span class="o">=</span> <span class="mf">9.3</span>
 
-<span class="kn">from</span> <span class="nn">pyRT_DISORT.aerosol</span> <span class="kn">import</span> <span class="n">NearestNeighborForwardScattering</span>
+<span class="kn">from</span> <span class="nn">pyRT_DISORT.aerosol</span> <span class="kn">import</span> <span class="n">ForwardScattering</span>
 
-<span class="n">fs</span> <span class="o">=</span> <span class="n">NearestNeighborForwardScattering</span><span class="p">(</span><span class="n">csca</span><span class="p">,</span> <span class="n">cext</span><span class="p">,</span> <span class="n">psizes</span><span class="p">,</span> <span class="n">wavs</span><span class="p">,</span> <span class="n">particle_size_grad</span><span class="p">,</span>
-                                      <span class="n">pixel_wavelengths</span><span class="p">,</span> <span class="n">wave_ref</span><span class="p">)</span>
-<span class="n">dust_ssa</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="n">single_scattering_albedo</span>
+<span class="n">fs</span> <span class="o">=</span> <span class="n">ForwardScattering</span><span class="p">(</span><span class="n">csca</span><span class="p">,</span> <span class="n">cext</span><span class="p">,</span> <span class="n">psizes</span><span class="p">,</span> <span class="n">wavs</span><span class="p">,</span> <span class="n">particle_size_grad</span><span class="p">,</span>
+                       <span class="n">pixel_wavelengths</span><span class="p">,</span> <span class="n">wave_ref</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>I won’t list all of the properties, but this object allows you to see the
-the input coefficients on this new grid. It also defines the single scattering
-albedo, and extinction profile of this new grid. We’ve actually already defined
-the single scattering albedo already, so let’s now create the optical depth
-array.</p>
+<p>Before calling any methods, <code class="docutils literal notranslate"><span class="pre">fs</span></code> simply holds on to the inputs. It’s now our
+job to tell it <em>how</em> to grid the forward scattering properties onto this new
+grid. Perhaps you want nearest neighbor interpolation, perhaps you want linear
+interpolation, or perhaps you want something fancier. Just call the method that
+tells it how to do the interpolation and then you can access the computed
+properties. Here, I’ll use nearest neighbor.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fs</span><span class="o">.</span><span class="n">make_nn_properties</span><span class="p">()</span>
+
+<span class="n">nn_sca_cs</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="n">scattering_cross_section</span>
+<span class="n">nn_ext_cs</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="n">extinction_cross_section</span>
+<span class="n">dust_ssa</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="n">single_scattering_albedo</span>
+<span class="n">dust_ext</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="n">extinction</span>
+</pre></div>
+</div>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>If you don’t call a method, all of the properties will be empty arrays.</p>
+</div>
+<p>We’ve now defined the single scattering albedo at the nearest neighbor grid
+points. Since we have the extinction (<code class="docutils literal notranslate"><span class="pre">dust_ext</span></code>) we can create the optical
+depth array.</p>
 </div>
 <div class="section" id="opticaldepth">
 <h2>OpticalDepth<a class="headerlink" href="#opticaldepth" title="Permalink to this headline">¶</a></h2>
-<p>Now that we have the extinction profile from <code class="code docutils literal notranslate"><span class="pre">nnfs</span></code>, we can make the array
+<p>Now that we have the extinction profile from <code class="code docutils literal notranslate"><span class="pre">fs</span></code>, we can make the array
 of optical depth with <a class="reference internal" href="../api-reference/aerosol.html#aerosol.OpticalDepth" title="aerosol.OpticalDepth"><code class="xref py py-class docutils literal notranslate"><span class="pre">OpticalDepth</span></code></a>. I’ll plug in everything
 and let it calculate. Essentially, all it needs to know to compute the optical
 depth is the the vertical mixing ratio profile along with the column density in
 each layer. It’ll allocate the optical such that the total optical depth sums
 up to the column integrated optical depth (which I set to 1 here), and is then
-scaled to the wavelength reference that defined extinction.</p>
+scaled to the reference wavelength that extinction was computed for (here,
+9.3 microns when making <code class="docutils literal notranslate"><span class="pre">dust_ext</span></code>).</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.aerosol</span> <span class="kn">import</span> <span class="n">OpticalDepth</span>
 
 <span class="n">od</span> <span class="o">=</span> <span class="n">OpticalDepth</span><span class="p">(</span><span class="n">dust_profile</span><span class="p">,</span> <span class="n">hydro</span><span class="o">.</span><span class="n">column_density</span><span class="p">,</span> <span class="n">fs</span><span class="o">.</span><span class="n">extinction</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">dust_od</span> <span class="o">=</span> <span class="n">od</span><span class="o">.</span><span class="n">total</span>
 </pre></div>
 </div>
-<p>With that, we have the optical depth computed.</p>
+<p>With that, we computed the optical depth.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>As before, if you want to see the total optical depth due to dust at the
+input wavelengths, you can execute the line</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dust_od</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+</pre></div>
 </div>
-<div class="section" id="nearestneighbortabularlegendrecoefficients">
-<h2>NearestNeighborTabularLegendreCoefficients<a class="headerlink" href="#nearestneighbortabularlegendrecoefficients" title="Permalink to this headline">¶</a></h2>
-<p>Now, we just need to make the phase function. The general idea is that any
-phase function will be defined on an input grid of particle sizes and
-wavelengths. pyRT_DISORT comes with an abstract
-<a class="reference internal" href="../api-reference/aerosol.html#aerosol.TabularLegendreCoefficients" title="aerosol.TabularLegendreCoefficients"><code class="xref py py-class docutils literal notranslate"><span class="pre">TabularLegendreCoefficients</span></code></a> that houses some methods to help
-create a phase function. But something more practical might be
-<a class="reference internal" href="../api-reference/aerosol.html#aerosol.NearestNeighborTabularLegendreCoefficients" title="aerosol.NearestNeighborTabularLegendreCoefficients"><code class="xref py py-class docutils literal notranslate"><span class="pre">NearestNeighborTabularLegendreCoefficients</span></code></a>. As before, we
-just need to give this object the phase function, the particle size and
-wavelength grid over which it’s defined, and the particle size and wavelength
-grid over which we want the phase function. Let’s go ahead and do that here.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Suppose you have an analytic phase function like Henyey-Greenstein. Even in
-this case it depends on the asymmetry parameter, which is itself only
-empirically determined at certain sizes and wavelengths. In this case, we
-just need to convert the asymmetry parameter into Legendre coefficients,
-then we have an array that’s functionally identical to empirical, tabular
-Legendre coefficients.</p>
+<p>to see the column integrated optical depth. For this example it gives
+<code class="docutils literal notranslate"><span class="pre">[1.89162754</span> <span class="pre">1.93270736</span> <span class="pre">1.55633803</span> <span class="pre">1.16197183</span> <span class="pre">0.76995305]</span></code>. This is
+just the ratio of the extinction coefficient at the wavelength divided by
+the extinction coefficient at the reference wavelength, summed over all the
+layers.</p>
 </div>
+</div>
+<div class="section" id="tabularlegendrecoefficients">
+<h2>TabularLegendreCoefficients<a class="headerlink" href="#tabularlegendrecoefficients" title="Permalink to this headline">¶</a></h2>
+<p>Now, we just need to make the phase function, which we can do with
+<a class="reference internal" href="../api-reference/aerosol.html#aerosol.TabularLegendreCoefficients" title="aerosol.TabularLegendreCoefficients"><code class="xref py py-class docutils literal notranslate"><span class="pre">TabularLegendreCoefficients</span></code></a>. This class will essentially work
+the same way that <code class="docutils literal notranslate"><span class="pre">ForwardScattering</span></code> did—it will simply hang on to an
+array of Legendre coefficients, the grid over which they’re defined, and the
+grid to regrid them onto. Let’s go ahead and do that here.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.aerosol</span> <span class="kn">import</span> <span class="n">NearestNeighborTabularLegendreCoefficients</span>
 
 <span class="n">dust_phsfn_file</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;~/pyRT_DISORT/tests/aux/dust_phase_function.fits&#39;</span><span class="p">)</span>
@@ -312,10 +324,34 @@ Legendre coefficients.</p>
 
 <span class="n">pf</span> <span class="o">=</span> <span class="n">NearestNeighborTabularLegendreCoefficients</span><span class="p">(</span><span class="n">coeff</span><span class="p">,</span> <span class="n">pf_psizes</span><span class="p">,</span> <span class="n">pf_wavs</span><span class="p">,</span>
                                                 <span class="n">pgrad</span><span class="p">,</span> <span class="n">pixel_wavelengths</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Like before, there are multiple ways to do the regridding. I’ll again go with
+nearest neighbor, then access the phase function via the property.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pf</span><span class="o">.</span><span class="n">make_nn_phase_function</span><span class="p">()</span>
+
 <span class="n">dust_pf</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">phase_function</span>
 </pre></div>
 </div>
-<p>And before you know it, we’ve created all the things we need for dust!</p>
+<p>To recap, we regridded the forward scattering properties to a grid via
+nearest neighbor interpolation, which gave us the dust single scattering
+albedo. We made vertical profile for dust, and with the nearest neighbor
+extinction profile we computed the optical depth. Finally, we used nearest
+neighbor interpolation to get the Legendre coefficients on our grid. We now
+computed all of the arrays for dust!</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In this example I used the tabulated Legendre coefficients from an empirical
+phase function, but suppose you want to use an analytic phase function like
+Henyey-Greenstein. In this case the Legendre coefficients are determined
+by the asymmetry parameter at particle sizes and wavelengths. You’d want to
+turn the asymmetry parameter into Legendre coefficients (see
+<code class="xref py py-class docutils literal notranslate"><span class="pre">HenyeyGreenstein</span></code> to do this). After doing this we have an
+array that’s functionally identical to the empirical coefficients we defined
+above—Legendre coefficients and the particle size and wavelength grid over
+which they’re defined, so you can put the newly created Legendre coefficient
+array into <code class="docutils literal notranslate"><span class="pre">TabularLegendreCoefficients</span></code> and be good to go.</p>
+</div>
 </div>
 </div>
 
