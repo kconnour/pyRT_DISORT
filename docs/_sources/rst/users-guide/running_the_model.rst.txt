@@ -1,3 +1,45 @@
 Running the model
 =================
-Coming soon!
+We have all the variables we need to simulate some reflectance curves. Recall
+that we've been making properties (where applicable) at all 5 wavelengths at
+once. Unfortunately DISORT can't natively handle this, so we need to loop over
+wavelength. I'll import the necessary module and create an array that'll be
+filled as DISORT runs.
+
+.. code-block:: python
+
+   import disort
+
+   test_run = np.zeros(pixel_wavelengths.shape)
+
+Once we carefully put all ~50 variables in the correct order and remember to
+only select parts of the arrays we need (slicing off the wavelength dimension),
+we can do simulations.
+
+.. code-block:: python
+
+   for ind in range(pixel_wavelengths.size):
+       rfldir, rfldn, flup, dfdt, uavg, uu, albmed, trnmed = \
+           disort.disort(USRANG, USRTAU, IBCND, ONLYFL, PRNT, PLANK, LAMBER,
+                         DELTAMPLUS, DO_PSEUDO_SPHERE, DTAUC[:, ind], SSALB[:, ind],
+                         PMOM[:, :, ind], TEMPER, WVNMLO, WVNMHI,
+                         UTAU, UMU0, PHI0, UMU, PHI, FBEAM, FISOT,
+                         ALBEDO, BTEMP, TTEMP, TEMIS, EARTH_RADIUS, H_LYR, RHOQ, RHOU,
+                         RHO_ACCURATE, BEMST, EMUST, ACCUR, HEADER, RFLDIR,
+                         RFLDN, FLUP, DFDT, UAVG, UU, ALBMED, TRNMED)
+
+       test_run[ind] = uu[0, 0, 0]
+
+   print(test_run)
+
+This prints :code:`[0.20444766 0.18252057 0.07527761 0.11988172 0.10403387]`.
+
+.. note::
+   It seems pretty tedious to me to have to put in all the variables in the
+   proper order. At some point I may make a function/class that accepts
+   instances of classes that you've already created and then extracts the
+   proper variables from those class attributes. But I can only do so much at
+   once.
+
+And with that we've done our simulation. At some point I'll show you how to add
+a solver and parallelize this code, but I need a break for now... 

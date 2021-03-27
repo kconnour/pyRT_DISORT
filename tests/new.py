@@ -190,13 +190,8 @@ from pyRT_DISORT.surface import Surface
 
 sfc = Surface(0.1, cp.n_streams, cp.n_polar, cp.n_azimuth, ob.user_angles,
                   ob.only_fluxes)
+
 sfc.make_lambertian()
-
-b0 = 1
-h = 0.5
-w = 0.5
-
-sfc.make_hapke(b0, h, w, UMU, UMU0, PHI, PHI0, FBEAM)
 
 ALBEDO = sfc.albedo
 LAMBER = sfc.lambertian
@@ -211,7 +206,7 @@ import disort
 
 test_run = np.zeros(pixel_wavelengths.shape)
 
-for ind, w in enumerate(pixel_wavelengths):
+for ind in range(pixel_wavelengths.size):
     rfldir, rfldn, flup, dfdt, uavg, uu, albmed, trnmed = \
         disort.disort(USRANG, USRTAU, IBCND, ONLYFL, PRNT, PLANK, LAMBER,
                       DELTAMPLUS, DO_PSEUDO_SPHERE, DTAUC[:, ind], SSALB[:, ind],
