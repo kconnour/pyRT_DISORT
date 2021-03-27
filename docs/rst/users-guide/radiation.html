@@ -96,8 +96,8 @@
 <li class="toctree-l2"><a class="reference internal" href="atmosphere.html">The atmosphere module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="controller.html">The controller module</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">The radiation module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#incident-flux">Incident Flux</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#thermal-emission">Thermal Emission</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#incidentflux">IncidentFlux</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#thermalemission">ThermalEmission</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="output.html">The output module</a></li>
@@ -179,16 +179,16 @@
             
   <div class="section" id="the-radiation-module">
 <h1>The radiation module<a class="headerlink" href="#the-radiation-module" title="Permalink to this headline">¶</a></h1>
-<p>We need to specify the flux and thermal quantities used in the model, so let’s
-get right to it.</p>
-<div class="section" id="incident-flux">
-<h2>Incident Flux<a class="headerlink" href="#incident-flux" title="Permalink to this headline">¶</a></h2>
+<p>Let’s now specify the flux and thermal quantities used in the model.</p>
+<div class="section" id="incidentflux">
+<h2>IncidentFlux<a class="headerlink" href="#incidentflux" title="Permalink to this headline">¶</a></h2>
 <p>We can define the beam flux and the isotropic flux at the top of the atmosphere
 in the <a class="reference internal" href="../api-reference/radiation.html#radiation.IncidentFlux" title="radiation.IncidentFlux"><code class="xref py py-class docutils literal notranslate"><span class="pre">IncidentFlux</span></code></a> class. Instances of this class don’t do
 anything but containerize your desired flux, and provide some default values.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.radiation</span> <span class="kn">import</span> <span class="n">IncidentFlux</span><span class="p">,</span> <span class="n">ThermalEmission</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.radiation</span> <span class="kn">import</span> <span class="n">IncidentFlux</span>
 
 <span class="n">flux</span> <span class="o">=</span> <span class="n">IncidentFlux</span><span class="p">()</span>
+
 <span class="n">FBEAM</span> <span class="o">=</span> <span class="n">flux</span><span class="o">.</span><span class="n">beam_flux</span>
 <span class="n">FISOT</span> <span class="o">=</span> <span class="n">flux</span><span class="o">.</span><span class="n">isotropic_flux</span>
 </pre></div>
@@ -197,20 +197,24 @@ anything but containerize your desired flux, and provide some default values.</p
 for our Martian simulation, there’s no real need to worry about the isotropic
 flux from space.</p>
 </div>
-<div class="section" id="thermal-emission">
-<h2>Thermal Emission<a class="headerlink" href="#thermal-emission" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="thermalemission">
+<h2>ThermalEmission<a class="headerlink" href="#thermalemission" title="Permalink to this headline">¶</a></h2>
 <p>We can also define whether thermal emission is used in the model with the
 <a class="reference internal" href="../api-reference/radiation.html#radiation.ThermalEmission" title="radiation.ThermalEmission"><code class="xref py py-class docutils literal notranslate"><span class="pre">ThermalEmission</span></code></a> class. As before, pyRT_DISORT has default
 values to get you up and running, though you can easily override them.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">te</span> <span class="o">=</span> <span class="n">ThermalEmission</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.radiation</span> <span class="kn">import</span> <span class="n">ThermalEmission</span>
+
+<span class="n">te</span> <span class="o">=</span> <span class="n">ThermalEmission</span><span class="p">()</span>
+
 <span class="n">PLANK</span> <span class="o">=</span> <span class="n">te</span><span class="o">.</span><span class="n">thermal_emission</span>
 <span class="n">BTEMP</span> <span class="o">=</span> <span class="n">te</span><span class="o">.</span><span class="n">bottom_temperature</span>
 <span class="n">TTEMP</span> <span class="o">=</span> <span class="n">te</span><span class="o">.</span><span class="n">top_temperature</span>
 <span class="n">TEMIS</span> <span class="o">=</span> <span class="n">te</span><span class="o">.</span><span class="n">top_emissivity</span>
 </pre></div>
 </div>
-<p>By default, <code class="code docutils literal notranslate"><span class="pre">thermal_emission==False</span></code> and no other values are used. But
-you’re free to turn thermal emission on and add values for the boundaries.</p>
+<p>By default, <code class="code docutils literal notranslate"><span class="pre">thermal_emission</span></code> is set to <code class="code docutils literal notranslate"><span class="pre">False</span></code> and no other
+values are used. But
+you’re free to turn on thermal emission and add values for the boundaries.</p>
 </div>
 </div>
 
