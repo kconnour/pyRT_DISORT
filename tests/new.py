@@ -186,17 +186,25 @@ ulv = UserLevel(cp.n_user_levels)
 UTAU = ulv.optical_depth_output
 
 # The surface module
-from pyRT_DISORT.surface import Lambertian
+from pyRT_DISORT.surface import Surface
 
-lamb = Lambertian(0.1, cp.n_streams, cp.n_polar, cp.n_azimuth, ob.user_angles,
+sfc = Surface(0.1, cp.n_streams, cp.n_polar, cp.n_azimuth, ob.user_angles,
                   ob.only_fluxes)
-ALBEDO = lamb.albedo
-LAMBER = lamb.lambertian
-RHOU = lamb.rhou
-RHOQ = lamb.rhoq
-BEMST = lamb.bemst
-EMUST = lamb.emust
-RHO_ACCURATE = lamb.rho_accurate
+sfc.make_lambertian()
+
+b0 = 1
+h = 0.5
+w = 0.5
+
+sfc.make_hapke(b0, h, w, UMU, UMU0, PHI, PHI0, FBEAM)
+
+ALBEDO = sfc.albedo
+LAMBER = sfc.lambertian
+RHOU = sfc.rhou
+RHOQ = sfc.rhoq
+BEMST = sfc.bemst
+EMUST = sfc.emust
+RHO_ACCURATE = sfc.rho_accurate
 
 # Run the model
 import disort

@@ -1,5 +1,5 @@
-"""The output module contains data structures for controlling what DISORT
-outputs.
+"""The :code:`output` module contains data structures for controlling what
+DISORT outputs.
 """
 import numpy as np
 
