@@ -88,15 +88,15 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../users-guide.html">User’s Guide</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api-reference.html">pyRT_DISORT API reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="aerosol.html">Aerosol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atmosphere.html">Atmosphere</a></li>
 <li class="toctree-l2"><a class="reference internal" href="controller.html">Controller</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eos.html">Equation of State</a></li>
 <li class="toctree-l2"><a class="reference internal" href="observation.html">Observation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="output.html">Output</a></li>
-<li class="toctree-l2"><a class="reference internal" href="phase_function.html">Phase Function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="radiation.html">Radiation</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Rayleigh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="surface.html">Surface</a></li>
-<li class="toctree-l2"><a class="reference internal" href="vertical_profile.html">Vertical Profile</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../about-disort.html">About DISORT</a></li>
@@ -172,58 +172,15 @@
             
   <div class="section" id="module-rayleigh">
 <span id="rayleigh"></span><h1>Rayleigh<a class="headerlink" href="#module-rayleigh" title="Permalink to this headline">¶</a></h1>
-<p>The rayleigh module contains structures for computing Rayleigh scattering.</p>
-<dl class="py class">
-<dt id="rayleigh.Rayleigh">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">rayleigh.</span></code><code class="sig-name descname"><span class="pre">Rayleigh</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spectral_shape</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rayleigh.Rayleigh" title="Permalink to this definition">¶</a></dt>
-<dd><p>An abstract base class for Rayleigh scattering.</p>
-<p>Rayleigh creates the Legendre coefficient phase function array given the
-number of layers and the spectral shape. This is an abstract base
-class from which all other Rayleigh classes are derived.</p>
-<dl class="py method">
-<dt id="rayleigh.Rayleigh.__init__">
-<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spectral_shape</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rayleigh.Rayleigh.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>n_layers</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The number of layers to use in the model.</p></li>
-<li><p><strong>spectral_shape</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>) – The pixel shape to construct a phase function.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>TypeError</strong> – Raised if <code class="code docutils literal notranslate"><span class="pre">n_layers</span></code> is not an int, or if
-    <code class="code docutils literal notranslate"><span class="pre">spectral_shape</span></code> is not a tuple.</p></li>
-<li><p><strong>ValueError</strong> – Raised if the values in <code class="code docutils literal notranslate"><span class="pre">spectral_shape</span></code> are not ints.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="rayleigh.Rayleigh.phase_function">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">phase_function</span></code><a class="headerlink" href="#rayleigh.Rayleigh.phase_function" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the Legendre decomposition of the phase function.</p>
-<p class="rubric">Notes</p>
-<p>The shape of this array is (3, n_layers, (spectral_shape)). The
-0 <sup>th</sup> and 2 <sup>nd</sup> coefficient along the 0 <sup>th</sup> axis will
-be 1 and 0.1, respectively.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
+<p>The <code class="docutils literal notranslate"><span class="pre">rayleigh</span></code> module contains structures for computing Rayleigh
+scattering.</p>
 <dl class="py class">
 <dt id="rayleigh.RayleighCO2">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">rayleigh.</span></code><code class="sig-name descname"><span class="pre">RayleighCO2</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wavelength</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_density</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rayleigh.RayleighCO2" title="Permalink to this definition">¶</a></dt>
-<dd><p>A structure to hold arrays related to CO <sub>2</sub> Rayleigh scattering.</p>
-<p>RayleighCO2 creates the Legendre coefficient phase function array and the
-optical depths due to Rayleigh scattering by CO <sub>2</sub> in each of the
-layers.</p>
+<dd><p>A structure to compute CO <sub>2</sub> Rayleigh scattering arrays.</p>
+<p>RayleighCO2 creates the optical depth, single scattering albedo, and
+Legendre coefficient decomposition phase function arrays due to Rayleigh
+scattering by CO <sub>2</sub> in each of the layers.</p>
 <dl class="py method">
 <dt id="rayleigh.RayleighCO2.__init__">
 <code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wavelength</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_density</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rayleigh.RayleighCO2.__init__" title="Permalink to this definition">¶</a></dt>
@@ -246,24 +203,21 @@ layers.</p>
 </dl>
 <p class="rubric">Notes</p>
 <p>In the general case of a hyperspectral imager with MxN pixels and W
-wavelengths, <code class="code docutils literal notranslate"><span class="pre">wavelength</span></code> can have shape WxMxN. In this case,
-<code class="code docutils literal notranslate"><span class="pre">column_density</span></code> should have shape ZxMxN, where Z is the number
+wavelengths, <code class="docutils literal notranslate"><span class="pre">wavelength</span></code> can have shape WxMxN. In this case,
+<code class="docutils literal notranslate"><span class="pre">column_density</span></code> should have shape ZxMxN, where Z is the number
 of model layers. The 0 <sup>th</sup> dimension can have different shapes
 between the arrays but the subsequent dimensions (if any) should have
 the same shape.</p>
+<p class="rubric">References</p>
 <p>The values used here are from <a class="reference external" href="https://doi.org/10.1016/j.jqsrt.2004.07.025">Sneep and Ubachs 2005</a></p>
 <p>Due to a typo in the paper, I changed the coefficient to 10 <sup>3</sup>
-when using equation 13 for computing the index of refraction</p>
+when using equation 13 for computing the index of refraction.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="rayleigh.RayleighCO2.phase_function">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">phase_function</span></code><a class="headerlink" href="#rayleigh.RayleighCO2.phase_function" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the Legendre decomposition of the phase function.</p>
-<p class="rubric">Notes</p>
-<p>The shape of this array is (3, n_layers, (spectral_shape)). The
-0 <sup>th</sup> and 2 <sup>nd</sup> coefficient along the 0 <sup>th</sup> axis will
-be 1 and 0.1, respectively.</p>
+<dt id="rayleigh.RayleighCO2.optical_depth">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">optical_depth</span></code><a class="headerlink" href="#rayleigh.RayleighCO2.optical_depth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the Rayleigh optical depth.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
@@ -272,9 +226,27 @@ be 1 and 0.1, respectively.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="rayleigh.RayleighCO2.scattering_optical_depth">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">scattering_optical_depth</span></code><a class="headerlink" href="#rayleigh.RayleighCO2.scattering_optical_depth" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the Rayleigh scattering optical depth.</p>
+<dt id="rayleigh.RayleighCO2.phase_function">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">phase_function</span></code><a class="headerlink" href="#rayleigh.RayleighCO2.phase_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the Legendre decomposition of the phase function.</p>
+<p class="rubric">Notes</p>
+<p>The shape of this array is (3, n_layers, (spectral_shape)). The
+0 <sup>th</sup> and 2 <sup>nd</sup> coefficient along the 0 <sup>th</sup> axis are
+1 and 0.1, respectively.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="rayleigh.RayleighCO2.single_scattering_albedo">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">single_scattering_albedo</span></code><a class="headerlink" href="#rayleigh.RayleighCO2.single_scattering_albedo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the Rayleigh single scattering albedo.</p>
+<p class="rubric">Notes</p>
+<p>The shape of this array is (n_layers, (spectral_shape)). It is
+filled with all 1s.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>

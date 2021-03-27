@@ -1,19 +1,23 @@
 import numpy as np
+from pyRT_DISORT.eos import Hydrostatic
 
-
-def get_nearest_indices(array, values):
-    #diff = (values.reshape(1, -1) - array.reshape(-1, 1))
-    #indices = np.abs(diff).argmin(axis=0)
-    #return indices
-    indices = np.abs(np.subtract.outer(array, values)).argmin(0)
-    return indices
-
-wavgrid = np.linspace(1, 10, num=11)
-#print(wavgrid)
-wavs = np.array([[3, 4], [7, 8]])
-
-inds = get_nearest_indices(wavgrid, wavs)
-#print(wavgrid[inds])
+z = np.linspace(100, -1, num=50)
 
 import disort
 print(disort.disort.__doc__)
+
+'''class Foo:
+    def __init__(self, a):
+        self.__a = a
+
+    def __getattr__(self, method):
+        return getattr(self.a, method)
+
+    @property
+    def a(self):
+        return self.__a
+
+
+f = Foo(np.linspace(0, 50, num=51))
+print(np.amax(f))'''
+

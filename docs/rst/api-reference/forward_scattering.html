@@ -1,0 +1,305 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Forward Scattering &mdash; pyRT_DISORT  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Model Atmosphere" href="model_atmosphere.html" />
+    <link rel="prev" title="Equation of State" href="eos.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> pyRT_DISORT
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Useful links</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../users-guide.html">User’s Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api-reference.html">pyRT_DISORT API reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="aerosol.html">Aerosol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="controller.html">Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eos.html">Equation of State</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Forward Scattering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_atmosphere.html">Model Atmosphere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="observation.html">Observation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optical_depth.html">Optical Depth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="phase_function.html">Phase Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radiation.html">Radiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rayleigh.html">Rayleigh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="surface.html">Surface</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../about-disort.html">About DISORT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pyRT_DISORT</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../api-reference.html">pyRT_DISORT API reference</a> &raquo;</li>
+        
+      <li>Forward Scattering</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../_sources/rst/api-reference/forward_scattering.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-forward_scattering">
+<span id="forward-scattering"></span><h1>Forward Scattering<a class="headerlink" href="#module-forward_scattering" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="forward_scattering.NearestNeighborSingleScatteringAlbedo">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">forward_scattering.</span></code><code class="sig-name descname"><span class="pre">NearestNeighborSingleScatteringAlbedo</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scattering_cross_section</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extinction_cross_section</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_size_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelength_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelength</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#forward_scattering.NearestNeighborSingleScatteringAlbedo" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class to make the single scattering albedo related variables.</p>
+<p>NearestNeighborSingleScatteringAlbedo accepts the scattering and extinction
+cross sections, along with a 1D wavelength and particle size grid. It then
+finds the nearest neighbor value in the input forward scattering properties
+to the grids, and creates the properties on a particle size and wavelength
+grid.</p>
+<dl class="py method">
+<dt id="forward_scattering.NearestNeighborSingleScatteringAlbedo.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scattering_cross_section</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extinction_cross_section</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_size_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelength_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelength</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#forward_scattering.NearestNeighborSingleScatteringAlbedo.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scattering_cross_section</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – 2D array of the scattering cross section (the 0th axis is assumed to
+be the particle size axis, while the 1st axis is assumed to be the
+wavelength axis).</p></li>
+<li><p><strong>extinction_cross_section</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – 2D array of the extinction cross section with same dims as above.</p></li>
+<li><p><strong>particle_size_grid</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – 1D array of particle sizes over which the above properties are
+defined.</p></li>
+<li><p><strong>wavelength_grid</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – 1D array of wavelengths over which the above properties are defined.</p></li>
+<li><p><strong>particle_size</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – 1D array of particle sizes to regrid the properties onto.</p></li>
+<li><p><strong>wavelength</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – 1D array of wavelengths to regrid the properties onto.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="forward_scattering.NearestNeighborSingleScatteringAlbedo.extinction_cross_section">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">extinction_cross_section</span></code><a class="headerlink" href="#forward_scattering.NearestNeighborSingleScatteringAlbedo.extinction_cross_section" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the extinction cross section on the new grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="forward_scattering.NearestNeighborSingleScatteringAlbedo.make_extinction_grid">
+<code class="sig-name descname"><span class="pre">make_extinction_grid</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reference_wavelength</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#forward_scattering.NearestNeighborSingleScatteringAlbedo.make_extinction_grid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a grid of the extinction cross section at a reference wavelength.
+This is the extinction cross section at the input wavelengths divided by
+the extinction cross section at the reference wavelength.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="forward_scattering.NearestNeighborSingleScatteringAlbedo.scattering_cross_section">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">scattering_cross_section</span></code><a class="headerlink" href="#forward_scattering.NearestNeighborSingleScatteringAlbedo.scattering_cross_section" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the scattering cross section on the new grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="forward_scattering.NearestNeighborSingleScatteringAlbedo.single_scattering_albedo">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">single_scattering_albedo</span></code><a class="headerlink" href="#forward_scattering.NearestNeighborSingleScatteringAlbedo.single_scattering_albedo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the single scattering albedo on the new grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="model_atmosphere.html" class="btn btn-neutral float-right" title="Model Atmosphere" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="eos.html" class="btn btn-neutral float-left" title="Equation of State" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, kconnour.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

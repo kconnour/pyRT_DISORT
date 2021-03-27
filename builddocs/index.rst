@@ -1,12 +1,9 @@
 Welcome to pyRT_DISORT's documentation
 ======================================
-pyRT_DISORT is a collection of tools that help make radiative transfer easier
-by performing many of the pre-processing steps needed to create the arrays
-required by DISORT. There's no one way to do radiative transfer, so this
-package is designed to just provide tools to make your life easier, assuming
-you combine them in a useful way. If you're a first time user, I suggest you
-check out :doc:`rst/users-guide`, where I walk through an example of how
-to use this package to perform retrievals of Martian dust.
+Hey kid, wanna do radiative transfer in Python? Of course you do, that's why
+you're here... and lucky for you I created pyRT_DISORT to help you out. If
+you're a first time user, I suggest you check out the :doc:`rst/users-guide`;
+otherwise check out info about the project in the links below.
 
 .. toctree::
    :maxdepth: 1

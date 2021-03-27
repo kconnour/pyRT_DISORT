@@ -1,11 +1,11 @@
-"""The controller module holds miscellaneous classes responsible for creating
-arrays that control how DISORT runs.
+"""The :code:`controller` module holds miscellaneous classes responsible for
+creating variables that control how DISORT runs.
 """
 from warnings import warn
 
 
 class ComputationalParameters:
-    """Create a data structure for holding the size of computational parameters.
+    """A data structure for holding the size of computational parameters.
 
     ComputationalParameters holds the number of model layers, streams, moments,
     and angles. It also performs basic checks that these values are plausible.
@@ -13,8 +13,6 @@ class ComputationalParameters:
 
     """
 
-    # TODO: I'd like a better description of n_user_levels. It's not documented
-    #  in the DISORT documentation...
     def __init__(self, n_layers: int, n_moments: int, n_streams: int,
                  n_azimuth: int, n_polar: int, n_user_levels: int) -> None:
         """
@@ -24,21 +22,17 @@ class ComputationalParameters:
             The number of layers to use in the model.
         n_moments
             The number of polynomial moments to use in the model. This number
-            should be greater than or equal to 'n_streams' in problems with
-            scattering. In problems without scattering, this variable is not
-            used by DISORT.
+            should be greater than or equal to :code:`n_streams`.
         n_streams
             The number of streams (i.e. the number of computational polar
             angles) to use in the model. This number should be even and at least
-            2. In general, the more streams used the more accurate DISORT's
-            computations will be.
+            2.
         n_azimuth
             The number of azimuthal angles where DISORT should return radiant
             quantities.
         n_polar
             The number of user-specified polar angles where DISORT should return
-            radiant quantities. Only used by DISORT if
-            :py:attr:`output.OutputBehavior.user_angles` ==True.
+            radiant quantities.
         n_user_levels
             The number of user levels to use in the model.
 
@@ -133,7 +127,10 @@ class ComputationalParameters:
 
         Notes
         -----
-        In DISORT, this variable is named :code:`MAXCLY`.
+        In DISORT, this variable is named :code:`MAXCLY` (though in the
+        :code:`disort` package, this variable is optional).
+
+        In problems without scattering, this variable is not used.
 
         """
         return self.__n_layers
@@ -144,7 +141,8 @@ class ComputationalParameters:
 
         Notes
         -----
-        In DISORT, this variable is named :code:`MAXMOM`.
+        In DISORT, this variable is named :code:`MAXMOM` (though in the
+        :code:`disort` package, this variable is optional).
 
         """
         return self.__n_moments
@@ -155,7 +153,9 @@ class ComputationalParameters:
 
         Notes
         -----
-        In DISORT, this variable is named :code:`MAXCMU`.
+        In DISORT, this variable is named :code:`MAXCMU` (though in the
+        :code:`disort` package, this variable is optional). In general, the more
+        streams used the more accurate DISORT's computations will be.
 
         """
         return self.__n_streams
@@ -166,7 +166,8 @@ class ComputationalParameters:
 
         Notes
         -----
-        In DISORT, this variable is named :code:`MAXPHI`.
+        In DISORT, this variable is named :code:`MAXPHI` (though in the
+        :code:`disort` package, this variable is optional).
 
         """
         return self.__n_azimuth
@@ -177,7 +178,9 @@ class ComputationalParameters:
 
         Notes
         -----
-        In DISORT, this variable is named :code:`MAXUMU`.
+        In DISORT, this variable is named :code:`MAXUMU` (though in the
+        :code:`disort` package, this variable is optional). Only used by DISORT
+        if :py:attr:`~output.OutputBehavior.user_angles` is set to ``True``.
 
         """
         return self.__n_polar
@@ -188,7 +191,12 @@ class ComputationalParameters:
 
         Notes
         -----
-        In DISORT, this variable is named :code:`MAXULV`.
+        In DISORT, this variable is named :code:`MAXULV` (though in the
+        :code:`disort` package, this variable is optional).
+
+        See Also
+        --------
+        :class:`~output.UserLevel`
 
         """
         return self.__n_user_levels
@@ -196,7 +204,7 @@ class ComputationalParameters:
 
 # TODO: fix user_angles docstring. It's a mess
 class ModelBehavior:
-    """Create a data structure for holding the DISORT control variables.
+    """A data structure for holding the DISORT control variables.
 
     ModelBehavior holds the control flags that dictate DISORT's behavior. It
     also performs basic checks that the input control options are plausible.
@@ -217,38 +225,40 @@ class ModelBehavior:
             series has not converged). Should be between 0 and 0.01 to avoid
             risk of serious non-convergence. Has no effect on problems lacking a
             beam source, since azimuthal series has only one term in that case.
-            Default is 0.0.
         delta_m_plus
             Denote whether to use the delta-M+ method of Lin et al. (2018).
-            Default is False.
         do_pseudo_sphere
-            Denote whether to use a pseudo-spherical correction. Default is
-            False.
+            Denote whether to use a pseudo-spherical correction.
         header
             Use a 127- (or less) character header for prints, embedded in the
             DISORT banner. Input headers greater than 127 characters will be
-            truncated. Setting header='' will eliminate both the banner and the
-            header, and this is the only way to do so ('header' is not
-            controlled by any of the 'print' flags); 'header' can be used
+            truncated. Setting :code:`header=''` will eliminate both the banner
+            and the
+            header, and this is the only way to do so (:code:`header` is not
+            controlled by any of the :code:`print_variables` flags); :code:`header` can be used
             to mark the progress of a calculation in which DISORT is called many
-            times, while leaving all other printing turned off. Default is ''.
+            times, while leaving all other printing turned off.
         print_variables
             Make a list of variables that control what DISORT prints. The 5
             booleans control whether each of the following is printed:
 
-            1. Input variables (except PMOM)
+            1. Input variables (except ``PMOM``)
             2. Fluxes
             3. Intensities at user levels and angles
             4. Planar transmissivity and planar albedo as a function of solar
-               zenith angle (incidence_beam_conditions == True)
+               zenith angle (only used if
+               :py:attr:`~output.OutputBehavior.incidence_beam_conditions` is
+               set to ``True``)
             5. PMOM for each layer (but only if 1. == True and only for layers
                with scattering)
 
-            Default is None, which makes [False, False, False, False, False].
+            Default is :code:`None`, which makes
+            :code:`[False, False, False, False, False]`.
         radius
             The planetary radius. This is presumably only used if
-            :code:`do_pseudo_sphere==True`, although there is no documentation
-            on this. Default is 6371.0.
+            :code:`do_pseudo_sphere` is set to :code:`True`, although there is no
+            documentation
+            on this
 
         Raises
         ------
@@ -356,8 +366,7 @@ class ModelBehavior:
 
         Notes
         -----
-        In DISORT, this variable is named :code:`DELTAMPLUS`. There is no
-        documentation on this variable.
+        In DISORT, this variable is named :code:`DELTAMPLUS`.
 
         """
         return self.__delta_m_plus
@@ -368,8 +377,7 @@ class ModelBehavior:
 
         Notes
         -----
-        In DISORT, this variable is named :code:`DO_PSEUDO_SPHERE`. There is no
-        documentation on this variable.
+        In DISORT, this variable is named :code:`DO_PSEUDO_SPHERE`.
 
         """
         return self.__do_pseudo_sphere
@@ -402,9 +410,7 @@ class ModelBehavior:
 
         Notes
         -----
-        In DISORT, this variable is named :code:`EARTH_RADIUS`. There is no
-        documentation on this variable, though I'm presuming it could be any
-        planetary radius.
+        In DISORT, this variable is named :code:`EARTH_RADIUS`.
 
         """
         return self.__radius

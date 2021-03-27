@@ -1,5 +1,5 @@
-"""The flux module contains data structures for holding the flux variables
-used in DISORT.
+"""The :code:`radiation` module contains data structures for holding the
+radiation variables used in DISORT.
 """
 import numpy as np
 
@@ -20,10 +20,10 @@ class IncidentFlux:
         beam_flux
             The intensity of the incident beam at the top boundary.
             Ensure this variable and :code:`isotropic_flux` have the same units.
-            Note that this is an infinitely wide beam. Default is pi.
+            Note that this is an infinitely wide beam.
         isotropic_flux
             The intensity of the incident beam at the top boundary. Ensure this
-            variable and :code:`beam_flux` have the same units. Default is 0.0.
+            variable and :code:`beam_flux` have the same units.
 
         Raises
         ------
@@ -32,11 +32,11 @@ class IncidentFlux:
 
         Notes
         -----
-        If :code:`thermal_emission==True` (defined in :class:`.ThermalEmission`)
+        If :py:attr:`~ThermalEmission.thermal_emission` is set to :code:`True`,
         this is assumed to have the same units as :code:`PLKAVG` (which defaults
         to [:math:`\frac{\text{W}}{\text{m}^2}`]) and the corresponding
-        incident flux is :code:`umu0 * beam_flux` and
-        :code:`pi * isotropic_flux`. If :code:`thermal_emission==False`,
+        incident flux is umu0 * beam_flux and pi * isotropic_flux. If
+        :py:attr:`~ThermalEmission.thermal_emission` is set to :code:`False`,
         :code:`beam_flux` and :code:`isotropic_flux` have arbitrary units, and
         the output fluxes and
         intensities are assumed to have the same units as these variables.
@@ -96,25 +96,21 @@ class ThermalEmission:
             Denote whether to use thermal emission. If :code:`True`, DISORT will
             include thermal emission and will need the following variables:
 
-                - :code:`bottom_temperature` (from this class)
-                - :code:`top_temperature` (from this class)
-                - :code:`top_emissivity` (from this class)
-                - :code:`low_wavenumber` (from :class:`observation.Spectral`)
-                - :code:`high_wavenumber` (from :class:`observation.Spectral`)
-                - :code:`temperature` (from class:`eos.Hydrostatic`)
+                - :code:`bottom_temperature`
+                - :code:`top_temperature`
+                - :code:`top_emissivity`
+                - :code:`low_wavenumber` (aka :code:`WVNMLO`)
+                - :code:`high_wavenumber` (aka :code:`WVNMHI`)
+                - :code:`temperature` (aka :code:`TEMPER`)
 
             If :code:`False`, DISORT will save computation time by ignoring all
-            thermal emission and all of the aforementioned variables. Default is
-            False.
+            thermal emission and all of the aforementioned variables.
         bottom_temperature
-            The temperature of the bottom boundary [K]. Only used by DISORT if
-            :code:`thermal_emission==True`. Default is 0.0.
+            The temperature of the bottom boundary [K].
         top_temperature
-            The temperature of the top boundary [K]. Only used by DISORT if
-            :code:`thermal_emission==True`. Default is 0.0.
+            The temperature of the top boundary [K].
         top_emissivity
-            The emissivity of the top boundary. Only used by DISORT if
-            :code:`thermal_emission==True`. Default is 1.0.
+            The emissivity of the top boundary.
 
         Raises
         ------
@@ -124,6 +120,10 @@ class ThermalEmission:
         ValueError
             Raised if bottom_temperature or top_temperature is negative, or if
             top_emissivity is not between 0 and 1.
+
+        See Also
+        --------
+        :class:`~observation.Spectral`, :class:`~eos.Hydrostatic`
 
         """
         self.__thermal_emission = self.__make_thermal_emission(thermal_emission)
@@ -189,22 +189,24 @@ class ThermalEmission:
 
     @property
     def bottom_temperature(self) -> float:
-        """Get the input temperature at the bottom boundary.
+        """Get the input temperature at the bottom boundary [K].
 
         Notes
         -----
-        In DISORT, this variable is named :code:`BTEMP`.
+        In DISORT, this variable is named :code:`BTEMP`. It is only used by
+        DISORT if :code:`thermal_emission` is set to :code:`True`.
 
         """
         return self.__bottom_temperature
 
     @property
     def top_temperature(self) -> float:
-        """Get the input temperature at the top boundary.
+        """Get the input temperature at the top boundary [K].
 
         Notes
         -----
-        In DISORT, this variable is named :code:`TTEMP`.
+        In DISORT, this variable is named :code:`TTEMP`. It is only used by
+        DISORT if :code:`thermal_emission` is set to :code:`True`.
 
         """
         return self.__top_temperature
@@ -215,7 +217,8 @@ class ThermalEmission:
 
         Notes
         -----
-        In DISORT, this variable is named :code:`TEMIS`.
+        In DISORT, this variable is named :code:`TEMIS`. It is only used by
+        DISORT if :code:`thermal_emission` is set to :code:`True`.
 
         """
         return self.__top_emissivity

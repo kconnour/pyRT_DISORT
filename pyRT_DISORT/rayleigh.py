@@ -1,16 +1,17 @@
-"""The rayleigh module contains structures for computing Rayleigh scattering.
+"""The ``rayleigh`` module contains structures for computing Rayleigh
+scattering.
 """
 import numpy as np
-from pyRT_DISORT.eos import ColumnDensity
-from pyRT_DISORT.observation import Wavelength
+from pyRT_DISORT.eos import _EoSVar
+from pyRT_DISORT.observation import _Wavelength
 
 
-class Rayleigh:
+class _Rayleigh:
     """An abstract base class for Rayleigh scattering.
 
-    Rayleigh creates the Legendre coefficient phase function array given the
-    number of layers and the spectral shape. This is an abstract base
-    class from which all other Rayleigh classes are derived.
+    _Rayleigh creates the single scattering albedo and Legendre coefficient
+    phase function array given the number of layers and the spectral shape. This
+    is an abstract base class from which all other Rayleigh classes are derived.
 
     """
 
@@ -37,6 +38,7 @@ class Rayleigh:
 
         self.__raise_error_if_inputs_are_bad()
 
+        self.__single_scattering_albedo = self.__make_single_scattering_albedo()
         self.__phase_function = self.__construct_phase_function()
 
     def __raise_error_if_inputs_are_bad(self) -> None:
@@ -60,11 +62,26 @@ class Rayleigh:
                 message = 'At least one value in spectral_shape is not an int.'
                 raise ValueError(message)
 
+    def __make_single_scattering_albedo(self) -> np.ndarray:
+        return np.ones((self.__n_layers,) + self.__spectral_shape)
+
     def __construct_phase_function(self) -> np.ndarray:
         pf = np.zeros((3, self.__n_layers) + self.__spectral_shape)
         pf[0, :] = 1
         pf[2, :] = 0.1
         return pf
+
+    @property
+    def single_scattering_albedo(self) -> np.ndarray:
+        r"""Get the Rayleigh single scattering albedo.
+
+        Notes
+        -----
+        The shape of this array is (n_layers, (spectral_shape)). It is
+        filled with all 1s.
+
+        """
+        return self.__single_scattering_albedo
 
     @property
     def phase_function(self) -> np.ndarray:
@@ -73,19 +90,19 @@ class Rayleigh:
         Notes
         -----
         The shape of this array is (3, n_layers, (spectral_shape)). The
-        0 :sup:`th` and 2 :sup:`nd` coefficient along the 0 :sup:`th` axis will
-        be 1 and 0.1, respectively.
+        0 :sup:`th` and 2 :sup:`nd` coefficient along the 0 :sup:`th` axis are
+        1 and 0.1, respectively.
 
         """
         return self.__phase_function
 
 
-class RayleighCO2(Rayleigh):
-    r"""A structure to hold arrays related to CO :sub:`2` Rayleigh scattering.
+class RayleighCO2(_Rayleigh):
+    r"""A structure to compute CO :sub:`2` Rayleigh scattering arrays.
 
-    RayleighCO2 creates the Legendre coefficient phase function array and the
-    optical depths due to Rayleigh scattering by CO :sub:`2` in each of the
-    layers.
+    RayleighCO2 creates the optical depth, single scattering albedo, and
+    Legendre coefficient decomposition phase function arrays due to Rayleigh
+    scattering by CO :sub:`2` in each of the layers.
 
     """
 
@@ -112,22 +129,24 @@ class RayleighCO2(Rayleigh):
         Notes
         -----
         In the general case of a hyperspectral imager with MxN pixels and W
-        wavelengths, :code:`wavelength` can have shape WxMxN. In this case,
-        :code:`column_density` should have shape ZxMxN, where Z is the number
+        wavelengths, ``wavelength`` can have shape WxMxN. In this case,
+        ``column_density`` should have shape ZxMxN, where Z is the number
         of model layers. The 0 :sup:`th` dimension can have different shapes
         between the arrays but the subsequent dimensions (if any) should have
         the same shape.
 
+        References
+        ----------
         The values used here are from `Sneep and Ubachs 2005
         <https://doi.org/10.1016/j.jqsrt.2004.07.025>`_
 
         Due to a typo in the paper, I changed the coefficient to 10 :sup:`3`
-        when using equation 13 for computing the index of refraction
+        when using equation 13 for computing the index of refraction.
 
         """
-        self.__wavelength = Wavelength(wavelength)
+        self.__wavelength = _Wavelength(wavelength, 'wavelength')
         self.__wavenumber = self.__wavelength.wavelength_to_wavenumber()
-        self.__column_density = ColumnDensity(column_density)
+        self.__column_density = _EoSVar(column_density, 'cd')
 
         self.__raise_error_if_inputs_have_incompatible_shapes()
 
@@ -137,8 +156,8 @@ class RayleighCO2(Rayleigh):
             self.__calculate_scattering_optical_depths(column_density)
 
     def __raise_error_if_inputs_have_incompatible_shapes(self) -> None:
-        if self.__wavelength.wavelength.shape[1:] != \
-                self.__column_density.column_density.shape[1:]:
+        if self.__wavelength.shape[1:] != \
+                self.__column_density.val.shape[1:]:
             message = 'wavelength and column_density must have the same ' \
                       'shape along all dimensions except the 0th.'
             raise ValueError(message)
@@ -174,8 +193,8 @@ class RayleighCO2(Rayleigh):
         return coefficient * middle_term * king_factor   # cm**2 / molecule
 
     @property
-    def scattering_optical_depth(self) -> np.ndarray:
-        """Get the Rayleigh scattering optical depth.
+    def optical_depth(self) -> np.ndarray:
+        """Get the Rayleigh optical depth.
 
         """
         return self.__scattering_od

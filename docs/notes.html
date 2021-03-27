@@ -1,0 +1,234 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Notes on Sphinx &mdash; pyRT_DISORT  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> pyRT_DISORT
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Useful links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rst/users-guide.html">User’s Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rst/api-reference.html">pyRT_DISORT API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rst/about-disort.html">About DISORT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rst/about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pyRT_DISORT</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Notes on Sphinx</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/notes.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="notes-on-sphinx">
+<h1>Notes on Sphinx<a class="headerlink" href="#notes-on-sphinx" title="Permalink to this headline">¶</a></h1>
+<p>This is info I could only find after much StackExchange digging… It could
+be a result of me just not knowing things though. If you install Sphinx, it
+gets associated with the Python version that you installed it with. This means
+that if you installed it with python3.8 and then write code in python3.9,
+Sphinx will be unable (as far as I know…) to make documentation for the new
+code. Plus, it’s difficult for me to ensure I’m using the most recent version
+of Sphinx.</p>
+<div class="section" id="quickstart">
+<h2>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h2>
+<p>To get started with a project you’d usually run <code class="code docutils literal notranslate"><span class="pre">sphinx-quickstart</span></code> from
+Terminal. In code form, <code class="code docutils literal notranslate"><span class="pre">sphinx-quickstart</span></code> is equivalent to
+<code class="code docutils literal notranslate"><span class="pre">&lt;python&gt;</span> <span class="pre">-m</span> <span class="pre">sphinx.cmd.quickstart</span></code> where &lt;python&gt; is the absolute path
+to your interpreter.</p>
+</div>
+<div class="section" id="building-docs">
+<h2>Building docs<a class="headerlink" href="#building-docs" title="Permalink to this headline">¶</a></h2>
+<p>When you’re ready to build docs you’d usually run <code class="code docutils literal notranslate"><span class="pre">make</span> <span class="pre">html</span></code> from
+Terminal. In code form, <code class="code docutils literal notranslate"><span class="pre">make</span> <span class="pre">html</span></code> =
+<code class="code docutils literal notranslate"><span class="pre">&lt;python&gt;</span> <span class="pre">-m</span> <span class="pre">sphinx.cmd.build</span> <span class="pre">-b</span> <span class="pre">html</span> <span class="pre">&lt;path</span> <span class="pre">to</span> <span class="pre">conf.py&gt;</span>
+<span class="pre">&lt;path</span> <span class="pre">to</span> <span class="pre">where</span> <span class="pre">to</span> <span class="pre">put</span> <span class="pre">the</span> <span class="pre">html</span> <span class="pre">files&gt;</span></code>. You can also add a <code class="code docutils literal notranslate"><span class="pre">-E</span></code> flag
+to tell Sphinx to overwrite the old docs and rebuild them all each time. I
+prefer this, since sometimes changes to the header of one file aren’t
+registered in other files.</p>
+<p>Suppose pyRT_DISORT is in the repos directory in your home folder. The command
+will look like:
+<code class="code docutils literal notranslate"><span class="pre">~/repos/pyRT_DISORT/venv-doc/bin/python</span> <span class="pre">-m</span> <span class="pre">sphinx.cmd.build</span> <span class="pre">-b</span> <span class="pre">html</span>
+<span class="pre">~/repos/pyRT_DISORT/builddocs</span> <span class="pre">~/repos/pyRT_DISORT/docs</span> <span class="pre">-E</span></code></p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, kconnour.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

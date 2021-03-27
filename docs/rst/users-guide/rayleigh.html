@@ -38,7 +38,7 @@
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Forward Scattering" href="forward_scattering.html" />
+    <link rel="next" title="The aerosol module" href="aerosol.html" />
     <link rel="prev" title="The eos module" href="eos.html" /> 
 </head>
 
@@ -87,22 +87,20 @@
               <p class="caption"><span class="caption-text">Useful links</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../users-guide.html">User’s Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="observation.html">The observation module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eos.html">The eos module</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">The rayleigh module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#the-generic-rayleigh-class">The generic Rayleigh class</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#rayleigh-co2">Rayleigh CO2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rayleighco2">RayleighCO2</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="forward_scattering.html">Forward Scattering</a></li>
-<li class="toctree-l2"><a class="reference internal" href="optical_depth.html">Optical Depth</a></li>
-<li class="toctree-l2"><a class="reference internal" href="phase_function.html">Phase Function</a></li>
-<li class="toctree-l2"><a class="reference internal" href="model_build.html">Model Build</a></li>
-<li class="toctree-l2"><a class="reference internal" href="controller.html">Controller</a></li>
-<li class="toctree-l2"><a class="reference internal" href="surface.html">Surface</a></li>
-<li class="toctree-l2"><a class="reference internal" href="radiation.html">Radiation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="output.html">Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aerosol.html">The aerosol module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atmosphere.html">The atmosphere module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="controller.html">The controller module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radiation.html">The radiation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">The output module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="surface.html">The surface module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="running_the_model.html">Running the model</a></li>
 </ul>
 </li>
@@ -180,61 +178,51 @@
             
   <div class="section" id="the-rayleigh-module">
 <h1>The rayleigh module<a class="headerlink" href="#the-rayleigh-module" title="Permalink to this headline">¶</a></h1>
-<p>Let’s start building our model atmosphere. The first thing we’ll want to do
-is include Rayleigh scattering in the model. To do that, we’ll first need to
-construct arrays of the optical depth and Legendre decomposition of the phase
-function for Rayleigh scattering (since DISORT only wants to deal with the
-Legendre coefficients—not phase functions themselves).</p>
-<div class="section" id="the-generic-rayleigh-class">
-<h2>The generic Rayleigh class<a class="headerlink" href="#the-generic-rayleigh-class" title="Permalink to this headline">¶</a></h2>
-<p>The phase function array is actually the easy part of this process. All
-Rayleigh scattering has the same Legendre coefficient decomposition. To make
-the array(s) required by DISORT, we just need to know the number of
-layers to use in the model.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>pyRT_DISORT also asks for the spectral shape so it can construct a
-phase function for each pixel. The value of this array is the same across
-all layers and pixels so you don’t <em>need</em> to include a pixel shape, but
-it makes matrix math much simpler.</p>
-</div>
-<p>While the phase function is the same between multiple atmospheric species,
-their optical depths will not be… and I can’t possibly hope to create
-classes for all the possible Rayleigh scattering species. Instead, I have
-an abstract <a class="reference internal" href="../api-reference/rayleigh.html#rayleigh.Rayleigh" title="rayleigh.Rayleigh"><code class="xref py py-class docutils literal notranslate"><span class="pre">Rayleigh</span></code></a> class that simply constructs the
-phase function. You can extend this class to a species of your liking.
-pyRT_DISORT comes with one example of this, as we’ll see next.</p>
-</div>
-<div class="section" id="rayleigh-co2">
-<h2>Rayleigh CO2<a class="headerlink" href="#rayleigh-co2" title="Permalink to this headline">¶</a></h2>
+<p>Now that we know the boundaries of our model, let’s start building it. What
+we’ll do is essentially create atmospheric arrays for Rayleigh scattering, then
+do the same thing with dust, and then combine them to get the total model
+arrays.</p>
+<p>These arrays, if you’re curious, are</p>
+<ol class="arabic simple">
+<li><p>The optical depth in each layer (known as <code class="code docutils literal notranslate"><span class="pre">DTAUC</span></code>).</p></li>
+<li><p>The single scattering albedo in each layer (known as <code class="code docutils literal notranslate"><span class="pre">SSALB</span></code>).</p></li>
+<li><p>The Legendre decomposition of the phase function in each layer
+(known as <code class="code docutils literal notranslate"><span class="pre">PMOM</span></code>).</p></li>
+</ol>
+<div class="section" id="rayleighco2">
+<h2>RayleighCO2<a class="headerlink" href="#rayleighco2" title="Permalink to this headline">¶</a></h2>
 <p>Mars has a CO <sub>2</sub> atmosphere, so let’s instantiate a
-<a class="reference internal" href="../api-reference/rayleigh.html#rayleigh.RayleighCO2" title="rayleigh.RayleighCO2"><code class="xref py py-class docutils literal notranslate"><span class="pre">RayleighCO2</span></code></a> object—a class that extends <code class="code docutils literal notranslate"><span class="pre">Rayleigh</span></code>
-whose whole purpose is to hold the optical depth and phase function arrays for
-Rayleigh scattering from CO2. This will inherit the generic Rayleigh
-phase function and it will also create the optical depths in each of the model
-layers. We just need to provide it the wavelengths at which to make the
-optical depths, and the column density in each of the layers. We’ve already created
-these inputs, so we have everything we need to make the relevant arrays.</p>
+<a class="reference internal" href="../api-reference/rayleigh.html#rayleigh.RayleighCO2" title="rayleigh.RayleighCO2"><code class="xref py py-class docutils literal notranslate"><span class="pre">RayleighCO2</span></code></a> object. This will create the aforementioned
+arrays. We just need to provide it the wavelengths
+at which to make the optical depths, and the column density in each of the
+layers. Let’s do that here.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.rayleigh</span> <span class="kn">import</span> <span class="n">RayleighCO2</span>
 
-<span class="hll"><span class="n">rco2</span> <span class="o">=</span> <span class="n">RayleighCO2</span><span class="p">(</span><span class="n">pixel_wavelengths</span><span class="p">,</span> <span class="n">column_density</span><span class="p">)</span>
-</span><span class="n">rayleigh_phase_function</span> <span class="o">=</span> <span class="n">rco2</span><span class="o">.</span><span class="n">phase_function</span>
-<span class="n">rayleigh_od</span> <span class="o">=</span> <span class="n">rco2</span><span class="o">.</span><span class="n">scattering_optical_depth</span>
+<span class="n">rco2</span> <span class="o">=</span> <span class="n">RayleighCO2</span><span class="p">(</span><span class="n">pixel_wavelengths</span><span class="p">,</span> <span class="n">column_density</span><span class="p">)</span>
+
+<span class="n">rayleigh_od</span> <span class="o">=</span> <span class="n">rco2</span><span class="o">.</span><span class="n">optical_depth</span>
+<span class="n">rayleigh_ssa</span> <span class="o">=</span> <span class="n">rco2</span><span class="o">.</span><span class="n">single_scattering_albedo</span>
+<span class="n">rayleigh_pf</span> <span class="o">=</span> <span class="n">rco2</span><span class="o">.</span><span class="n">phase_function</span>
 </pre></div>
 </div>
-<p>Since Rayleigh optical depth is completely due to scattering, there’s no
-“total_optical_depth” property. These arrays aren’t particularly valuable by
-themselves but soon we’ll add these to similar arrays created from dust to
-create the arrays DISORT wants.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>I previously mentioned that pyRT_DISORT arrays generally have shape
-of (n_moments, n_layers, n_wavelengths, (n_pixels)). Our hyperspectral
-imager will produce 5D arrays here, although DISORT only wants 2D arrays.
-Be sure to keep the first two dimensions but select a specific dimension
-for all later dimensions; more on this to come. Since Rayleigh scattering
-is usually known (or fixed) beforehand, this allows you to compute all the
-Rayleigh scattering for an image at once.</p>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>These arrays have shapes (14, 5), (14, 5), and (3, 14, 5)—the same shapes
+DISORT expects for <code class="docutils literal notranslate"><span class="pre">DTAUC</span></code>, <code class="docutils literal notranslate"><span class="pre">SSALB</span></code>, and <code class="docutils literal notranslate"><span class="pre">PMOM</span></code> but with an extra
+wavelength dimension tacked on to the end. This class computed the arrays
+at all wavelengths at once, so don’t get tripped up when computing these
+composite arrays.</p>
+</div>
+<p>We’ve now computed all of the quantities relevant to Rayleigh scattering.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>If you want to see the total optical depth due to Rayleigh scattering at
+the input wavelengths, you can execute the line</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">rayleigh_od</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>to see the column integrated optical depth. For this example it gives
+<code class="docutils literal notranslate"><span class="pre">[1.62444356e-04</span> <span class="pre">1.00391950e-05</span> <span class="pre">1.97891739e-06</span> <span class="pre">6.25591479e-07</span> <span class="pre">2.56207684e-07]</span></code></p>
 </div>
 </div>
 </div>
@@ -245,7 +233,7 @@ Rayleigh scattering for an image at once.</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="forward_scattering.html" class="btn btn-neutral float-right" title="Forward Scattering" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="aerosol.html" class="btn btn-neutral float-right" title="The aerosol module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
         <a href="eos.html" class="btn btn-neutral float-left" title="The eos module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 

@@ -32,13 +32,14 @@
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Phase Function" href="phase_function.html" />
+    <link rel="next" title="Radiation" href="radiation.html" />
     <link rel="prev" title="Observation" href="observation.html" /> 
 </head>
 
@@ -88,15 +89,15 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../users-guide.html">User’s Guide</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api-reference.html">pyRT_DISORT API reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="aerosol.html">Aerosol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atmosphere.html">Atmosphere</a></li>
 <li class="toctree-l2"><a class="reference internal" href="controller.html">Controller</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eos.html">Equation of State</a></li>
 <li class="toctree-l2"><a class="reference internal" href="observation.html">Observation</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Output</a></li>
-<li class="toctree-l2"><a class="reference internal" href="phase_function.html">Phase Function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="radiation.html">Radiation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rayleigh.html">Rayleigh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="surface.html">Surface</a></li>
-<li class="toctree-l2"><a class="reference internal" href="vertical_profile.html">Vertical Profile</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../about-disort.html">About DISORT</a></li>
@@ -172,12 +173,12 @@
             
   <div class="section" id="module-output">
 <span id="output"></span><h1>Output<a class="headerlink" href="#module-output" title="Permalink to this headline">¶</a></h1>
-<p>The output module contains data structures for controlling what DISORT
-outputs.</p>
+<p>The <code class="code docutils literal notranslate"><span class="pre">output</span></code> module contains data structures for controlling what
+DISORT outputs.</p>
 <dl class="py class">
 <dt id="output.OutputArrays">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">output.</span></code><code class="sig-name descname"><span class="pre">OutputArrays</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_polar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_user_levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_azimuth</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#output.OutputArrays" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a data structure to make the DISORT output arrays.</p>
+<dd><p>A structure to make the DISORT output arrays.</p>
 <p>OutputArrays creates arrays of 0s that are designed to get populated with
 values as DISORT runs.</p>
 <dl class="py method">
@@ -225,16 +226,13 @@ downward flux minus the direct beam flux.</p>
 <dt id="output.OutputArrays.diffuse_up_flux">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">diffuse_up_flux</span></code><a class="headerlink" href="#output.OutputArrays.diffuse_up_flux" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the diffuse upward flux output array.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The diffuse upward flux.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>np.ndarray</p>
-</dd>
-</dl>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">FLUP</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -254,7 +252,8 @@ downward flux minus the direct beam flux.</p>
 <dt id="output.OutputArrays.flux_divergence">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">flux_divergence</span></code><a class="headerlink" href="#output.OutputArrays.flux_divergence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the flux divergence output array, which is will represent
-(d(net_flux) / d(optical_depth)). This is an exact result.</p>
+<span class="math notranslate nohighlight">\(\frac{dF}{d\tau}\)</span> where <span class="math notranslate nohighlight">\(F\)</span> is the flux and <span class="math notranslate nohighlight">\(\tau\)</span>
+is the optical depth. This is an exact result.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">DFDT</span></code>.</p>
 <dl class="field-list simple">
@@ -308,7 +307,7 @@ downward flux minus the direct beam flux.</p>
 <dl class="py class">
 <dt id="output.OutputBehavior">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">output.</span></code><code class="sig-name descname"><span class="pre">OutputBehavior</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">incidence_beam_conditions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_fluxes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_angles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_optical_depths</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#output.OutputBehavior" title="Permalink to this definition">¶</a></dt>
-<dd><p>A data structure that holds DISORT output behavior switches.</p>
+<dd><p>A structure that holds DISORT output behavior switches.</p>
 <p>OutputBehavior provides some default output behavior for DISORT. All the
 parameters can be overriden to fit user specifications.</p>
 <dl class="py method">
@@ -323,51 +322,59 @@ the
 entire medium as a function of incidence beam angle. In this case,
 the following inputs are the only ones considered by DISORT:</p>
 <ul>
-<li><p><code class="code docutils literal notranslate"><span class="pre">n_layers</span></code> (from <a class="reference internal" href="controller.html#controller.ComputationalParameters" title="controller.ComputationalParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">controller.ComputationalParameters</span></code></a>)</p></li>
-<li><p>DTAUC</p></li>
-<li><p>SSALB</p></li>
-<li><p>PMOM</p></li>
-<li><p><code class="code docutils literal notranslate"><span class="pre">n_streams</span></code> (from <a class="reference internal" href="controller.html#controller.ComputationalParameters" title="controller.ComputationalParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">controller.ComputationalParameters</span></code></a>)</p></li>
-<li><p><code class="code docutils literal notranslate"><span class="pre">user_angles</span></code> (from this class)</p></li>
-<li><p><code class="code docutils literal notranslate"><span class="pre">n_polar</span></code> (from <a class="reference internal" href="controller.html#controller.ComputationalParameters" title="controller.ComputationalParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">controller.ComputationalParameters</span></code></a>)</p></li>
-<li><p><code class="code docutils literal notranslate"><span class="pre">mu</span></code> (from <a class="reference internal" href="observation.html#observation.Spectral" title="observation.Spectral"><code class="xref py py-class docutils literal notranslate"><span class="pre">observation.Spectral</span></code></a>)</p></li>
-<li><p>ALBEDO</p></li>
-<li><p><code class="code docutils literal notranslate"><span class="pre">print_variables</span></code> (from <a class="reference internal" href="controller.html#controller.ComputationalParameters" title="controller.ComputationalParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">controller.ComputationalParameters</span></code></a>)</p></li>
-<li><p><code class="code docutils literal notranslate"><span class="pre">header</span></code> (from <a class="reference internal" href="controller.html#controller.ComputationalParameters" title="controller.ComputationalParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">controller.ComputationalParameters</span></code></a>)</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">MAXCLY</span></code></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">DTAUC</span></code></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">SSALB</span></code></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">PMOM</span></code></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">NSTR</span></code></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">USRANG</span></code></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">MAXUMU</span></code></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">UMU</span></code></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">ALBEDO</span></code></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">PRNT</span></code></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">HEADER</span></code></p></li>
 </ul>
-<p>PLANK is assumed to be False, LAMBER is assumed to be True, and
-ONLYFL must be False. The only output is ALBMED and TRNMED. The
+<p><code class="code docutils literal notranslate"><span class="pre">PLANK</span></code> is assumed to be <code class="code docutils literal notranslate"><span class="pre">False</span></code>, <code class="code docutils literal notranslate"><span class="pre">LAMBER</span></code> is
+assumed to be <code class="code docutils literal notranslate"><span class="pre">True</span></code>, and
+<code class="code docutils literal notranslate"><span class="pre">ONLYFL</span></code> must be <code class="code docutils literal notranslate"><span class="pre">False</span></code>. The only output is
+<code class="code docutils literal notranslate"><span class="pre">ALBMED</span></code> and <code class="code docutils literal notranslate"><span class="pre">TRNMED</span></code>. The
 intensities are not corrected for delta-M+ correction.</p>
-<p>If False, this is accommodates any general case of boundary
+<p>If <code class="code docutils literal notranslate"><span class="pre">False</span></code>, this is accommodates any general case of boundary
 conditions including beam illumination from the top, isotropic
 illumination from the top, thermal emission from the top, internal
 thermal emission, reflection at the bottom, and/or thermal emission
-from the bottom. Default is False.</p>
+from the bottom.</p>
 </p></li>
-<li><p><strong>only_fluxes</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Determine if only the fluxes are returned by the model. If True,
-return fluxes, flux divergences, and mean intensities; if False,
-return all those quantities and intensities. In addition, if True
+<li><p><strong>only_fluxes</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Determine if only the fluxes are returned by the model. If
+<code class="code docutils literal notranslate"><span class="pre">True</span></code>,
+return fluxes, flux divergences, and mean intensities; if
+<code class="code docutils literal notranslate"><span class="pre">False</span></code>,
+return all those quantities and intensities. In addition, if
+<code class="code docutils literal notranslate"><span class="pre">True</span></code>
 the number of polar angles can be 0, the number of azimuthal angles
 can be 0, phi is not used, and all values of intensity (UU) will be
-set to 0 (these are defined in ComputationalParameters). Default is
-False.</p></li>
+set to 0.</p></li>
 <li><p><strong>user_angles</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Denote whether radiant quantities should be returned at user angles.
-If False, radiant quantities are to be returned at computational
-polar angles. Also, UMU will return the cosines of the computational
-polar angles and n_polar (from ComputationalParameters) will return
-their number ( = n_streams).UMU must
-be large enough to contain n_streams elements. If True,
+If <code class="code docutils literal notranslate"><span class="pre">False</span></code>, radiant quantities are to be returned at computational
+polar angles. Also, <code class="code docutils literal notranslate"><span class="pre">UMU</span></code> will return the cosines of the computational
+polar angles and n_polar will return
+their number ( = n_streams). <code class="code docutils literal notranslate"><span class="pre">UMU</span></code> must
+be large enough to contain n_streams elements. If <code class="code docutils literal notranslate"><span class="pre">True</span></code>,
 radiant quantities are to be returned at user-specified polar
 angles, as follows: NUMU No. of polar angles (zero is a legal value
 only when ‘only_fluxes’ == True ) UMU(IU) IU=1 to NUMU, cosines of
 output polar angles in increasing order—starting with negative
 (downward) values (if any) and on through positive (upward)
-values; <strong>* MUST NOT HAVE ANY ZERO VALUES *</strong>. Default is True.</p></li>
+values; <strong>MUST NOT HAVE ANY ZERO VALUES</strong>.</p></li>
 <li><p><strong>user_optical_depths</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Denote whether radiant quantities are returned at user-specified
-optical depths. Default is False.</p></li>
+optical depths.</p></li>
 </ul>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="controller.html#controller.ComputationalParameters" title="controller.ComputationalParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">ComputationalParameters</span></code></a>, <a class="reference internal" href="controller.html#controller.ModelBehavior" title="controller.ModelBehavior"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelBehavior</span></code></a>, <a class="reference internal" href="observation.html#observation.Spectral" title="observation.Spectral"><code class="xref py py-class docutils literal notranslate"><span class="pre">Spectral</span></code></a></p>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -427,51 +434,42 @@ depths.</p>
 
 <dl class="py class">
 <dt id="output.UserLevel">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">output.</span></code><code class="sig-name descname"><span class="pre">UserLevel</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">optical_depth_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_user_levels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#output.UserLevel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create the user levels at which radiant quantities are returned.</p>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">output.</span></code><code class="sig-name descname"><span class="pre">UserLevel</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_user_levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optical_depth_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#output.UserLevel" title="Permalink to this definition">¶</a></dt>
+<dd><p>A structure to create the levels at which radiant quantities are returned</p>
 <p>UserLevel checks that radiant quantities can be returned at user levels.</p>
 <dl class="py method">
 <dt id="output.UserLevel.__init__">
-<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">optical_depth_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_user_levels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#output.UserLevel.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_user_levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optical_depth_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#output.UserLevel.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>n_user_levels</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The number of user levels to instantiate. Only used if
+<code class="code docutils literal notranslate"><span class="pre">optical_depth_output</span></code> is not <code class="code docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
 <li><p><strong>optical_depth_output</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]) – If radiant quantities are to be returned at user specified optical
-depths (as specified in mb) this is the monotonically increasing 1D
+depths  this is the monotonically increasing 1D
 array of optical depths where they should be output. It must not
-exceed the column integrated optical depth of DTAUC. If radiant
+exceed the column integrated optical depth of <code class="code docutils literal notranslate"><span class="pre">DTAUC</span></code>. If
+radiant
 quantities can simply be returned at the boundary of every
-computational layer (user_optical_depths = False) this can be None,
-and this object will create an array of 0s for the output. Default
-is None.</p></li>
-<li><p><strong>n_user_levels</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The number of user levels to instantiate. Only required if
-<code class="code docutils literal notranslate"><span class="pre">optical_depth_output</span></code> is not None.</p></li>
+computational layer (assuming <code class="code docutils literal notranslate"><span class="pre">user_optical_depths</span></code> is set to
+<code class="code docutils literal notranslate"><span class="pre">False</span></code>) this can be <code class="code docutils literal notranslate"><span class="pre">None</span></code>,
+and this object will create an array of 0s for the output.</p></li>
 </ul>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p>The documentation suggests if user_optical_depths = False, this array
-is populated with optical depths at the boundaries of the computational
-layers. However, this seems equal to DTAUC to me but with a 0 appended.
-Additionally, making this case work would require changing f2py to
-make this an output array… which I’m not inclined to do if no one will
-use it.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="output.UserLevel.optical_depth_output">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">optical_depth_output</span></code><a class="headerlink" href="#output.UserLevel.optical_depth_output" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input user optical depth array at user levels.</p>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">UTAU</span></code>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The optical depth at user levels.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>np.ndarray</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p>In DISORT, this variable is named “UTAU”.</p>
 </dd></dl>
 
 </dd></dl>
@@ -484,7 +482,7 @@ use it.</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="phase_function.html" class="btn btn-neutral float-right" title="Phase Function" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="radiation.html" class="btn btn-neutral float-right" title="Radiation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
         <a href="observation.html" class="btn btn-neutral float-left" title="Observation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 

@@ -6,28 +6,18 @@ from scipy.constants import Boltzmann
 from scipy.integrate import quadrature as quad
 
 
-# TODO: The scale height stuff almost operates independently. Consider making it
-#  into another class
 # TODO: the RTD theme puts the equation number *above* the equation, which is
 #  awful. There's nothing I can really do to change this but wait until they fix
 #  it (and a pull request is in the works...). This is just a reminder.
-
-
+# TODO: Fix the Raises docstring formatting
 class Hydrostatic:
     """A data structure that computes a hydrostatic equation of state.
 
     Hydrostatic accepts equation of state variables and regrids them to a
     user-specified altitude grid using linear interpolation. Then, it computes
-    the number density, column density, and scale height at or within these new
-    boundaries assuming the atmosphere follows the equation
-
-    .. math::
-       :label: hydrostatic_equation
-
-       P = n k_B T
-
-    where :math:`P` is the pressure, :math:`n` is the number density,
-    :math:`k_B` is Boltzmann's constant, and :math:`T` is the temperature.
+    number density and scale height at the new boundaries, and the
+    column density within the new boundaries, assuming the atmosphere is in
+    hydrostatic equilibrium.
 
     """
 
@@ -41,12 +31,12 @@ class Hydrostatic:
             The altitude grid [km] over which the equation of state variables
             are defined. See the note below for additional conditions.
         pressure_grid
-            The pressure [Pa] at all values in :code:`altitude_grid`.
+            The pressure [Pa] at all values in ``altitude_grid``.
         temperature_grid
-            The temperature [K] at all values in :code:`altitude_grid`.
+            The temperature [K] at all values in ``altitude_grid``.
         altitude_boundaries
-            The desired boundary altitude. See the note below for additional
-            conditions.
+            The desired boundary altitude [km]. See the note below for
+            additional conditions.
         particle_mass
             The average mass [kg] of atmospheric particles.
         gravity
@@ -56,24 +46,36 @@ class Hydrostatic:
         Raises
         ------
         TypeError
-            Raised if :code:`altitude_grid`, :code:`pressure_grid`,
-            :code:`temperature_grid`, or :code:`altitude_boundaries` are not
-            instances of numpy.ndarray; or if :code:`particle_mass` or
-            :code:`gravity` are not floats.
+            Raised if ``altitude_grid``, ``pressure_grid``,
+            ``temperature_grid``, or ``altitude_boundaries`` are not all
+            numpy.ndarrays; or if ``particle_mass`` or ``gravity`` are not
+            floats.
         ValueError
-            Raised if :code:`altitude_grid`, :code:`pressure_grid`, or
-            :code:`temperature_grid` do not have the same shapes; if
-            :code:`altitude_grid` or :code:`altitude_boundaries` have
-            incompatible pixel dimensions; if they are not monotonically
-            decreasing along the 0 :sup:`th` dimension; if
-            :code:`pressure_grid`, or
-            :code:`temperature_grid` contain non-positive, finite values; if
-            :code:`altitude_boundaries` does not contain at least 2 boundaries;
-            or if :code:`particle_mass` or :code:`gravity` are not positive,
-            finite.
+            Raised if:
+               * ``altitude_grid``, ``pressure_grid``, or
+                  ``temperature_grid`` do not have the same shapes
+               * ``altitude_grid`` or ``altitude_boundaries`` have
+                 incompatible pixel dimensions
+               * ``altitude_grid`` or ``altitude_boundaries`` are not
+                 monotonically decreasing along the 0 :sup:`th` axis;
+               * ``pressure_grid``, or ``temperature_grid`` contain
+                 non-positive, finite values
+               * ``altitude_boundaries`` does not contain at least 2
+                 boundaries
+               * ``particle_mass`` or ``gravity`` are not positive, finite
 
         Notes
         -----
+        This class assumes the atmosphere follows the equation
+
+        .. math::
+           :label: hydrostatic_equation
+
+           P = n k_B T
+
+        where :math:`P` is the pressure, :math:`n` is the number density,
+        :math:`k_B` is Boltzmann's constant, and :math:`T` is the temperature.
+
         The inputs can be ND arrays, as long as they have compatible shapes. In
         this scenario, :code:`altitude_grid`, :code:`pressure_grid`, and
         :code:`temperature_grid` must be of shape Mx(pixels) whereas
@@ -85,18 +87,17 @@ class Hydrostatic:
         are ND arrays, this condition only applies to the 0 :sup:`th` axis.
 
         Also, scipy's Gaussian quadrature routine becomes less accurate the
-        larger the atmosphere's scale height is. I'm working to reduce the
+        smaller the atmosphere's scale height is. I'm working to reduce the
         errors. In the meantime the column density is fairly close to analytical
         results but should be improved.
 
         """
-
-        self.__altitude_grid = altitude_grid
-        self.__pressure_grid = pressure_grid
-        self.__temperature_grid = temperature_grid
-        self.__mass = particle_mass
-        self.__gravity = gravity
-        self.__altitude = altitude_boundaries
+        self.__altitude_grid = _Altitude(altitude_grid, 'altitude_grid')
+        self.__pressure_grid = _EoSVar(pressure_grid, 'pressure_grid')
+        self.__temperature_grid = _EoSVar(temperature_grid, 'temperature_grid')
+        self.__mass = _ScaleHeightVar(particle_mass, 'particle_mass')
+        self.__gravity = _ScaleHeightVar(gravity, 'gravity')
+        self.__altitude = _Altitude(altitude_boundaries, 'altitude_boundaries')
 
         self.__raise_error_if_inputs_are_bad()
 
@@ -114,43 +115,9 @@ class Hydrostatic:
             self.__compute_scale_height(particle_mass, gravity)
 
     def __raise_error_if_inputs_are_bad(self) -> None:
-        self.__raise_type_error_if_eos_vars_are_not_all_ndarray()
-        self.__raise_type_error_if_scale_height_vars_are_not_all_float()
         self.__raise_value_error_if_eos_vars_are_not_all_same_shape()
         self.__raise_value_error_if_altitudes_do_not_match_pixel_dim()
-        self.__raise_value_error_if_altitudes_are_not_monotonically_decreasing()
-        self.__raise_value_error_if_eos_vars_are_not_positive_finite()
         self.__raise_value_error_if_model_has_too_few_boundaries()
-        self.__raise_value_error_if_scale_height_vars_are_not_positive_finite()
-
-    def __raise_type_error_if_eos_vars_are_not_all_ndarray(self) -> None:
-        self.__raise_type_error_if_variable_is_not_ndarray(
-            self.__altitude_grid, 'altitude_grid')
-        self.__raise_type_error_if_variable_is_not_ndarray(
-            self.__pressure_grid, 'pressure_grid')
-        self.__raise_type_error_if_variable_is_not_ndarray(
-            self.__temperature_grid, 'temperature_grid')
-        self.__raise_type_error_if_variable_is_not_ndarray(
-            self.__altitude, 'altitude_boundaries')
-
-    @staticmethod
-    def __raise_type_error_if_variable_is_not_ndarray(
-            var: np.ndarray, name: str) -> None:
-        if not isinstance(var, np.ndarray):
-            message = f'{name} must be an ndarray.'
-            raise TypeError(message)
-
-    def __raise_type_error_if_scale_height_vars_are_not_all_float(self) -> None:
-        self.__raise_type_error_if_var_is_not_float(
-            self.__mass, 'particle_mass')
-        self.__raise_type_error_if_var_is_not_float(
-            self.__gravity, 'gravity')
-
-    @staticmethod
-    def __raise_type_error_if_var_is_not_float(var: float, name: str) -> None:
-        if not isinstance(var, float):
-            message = f'{name} must be a float.'
-            raise TypeError(message)
 
     def __raise_value_error_if_eos_vars_are_not_all_same_shape(self) -> None:
         if not self.__altitude_grid.shape == self.__pressure_grid.shape == \
@@ -162,55 +129,13 @@ class Hydrostatic:
     def __raise_value_error_if_altitudes_do_not_match_pixel_dim(self) -> None:
         if self.__altitude_grid.shape[1:] != self.__altitude.shape[1:]:
             message = 'altitude_grid and altitude_boundaries can have ' \
-                      'different shapes along the 0th dimension but must have' \
-                      'the same shape along all subsequent dimensions.'
-            raise ValueError(message)
-
-    def __raise_value_error_if_altitudes_are_not_monotonically_decreasing(
-            self) -> None:
-        self.__raise_value_error_if_altitude_is_not_monotonically_decreasing(
-            self.__altitude_grid, 'altitude_grid')
-        self.__raise_value_error_if_altitude_is_not_monotonically_decreasing(
-            self.__altitude, 'altitude_boundaries')
-
-    @staticmethod
-    def __raise_value_error_if_altitude_is_not_monotonically_decreasing(
-            var: np.ndarray, name: str) -> None:
-        if not np.all(np.diff(var, axis=0) < 0):
-            message = f'{name} must be monotonically decreasing along the ' \
-                      f'0th dimension.'
-            raise ValueError(message)
-
-    def __raise_value_error_if_eos_vars_are_not_positive_finite(self) -> None:
-        self.__raise_value_error_if_eos_var_is_not_positive_finite(
-            self.__pressure_grid, 'pressure_grid')
-        self.__raise_value_error_if_eos_var_is_not_positive_finite(
-            self.__temperature_grid, 'temperature_grid')
-
-    @staticmethod
-    def __raise_value_error_if_eos_var_is_not_positive_finite(
-            var: np.ndarray, name: str) -> None:
-        if not (np.all(0 < var) and np.all(var < np.inf)):
-            message = f'{name} must contain only positive finite values'
+                      'different shapes along the 0th axis but must have' \
+                      'the same shape along all subsequent axes.'
             raise ValueError(message)
 
     def __raise_value_error_if_model_has_too_few_boundaries(self) -> None:
         if self.__altitude.shape[0] < 2:
             message = 'altitude_boundaries must contain at least 2 boundaries.'
-            raise ValueError(message)
-
-    def __raise_value_error_if_scale_height_vars_are_not_positive_finite(
-            self) -> None:
-        self.__raise_value_error_if_var_is_not_positive_finite(
-            self.__mass, 'particle_mass')
-        self.__raise_value_error_if_var_is_not_positive_finite(
-            self.__gravity, 'gravity')
-
-    @staticmethod
-    def __raise_value_error_if_var_is_not_positive_finite(
-            var: float, name: str) -> None:
-        if not 0 < var < np.inf:
-            message = f'{name} must be positive finite.'
             raise ValueError(message)
 
     def __extract_n_layers(self) -> int:
@@ -219,9 +144,9 @@ class Hydrostatic:
     # TODO: Ideally I'd like to vectorize this
     def __interpolate_to_boundary_alts(self, grid: np.ndarray) -> np.ndarray:
         flattened_altitude_grid = \
-            self.__flatten_along_pixel_dimension(self.__altitude_grid)
+            self.__flatten_along_pixel_dimension(self.__altitude_grid.val)
         flattened_boundaries = \
-            self.__flatten_along_pixel_dimension(self.__altitude)
+            self.__flatten_along_pixel_dimension(self.__altitude.val)
         flattened_quantity_grid = self.__flatten_along_pixel_dimension(grid)
         interpolated_quantity = np.zeros(flattened_boundaries.shape)
         for pixel in range(flattened_boundaries.shape[1]):
@@ -246,7 +171,7 @@ class Hydrostatic:
     #  will fix them.
     def __compute_column_density(self) -> np.ndarray:
         flattened_boundaries = \
-            np.flipud(self.__flatten_along_pixel_dimension(self.__altitude)
+            np.flipud(self.__flatten_along_pixel_dimension(self.__altitude.val)
                       * 1000)
         flattened_pressure = \
             np.flipud(self.__flatten_along_pixel_dimension(self.__pressure))
@@ -282,8 +207,15 @@ class Hydrostatic:
 
     @property
     def n_layers(self) -> int:
-        """Get the number of layers in the model. This value is inferred from
-        the 0 :sup:`th` axis of :code:`altitude_boundaries`.
+        """Get the number of layers in the model.
+
+        Notes
+        -----
+        This value is inferred from the 0 :sup:`th` axis of
+        ``altitude_boundaries``.
+
+        In DISORT, this variable is named ``MAXCLY`` (though in the ``disort``
+        package, this variable is optional).
 
         """
         return self.__n_layers
@@ -293,26 +225,32 @@ class Hydrostatic:
         """Get the input boundary altitude [km].
 
         """
-        return self.__altitude
+        return self.__altitude.val
 
     @property
     def pressure(self) -> np.ndarray:
-        """Get the pressure [Pa] at the boundary altitude. This variable is
-        obtained by linearly interpolating the input pressure onto
-        :code:`altitude_boundaries`.
+        """Get the pressure [Pa] at the boundary altitude.
+
+        Notes
+        -----
+        This variable is obtained by linearly interpolating the input pressure
+        onto ``altitude_boundaries``.
 
         """
         return self.__pressure
 
     @property
     def temperature(self) -> np.ndarray:
-        """Get the temperature [K] at the boundary altitude. This variable is
-        obtained by linearly interpolating the input temperature onto
-        :code:`altitude_boundaries`.
+        """Get the temperature [K] at the boundary altitude.
 
         Notes
         -----
-        In DISORT, this variable is named :code:`TEMPER`.
+        This variable is obtained by linearly interpolating the input
+        temperature onto ``altitude_boundaries``.
+
+        In DISORT, this variable is named ``TEMPER``. It is only needed by
+        DISORT if :py:attr:`~radiation.ThermalEmission.thermal_emission` is set
+        to ``True``.
 
         """
         return self.__temperature
@@ -320,9 +258,12 @@ class Hydrostatic:
     @property
     def number_density(self) -> np.ndarray:
         r"""Get the number density [:math:`\frac{\text{particles}}{\text{m}^3}`]
-        at the boundary altitude. This variable is obtained by getting the
-        pressure and temperature at the boundary altitude, then solving
-        :eq:`hydrostatic_equation`.
+        at the boundary altitude.
+
+        Notes
+        -----
+        This variable is obtained by getting the pressure and temperature at the
+        boundary altitude, then solving :eq:`hydrostatic_equation`.
 
         """
         return self.__number_density
@@ -330,9 +271,13 @@ class Hydrostatic:
     @property
     def column_density(self) -> np.ndarray:
         r"""Get the column density [:math:`\frac{\text{particles}}{\text{m}^2}`]
-        of the boundary *layers*. This is obtained by getting the number density
-        at the boundary altitude, then integrating (using Gaussian quadrature)
-        between the boundary altitude such that
+        of the boundary *layers*.
+
+        Notes
+        -----
+        This is obtained by getting the number density at the boundary altitude,
+        then integrating (using Gaussian quadrature) between the boundary
+        altitude such that
 
         .. math::
            N = \int n(z) dz
@@ -345,8 +290,11 @@ class Hydrostatic:
 
     @property
     def scale_height(self) -> np.ndarray:
-        r"""Get the scale height [km] at the boundary altitude. For a
-        hydrostatic atmosphere, the scale height is defined as
+        r"""Get the scale height [km] at the boundary altitude.
+
+        Notes
+        -----
+        For a hydrostatic atmosphere, the scale height is defined as
 
         .. math::
            H = \frac{k_B T}{mg}
@@ -355,85 +303,44 @@ class Hydrostatic:
         constant, :math:`T` is the temperature, :math:`m` is the average mass
         of an atmospheric particle, and :math:`g` is the planetary gravity.
 
-        Notes
-        -----
-        In DISORT, this variable is named :code:`H_LYR`. Despite the name, this
-        variable should have length of :code:`n_layers + 1`. It is only used if
+        In DISORT, this variable is named ``H_LYR``. Despite the name, this
+        variable should have length of ``n_layers + 1``. It is only used if
         :py:attr:`~controller.ModelBehavior.do_pseudo_sphere` is set to
-        :code:`True`.
+        ``True``.
 
         """
         return self.__scale_height
 
 
-class ColumnDensity:
-    """Perform checks that a given column density is plausible.
-
-    """
-
-    def __init__(self, column_density: np.ndarray) -> None:
-        """
-        Parameters
-        ----------
-        column_density
-            ND array of column density.
-
-        Raises
-        ------
-        TypeError
-            Raised if :code:`column_density` is not a numpy.ndarray.
-        ValueError
-            Raised if :code:`column_density` contains negative values.
-
-        """
-        self.__column_density = column_density
-
-        self.__raise_type_error_if_not_ndarray()
-
-    def __raise_error_if_input_is_bad(self) -> None:
-        self.__raise_type_error_if_not_ndarray()
-        self.__raise_value_error_if_contains_negative_values()
-
-    def __raise_type_error_if_not_ndarray(self) -> None:
-        if not isinstance(self.__column_density, np.ndarray):
-            message = 'column_density must be a numpy.ndarray.'
-            raise TypeError(message)
-
-    def __raise_value_error_if_contains_negative_values(self) -> None:
-        if np.any(self.__column_density < 0):
-            message = 'column_density contains negative values.'
-            raise ValueError(message)
-
-    @property
-    def column_density(self) -> np.ndarray:
-        """Get the input column density.
-
-        """
-        return self.__column_density
-
-
-class Altitude:
+class _Altitude:
     """Perform checks that a given altitude is plausible.
 
+    _Altitude accepts altitudes and ensures they're monotonically decreasing.
+
     """
 
-    def __init__(self, altitude: np.ndarray) -> None:
+    def __init__(self, altitude: np.ndarray, name: str) -> None:
         """
         Parameters
         ----------
         altitude
-            ND array of altitudes.
+            Array of altitude.
+        name
+            Name of the altitude array.
 
         Raises
         ------
         TypeError
-            Raised if :code:`altitude` is not a numpy.ndarray
+            Raised if `altitude`` is not a numpy.ndarray
         ValueError
-            Raised if :code:`altitude` is not monotonically decreasing along
+            Raised if ``altitude`` is not monotonically decreasing along
             the 0th axis.
 
         """
         self.__altitude = altitude
+        self.__name = name
+
+        self.__raise_error_if_input_is_bad()
 
     def __raise_error_if_input_is_bad(self) -> None:
         self.__raise_type_error_if_not_ndarray()
@@ -441,15 +348,128 @@ class Altitude:
 
     def __raise_type_error_if_not_ndarray(self) -> None:
         if not isinstance(self.__altitude, np.ndarray):
-            message = 'altitude must be a numpy.ndarray.'
+            message = f'{self.__name} must be a numpy.ndarray.'
             raise TypeError(message)
 
     def __raise_value_error_if_not_monotonically_decreasing(self) -> None:
         if not np.all(np.diff(self.__altitude, axis=0) < 0):
-            message = 'altitude must be monotonically decreasing along the ' \
-                      '0th axis.'
+            message = f'{self.__name} must be monotonically decreasing along ' \
+                      f'the 0th axis.'
             raise ValueError(message)
 
+    def __getattr__(self, method):
+        return getattr(self.val, method)
+
     @property
-    def altitude(self) -> np.ndarray:
+    def val(self) -> np.ndarray:
         return self.__altitude
+
+
+class _EoSVar:
+    """Perform checks that a given equation of state variable is plausible.
+
+    _EoSVar accepts equation of state variables to ensure they're physically
+    allowable.
+
+    """
+
+    def __init__(self, variable: np.ndarray, name: str) -> None:
+        """
+        Parameters
+        ----------
+        variable
+            Array of an equation of state variable.
+        name
+            The name of the variable.
+
+        Raises
+        ------
+        TypeError
+            Raised if ``variable`` is not a numpy.ndarray.
+        ValueError
+            Raised if ``variable`` contains negative values.
+
+        """
+        self.__var = variable
+        self.__name = name
+
+        self.__raise_error_if_input_is_bad()
+
+    def __raise_error_if_input_is_bad(self) -> None:
+        self.__raise_type_error_if_not_ndarray()
+        self.__raise_value_error_if_contains_negative_values()
+
+    def __raise_type_error_if_not_ndarray(self) -> None:
+        if not isinstance(self.__var, np.ndarray):
+            message = f'{self.__name} must be a numpy.ndarray.'
+            raise TypeError(message)
+
+    def __raise_value_error_if_contains_negative_values(self) -> None:
+        if np.any(self.__var < 0) or np.any(np.isinf(self.__var)):
+            message = f'{self.__name} must only contain positive finite values.'
+            raise ValueError(message)
+
+    def __getattr__(self, method):
+        return getattr(self.val, method)
+
+    @property
+    def val(self) -> np.ndarray:
+        """Get the input variable.
+
+        """
+        return self.__var
+
+
+class _ScaleHeightVar:
+    """Perform checks that a given scale height variable is plausible.
+
+    _ScaleHeightVar accepts scale height variables to ensure they're physically
+    allowable.
+
+    """
+
+    def __init__(self, variable: float, name: str) -> None:
+        """
+        Parameters
+        ----------
+        variable
+            Array of an equation of state variable.
+        name
+            The name of the variable.
+
+        Raises
+        ------
+        TypeError
+            Raised if ``variable`` is not a float.
+        ValueError
+            Raised if ``variable`` contains negative values.
+
+        """
+        self.__var = variable
+        self.__name = name
+
+        self.__raise_error_if_input_is_bad()
+
+    def __raise_error_if_input_is_bad(self) -> None:
+        self.__raise_type_error_if_not_float()
+        self.__raise_value_error_if_contains_negative_values()
+
+    def __raise_type_error_if_not_float(self) -> None:
+        if not isinstance(self.__var, float):
+            message = f'{self.__name} must be a float.'
+            raise TypeError(message)
+
+    def __raise_value_error_if_contains_negative_values(self) -> None:
+        if np.any(self.__var < 0) or np.any(np.isinf(self.__var)):
+            message = f'{self.__name} must only contain positive finite values.'
+            raise ValueError(message)
+
+    def __getattr__(self, method):
+        return getattr(self.val, method)
+
+    @property
+    def val(self) -> float:
+        """Get the input variable.
+
+        """
+        return self.__var

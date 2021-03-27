@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Forward Scattering &mdash; pyRT_DISORT  documentation</title>
+  <title>The forward_scattering module &mdash; pyRT_DISORT  documentation</title>
   
 
   
@@ -37,9 +37,7 @@
 
     
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Optical Depth" href="optical_depth.html" />
-    <link rel="prev" title="The rayleigh module" href="rayleigh.html" /> 
+    <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -85,23 +83,8 @@
             
             
               <p class="caption"><span class="caption-text">Useful links</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="../users-guide.html">User’s Guide</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="observation.html">The observation module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="eos.html">The eos module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rayleigh.html">The rayleigh module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Forward Scattering</a></li>
-<li class="toctree-l2"><a class="reference internal" href="optical_depth.html">Optical Depth</a></li>
-<li class="toctree-l2"><a class="reference internal" href="phase_function.html">Phase Function</a></li>
-<li class="toctree-l2"><a class="reference internal" href="model_build.html">Model Build</a></li>
-<li class="toctree-l2"><a class="reference internal" href="controller.html">Controller</a></li>
-<li class="toctree-l2"><a class="reference internal" href="surface.html">Surface</a></li>
-<li class="toctree-l2"><a class="reference internal" href="radiation.html">Radiation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="output.html">Output</a></li>
-<li class="toctree-l2"><a class="reference internal" href="running_the_model.html">Running the model</a></li>
-</ul>
-</li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../users-guide.html">User’s Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api-reference.html">pyRT_DISORT API reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../about-disort.html">About DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
@@ -153,9 +136,7 @@
     
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
-          <li><a href="../users-guide.html">User’s Guide</a> &raquo;</li>
-        
-      <li>Forward Scattering</li>
+      <li>The forward_scattering module</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -174,9 +155,57 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="forward-scattering">
-<h1>Forward Scattering<a class="headerlink" href="#forward-scattering" title="Permalink to this headline">¶</a></h1>
-<p>Coming soon!</p>
+  <div class="section" id="the-forward-scattering-module">
+<h1>The forward_scattering module<a class="headerlink" href="#the-forward-scattering-module" title="Permalink to this headline">¶</a></h1>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This is about the point I ran out of gas vectorizing things and
+writing good documentation. I need some more feedback before continuing
+too much further.</p>
+</div>
+<p>With our vertical profile defined, let’s define the forward scattering
+properties of our dust. We can do that with the obtusely named
+<code class="xref py py-class docutils literal notranslate"><span class="pre">NearestNeighborSingleScatteringAlbedo</span></code> (I’m open
+to better names!). This class essentially just takes in the scattering and
+extinction coefficients, along with the grid they’re defined on, and regrids
+them onto a user-defined particle size and wavelength grid by finding the
+nearest neighbor values. pyRT_DISORT only really cares about the single
+scattering albedo, so that’s why the class is named as such…</p>
+<p>I included the dust scattering properties in some tests, so let’s just grab
+the empirical values.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
+
+<span class="n">prop</span> <span class="o">=</span> <span class="s1">&#39;~/pyRT_DISORT/tests/aux/dust_properties.fits&#39;</span>
+<span class="n">hdul</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="n">cext</span> <span class="o">=</span> <span class="n">hdul</span><span class="p">[</span><span class="s1">&#39;primary&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">csca</span> <span class="o">=</span> <span class="n">hdul</span><span class="p">[</span><span class="s1">&#39;primary&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">wavs</span> <span class="o">=</span> <span class="n">hdul</span><span class="p">[</span><span class="s1">&#39;wavelengths&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+<span class="n">psizes</span> <span class="o">=</span> <span class="n">hdul</span><span class="p">[</span><span class="s1">&#39;particle_sizes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+</pre></div>
+</div>
+<p>Let’s say we have some knowledge of the particle sizes to use in our model.
+We can make them here too</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">gradient</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">short_wavelength</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>  <span class="c1"># Recall wavelength is 3D</span>
+</pre></div>
+</div>
+<p>We can now add these to the our very lengthy class name.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">nnssa</span> <span class="o">=</span> <span class="n">NearestNeighborSingleScatteringAlbedo</span><span class="p">(</span><span class="n">csca</span><span class="p">,</span> <span class="n">cext</span><span class="p">,</span> <span class="n">psizes</span><span class="p">,</span> <span class="n">wavs</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">gradient</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If you just want to play with things, I included the scattering and extinction
+cross sections on this new grids as properties, along with the single scattering
+albedo. I also have a method (<em>gasp!</em>) to make the extinction coefficient
+at a reference wavelength. It will make an array of shape
+(n_sizes, n_wavelengths) of the extinction coefficient at the reference
+wavelength assuming the input particle sizes remain unchanged. This will be
+needed for use in our next module.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>I plan to add some more classes, like to linearly interpolate between values
+and not force you to use nearest neighbor, at some point. But hopefully this
+is serviceable for now.</p>
+</div>
 </div>
 
 
@@ -184,10 +213,6 @@
            
           </div>
           <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="optical_depth.html" class="btn btn-neutral float-right" title="Optical Depth" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="rayleigh.html" class="btn btn-neutral float-left" title="The rayleigh module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-    </div>
 
   <hr/>
 
