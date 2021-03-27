@@ -5,15 +5,17 @@ can run DISORT is create some output parameters and arrays.
 
 OutputArrays
 -------------
-Let's start by making the output arrays. We only need a few parameters to
-create the arrays (they define the shape of the arrays), and we've already made
+Let's start by making the output arrays. These are arrays filled with 0s that
+will be populated with values as DISORT runs. We only need a few parameters to
+define the shape of these arrays, and we've already made
 the parameters we'll need. Let's add them to :class:`~output.OutputArrays`.
 
 .. code-block:: python
 
-   from pyRT_DISORT.output import OutputArrays, OutputBehavior, UserLevel
+   from pyRT_DISORT.output import OutputArrays
 
    oa = OutputArrays(cp.n_polar, cp.n_user_levels, cp.n_azimuth)
+
    ALBMED = oa.albedo_medium
    FLUP = oa.diffuse_up_flux
    RFLDN = oa.diffuse_down_flux
@@ -23,16 +25,15 @@ the parameters we'll need. Let's add them to :class:`~output.OutputArrays`.
    UAVG = oa.mean_intensity
    TRNMED = oa.transmissivity_medium
 
-All the arrays are set to 0 and will be populated as DISORT runs.
-
 OutputBehavior
 ---------------
 Let's now set some switches to define how DISORT will
 run. This is done with :class:`~output.OutputBehavior`, which sets some default
 values for how DISORT should run, but as usual you're free to override them.
 
-
 .. code-block:: python
+
+   from pyRT_DISORT.output import OutputBehavior
 
    ob = OutputBehavior()
    IBCND = ob.incidence_beam_conditions
@@ -46,7 +47,10 @@ We need an oddball variable to make the user levels. We can do that here.
 
 .. code-block:: python
 
+   from pyRT_DISORT.output import UserLevel
+
    ulv = UserLevel(cp.n_user_levels)
+
    UTAU = ulv.optical_depth_output
 
 This is a variable you need to completely create yourself if your run will

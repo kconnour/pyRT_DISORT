@@ -5,7 +5,7 @@ import numpy as np
 
 
 class OutputArrays:
-    """Create a data structure to make the DISORT output arrays.
+    """A structure to make the DISORT output arrays.
 
     OutputArrays creates arrays of 0s that are designed to get populated with
     values as DISORT runs.
@@ -78,11 +78,6 @@ class OutputArrays:
     def diffuse_up_flux(self) -> np.ndarray:
         """Get the diffuse upward flux output array.
 
-        Returns
-        -------
-        np.ndarray
-            The diffuse upward flux.
-
         Notes
         -----
         In DISORT, this variable is named :code:`FLUP`.
@@ -115,8 +110,9 @@ class OutputArrays:
 
     @property
     def flux_divergence(self) -> np.ndarray:
-        """Get the flux divergence output array, which is will represent
-        (d(net_flux) / d(optical_depth)). This is an exact result.
+        r"""Get the flux divergence output array, which is will represent
+        :math:`\frac{dF}{d\tau}` where :math:`F` is the flux and :math:`\tau`
+        is the optical depth. This is an exact result.
 
         Notes
         -----
@@ -160,7 +156,7 @@ class OutputArrays:
 
 
 class OutputBehavior:
-    """A data structure that holds DISORT output behavior switches.
+    """A structure that holds DISORT output behavior switches.
 
     OutputBehavior provides some default output behavior for DISORT. All the
     parameters can be overriden to fit user specifications.
@@ -179,51 +175,62 @@ class OutputBehavior:
             entire medium as a function of incidence beam angle. In this case,
             the following inputs are the only ones considered by DISORT:
 
-            - :code:`n_layers` (from :class:`controller.ComputationalParameters`)
-            - DTAUC
-            - SSALB
-            - PMOM
-            - :code:`n_streams` (from :class:`controller.ComputationalParameters`)
-            - :code:`user_angles` (from this class)
-            - :code:`n_polar` (from :class:`controller.ComputationalParameters`)
-            - :code:`mu` (from :class:`observation.Spectral`)
-            - ALBEDO
-            - :code:`print_variables` (from :class:`controller.ComputationalParameters`)
-            - :code:`header` (from :class:`controller.ComputationalParameters`)
+            - :code:`MAXCLY`
+            - :code:`DTAUC`
+            - :code:`SSALB`
+            - :code:`PMOM`
+            - :code:`NSTR`
+            - :code:`USRANG`
+            - :code:`MAXUMU`
+            - :code:`UMU`
+            - :code:`ALBEDO`
+            - :code:`PRNT`
+            - :code:`HEADER`
 
-            PLANK is assumed to be False, LAMBER is assumed to be True, and
-            ONLYFL must be False. The only output is ALBMED and TRNMED. The
+            :code:`PLANK` is assumed to be :code:`False`, :code:`LAMBER` is
+            assumed to be :code:`True`, and
+            :code:`ONLYFL` must be :code:`False`. The only output is
+            :code:`ALBMED` and :code:`TRNMED`. The
             intensities are not corrected for delta-M+ correction.
 
-            If False, this is accommodates any general case of boundary
+            If :code:`False`, this is accommodates any general case of boundary
             conditions including beam illumination from the top, isotropic
             illumination from the top, thermal emission from the top, internal
             thermal emission, reflection at the bottom, and/or thermal emission
-            from the bottom. Default is False.
+            from the bottom.
         only_fluxes
-            Determine if only the fluxes are returned by the model. If True,
-            return fluxes, flux divergences, and mean intensities; if False,
-            return all those quantities and intensities. In addition, if True
+            Determine if only the fluxes are returned by the model. If
+            :code:`True`,
+            return fluxes, flux divergences, and mean intensities; if
+            :code:`False`,
+            return all those quantities and intensities. In addition, if
+            :code:`True`
             the number of polar angles can be 0, the number of azimuthal angles
             can be 0, phi is not used, and all values of intensity (UU) will be
-            set to 0 (these are defined in ComputationalParameters). Default is
-            False.
+            set to 0.
         user_angles
             Denote whether radiant quantities should be returned at user angles.
-            If False, radiant quantities are to be returned at computational
-            polar angles. Also, UMU will return the cosines of the computational
-            polar angles and n_polar (from ComputationalParameters) will return
-            their number ( = n_streams).UMU must
-            be large enough to contain n_streams elements. If True,
+            If :code:`False`, radiant quantities are to be returned at computational
+            polar angles. Also, :code:`UMU` will return the cosines of the computational
+            polar angles and n_polar will return
+            their number ( = n_streams). :code:`UMU` must
+            be large enough to contain n_streams elements. If :code:`True`,
             radiant quantities are to be returned at user-specified polar
             angles, as follows: NUMU No. of polar angles (zero is a legal value
             only when 'only_fluxes' == True ) UMU(IU) IU=1 to NUMU, cosines of
             output polar angles in increasing order---starting with negative
             (downward) values (if any) and on through positive (upward)
-            values; *** MUST NOT HAVE ANY ZERO VALUES ***. Default is True.
+            values; **MUST NOT HAVE ANY ZERO VALUES**.
         user_optical_depths
             Denote whether radiant quantities are returned at user-specified
-            optical depths. Default is False.
+            optical depths.
+
+        See Also
+        --------
+        :class:`~controller.ComputationalParameters`,
+        :class:`~controller.ModelBehavior`,
+        :class:`~observation.Spectral`
+
         """
         self.__incidence_beam_conditions = \
             self.__make_incidence_beam_conditions(incidence_beam_conditions)
@@ -299,7 +306,7 @@ class OutputBehavior:
 
 
 class UserLevel:
-    """Create the user levels at which radiant quantities are returned.
+    """A structure to create the levels at which radiant quantities are returned
 
     UserLevel checks that radiant quantities can be returned at user levels.
 
@@ -308,27 +315,19 @@ class UserLevel:
         """
         Parameters
         ----------
+        n_user_levels
+            The number of user levels to instantiate. Only used if
+            :code:`optical_depth_output` is not :code:`None`.
         optical_depth_output
             If radiant quantities are to be returned at user specified optical
-            depths (as specified in mb) this is the monotonically increasing 1D
+            depths  this is the monotonically increasing 1D
             array of optical depths where they should be output. It must not
-            exceed the column integrated optical depth of DTAUC. If radiant
+            exceed the column integrated optical depth of :code:`DTAUC`. If
+            radiant
             quantities can simply be returned at the boundary of every
-            computational layer (user_optical_depths = False) this can be None,
-            and this object will create an array of 0s for the output. Default
-            is None.
-        n_user_levels
-            The number of user levels to instantiate. Only required if
-            :code:`optical_depth_output` is not None.
-
-        Notes
-        -----
-        The documentation suggests if user_optical_depths = False, this array
-        is populated with optical depths at the boundaries of the computational
-        layers. However, this seems equal to DTAUC to me but with a 0 appended.
-        Additionally, making this case work would require changing f2py to
-        make this an output array... which I'm not inclined to do if no one will
-        use it.
+            computational layer (assuming :code:`user_optical_depths` is set to
+            :code:`False`) this can be :code:`None`,
+            and this object will create an array of 0s for the output.
 
         """
         self.__optical_depth_output = self.__make_optical_depth_output(
@@ -348,14 +347,9 @@ class UserLevel:
     def optical_depth_output(self) -> np.ndarray:
         """Get the input user optical depth array at user levels.
 
-        Returns
-        -------
-        np.ndarray
-            The optical depth at user levels.
-
         Notes
         -----
-        In DISORT, this variable is named "UTAU".
+        In DISORT, this variable is named :code:`UTAU`.
 
         """
         return self.__optical_depth_output

@@ -184,12 +184,14 @@
 can run DISORT is create some output parameters and arrays.</p>
 <div class="section" id="outputarrays">
 <h2>OutputArrays<a class="headerlink" href="#outputarrays" title="Permalink to this headline">¶</a></h2>
-<p>Let’s start by making the output arrays. We only need a few parameters to
-create the arrays (they define the shape of the arrays), and we’ve already made
+<p>Let’s start by making the output arrays. These are arrays filled with 0s that
+will be populated with values as DISORT runs. We only need a few parameters to
+define the shape of these arrays, and we’ve already made
 the parameters we’ll need. Let’s add them to <a class="reference internal" href="../api-reference/output.html#output.OutputArrays" title="output.OutputArrays"><code class="xref py py-class docutils literal notranslate"><span class="pre">OutputArrays</span></code></a>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.output</span> <span class="kn">import</span> <span class="n">OutputArrays</span><span class="p">,</span> <span class="n">OutputBehavior</span><span class="p">,</span> <span class="n">UserLevel</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.output</span> <span class="kn">import</span> <span class="n">OutputArrays</span>
 
 <span class="n">oa</span> <span class="o">=</span> <span class="n">OutputArrays</span><span class="p">(</span><span class="n">cp</span><span class="o">.</span><span class="n">n_polar</span><span class="p">,</span> <span class="n">cp</span><span class="o">.</span><span class="n">n_user_levels</span><span class="p">,</span> <span class="n">cp</span><span class="o">.</span><span class="n">n_azimuth</span><span class="p">)</span>
+
 <span class="n">ALBMED</span> <span class="o">=</span> <span class="n">oa</span><span class="o">.</span><span class="n">albedo_medium</span>
 <span class="n">FLUP</span> <span class="o">=</span> <span class="n">oa</span><span class="o">.</span><span class="n">diffuse_up_flux</span>
 <span class="n">RFLDN</span> <span class="o">=</span> <span class="n">oa</span><span class="o">.</span><span class="n">diffuse_down_flux</span>
@@ -200,14 +202,15 @@ the parameters we’ll need. Let’s add them to <a class="reference internal" h
 <span class="n">TRNMED</span> <span class="o">=</span> <span class="n">oa</span><span class="o">.</span><span class="n">transmissivity_medium</span>
 </pre></div>
 </div>
-<p>All the arrays are set to 0 and will be populated as DISORT runs.</p>
 </div>
 <div class="section" id="outputbehavior">
 <h2>OutputBehavior<a class="headerlink" href="#outputbehavior" title="Permalink to this headline">¶</a></h2>
 <p>Let’s now set some switches to define how DISORT will
 run. This is done with <a class="reference internal" href="../api-reference/output.html#output.OutputBehavior" title="output.OutputBehavior"><code class="xref py py-class docutils literal notranslate"><span class="pre">OutputBehavior</span></code></a>, which sets some default
 values for how DISORT should run, but as usual you’re free to override them.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ob</span> <span class="o">=</span> <span class="n">OutputBehavior</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.output</span> <span class="kn">import</span> <span class="n">OutputBehavior</span>
+
+<span class="n">ob</span> <span class="o">=</span> <span class="n">OutputBehavior</span><span class="p">()</span>
 <span class="n">IBCND</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">incidence_beam_conditions</span>
 <span class="n">ONLYFL</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">only_fluxes</span>
 <span class="n">USRANG</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">user_angles</span>
@@ -218,7 +221,10 @@ values for how DISORT should run, but as usual you’re free to override them.</
 <div class="section" id="userlevel">
 <h2>UserLevel<a class="headerlink" href="#userlevel" title="Permalink to this headline">¶</a></h2>
 <p>We need an oddball variable to make the user levels. We can do that here.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ulv</span> <span class="o">=</span> <span class="n">UserLevel</span><span class="p">(</span><span class="n">cp</span><span class="o">.</span><span class="n">n_user_levels</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.output</span> <span class="kn">import</span> <span class="n">UserLevel</span>
+
+<span class="n">ulv</span> <span class="o">=</span> <span class="n">UserLevel</span><span class="p">(</span><span class="n">cp</span><span class="o">.</span><span class="n">n_user_levels</span><span class="p">)</span>
+
 <span class="n">UTAU</span> <span class="o">=</span> <span class="n">ulv</span><span class="o">.</span><span class="n">optical_depth_output</span>
 </pre></div>
 </div>
