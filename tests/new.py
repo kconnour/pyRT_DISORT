@@ -117,15 +117,12 @@ pf.make_nn_phase_function()
 dust_pf = pf.phase_function
 
 # the atmosphere module
-from pyRT_DISORT.atmosphere import ModelAtmosphere
-
-model = ModelAtmosphere()
+from pyRT_DISORT.atmosphere import Atmosphere
 
 rayleigh_info = (rayleigh_od, rayleigh_ssa, rayleigh_pf)
 dust_info = (dust_od, dust_ssa, dust_pf)
 
-model.add_constituent(rayleigh_info)
-model.add_constituent(dust_info)
+model = Atmosphere(rayleigh_info, dust_info)
 
 DTAUC = model.optical_depth
 SSALB = model.single_scattering_albedo

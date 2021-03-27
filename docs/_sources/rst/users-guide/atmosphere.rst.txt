@@ -3,40 +3,32 @@ The atmosphere module
 We've done the hard work of creating all the atmospheric arrays for the
 individual constituents. Now we just need to put everything together.
 
-ModelAtmosphere
----------------
-We can construct the "big 3" arrays of the optical depth, single scattering
-albedo, and phase function with :class:`~atmosphere.ModelAtmosphere`.
-Let's make one of these objects (which takes no inputs to construct)
+Atmosphere
+----------
+We can construct the arrays of the optical depth, single scattering
+albedo, and phase function with :class:`~atmosphere.Atmosphere`. It requires
+tuples of each of the 3 arrays for each atmospheric
+constituent. I'll go ahead and make these tuples for Rayleigh scattering and
+dust
 
 .. code-block:: python
 
-   from pyRT_DISORT.model_atmosphere import ModelAtmosphere
+   rayleigh_info = (rayleigh_od, rayleigh_ssa, rayleigh_pf)
+   dust_info = (dust_od, dust_ssa, dust_pf)
 
-   model = ModelAtmosphere()
-
-With its :py:meth:`~model_atmosphere.ModelAtmosphere.add_constituent` method,
-we can give it tuples of each of the 3
-arrays for each atmospheric constituent. This object will just hold on to these
-arrays. Let's make the inputs we made for Rayleigh scattering and dust.
+We can now add these to ``Atmosphere``, which will go ahead and construct the
+composite arrays.
 
 .. code-block:: python
 
-   rayleigh_info = (rco2.scattering_optical_depth, rco2.ssa, rco2.phase_function)
-   dust_info = (od.total, nnssa.single_scattering_albedo, pf.phase_function)
+   from pyRT_DISORT.model_atmosphere import Atmosphere
 
-   model.add_constituent(rayleigh_info)
-   model.add_constituent(dust_info)
-
-Now :code:`model` knows about everything it needs to know about. You can access
-the total atmospheric properties via the class properties.
-
-.. code-block:: python
+   model = Atmosphere(rayleigh_info, dust_info)
 
    DTAUC = model.optical_depth
    SSALB = model.single_scattering_albedo
    PMOM = model.legendre_moments
 
-That's all there is to it. And with that, we've done the hard part of
-constructing our DISORT run. The upcoming modules will help us create some of
-the remaining variables requested by DISORT.
+That's all there is to it. We now have our atmospheric arrays. The remaning
+modules are generally small and simply help to construct some of the switches
+required by DISORT.

@@ -1,7 +1,15 @@
+Misc:
+- add HG phase function
+- type hint ndarray shapes
+- fix eos Raises bullet points
+- test if pip installs the tests directory
+- why have a requirements.txt?
+- consider having a disort folder parallel to pyRT_DISORT
+- attempt to recombine docs and builddocs
+
 Refresh part 2:
 --- Remake the integration tests to conform with pytest
 --- Remake the untested utilities + tests + guide
---- Consider a better organizational structure. ~15 modules seems like a ton
 
 User's guide part 2:
 --- Add info on the new utilities
@@ -10,7 +18,6 @@ User's guide part 2:
 Documentation:
 --- try to make a dummy index.html so docs can all be on one folder
 --- Have "next" and "previous" only go through the example
---- Remove my computer's path from notes.md
 --- Can I remove the .pytest_cache once I'm done with all tests?
 
 Additions:

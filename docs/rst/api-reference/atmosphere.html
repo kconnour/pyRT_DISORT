@@ -173,40 +173,37 @@
             
   <div class="section" id="module-atmosphere">
 <span id="atmosphere"></span><h1>Atmosphere<a class="headerlink" href="#module-atmosphere" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="code docutils literal notranslate"><span class="pre">atmosphere</span></code> module contains structures to make the total
+atmospheric properties required by DISORT.</p>
 <dl class="py class">
-<dt id="atmosphere.ModelAtmosphere">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">atmosphere.</span></code><code class="sig-name descname"><span class="pre">ModelAtmosphere</span></code><a class="headerlink" href="#atmosphere.ModelAtmosphere" title="Permalink to this definition">¶</a></dt>
+<dt id="atmosphere.Atmosphere">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">atmosphere.</span></code><code class="sig-name descname"><span class="pre">Atmosphere</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atmosphere.Atmosphere" title="Permalink to this definition">¶</a></dt>
 <dd><p>A structure to compute the total atmospheric properties.</p>
-<p>ModelAtmosphere accepts the radiative properties of atmospheric constituents
-and holds them. When requested, it computes the total atmospheric quantities
-for use in DISORT.</p>
+<p>Atmosphere accepts a collection of atmospheric properties for each
+constituent in the model. It then computes the total atmospheric arrays
+from these inputs.</p>
 <dl class="py method">
-<dt id="atmosphere.ModelAtmosphere.__init__">
-<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atmosphere.ModelAtmosphere.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="atmosphere.ModelAtmosphere.add_constituent">
-<code class="sig-name descname"><span class="pre">add_constituent</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">properties</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atmosphere.ModelAtmosphere.add_constituent" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add an atmospheric constituent to the model. <code class="code docutils literal notranslate"><span class="pre">properties</span></code> must
-be a tuple of the numpy.ndarrays of the optical depth, single scattering
-albedo, and Legendre coefficient decomposed phase function.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+<dt id="atmosphere.Atmosphere.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atmosphere.Atmosphere.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>args</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]) – Tuple of (optical depth, single scattering albedo, phase function)
+for each constituent to add to the atmospheric model.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="atmosphere.ModelAtmosphere.legendre_moments">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">legendre_moments</span></code><a class="headerlink" href="#atmosphere.ModelAtmosphere.legendre_moments" title="Permalink to this definition">¶</a></dt>
+<dt id="atmosphere.Atmosphere.legendre_moments">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">legendre_moments</span></code><a class="headerlink" href="#atmosphere.Atmosphere.legendre_moments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the total Legendre coefficient array of the atmosphere. This is
 computed via</p>
 <div class="math notranslate nohighlight">
-\[P = \frac{\Sigma \tilde{\omega}_i * \tau_i * P_i}{\tilde{\omega} * \tau}\]</div>
-<p>where <span class="math notranslate nohighlight">\(P\)</span> is the total phase function array.</p>
+\[P = \frac{\Sigma \tilde{\omega}_i * \tau_i * P_i}
+         {\tilde{\omega} * \tau}\]</div>
+<p>where <span class="math notranslate nohighlight">\(P\)</span> is the total phase function array, <span class="math notranslate nohighlight">\(P_i\)</span> is the
+phase function of each constituent, and the other variables are defined
+in the other properties.</p>
 <p class="rubric">Notes</p>
 <p>Each eleemnt of this variable along the wavelength dimension is named
 <code class="code docutils literal notranslate"><span class="pre">PMOM</span></code> in DISORT.</p>
@@ -218,12 +215,13 @@ computed via</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="atmosphere.ModelAtmosphere.optical_depth">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">optical_depth</span></code><a class="headerlink" href="#atmosphere.ModelAtmosphere.optical_depth" title="Permalink to this definition">¶</a></dt>
+<dt id="atmosphere.Atmosphere.optical_depth">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">optical_depth</span></code><a class="headerlink" href="#atmosphere.Atmosphere.optical_depth" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the total optical depth of the atmosphere. This is computed via</p>
 <div class="math notranslate nohighlight">
 \[\tau = \Sigma \tau_i\]</div>
-<p>where <span class="math notranslate nohighlight">\(\tau\)</span> is the total optical depth, and <span class="math notranslate nohighlight">\(\tau_i\)</span> is the optical depth
+<p>where <span class="math notranslate nohighlight">\(\tau\)</span> is the total optical depth, and <span class="math notranslate nohighlight">\(\tau_i\)</span> is the
+optical depth
 of each of the atmospheric species.</p>
 <p class="rubric">Notes</p>
 <p>Each element of this variable along the wavelength dimension is named
@@ -236,15 +234,15 @@ of each of the atmospheric species.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="atmosphere.ModelAtmosphere.single_scattering_albedo">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">single_scattering_albedo</span></code><a class="headerlink" href="#atmosphere.ModelAtmosphere.single_scattering_albedo" title="Permalink to this definition">¶</a></dt>
+<dt id="atmosphere.Atmosphere.single_scattering_albedo">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">single_scattering_albedo</span></code><a class="headerlink" href="#atmosphere.Atmosphere.single_scattering_albedo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the single scattering albedo of the atmosphere. This is computed
 via</p>
 <div class="math notranslate nohighlight">
-\[\tilde{\omega} = \frac{\Sigma \tilde{\omega}_i * \tau_i}{\tau}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\tilde{\omega}\)</span> is the total single scattering albedo and
-<span class="math notranslate nohighlight">\(\tilde{\omega}_i\)</span> is the single scattering albedo of an individual
-species.</p>
+\[\tilde{\omega} = \frac{\Sigma \tilde{\omega}_i \tau_i}{\tau}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\tilde{\omega}\)</span> is the total single scattering albedo,
+<span class="math notranslate nohighlight">\(\tilde{\omega}_i\)</span> is the single scattering albedo of an
+individual species, and <span class="math notranslate nohighlight">\(\tau\)</span> is the total optical depth.</p>
 <p class="rubric">Notes</p>
 <p>Each element of this variable along the wavelength dimension is named
 <code class="code docutils literal notranslate"><span class="pre">SSALB</span></code> in DISORT.</p>

@@ -1,89 +1,91 @@
-# 3rd-party imports
+"""The :code:`atmosphere` module contains structures to make the total
+atmospheric properties required by DISORT.
+"""
 import numpy as np
 
 
-class ModelAtmosphere:
+class Atmosphere:
     """A structure to compute the total atmospheric properties.
 
-    ModelAtmosphere accepts the radiative properties of atmospheric constituents
-    and holds them. When requested, it computes the total atmospheric quantities
-    for use in DISORT.
+    Atmosphere accepts a collection of atmospheric properties for each
+    constituent in the model. It then computes the total atmospheric arrays
+    from these inputs.
 
     """
 
-    def __init__(self):
-        self.__constituent_optical_depth = []
-        self.__constituent_single_scattering_albedo = []
-        self.__constituent_legendre_coefficient = []
-
-        self.__uptodate = True
-
-        self.__optical_depth = np.array([])
-        self.__single_scattering_albedo = np.array([])
-        self.__legendre_moments = np.array([])
-
-    def add_constituent(self, properties: tuple) -> None:
-        """Add an atmospheric constituent to the model. :code:`properties` must
-        be a tuple of the numpy.ndarrays of the optical depth, single scattering
-        albedo, and Legendre coefficient decomposed phase function.
+    def __init__(self,
+                 *args: tuple[np.ndarray, np.ndarray, np.ndarray]) -> None:
+        """
+        Parameters
+        ----------
+        args
+            Tuple of (optical depth, single scattering albedo, phase function)
+            for each constituent to add to the atmospheric model.
 
         """
-        self.__check_constituent_addition(properties)
-        self.__constituent_optical_depth.append(properties[0])
-        self.__constituent_single_scattering_albedo.append(properties[1])
-        self.__constituent_legendre_coefficient.append(properties[2])
-        self.__uptodate = False
+        self.__properties = args
 
-    @staticmethod
-    def __check_constituent_addition(properties):
-        if not isinstance(properties, tuple):
-            raise TypeError('properties must be a tuple')
-        if len(properties) != 3:
-            raise ValueError('properties must be of length 3')
-        if not all(isinstance(x, np.ndarray) for x in properties):
-            raise TypeError('All elements in properties must be a np.ndarray')
+        self.__check_constituents()
 
-    def __compute_model(self) -> None:
-        if not self.__uptodate:
-            self.__calculate_optical_depth()
+        self.__n_species = len(self.__properties)
+        self.__constituent_optical_depth = self.__extract_property(0)
+        self.__constituent_single_scattering_albedo = self.__extract_property(1)
+        self.__constituent_phase_function = self.__extract_property(2)
+
+        self.__optical_depth = self.__calculate_optical_depth()
+        self.__single_scattering_albedo = \
             self.__calculate_single_scattering_albedo()
-            self.__calculate_legendre_coefficients()
-        self.__uptodate = True
+        self.__legendre_moments = self.__calculate_legendre_coefficients()
 
-    def __calculate_optical_depth(self):
-        self.__optical_depth = sum(self.__constituent_optical_depth)
+    def __check_constituents(self):
+        for p in self.__properties:
+            if not isinstance(p, tuple):
+                raise TypeError('properties must be a tuple')
+            if len(p) != 3:
+                raise ValueError('properties must be of length 3')
+            if not all(isinstance(x, np.ndarray) for x in p):
+                raise TypeError('All elements in args must be a np.ndarray')
 
-    def __calculate_single_scattering_albedo(self):
+    def __extract_property(self, index):
+        return [f[index] for f in self.__properties]
+
+    def __calculate_optical_depth(self) -> np.ndarray:
+        return sum(self.__constituent_optical_depth)
+
+    def __calculate_single_scattering_albedo(self) -> np.ndarray:
         scattering_od = [self.__constituent_single_scattering_albedo[i] *
                          self.__constituent_optical_depth[i] for i in
-                         range(len(self.__constituent_optical_depth))]
-        self.__single_scattering_albedo = \
-            sum(scattering_od) / self.__optical_depth
+                         range(self.__n_species)]
+        return sum(scattering_od) / self.__optical_depth
 
-    def __calculate_legendre_coefficients(self):
+    def __calculate_legendre_coefficients(self) -> np.ndarray:
         max_moments = self.__get_max_moments()
-        self.__match_moments(self.__constituent_legendre_coefficient, max_moments)
+        self.__match_moments(self.__constituent_phase_function,
+                             max_moments)
         weighted_moments = [self.__constituent_single_scattering_albedo[i] *
                             self.__constituent_optical_depth[i] *
-                            self.__constituent_legendre_coefficient[i] for i in
-                            range(len(self.__constituent_optical_depth))]
+                            self.__constituent_phase_function[i] for i in
+                            range(self.__n_species)]
         denom = [self.__constituent_single_scattering_albedo[i] *
-                            self.__constituent_optical_depth[i]
-                            for i in range(len(self.__constituent_optical_depth))]
-        self.__legendre_moments = sum(weighted_moments) / sum(denom)
+                 self.__constituent_optical_depth[i]
+                 for i in range(self.__n_species)]
+        return sum(weighted_moments) / sum(denom)
 
     def __get_max_moments(self):
-        return max(i.shape[0] for i in self.__constituent_legendre_coefficient)
+        return max(i.shape[0] for i in self.__constituent_phase_function)
 
     def __match_moments(self, phase_functions, max_moments):
         for counter, pf in enumerate(phase_functions):
             if pf.shape[0] < max_moments:
-                self.__constituent_legendre_coefficient[counter] = self.__add_moments(pf, max_moments)
+                self.__constituent_phase_function[
+                    counter] = self.__add_moments(pf, max_moments)
 
     @staticmethod
     def __add_moments(phase_function, max_moments):
-        starting_inds = np.linspace(phase_function.shape[0], phase_function.shape[0],
-                                    num=max_moments - phase_function.shape[0], dtype=int)
+        starting_inds = np.linspace(phase_function.shape[0],
+                                    phase_function.shape[0],
+                                    num=max_moments - phase_function.shape[0],
+                                    dtype=int)
         return np.insert(phase_function, starting_inds, 0, axis=0)
 
     @property
@@ -93,7 +95,8 @@ class ModelAtmosphere:
         .. math::
            \tau = \Sigma \tau_i
 
-        where :math:`\tau` is the total optical depth, and :math:`\tau_i` is the optical depth
+        where :math:`\tau` is the total optical depth, and :math:`\tau_i` is the
+        optical depth
         of each of the atmospheric species.
 
         Notes
@@ -102,7 +105,6 @@ class ModelAtmosphere:
         :code:`DTAUC` in DISORT.
 
         """
-        self.__compute_model()
         return self.__optical_depth
 
     @property
@@ -111,11 +113,11 @@ class ModelAtmosphere:
         via
 
         .. math::
-           \tilde{\omega} = \frac{\Sigma \tilde{\omega}_i * \tau_i}{\tau}
+           \tilde{\omega} = \frac{\Sigma \tilde{\omega}_i \tau_i}{\tau}
 
-        where :math:`\tilde{\omega}` is the total single scattering albedo and
-        :math:`\tilde{\omega}_i` is the single scattering albedo of an individual
-        species.
+        where :math:`\tilde{\omega}` is the total single scattering albedo,
+        :math:`\tilde{\omega}_i` is the single scattering albedo of an
+        individual species, and :math:`\tau` is the total optical depth.
 
         Notes
         -----
@@ -123,7 +125,6 @@ class ModelAtmosphere:
         :code:`SSALB` in DISORT.
 
         """
-        self.__compute_model()
         return self.__single_scattering_albedo
 
     @property
@@ -132,9 +133,12 @@ class ModelAtmosphere:
         computed via
 
         .. math::
-           P = \frac{\Sigma \tilde{\omega}_i * \tau_i * P_i}{\tilde{\omega} * \tau}
+           P = \frac{\Sigma \tilde{\omega}_i * \tau_i * P_i}
+                    {\tilde{\omega} * \tau}
 
-        where :math:`P` is the total phase function array.
+        where :math:`P` is the total phase function array, :math:`P_i` is the
+        phase function of each constituent, and the other variables are defined
+        in the other properties.
 
         Notes
         -----
@@ -142,5 +146,4 @@ class ModelAtmosphere:
         :code:`PMOM` in DISORT.
 
         """
-        self.__compute_model()
         return self.__legendre_moments
