@@ -1,7 +1,6 @@
-import glob
 import os
 import setuptools
-import sys
+from numpy import f2py
 
 
 class SetupDISORT:
@@ -18,26 +17,16 @@ class SetupDISORT:
     def __install_disort(self) -> None:
         folder_name = 'disort4.0.99'
         module_name = 'disort'
-        self.__compile_disort_binary_file(folder_name, module_name)
-        binary_filename = self.__get_binary_filename()
-        self.__move_binary_file_up_one_directory(binary_filename, folder_name)
 
-    def __compile_disort_binary_file(self, folder_name: str, module_name: str) \
-            -> None:
-        os.chdir(os.path.join(self.__project_path, folder_name))
-        os.system(
-            f'{sys.executable} -m numpy.f2py -c BDREF.f DISOBRDF.f DISORT.f '
-            f'ERRPACK.f LAPACK.f LINPAK.f RDI1MACH.f -m {module_name}')
-
-    @staticmethod
-    def __get_binary_filename() -> str:
-        return glob.glob('*.so')[0]
-
-    def __move_binary_file_up_one_directory(self, binary_filename: str,
-                                            folder_name: str) -> None:
-        os.rename(os.path.join(os.path.join(self.__project_path, folder_name),
-                               binary_filename),
-                  os.path.join(self.__project_path, binary_filename))
+        disort_source_dir = os.path.join(self.__project_path, folder_name)
+        mods = ['BDREF.f', 'DISOBRDF.f', 'ERRPACK.f', 'LAPACK.f',
+                'LINPAK.f', 'RDI1MACH.f']
+        paths = [os.path.join(disort_source_dir, m) for m in mods]
+        # I'm disgusted to say I'm adding a comment. I want to compile DISORT.f
+        #  as a module, and I can do that by adding the other modules it needs
+        #  in extra_args (this wasn't clear in f2py documentation).
+        with open(os.path.join(disort_source_dir, 'DISORT.f')) as mod:
+            f2py.compile(mod.read(), modulename=module_name, extra_args=paths)
 
     def __setup_package(self) -> None:
         os.chdir(self.__project_path)
