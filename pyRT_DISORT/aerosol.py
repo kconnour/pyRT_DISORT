@@ -312,6 +312,13 @@ class _Interpolator:
         return np.take(np.take(self.__coeff, size_indices, axis=-2),
                        wavelength_indices, axis=-1)
 
+    def linear(self) -> np.ndarray:
+        intpf = np.zeros((self.__coeff.shape[0], self.__particle_size.shape[0], self.__wavelength.shape[0]))
+        for i in range(len(intpf)):
+            pf = interp2d(self.__pgrid, self.__wgrid, phsfn[i, :, :].T)
+            intpf[i, :, :] = pf(self.__particle_size, self.__wavelength).T
+        return intpf
+
     @staticmethod
     def __get_nearest_indices(grid: np.ndarray, values: np.ndarray) \
             -> np.ndarray:
@@ -373,37 +380,60 @@ class ForwardScattering:
         particle sizes and wavelengths.
 
         """
-        self.__gridded_c_scattering = self.__make_gridded_c_scattering()
-        self.__gridded_c_extinction = self.__make_gridded_c_extinction()
+        self.__gridded_c_scattering = self.__make_gridded_c_scattering('nn')
+        self.__gridded_c_extinction = self.__make_gridded_c_extinction('nn')
         self.__gridded_ssa = self.__make_gridded_ssa()
-        self.__extinction = self.__make_extinction_grid()
+        self.__extinction = self.__make_extinction_grid('nn')
 
-    def __make_gridded_c_scattering(self):
-        nni = _Interpolator(self.__c_sca.parameter, self.__c_sca.particle_size,
-                           self.__c_sca.wavelength, self.__particle_size,
-                           self.__wavelength)
-        return nni.nearest_neighbor()
+    def make_linear_properties(self) -> None:
+        """Make the forward scattering properties at the input particle sizes
+        and wavelengths by linearly interpolating them onto the input grid.
 
-    def __make_gridded_c_extinction(self):
-        nni = _Interpolator(self.__c_ext.parameter, self.__c_ext.particle_size,
-                           self.__c_ext.wavelength, self.__particle_size,
-                           self.__wavelength)
-        return nni.nearest_neighbor()
+        """
+        self.__gridded_c_scattering = self.__make_gridded_c_scattering('linear')
+        self.__gridded_c_extinction = self.__make_gridded_c_extinction('linear')
+        self.__gridded_ssa = self.__make_gridded_ssa()
+        self.__extinction = self.__make_extinction_grid('linear')
+
+    def __make_gridded_c_scattering(self, kind: str) -> np.ndarray:
+        interp = _Interpolator(self.__c_sca.parameter,
+                               self.__c_sca.particle_size,
+                               self.__c_sca.wavelength, self.__particle_size,
+                               self.__wavelength)
+
+        return self.__interpolate_by_kind(interp, kind)
+
+    def __make_gridded_c_extinction(self, kind: str) -> np.ndarray:
+        interp = _Interpolator(self.__c_ext.parameter,
+                               self.__c_ext.particle_size,
+                               self.__c_ext.wavelength, self.__particle_size,
+                               self.__wavelength)
+
+        return self.__interpolate_by_kind(interp, kind)
 
     def __make_gridded_ssa(self):
         return self.__gridded_c_scattering / self.__gridded_c_extinction
 
-    def __make_extinction_grid(self) -> np.ndarray:
+    def __make_extinction_grid(self, kind: str) -> np.ndarray:
         """Make a grid of the extinction cross section at a reference wavelength.
         This is the extinction cross section at the input wavelengths divided by
         the extinction cross section at the reference wavelength.
 
         """
-        nni = _Interpolator(self.__c_ext.parameter, self.__c_ext.particle_size,
-                           self.__c_ext.wavelength, self.__particle_size,
-                           np.array([self.__wave_ref]))
-        extinction_profile = np.squeeze(nni.nearest_neighbor())
+        interp = _Interpolator(self.__c_ext.parameter,
+                               self.__c_ext.particle_size,
+                               self.__c_ext.wavelength, self.__particle_size,
+                               np.array([self.__wave_ref]))
+        extinction_profile = np.squeeze(self.__interpolate_by_kind(interp, kind))
         return (self.__gridded_c_extinction.T / extinction_profile).T
+
+    @staticmethod
+    def __interpolate_by_kind(interp: _Interpolator, kind: str) -> np.ndarray:
+        # TODO: in python3.10 do a switch case
+        if kind == 'nn':
+            return interp.nearest_neighbor()
+        elif kind == 'linear':
+            return interp.linear()
 
     @property
     def scattering_cross_section(self) -> np.ndarray:
@@ -543,11 +573,29 @@ class TabularLegendreCoefficients:
         wavelengths.
 
         """
-        nni = _Interpolator(self.__coefficients, self.__particle_grid,
-                           self.__wavelength_grid, self.__particle_profile,
-                           self.__wavelengths)
-        nn_pf = nni.nearest_neighbor()
-        self.__phase_function = self.__normalize_coefficients(nn_pf)
+        self.__make_phase_function('nn')
+
+    def make_linear_phase_function(self) -> None:
+        """Make the phase function by linearly interpolating between the input
+        grid of particle sizes and wavelengths.
+
+        """
+        self.__make_phase_function('linear')
+
+    def __make_phase_function(self, kind: str) -> None:
+        interp = _Interpolator(self.__coefficients, self.__particle_grid,
+                               self.__wavelength_grid, self.__particle_profile,
+                               self.__wavelengths)
+
+        # TODO: in python3.10 do a switch case
+        if kind == 'nn':
+            pf = interp.nearest_neighbor()
+        elif kind == 'linear':
+            pf = interp.linear()
+
+        print(pf[:, 0, 0])
+
+        self.__phase_function = self.__normalize_coefficients(pf)
 
     @property
     def phase_function(self) -> np.ndarray:
