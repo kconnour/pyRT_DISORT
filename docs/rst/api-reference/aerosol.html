@@ -278,6 +278,18 @@ grid.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt id="aerosol.ForwardScattering.make_linear_properties">
+<code class="sig-name descname"><span class="pre">make_linear_properties</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#aerosol.ForwardScattering.make_linear_properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make the forward scattering properties at the input particle sizes
+and wavelengths by linearly interpolating them onto the input grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt id="aerosol.ForwardScattering.make_nn_properties">
 <code class="sig-name descname"><span class="pre">make_nn_properties</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#aerosol.ForwardScattering.make_nn_properties" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make the forward scattering properties at the nearest neighbor
@@ -374,6 +386,18 @@ particle_size_grid, wavelength_grid]</p></li>
 <li><p><strong>max_moments</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – The maximum number of coefficients to use in the array. If None,
 all available coefficients are used.</p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="aerosol.TabularLegendreCoefficients.make_linear_phase_function">
+<code class="sig-name descname"><span class="pre">make_linear_phase_function</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#aerosol.TabularLegendreCoefficients.make_linear_phase_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make the phase function by linearly interpolating between the input
+grid of particle sizes and wavelengths.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
 </dd></dl>
