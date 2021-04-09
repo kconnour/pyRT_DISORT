@@ -4,6 +4,7 @@ required by DISORT.
 # TODO: add parameter validators if these classes are ok
 import numpy as np
 from pyRT_DISORT.eos import _Altitude
+from scipy.interpolate import interp2d
 
 
 class Conrath:
@@ -315,7 +316,7 @@ class _Interpolator:
     def linear(self) -> np.ndarray:
         intpf = np.zeros((self.__coeff.shape[0], self.__particle_size.shape[0], self.__wavelength.shape[0]))
         for i in range(len(intpf)):
-            pf = interp2d(self.__pgrid, self.__wgrid, phsfn[i, :, :].T)
+            pf = interp2d(self.__pgrid, self.__wgrid, self.__coeff[i, :, :].T)
             intpf[i, :, :] = pf(self.__particle_size, self.__wavelength).T
         return intpf
 
@@ -388,6 +389,9 @@ class ForwardScattering:
     def make_linear_properties(self) -> None:
         """Make the forward scattering properties at the input particle sizes
         and wavelengths by linearly interpolating them onto the input grid.
+
+        .. warning::
+           Due to a known bug, this does not work!
 
         """
         self.__gridded_c_scattering = self.__make_gridded_c_scattering('linear')
@@ -592,8 +596,6 @@ class TabularLegendreCoefficients:
             pf = interp.nearest_neighbor()
         elif kind == 'linear':
             pf = interp.linear()
-
-        print(pf[:, 0, 0])
 
         self.__phase_function = self.__normalize_coefficients(pf)
 

@@ -1,6 +1,5 @@
 import os
 import setuptools
-from numpy import f2py
 
 
 class SetupDISORT:
@@ -15,6 +14,7 @@ class SetupDISORT:
         return os.path.dirname(os.path.realpath(__file__))
 
     def __install_disort(self) -> None:
+        from numpy import f2py
         folder_name = 'disort4.0.99'
         module_name = 'disort'
 

@@ -4,6 +4,7 @@ __pycache__/
 build
 venv
 venv-doc
+venv-foo
 venv-test
 pyRT_DISORT.egg-info
 *.so

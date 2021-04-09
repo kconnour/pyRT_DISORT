@@ -40,9 +40,6 @@ pyRT_DISORT originally started as a Python-based spiritual successor to
 DISORT_MULTI---the brainchild of M.J. Wolff. I essentially transcribed its
 logic into numpy and broke the code up into modules and classes.
 
-After some considerable work, I'm revolutionizing how approximately (1) people
-do radiative transfer.
-
 Papers using pyRT_DISORT
 ------------------------
 None yet.
