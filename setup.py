@@ -60,4 +60,4 @@ class SetupDISORT:
         )
 
 
-SetupDISORT(install_disort=False)
+SetupDISORT()
