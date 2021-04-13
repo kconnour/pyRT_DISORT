@@ -1,5 +1,6 @@
 import os
 import setuptools
+from numpy import f2py
 
 
 class SetupDISORT:
@@ -14,7 +15,9 @@ class SetupDISORT:
         return os.path.dirname(os.path.realpath(__file__))
 
     def __install_disort(self) -> None:
-        from numpy import f2py
+        # Alternative:
+        # https://stackoverflow.com/questions/64950460/link-f2py-generated-so-file-in-a-python-package-using-setuptools
+        # https://numpy.org/devdocs/f2py/distutils.html
         folder_name = 'disort4.0.99'
         module_name = 'disort'
 
@@ -28,8 +31,8 @@ class SetupDISORT:
         with open(os.path.join(disort_source_dir, 'DISORT.f')) as mod:
             f2py.compile(mod.read(), modulename=module_name, extra_args=paths)
 
-    def __setup_package(self) -> None:
-        os.chdir(self.__project_path)
+    @staticmethod
+    def __setup_package() -> None:
         setuptools.setup(
             name='pyRT_DISORT',
             version='0.0.1',
@@ -45,7 +48,6 @@ class SetupDISORT:
                 'numpy>=1.20.1',
                 'pandas>=1.2.3',
                 'scipy>=1.6.1',
-                'wheel>=0.36.2'
             ],
             # If you want to test pyRT_DISORT, these are needed:
             # 'pytest>=6.2.2'
@@ -58,5 +60,4 @@ class SetupDISORT:
         )
 
 
-if __name__ == '__main__':
-    SetupDISORT(install_disort=True)
+SetupDISORT(install_disort=False)
