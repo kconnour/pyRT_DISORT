@@ -44,10 +44,10 @@ class SetupDISORT:
             include_package_data=True,
             python_requires='>=3.9',
             install_requires=[
-                'astropy>=4.2',
-                'numpy>=1.20.1',
-                'pandas>=1.2.3',
-                'scipy>=1.6.1',
+                'astropy',
+                'numpy',
+                'pandas',
+                'scipy',
             ],
             # If you want to test pyRT_DISORT, these are needed:
             # 'pytest>=6.2.2'
