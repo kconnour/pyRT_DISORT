@@ -7,7 +7,7 @@ clone using your favorite GUI) and move into the directory where it was cloned.
 You can then install it with :code:`pip install .`. By default, this will
 create two importable packages:
 
-1. ``pyRT_DISORT``
+1. ``disort``
    This is a binarized version of the standard FORTRAN-based DISORT code. This
    can take quite some time to install and since DISORT is not frequently
    updated, you can skip this step by setting :code:`install_disort=False`
@@ -17,6 +17,11 @@ create two importable packages:
 
 You can now import the libraries with :code:`import disort` and/or
 :code:`import pyRT_DISORT as pyrt`.
+
+.. attention::
+   I think it's a bad practice to have these as two separate modules... but I
+   haven't found the time to combine them into one. At some point in the future
+   :code:`disort` should simply become a part of :code:`pyRT_DISORT`.
 
 .. note::
    I use numpy's `f2py <https://numpy.org/doc/stable/f2py/>`_ utility to

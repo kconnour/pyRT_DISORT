@@ -1,20 +1,26 @@
+import glob
 import os
 import setuptools
+from numpy import f2py
 
 
+# TODO: see if there's a way to check if the .so file is up to date. If so,
+#  don't bother reinstalling it. Otherwise, do install it.
 class SetupDISORT:
-    def __init__(self, install_disort: bool = True) -> None:
+    def __init__(self) -> None:
         self.__project_path = self.__get_project_path()
-        if install_disort:
-            self.__install_disort()
-        self.__setup_package()
+        self.__install_disort()
+        # TODO: I want to move the so file into the package, but if I do I
+        #  can't figure out how to import disort. If I do this, I need to
+        #  remove the ../ part in setup.cfg
+        #self.__move_so_file_into_package()
+        setuptools.setup()
 
     @staticmethod
     def __get_project_path() -> str:
         return os.path.dirname(os.path.realpath(__file__))
 
     def __install_disort(self) -> None:
-        from numpy import f2py
         folder_name = 'disort4.0.99'
         module_name = 'disort'
 
@@ -28,35 +34,10 @@ class SetupDISORT:
         with open(os.path.join(disort_source_dir, 'DISORT.f')) as mod:
             f2py.compile(mod.read(), modulename=module_name, extra_args=paths)
 
-    def __setup_package(self) -> None:
-        os.chdir(self.__project_path)
-        setuptools.setup(
-            name='pyRT_DISORT',
-            version='0.0.1',
-            description='Make radiative transfer more accessible to the '
-                        'yearning masses',
-            url='https://github.com/kconnour/pyRT_DISORT',
-            author='kconnour',
-            packages=setuptools.find_packages(),
-            include_package_data=True,
-            python_requires='>=3.9',
-            install_requires=[
-                'astropy>=4.2',
-                'numpy>=1.20.1',
-                'pandas>=1.2.3',
-                'scipy>=1.6.1',
-                'wheel>=0.36.2'
-            ],
-            # If you want to test pyRT_DISORT, these are needed:
-            # 'pytest>=6.2.2'
-
-            # If you want to make documentation, these are needed:
-            # 'Sphinx>=3.4.3',
-            # 'sphinx_autodoc_typehints',
-            # 'sphinx-rtd-theme'
-            package_data={'': ['../*.so']}
-        )
+    def __move_so_file_into_package(self) -> None:
+        libname = glob.glob(os.path.join(self.__project_path, '*.so'))[0]
+        os.rename(libname, os.path.join(self.__project_path, 'pyRT_DISORT',
+                                        os.path.basename(libname)))
 
 
-if __name__ == '__main__':
-    SetupDISORT(install_disort=True)
+SetupDISORT()
