@@ -1,3 +1,4 @@
+import glob
 import os
 import setuptools
 from numpy import f2py
@@ -9,6 +10,7 @@ class SetupDISORT:
     def __init__(self) -> None:
         self.__project_path = self.__get_project_path()
         self.__install_disort()
+        self.__move_so_file_into_package()
         setuptools.setup()
 
     @staticmethod
@@ -16,9 +18,6 @@ class SetupDISORT:
         return os.path.dirname(os.path.realpath(__file__))
 
     def __install_disort(self) -> None:
-        # Alternative:
-        # https://stackoverflow.com/questions/64950460/link-f2py-generated-so-file-in-a-python-package-using-setuptools
-        # https://numpy.org/devdocs/f2py/distutils.html
         folder_name = 'disort4.0.99'
         module_name = 'disort'
 
@@ -31,6 +30,11 @@ class SetupDISORT:
         #  in extra_args (this wasn't clear in f2py documentation).
         with open(os.path.join(disort_source_dir, 'DISORT.f')) as mod:
             f2py.compile(mod.read(), modulename=module_name, extra_args=paths)
+
+    def __move_so_file_into_package(self) -> None:
+        libname = glob.glob(os.path.join(self.__project_path, '*.so'))[0]
+        os.rename(libname, os.path.join(self.__project_path, 'pyRT_DISORT',
+                                        os.path.basename(libname)))
 
 
 SetupDISORT()
