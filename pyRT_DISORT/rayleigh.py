@@ -68,7 +68,7 @@ class _Rayleigh:
     def __construct_phase_function(self) -> np.ndarray:
         pf = np.zeros((3, self.__n_layers) + self.__spectral_shape)
         pf[0, :] = 1
-        pf[2, :] = 0.1
+        pf[2, :] = 0.5
         return pf
 
     @property
@@ -91,7 +91,7 @@ class _Rayleigh:
         -----
         The shape of this array is (3, n_layers, (spectral_shape)). The
         0 :sup:`th` and 2 :sup:`nd` coefficient along the 0 :sup:`th` axis are
-        1 and 0.1, respectively.
+        1 and 0.5, respectively.
 
         """
         return self.__phase_function

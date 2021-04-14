@@ -246,7 +246,13 @@ This value will come in handy when creating the optical depth profile.</p>
 aren’t necessarily the ones we want to use, so we also need to include a grid
 of particle sizes and wavelengths to regrid the forward scattering properties
 onto. We can do this with <a class="reference internal" href="../api-reference/aerosol.html#aerosol.ForwardScattering" title="aerosol.ForwardScattering"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForwardScattering</span></code></a>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">particle_size_grad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>The particle size grid should be the same shape as the number of layers in
+the model. That’s to say, each layer should have an associated particle
+size.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">particle_size_grad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">z_grid</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">wave_ref</span> <span class="o">=</span> <span class="mf">9.3</span>
 
 <span class="kn">from</span> <span class="nn">pyRT_DISORT.aerosol</span> <span class="kn">import</span> <span class="n">ForwardScattering</span>

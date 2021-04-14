@@ -72,9 +72,14 @@ aren't necessarily the ones we want to use, so we also need to include a grid
 of particle sizes and wavelengths to regrid the forward scattering properties
 onto. We can do this with :class:`~aerosol.ForwardScattering`.
 
+.. caution::
+   The particle size grid should be the same shape as the number of layers in
+   the model. That's to say, each layer should have an associated particle
+   size. 
+
 .. code-block:: python
 
-   particle_size_grad = np.linspace(1, 1.5, num=14)
+   particle_size_grad = np.linspace(1, 1.5, num=len(z_grid)-1)
    wave_ref = 9.3
 
    from pyRT_DISORT.aerosol import ForwardScattering

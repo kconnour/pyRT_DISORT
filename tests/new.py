@@ -86,7 +86,7 @@ csca = hdul['primary'].data[:, :, 1]
 wavs = hdul['wavelengths'].data
 psizes = hdul['particle_sizes'].data
 
-pgrad = np.linspace(1.5, 1.5, num=14)
+pgrad = np.linspace(1.5, 1.5, num=len(z_grid)-1)
 wave_ref = 9.3
 
 from pyRT_DISORT.aerosol import ForwardScattering

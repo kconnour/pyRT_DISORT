@@ -182,7 +182,7 @@ clone using your favorite GUI) and move into the directory where it was cloned.
 You can then install it with <code class="code docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">.</span></code>. By default, this will
 create two importable packages:</p>
 <ol class="arabic simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">pyRT_DISORT</span></code>
+<li><p><code class="docutils literal notranslate"><span class="pre">disort</span></code>
 This is a binarized version of the standard FORTRAN-based DISORT code. This
 can take quite some time to install and since DISORT is not frequently
 updated, you can skip this step by setting <code class="code docutils literal notranslate"><span class="pre">install_disort=False</span></code>
@@ -192,6 +192,12 @@ This is the pure Python project that will do the atmospheric pre-processing.</p>
 </ol>
 <p>You can now import the libraries with <code class="code docutils literal notranslate"><span class="pre">import</span> <span class="pre">disort</span></code> and/or
 <code class="code docutils literal notranslate"><span class="pre">import</span> <span class="pre">pyRT_DISORT</span> <span class="pre">as</span> <span class="pre">pyrt</span></code>.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>I think it’s a bad practice to have these as two separate modules… but I
+haven’t found the time to combine them into one. At some point in the future
+<code class="code docutils literal notranslate"><span class="pre">disort</span></code> should simply become a part of <code class="code docutils literal notranslate"><span class="pre">pyRT_DISORT</span></code>.</p>
+</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>I use numpy’s <a class="reference external" href="https://numpy.org/doc/stable/f2py/">f2py</a> utility to
