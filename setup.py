@@ -10,7 +10,10 @@ class SetupDISORT:
     def __init__(self) -> None:
         self.__project_path = self.__get_project_path()
         self.__install_disort()
-        self.__move_so_file_into_package()
+        # TODO: I want to move the so file into the package, but if I do I
+        #  can't figure out how to import disort. If I do this, I need to
+        #  remove the ../ part in setup.cfg
+        #self.__move_so_file_into_package()
         setuptools.setup()
 
     @staticmethod
