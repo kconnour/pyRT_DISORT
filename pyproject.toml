@@ -1,34 +1,3 @@
-[project]
-name = "pyRT_DISORT"
-version = "0.0.1"
-description = "Make radiative transfer more accessible to the yearning masses"
-readme = "README.md"
-requires-python = ">=3.9"
-authors = [
-  {name = "kconnour"}
-]
-
-dependencies = [
-  "astropy>=4.2",
-  "numpy>=1.20.1",
-  "pandas>=1.2.3",
-  "scipy>1.6.1"
-]
-
-# These may use [project.optional-dependencies]
-# If you want to test pyRT_DISORT, these are needed:
-# 'pytest>=6.2.2'
-
-# If you want to make documentation, these are needed:
-# 'Sphinx>=3.4.3',
-# 'sphinx_autodoc_typehints',
-# 'sphinx-rtd-theme'
-
-[project.urls]
-homepage = "https://github.com/kconnour/pyRT_DISORT"
-repository = "https://github.com/kconnour/pyRT_DISORT"
-documentation = "https://kconnour.github.io/pyRT_DISORT/"
-
 [build-system]
-requires = ["setuptools", "wheel", "numpy"]  # these are only available during the build, not after it is installed
-build-backend = "setuptools.build_meta"  # always include this when using pip
+requires = ["setuptools", "wheel", "numpy"]
+build-backend = "setuptools.build_meta"
