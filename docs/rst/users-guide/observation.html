@@ -103,6 +103,7 @@
 <li class="toctree-l2"><a class="reference internal" href="output.html">The output module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="surface.html">The surface module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="running_the_model.html">Running the model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="retrieval.html">Retrieval</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api-reference.html">pyRT_DISORT API reference</a></li>
@@ -252,6 +253,7 @@ that we ultimately plug into DISORT.</p>
 pixel and that there’s a constant spectral width to each bin. I’ll go ahead and
 define some wavelengths here so we have some values to work with.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pixel_wavelengths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
+<span class="n">n_wavelengths</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pixel_wavelengths</span><span class="p">)</span>
 <span class="n">width</span> <span class="o">=</span> <span class="mf">0.05</span>
 </pre></div>
 </div>

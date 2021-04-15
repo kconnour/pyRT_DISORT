@@ -82,6 +82,7 @@ define some wavelengths here so we have some values to work with.
 .. code-block:: python
 
    pixel_wavelengths = np.array([1, 2, 3, 4, 5])
+   n_wavelengths = len(pixel_wavelengths)
    width = 0.05
 
 .. attention::

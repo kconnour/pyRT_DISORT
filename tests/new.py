@@ -20,6 +20,7 @@ PHI = phi[0, 0]
 PHI0 = phi0[0, 0]
 
 pixel_wavelengths = np.array([1, 2, 3, 4, 5])
+n_wavelengths = len(pixel_wavelengths)
 width = 0.05
 
 spectral = Spectral(pixel_wavelengths - width, pixel_wavelengths + width)
@@ -101,7 +102,7 @@ dust_ext = fs.extinction
 
 from pyRT_DISORT.aerosol import OpticalDepth
 
-od = OpticalDepth(dust_profile, hydro.column_density, fs.extinction, 1)
+od = OpticalDepth(dust_profile, hydro.column_density, fs.extinction, 0.234)
 dust_od = od.total
 
 from pyRT_DISORT.aerosol import TabularLegendreCoefficients
@@ -218,4 +219,49 @@ for ind in range(pixel_wavelengths.size):
 
     test_run[ind] = uu[0, 0, 0]
 
-print(test_run)
+rfl = np.array([0.116, 0.108, 0.084, 0.094, 0.092])
+
+
+def test_optical_depth(test_od):
+    # Trap the guess
+    if not 0 <= test_od <= 2:
+        return 9999999
+
+    od = OpticalDepth(dust_profile, hydro.column_density, fs.extinction,
+                      test_od)
+
+    dust_info = (od.total, dust_ssa, dust_pf)
+    model = Atmosphere(rayleigh_info, dust_info)
+
+    od_holder = np.zeros(n_wavelengths)
+    for wav_index in range(n_wavelengths):
+        rfldir, rfldn, flup, dfdt, uavg, uu, albmed, trnmed = \
+            disort.disort(USRANG, USRTAU, IBCND, ONLYFL, PRNT, PLANK, LAMBER,
+                          DELTAMPLUS, DO_PSEUDO_SPHERE,
+                          model.optical_depth[:, wav_index],
+                          model.single_scattering_albedo[:, wav_index],
+                          model.legendre_moments[:, :, wav_index],
+                          TEMPER, WVNMLO, WVNMHI,
+                          UTAU, UMU0, PHI0, UMU, PHI, FBEAM, FISOT,
+                          ALBEDO, BTEMP, TTEMP, TEMIS, EARTH_RADIUS, H_LYR, RHOQ, RHOU,
+                          RHO_ACCURATE, BEMST, EMUST, ACCUR, HEADER, RFLDIR,
+                          RFLDN, FLUP, DFDT, UAVG, UU, ALBMED, TRNMED)
+
+        od_holder[wav_index] = uu[0, 0, 0]
+    return np.sum((od_holder - rfl)**2)
+
+
+from scipy import optimize
+
+
+def retrieve_od(guess):
+    return optimize.minimize(test_optical_depth, np.array([guess]),
+                             method='Nelder-Mead').x
+
+
+import time
+
+t0 = time.time()
+print(retrieve_od(1))
+t1 = time.time()
+print(f'The retrieval took {(t1 - t0):.3f} seconds.')

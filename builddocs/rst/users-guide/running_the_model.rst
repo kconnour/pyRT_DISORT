@@ -40,6 +40,3 @@ This prints :code:`[0.20444766 0.18252057 0.07527761 0.11988172 0.10403387]`.
    instances of classes that you've already created and then extracts the
    proper variables from those class attributes. But I can only do so much at
    once.
-
-And with that we've done our simulation. At some point I'll show you how to add
-a solver and parallelize this code, but I need a break for now...

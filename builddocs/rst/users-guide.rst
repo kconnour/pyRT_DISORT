@@ -16,3 +16,4 @@ User's Guide
    users-guide/output
    users-guide/surface
    users-guide/running_the_model
+   users-guide/retrieval
