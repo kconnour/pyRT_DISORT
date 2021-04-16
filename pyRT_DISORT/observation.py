@@ -6,6 +6,8 @@ import numpy as np
 
 # TODO: I'm not sure that all combination of angles are physically realistic. If
 #  so, raise a warning
+# TODO: A user shoudl be able to specify incidence, emission, and azimuth, and
+#  then compute phase angles and phi0
 class Angles:
     r"""A data structure that contains angles required by DISORT.
 
@@ -34,8 +36,8 @@ class Angles:
         TypeError
             Raised if any of the angles are not a numpy.ndarray.
         ValueError
-            Raised if any of the input arrays are not the same shape or if they
-            contain values outside of their mathematically valid range.
+            Raised if any of the input arrays contain values outside of their
+            mathematically valid range.
 
         Notes
         -----
@@ -47,7 +49,7 @@ class Angles:
         self.__emission = _Angle(emission, 'emission', 0, 90)
         self.__phase = _Angle(phase, 'phase', 0, 180)
 
-        self.__raise_error_if_angles_are_bad()
+        #self.__raise_error_if_angles_are_bad()
 
         self.__mu0 = self.__compute_mu0()
         self.__mu = self.__compute_mu()
@@ -57,6 +59,7 @@ class Angles:
     def __raise_error_if_angles_are_bad(self) -> None:
         self.__raise_value_error_if_angles_are_not_all_same_shape()
 
+    # TODO: possibly one incidence angle, but many emissions, phases...
     def __raise_value_error_if_angles_are_not_all_same_shape(self) -> None:
         if not self.__incidence.shape == self.__emission.shape == \
                self.__phase.shape:
