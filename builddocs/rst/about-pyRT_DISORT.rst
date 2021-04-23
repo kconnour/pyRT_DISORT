@@ -47,3 +47,9 @@ None yet.
 If you use this code in your research, please consider acknowledging the use of
 this package in your paper. If you don't that's fine too, though it would be
 nice to add your work to the known papers pyRT_DISORT helped create.
+
+Acknowledgement
+---------------
+This work was performed for the Jet Propulsion Laboratory, California Institute
+of Technology, sponsored by the United States Government under Prime Contract
+NNN13D496T between Caltech and NASA under subcontract number 1511125.

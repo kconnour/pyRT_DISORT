@@ -9,13 +9,13 @@ to do this, I ran this code with a a dust optical depth known only to me and
 I'll show you how to get this value from what we've written.
 
 Let's suppose we measured the following reflectance (I/F) spectrum at the input
-set of angles (this was the result of my simulation).
+set of wavelengths (this was the result of my simulation).
 
 .. code-block:: python
 
    rfl = np.array([0.116, 0.108, 0.084, 0.094, 0.092])
 
-If we want to retrieve retrieve a scalar optical depth over this spectral range
+If we want to retrieve a scalar optical depth over this spectral range
 we want a function that accepts a test optical depth and finds the optical
 depth that best fits this spectrum. The following function does that
 

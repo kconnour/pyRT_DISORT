@@ -184,11 +184,11 @@ different optical depths and see which one matches an observation the best
 to do this, I ran this code with a a dust optical depth known only to me and
 I’ll show you how to get this value from what we’ve written.</p>
 <p>Let’s suppose we measured the following reflectance (I/F) spectrum at the input
-set of angles (this was the result of my simulation).</p>
+set of wavelengths (this was the result of my simulation).</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">rfl</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.116</span><span class="p">,</span> <span class="mf">0.108</span><span class="p">,</span> <span class="mf">0.084</span><span class="p">,</span> <span class="mf">0.094</span><span class="p">,</span> <span class="mf">0.092</span><span class="p">])</span>
 </pre></div>
 </div>
-<p>If we want to retrieve retrieve a scalar optical depth over this spectral range
+<p>If we want to retrieve a scalar optical depth over this spectral range
 we want a function that accepts a test optical depth and finds the optical
 depth that best fits this spectrum. The following function does that</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_optical_depth</span><span class="p">(</span><span class="n">test_od</span><span class="p">):</span>
