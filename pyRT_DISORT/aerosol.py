@@ -605,3 +605,70 @@ class TabularLegendreCoefficients:
 
         """
         return self.__phase_function
+
+
+class HenyeyGreenstein:
+    """Hold the HenyeyGreenstein asymmetry parameters.
+
+    HenyeyGreenstein holds the asymmetry parameters and ensures they're valid.
+    It provides a method to convert these to Legendre polynomials.
+
+    """
+
+    def __init__(self, asymmetry: np.ndarray) -> None:
+        r"""
+        Parameters
+        ----------
+        asymmetry
+            The asymmetry parameter.
+
+        Raises
+        ------
+        ValueError
+            Raised if the asymmetry parameter is not between -1 and 1.
+
+        Notes
+        -----
+        The Henyey-Greenstein phase function is defined as follows
+
+        .. math::
+           p(\theta) = \frac{1}{4\pi} \frac{1 - g^2}{[1 + g^2 -2g \cos(\theta)]^{3/2}}
+
+        """
+        self.__g = asymmetry
+        _HGAsymmetryParameter(asymmetry)
+
+    def legendre_decomposition(self, n_moments: float) -> np.ndarray:
+        r"""Get the Legendre decomposition of the asymmetry parameters up to
+        a given number of moments.
+
+        Parameters
+        ----------
+        n_moments
+            The maximum number of moments to get the coefficients for.
+
+        Notes
+        -----
+        The Legendre decomposition is actually quite simple. The phase function
+        can be decomposed as follows
+
+        .. math::
+           p(\mu) = \sum_{n=0}^{\infty} (2n + 1)g^n P_n(\mu)
+
+        where :math:`n` is the moment number, :math:`g` is the asymmetry
+        parameter, and :math:`P_n(\mu)` is the :math:`n`:sup:`th` Legendre
+        polynomial. I'm not a mathematician so if :math:`g=0` I still assume
+        the 0 :sup:`th` coefficient is 1.
+
+        """
+        return (2 * n_moments + 1) * self.__g**n_moments
+
+
+class _HGAsymmetryParameter:
+    def __init__(self, asymmetry: np.ndarray) -> None:
+        self.__g = asymmetry
+        self.__raise_value_error_if_parameter_not_in_valid_range()
+
+    def __raise_value_error_if_parameter_not_in_valid_range(self) -> None:
+        if np.any(self.__g > 1) or np.any(self.__g < -1):
+            raise ValueError('asymmetry must be in range [-1, 1].')

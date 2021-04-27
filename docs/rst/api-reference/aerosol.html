@@ -330,6 +330,57 @@ particle sizes and wavelengths.</p>
 </dd></dl>
 
 <dl class="py class">
+<dt id="aerosol.HenyeyGreenstein">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">aerosol.</span></code><code class="sig-name descname"><span class="pre">HenyeyGreenstein</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">asymmetry</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aerosol.HenyeyGreenstein" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hold the HenyeyGreenstein asymmetry parameters.</p>
+<p>HenyeyGreenstein holds the asymmetry parameters and ensures they’re valid.
+It provides a method to convert these to Legendre polynomials.</p>
+<dl class="py method">
+<dt id="aerosol.HenyeyGreenstein.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">asymmetry</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aerosol.HenyeyGreenstein.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>asymmetry</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The asymmetry parameter.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – Raised if the asymmetry parameter is not between -1 and 1.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The Henyey-Greenstein phase function is defined as follows</p>
+<div class="math notranslate nohighlight">
+\[p(\theta) = \frac{1}{4\pi} \frac{1 - g^2}{[1 + g^2 -2g \cos(\theta)]^{3/2}}\]</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="aerosol.HenyeyGreenstein.legendre_decomposition">
+<code class="sig-name descname"><span class="pre">legendre_decomposition</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_moments</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aerosol.HenyeyGreenstein.legendre_decomposition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the Legendre decomposition of the asymmetry parameters up to
+a given number of moments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>n_moments</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The maximum number of moments to get the coefficients for.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The Legendre decomposition is actually quite simple. The phase function
+can be decomposed as follows</p>
+<div class="math notranslate nohighlight">
+\[p(\mu) = \sum_{n=0}^{\infty} (2n + 1)g^n P_n(\mu)\]</div>
+<p>where <span class="math notranslate nohighlight">\(n\)</span> is the moment number, <span class="math notranslate nohighlight">\(g\)</span> is the asymmetry
+parameter, and <span class="math notranslate nohighlight">\(P_n(\mu)\)</span> is the <span class="math notranslate nohighlight">\(n\)</span><sup>th</sup> Legendre
+polynomial. I’m not a mathematician so if <span class="math notranslate nohighlight">\(g=0\)</span> I still assume
+the 0 <sup>th</sup> coefficient is 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt id="aerosol.OpticalDepth">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">aerosol.</span></code><code class="sig-name descname"><span class="pre">OpticalDepth</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mixing_ratio_profile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_density_layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extinction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_integrated_optical_depth</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aerosol.OpticalDepth" title="Permalink to this definition">¶</a></dt>
 <dd><p>A structure to compute the optical depth given profiles.</p>
