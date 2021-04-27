@@ -87,12 +87,12 @@ csca = hdul['primary'].data[:, :, 1]
 wavs = hdul['wavelengths'].data
 psizes = hdul['particle_sizes'].data
 
-pgrad = np.linspace(1.5, 1.5, num=len(z_grid)-1)
+particle_size_grad = np.linspace(1.5, 1.5, num=len(z_grid)-1)
 wave_ref = 9.3
 
 from pyRT_DISORT.aerosol import ForwardScattering
 
-fs = ForwardScattering(csca, cext, psizes, wavs, pgrad, pixel_wavelengths, wave_ref)
+fs = ForwardScattering(csca, cext, psizes, wavs, particle_size_grad, pixel_wavelengths, wave_ref)
 fs.make_nn_properties()
 
 nn_ext_cs = fs.extinction_cross_section
@@ -112,7 +112,7 @@ coeff = dust_phsfn_file['primary'].data
 pf_wavs = dust_phsfn_file['wavelengths'].data
 pf_psizes = dust_phsfn_file['particle_sizes'].data
 
-pf = TabularLegendreCoefficients(coeff, pf_psizes, pf_wavs, pgrad, pixel_wavelengths)
+pf = TabularLegendreCoefficients(coeff, pf_psizes, pf_wavs, particle_size_grad, pixel_wavelengths)
 pf.make_nn_phase_function()
 
 dust_pf = pf.phase_function

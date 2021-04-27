@@ -322,15 +322,15 @@ layers.</p>
 the same way that <code class="docutils literal notranslate"><span class="pre">ForwardScattering</span></code> did—it will simply hang on to an
 array of Legendre coefficients, the grid over which they’re defined, and the
 grid to regrid them onto. Let’s go ahead and do that here.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.aerosol</span> <span class="kn">import</span> <span class="n">NearestNeighborTabularLegendreCoefficients</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.aerosol</span> <span class="kn">import</span> <span class="n">TabularLegendreCoefficients</span>
 
 <span class="n">dust_phsfn_file</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;~/pyRT_DISORT/tests/aux/dust_phase_function.fits&#39;</span><span class="p">)</span>
 <span class="n">coeff</span> <span class="o">=</span> <span class="n">dust_phsfn_file</span><span class="p">[</span><span class="s1">&#39;primary&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
 <span class="n">pf_wavs</span> <span class="o">=</span> <span class="n">dust_phsfn_file</span><span class="p">[</span><span class="s1">&#39;wavelengths&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
 <span class="n">pf_psizes</span> <span class="o">=</span> <span class="n">dust_phsfn_file</span><span class="p">[</span><span class="s1">&#39;particle_sizes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
 
-<span class="n">pf</span> <span class="o">=</span> <span class="n">NearestNeighborTabularLegendreCoefficients</span><span class="p">(</span><span class="n">coeff</span><span class="p">,</span> <span class="n">pf_psizes</span><span class="p">,</span> <span class="n">pf_wavs</span><span class="p">,</span>
-                                                <span class="n">pgrad</span><span class="p">,</span> <span class="n">pixel_wavelengths</span><span class="p">)</span>
+<span class="n">pf</span> <span class="o">=</span> <span class="n">TabularLegendreCoefficients</span><span class="p">(</span><span class="n">coeff</span><span class="p">,</span> <span class="n">pf_psizes</span><span class="p">,</span> <span class="n">pf_wavs</span><span class="p">,</span>
+                                 <span class="n">particle_size_grad</span><span class="p">,</span> <span class="n">pixel_wavelengths</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Like before, there are multiple ways to do the regridding. I’ll again go with

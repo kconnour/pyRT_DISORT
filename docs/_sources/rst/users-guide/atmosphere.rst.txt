@@ -21,7 +21,7 @@ composite arrays.
 
 .. code-block:: python
 
-   from pyRT_DISORT.model_atmosphere import Atmosphere
+   from pyRT_DISORT.atmosphere import Atmosphere
 
    model = Atmosphere(rayleigh_info, dust_info)
 

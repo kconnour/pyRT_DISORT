@@ -154,15 +154,15 @@ grid to regrid them onto. Let's go ahead and do that here.
 
 .. code-block:: python
 
-   from pyRT_DISORT.aerosol import NearestNeighborTabularLegendreCoefficients
+   from pyRT_DISORT.aerosol import TabularLegendreCoefficients
 
    dust_phsfn_file = fits.open('~/pyRT_DISORT/tests/aux/dust_phase_function.fits')
    coeff = dust_phsfn_file['primary'].data
    pf_wavs = dust_phsfn_file['wavelengths'].data
    pf_psizes = dust_phsfn_file['particle_sizes'].data
 
-   pf = NearestNeighborTabularLegendreCoefficients(coeff, pf_psizes, pf_wavs,
-                                                   pgrad, pixel_wavelengths)
+   pf = TabularLegendreCoefficients(coeff, pf_psizes, pf_wavs,
+                                    particle_size_grad, pixel_wavelengths)
 
 Like before, there are multiple ways to do the regridding. I'll again go with
 nearest neighbor, then access the phase function via the property.
