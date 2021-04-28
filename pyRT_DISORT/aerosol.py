@@ -638,14 +638,15 @@ class HenyeyGreenstein:
         self.__g = asymmetry
         _HGAsymmetryParameter(asymmetry)
 
-    def legendre_decomposition(self, n_moments: float) -> np.ndarray:
+    def legendre_decomposition(self, n_moments: int) -> np.ndarray:
         r"""Get the Legendre decomposition of the asymmetry parameters up to
         a given number of moments.
 
         Parameters
         ----------
         n_moments
-            The maximum number of moments to get the coefficients for.
+            The maximum number of moments to get the coefficients for (not
+            including the 0th moment).
 
         Notes
         -----
@@ -661,7 +662,9 @@ class HenyeyGreenstein:
         the 0 :sup:`th` coefficient is 1.
 
         """
-        return (2 * n_moments + 1) * self.__g**n_moments
+        moments = np.linspace(0, n_moments, num=n_moments+1)
+        coeff = (2 * moments + 1) * np.power.outer(self.__g, moments)
+        return np.moveaxis(coeff, -1, 0)
 
 
 class _HGAsymmetryParameter:
