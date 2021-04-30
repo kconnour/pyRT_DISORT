@@ -50,7 +50,7 @@ can change these to your liking.
    mb = ModelBehavior()
    ACCUR = mb.accuracy
    DELTAMPLUS = mb.delta_m_plus
-   DOPSEUDOSPHERE = mb.do_pseudo_sphere
+   DO_PSEUDO_SPHERE = mb.do_pseudo_sphere
    HEADER = mb.header
    PRNT = mb.print_variables
-   RADIUS = mb.radius
+   EARTH_RADIUS = mb.radius

@@ -53,3 +53,5 @@ Acknowledgement
 This work was performed for the Jet Propulsion Laboratory, California Institute
 of Technology, sponsored by the United States Government under Prime Contract
 NNN13D496T between Caltech and NASA under subcontract number 1511125.
+
+.. image:: ../aux/mastcam-z-logo.jpeg

@@ -201,6 +201,15 @@ class ComputationalParameters:
         """
         return self.__n_user_levels
 
+    def __str__(self) -> str:
+        return f'ComputationalParameters: \n' \
+               f'   n_layers = {self.__n_layers} \n' \
+               f'   n_moments = {self.__n_moments} \n' \
+               f'   n_streams = {self.__n_streams} \n' \
+               f'   n_azimuth = {self.__n_azimuth} \n' \
+               f'   n_polar = {self.__n_polar} \n' \
+               f'   n_user_levels = {self.__n_user_levels}'
+
 
 # TODO: fix user_angles docstring. It's a mess
 class ModelBehavior:
@@ -414,3 +423,20 @@ class ModelBehavior:
 
         """
         return self.__radius
+
+    def __str__(self) -> str:
+        return f'ModelBehavior: \n' \
+               f'   accuracy = {self.__accuracy} \n' \
+               f'   delta_m_plus = {self.__delta_m_plus} \n' \
+               f'   do_pseudo_sphere = {self.__do_pseudo_sphere} \n' \
+               f'   header = {self.__header} \n' \
+               f'   print_variables = {self.__print_variables} \n' \
+               f'   radius = {self.__radius}'
+
+
+if __name__ == '__main__':
+    cp = ComputationalParameters(10, 30, 20, 40, 50 ,60)
+    print(cp)
+
+    mb = ModelBehavior()
+    print(mb)
