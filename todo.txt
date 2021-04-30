@@ -41,3 +41,9 @@ Tests:
 Miscellaneous
 --- Josh says there are nicer things than fits, so consider using that format
     instead of astropy. scipy has netCDF built in
+
+Suggestions
+--- disort wrapper with defaults
+--- Change defaults in the boolean classes?
+--- user levels --> output arrays
+--- Add __str__ to OA and OB

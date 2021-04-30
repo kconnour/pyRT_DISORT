@@ -6,18 +6,17 @@ import numpy as np
 
 # TODO: I'm not sure that all combination of angles are physically realistic. If
 #  so, raise a warning
-# TODO: A user shoudl be able to specify incidence, emission, and azimuth, and
-#  then compute phase angles and phi0
 class Angles:
     r"""A data structure that contains angles required by DISORT.
 
-    Angles accepts the incidence, emission, and phase angles from an observation
-    and computes :math:`\mu, \mu_0, \phi`, and :math:`\phi_0` from these angles.
+    Angles accepts the incidence and emission angles from an observation and
+    computes :math:`\mu` and :math:`\mu_0`from these angles. It also
+    instantiates empty arrays of :math:`phi` and :math:`phi0`. Both of these
+    can be set, either directly or via methods.
 
     """
 
-    def __init__(self, incidence: np.ndarray, emission: np.ndarray,
-                 phase: np.ndarray) -> None:
+    def __init__(self, incidence: np.ndarray, emission: np.ndarray) -> None:
         """
         Parameters
         ----------
@@ -26,10 +25,7 @@ class Angles:
             between 0 and 180 degrees.
         emission
             Pixel emission (emergence) angle [degrees]. All values must be
-            between 0 and 90 degrees.
-        phase
-            Pixel phase angle [degrees]. All values must be between 0 and 180
-            degrees.
+            between 0 and 180 degrees.
 
         Raises
         ------
@@ -39,57 +35,28 @@ class Angles:
             Raised if any of the input arrays contain values outside of their
             mathematically valid range.
 
-        Notes
-        -----
-        This class can accommodate arrays of any shape as long as they all have
-        the same shape.
+        See Also
+        --------
+        spacecraft_angles: Create instances of this class using a typical
+                           spacecraft geometry.
+
+        rover_angles: Create instances of this class using a typical rover
+                      geometry.
 
         """
         self.__incidence = _Angle(incidence, 'incidence', 0, 180)
-        self.__emission = _Angle(emission, 'emission', 0, 90)
-        self.__phase = _Angle(phase, 'phase', 0, 180)
-
-        #self.__raise_error_if_angles_are_bad()
+        self.__emission = _Angle(emission, 'emission', 0, 180)
 
         self.__mu0 = self.__compute_mu0()
         self.__mu = self.__compute_mu()
-        self.__phi0 = self.__make_phi0()
-        self.__phi = self.__compute_phi()
-
-    def __raise_error_if_angles_are_bad(self) -> None:
-        self.__raise_value_error_if_angles_are_not_all_same_shape()
-
-    # TODO: possibly one incidence angle, but many emissions, phases...
-    def __raise_value_error_if_angles_are_not_all_same_shape(self) -> None:
-        if not self.__incidence.shape == self.__emission.shape == \
-               self.__phase.shape:
-            message = 'incidence, emission, and phase must all have the same ' \
-                      'shape.'
-            raise ValueError(message)
+        self.__phi0 = np.array([])
+        self.__phi = np.array([])
 
     def __compute_mu0(self) -> np.ndarray:
         return self.__compute_angle_cosine(self.__incidence.val)
 
     def __compute_mu(self) -> np.ndarray:
         return self.__compute_angle_cosine(self.__emission.val)
-
-    # TODO: Presumably a user could want phi0 that's not all 0s, so add that
-    #  ability and remake property docstring
-    def __make_phi0(self) -> np.ndarray:
-        return np.zeros(self.__phase.shape)
-
-    # TODO: is there a cleaner way to make this variable?
-    def __compute_phi(self) -> np.ndarray:
-        sin_emission_angle = np.sin(np.radians(self.__emission.val))
-        sin_solar_zenith_angle = np.sin(np.radians(self.__incidence.val))
-        cos_phase_angle = self.__compute_angle_cosine(self.__phase.val)
-        with np.errstate(divide='ignore', invalid='ignore'):
-            tmp_arg = np.true_divide(
-                cos_phase_angle - self.mu * self.mu0,
-                sin_emission_angle * sin_solar_zenith_angle)
-            tmp_arg[~np.isfinite(tmp_arg)] = -1
-            d_phi = np.arccos(np.clip(tmp_arg, -1, 1))
-        return self.phi0 + 180 - np.degrees(d_phi)
 
     @staticmethod
     def __compute_angle_cosine(angle: np.ndarray) -> np.ndarray:
@@ -108,13 +75,6 @@ class Angles:
 
         """
         return self.__emission.val
-
-    @property
-    def phase(self) -> np.ndarray:
-        """Get the input phase angle [degrees].
-
-        """
-        return self.__phase.val
 
     @property
     def mu0(self) -> np.ndarray:
@@ -140,7 +100,7 @@ class Angles:
 
     @property
     def phi0(self) -> np.ndarray:
-        r"""Get :math:`\phi_0`. I assume this is always an array of 0s.
+        r"""Get :math:`\phi_0`---the zenith angle [degrees].
 
         Notes
         -----
@@ -148,6 +108,11 @@ class Angles:
 
         """
         return self.__phi0
+
+    @phi0.setter
+    def phi0(self, phi0: np.ndarray) -> None:
+        _Angle(phi0, 'phi0', 0, 180)
+        self.__phi0 = phi0
 
     @property
     def phi(self) -> np.ndarray:
@@ -159,6 +124,39 @@ class Angles:
 
         """
         return self.__phi
+
+    @phi.setter
+    def phi(self, azimuth_angle):
+        _Angle(azimuth_angle, 'azimuth_angle', 0, 180)
+        self.__phi = azimuth_angle
+
+    # TODO: is there a cleaner way to make this variable?
+    def set_azimuth(self, phase: np.ndarray):
+        """
+
+        Parameters
+        ----------
+        phase
+            Pixel phase angle [degrees]. All values must be between 0 and 180
+            degrees.
+
+        Returns
+        -------
+
+        """
+        self.phi0 = np.zeros(phase.shape)
+        phase = _Angle(phase, 'phase', 0, 180)
+        sin_emission_angle = np.sin(np.radians(self.__emission.val))
+        sin_solar_zenith_angle = np.sin(np.radians(self.__incidence.val))
+        cos_phase_angle = self.__compute_angle_cosine(phase.val)
+        with np.errstate(divide='ignore', invalid='ignore'):
+            tmp_arg = np.true_divide(
+                cos_phase_angle - self.mu * self.mu0,
+                sin_emission_angle * sin_solar_zenith_angle)
+            tmp_arg[~np.isfinite(tmp_arg)] = -1
+            d_phi = np.arccos(np.clip(tmp_arg, -1, 1))
+            phi = self.phi0 + 180 - np.degrees(d_phi)
+        self.__phi = phi
 
 
 class _Angle:
@@ -220,6 +218,70 @@ class _Angle:
     @property
     def val(self) -> np.ndarray:
         return self.__angle
+
+
+def spacecraft_angles(incidence: np.ndarray, emission: np.ndarray,
+                      phase: np.ndarray) -> Angles:
+    """Compute the angles for a typical spacecraft observing geometry.
+
+    Parameters
+    ----------
+    incidence
+        Pixel incidence (solar zenith) angle [degrees]. All values must be
+        between 0 and 180 degrees.
+    emission
+        Pixel emission (emergence) angle [degrees]. All values must be
+        between 0 and 180 degrees.
+    phase
+        Pixel phase angle [degrees]. All values must be between 0 and 180
+        degrees.
+
+    Raises
+    ------
+    TypeError
+        Raised if any of the angles are not a numpy.ndarray.
+    ValueError
+        Raised if any of the input arrays contain values outside of their
+        mathematically valid range.
+
+    """
+    angles = Angles(incidence, emission)
+    angles.set_azimuth(phase)
+    return angles
+
+
+def rover_angles(incidence: np.ndarray, emission: np.ndarray,
+                 azimuth: np.ndarray, azimuth0: np.ndarray) -> Angles:
+    """Compute the angles for a typical rover observing geometry.
+
+    Parameters
+    ----------
+    incidence
+        Pixel incidence (solar zenith) angle [degrees]. All values must be
+        between 0 and 180 degrees.
+    emission
+        Pixel emission (emergence) angle [degrees]. All values must be
+        between 0 and 180 degrees.
+    azimuth
+        Pixel azimuth angles [degrees]. All values must be between 0 and 180
+        degrees.
+    azimuth0
+        Pixel zenith angles [degrees]. All values must be between 0
+        and 180 degrees.
+
+    Raises
+    ------
+    TypeError
+        Raised if any of the angles are not a numpy.ndarray.
+    ValueError
+        Raised if any of the input arrays contain values outside of their
+        mathematically valid range.
+
+    """
+    angles = Angles(incidence, emission)
+    angles.phi = azimuth
+    angles.phi0 = azimuth0
+    return angles
 
 
 class Spectral:

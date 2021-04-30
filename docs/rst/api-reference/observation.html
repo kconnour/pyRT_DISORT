@@ -177,22 +177,21 @@
 quantities commonly found in an observation.</p>
 <dl class="py class">
 <dt id="observation.Angles">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">observation.</span></code><code class="sig-name descname"><span class="pre">Angles</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">incidence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emission</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#observation.Angles" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">observation.</span></code><code class="sig-name descname"><span class="pre">Angles</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">incidence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emission</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#observation.Angles" title="Permalink to this definition">¶</a></dt>
 <dd><p>A data structure that contains angles required by DISORT.</p>
-<p>Angles accepts the incidence, emission, and phase angles from an observation
-and computes <span class="math notranslate nohighlight">\(\mu, \mu_0, \phi\)</span>, and <span class="math notranslate nohighlight">\(\phi_0\)</span> from these angles.</p>
+<p>Angles accepts the incidence and emission angles from an observation and
+computes <span class="math notranslate nohighlight">\(\mu\)</span> and <span class="math notranslate nohighlight">\(\mu_0\)</span> and <span class="math notranslate nohighlight">\(phi0\)</span>. Both of these
+can be set, either directly or via methods.</p>
 <dl class="py method">
 <dt id="observation.Angles.__init__">
-<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">incidence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emission</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#observation.Angles.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">incidence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emission</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#observation.Angles.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>incidence</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Pixel incidence (solar zenith) angle [degrees]. All values must be
 between 0 and 180 degrees.</p></li>
 <li><p><strong>emission</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Pixel emission (emergence) angle [degrees]. All values must be
-between 0 and 90 degrees.</p></li>
-<li><p><strong>phase</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Pixel phase angle [degrees]. All values must be between 0 and 180
-degrees.</p></li>
+between 0 and 180 degrees.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
@@ -203,9 +202,15 @@ degrees.</p></li>
 </ul>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p>This class can accommodate arrays of any shape as long as they all have
-the same shape.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#observation.spacecraft_angles" title="observation.spacecraft_angles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spacecraft_angles</span></code></a></dt><dd><p>Create instances of this class using a typical spacecraft geometry.</p>
+</dd>
+<dt><a class="reference internal" href="#observation.rover_angles" title="observation.rover_angles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rover_angles</span></code></a></dt><dd><p>Create instances of this class using a typical rover geometry.</p>
+</dd>
+</dl>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -257,17 +262,6 @@ the same shape.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="observation.Angles.phase">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">phase</span></code><a class="headerlink" href="#observation.Angles.phase" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the input phase angle [degrees].</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt id="observation.Angles.phi">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">phi</span></code><a class="headerlink" href="#observation.Angles.phi" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get <span class="math notranslate nohighlight">\(\phi\)</span>—the azimuth angle [degrees].</p>
@@ -283,12 +277,23 @@ the same shape.</p>
 <dl class="py method">
 <dt id="observation.Angles.phi0">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">phi0</span></code><a class="headerlink" href="#observation.Angles.phi0" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get <span class="math notranslate nohighlight">\(\phi_0\)</span>. I assume this is always an array of 0s.</p>
+<dd><p>Get <span class="math notranslate nohighlight">\(\phi_0\)</span>—the zenith angle [degrees].</p>
 <p class="rubric">Notes</p>
 <p>Each element in this variable is named <code class="docutils literal notranslate"><span class="pre">PHI0</span></code> in DISORT.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="observation.Angles.set_azimuth">
+<code class="sig-name descname"><span class="pre">set_azimuth</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#observation.Angles.set_azimuth" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>phase</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Pixel phase angle [degrees]. All values must be between 0 and 180
+degrees.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -381,6 +386,64 @@ to <code class="docutils literal notranslate"><span class="pre">True</span></cod
 </dl>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="py function">
+<dt id="observation.rover_angles">
+<code class="sig-prename descclassname"><span class="pre">observation.</span></code><code class="sig-name descname"><span class="pre">rover_angles</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">incidence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emission</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azimuth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azimuth0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#observation.rover_angles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the angles for a typical rover observing geometry.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>incidence</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Pixel incidence (solar zenith) angle [degrees]. All values must be
+between 0 and 180 degrees.</p></li>
+<li><p><strong>emission</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Pixel emission (emergence) angle [degrees]. All values must be
+between 0 and 180 degrees.</p></li>
+<li><p><strong>azimuth</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Pixel azimuth angles [degrees]. All values must be between 0 and 180
+degrees.</p></li>
+<li><p><strong>azimuth0</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Pixel zenith angles [degrees]. All values must be between 0
+and 180 degrees.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – Raised if any of the angles are not a numpy.ndarray.</p></li>
+<li><p><strong>ValueError</strong> – Raised if any of the input arrays contain values outside of their
+    mathematically valid range.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#observation.Angles" title="observation.Angles"><code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="observation.spacecraft_angles">
+<code class="sig-prename descclassname"><span class="pre">observation.</span></code><code class="sig-name descname"><span class="pre">spacecraft_angles</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">incidence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emission</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#observation.spacecraft_angles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the angles for a typical spacecraft observing geometry.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>incidence</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Pixel incidence (solar zenith) angle [degrees]. All values must be
+between 0 and 180 degrees.</p></li>
+<li><p><strong>emission</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Pixel emission (emergence) angle [degrees]. All values must be
+between 0 and 180 degrees.</p></li>
+<li><p><strong>phase</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Pixel phase angle [degrees]. All values must be between 0 and 180
+degrees.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – Raised if any of the angles are not a numpy.ndarray.</p></li>
+<li><p><strong>ValueError</strong> – Raised if any of the input arrays contain values outside of their
+    mathematically valid range.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#observation.Angles" title="observation.Angles"><code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code></a></p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>

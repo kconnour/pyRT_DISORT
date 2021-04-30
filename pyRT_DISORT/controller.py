@@ -432,11 +432,3 @@ class ModelBehavior:
                f'   header = {self.__header} \n' \
                f'   print_variables = {self.__print_variables} \n' \
                f'   radius = {self.__radius}'
-
-
-if __name__ == '__main__':
-    cp = ComputationalParameters(10, 30, 20, 40, 50, 60)
-    print(cp)
-
-    mb = ModelBehavior()
-    print(mb)
