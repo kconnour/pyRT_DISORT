@@ -1,10 +1,7 @@
 Misc:
-- add HG phase function
 - type hint ndarray shapes
 - fix eos Raises bullet points
 - test if pip installs the tests directory (it does)
-- why have a requirements.txt?
-- consider having a disort folder parallel to pyRT_DISORT
 - attempt to recombine docs and builddocs
 
 Refresh part 2:

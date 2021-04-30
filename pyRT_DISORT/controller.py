@@ -219,7 +219,7 @@ class ModelBehavior:
     also performs basic checks that the input control options are plausible.
 
     """
-    def __init__(self, accuracy: float = 0.0, delta_m_plus: bool = False,
+    def __init__(self, accuracy: float = 0.0, delta_m_plus: bool = True,
                  do_pseudo_sphere: bool = False, header: str = '',
                  print_variables: list[bool] = None,
                  radius: float = 6371.0) -> None:
@@ -435,7 +435,7 @@ class ModelBehavior:
 
 
 if __name__ == '__main__':
-    cp = ComputationalParameters(10, 30, 20, 40, 50 ,60)
+    cp = ComputationalParameters(10, 30, 20, 40, 50, 60)
     print(cp)
 
     mb = ModelBehavior()
