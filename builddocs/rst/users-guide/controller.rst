@@ -13,15 +13,16 @@ ComputationalParameters
 We need to set a number of computational parameters. Let's do that with
 :class:`~controller.ComputationalParameters`. We can just plug the number of
 layers inferred from the number of altitudes to use from the equation of state.
-Let's then use 64 moments, 16 streams, 1 polar and azimuthal angle, and 80
-user levels.
+Let's then use 64 moments, 16 streams, and 1 polar and azimuthal angle. Let's
+also define the user levels to be at the same locations as our model
+boundaries.
 
 .. code-block:: python
 
    from pyRT_DISORT.controller import ComputationalParameters
 
    cp = ComputationalParameters(hydro.n_layers, model.legendre_moments.shape[0],
-                                16, 1, 1, 80)
+                                16, 1, 1, hydro.n_layers+1)
 
    MAXCLY = cp.n_layers
    MAXMOM = cp.n_moments

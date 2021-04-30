@@ -193,12 +193,13 @@ I’ll happily make these less disjoined.</p>
 <p>We need to set a number of computational parameters. Let’s do that with
 <a class="reference internal" href="../api-reference/controller.html#controller.ComputationalParameters" title="controller.ComputationalParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">ComputationalParameters</span></code></a>. We can just plug the number of
 layers inferred from the number of altitudes to use from the equation of state.
-Let’s then use 64 moments, 16 streams, 1 polar and azimuthal angle, and 80
-user levels.</p>
+Let’s then use 64 moments, 16 streams, and 1 polar and azimuthal angle. Let’s
+also define the user levels to be at the same locations as our model
+boundaries.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.controller</span> <span class="kn">import</span> <span class="n">ComputationalParameters</span>
 
 <span class="n">cp</span> <span class="o">=</span> <span class="n">ComputationalParameters</span><span class="p">(</span><span class="n">hydro</span><span class="o">.</span><span class="n">n_layers</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">legendre_moments</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-                             <span class="mi">16</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">80</span><span class="p">)</span>
+                             <span class="mi">16</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">hydro</span><span class="o">.</span><span class="n">n_layers</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="n">MAXCLY</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">n_layers</span>
 <span class="n">MAXMOM</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">n_moments</span>
