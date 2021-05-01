@@ -201,6 +201,15 @@ class ComputationalParameters:
         """
         return self.__n_user_levels
 
+    def __str__(self) -> str:
+        return f'ComputationalParameters: \n' \
+               f'   n_layers = {self.__n_layers} \n' \
+               f'   n_moments = {self.__n_moments} \n' \
+               f'   n_streams = {self.__n_streams} \n' \
+               f'   n_azimuth = {self.__n_azimuth} \n' \
+               f'   n_polar = {self.__n_polar} \n' \
+               f'   n_user_levels = {self.__n_user_levels}'
+
 
 # TODO: fix user_angles docstring. It's a mess
 class ModelBehavior:
@@ -210,7 +219,7 @@ class ModelBehavior:
     also performs basic checks that the input control options are plausible.
 
     """
-    def __init__(self, accuracy: float = 0.0, delta_m_plus: bool = False,
+    def __init__(self, accuracy: float = 0.0, delta_m_plus: bool = True,
                  do_pseudo_sphere: bool = False, header: str = '',
                  print_variables: list[bool] = None,
                  radius: float = 6371.0) -> None:
@@ -414,3 +423,12 @@ class ModelBehavior:
 
         """
         return self.__radius
+
+    def __str__(self) -> str:
+        return f'ModelBehavior: \n' \
+               f'   accuracy = {self.__accuracy} \n' \
+               f'   delta_m_plus = {self.__delta_m_plus} \n' \
+               f'   do_pseudo_sphere = {self.__do_pseudo_sphere} \n' \
+               f'   header = {self.__header} \n' \
+               f'   print_variables = {self.__print_variables} \n' \
+               f'   radius = {self.__radius}'

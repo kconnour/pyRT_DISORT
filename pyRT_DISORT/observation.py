@@ -6,18 +6,16 @@ import numpy as np
 
 # TODO: I'm not sure that all combination of angles are physically realistic. If
 #  so, raise a warning
-# TODO: A user shoudl be able to specify incidence, emission, and azimuth, and
-#  then compute phase angles and phi0
 class Angles:
     r"""A data structure that contains angles required by DISORT.
 
-    Angles accepts the incidence, emission, and phase angles from an observation
-    and computes :math:`\mu, \mu_0, \phi`, and :math:`\phi_0` from these angles.
+    Angles accepts the incidence, emission, and azimuth angles (both :math:`\phi`
+    and :math:`\phi_0` from an observation and
+    computes :math:`\mu` and :math:`\mu_0` from these angles.
 
     """
-
     def __init__(self, incidence: np.ndarray, emission: np.ndarray,
-                 phase: np.ndarray) -> None:
+                 azimuth: np.ndarray, azimuth0: np.ndarray) -> None:
         """
         Parameters
         ----------
@@ -26,10 +24,13 @@ class Angles:
             between 0 and 180 degrees.
         emission
             Pixel emission (emergence) angle [degrees]. All values must be
-            between 0 and 90 degrees.
-        phase
-            Pixel phase angle [degrees]. All values must be between 0 and 180
-            degrees.
+            between 0 and 180 degrees.
+        azimuth
+            Azimuthal output angles [degrees]. All values must be between 0 and
+            360 degrees.
+        azimuth0
+            The azimuth angle of the incident beam [degrees]. Must be between
+            0 and 360 degrees.
 
         Raises
         ------
@@ -37,34 +38,49 @@ class Angles:
             Raised if any of the angles are not a numpy.ndarray.
         ValueError
             Raised if any of the input arrays contain values outside of their
-            mathematically valid range.
+            mathematically valid range, or if the input arrays do not have the
+            same pixel dimension. See the notes section for more information.
+
+        See Also
+        --------
+        spacecraft_angles: Create instances of this class using a typical
+                           spacecraft geometry.
 
         Notes
         -----
-        This class can accommodate arrays of any shape as long as they all have
-        the same shape.
+        DISORT expects :code:`UMU0` and :code:`PHI0` to be floats and
+        :code:`UMU` and :code:`PHI` to be 1D arrays. pyRT_DISORT can do the
+        pre-processing all at once. If you want to use this option, both
+        :code:`incidence` and :code:`azimuth0` should be the same shape.
+        :code:`emission` should have the same shape but with another axis tacked
+        on to the end; the same is true for :code:`azimuth`.
+
+        For example, if you have an MxN image, both :code:`incidence` and
+        :code:`azimuth0` should have shape MxN. If you have A polar angles and
+        B azimuth angles, :code:`emission` should have shape MxNxA whereas
+        :code:`azimuth` should have shape MxNxB. In the case where each pixel
+        has its own set of angles, A=B=1. In the case of a single incidence
+        and incidence azimuth angle, the first dimension should have shape of 1.
+
 
         """
         self.__incidence = _Angle(incidence, 'incidence', 0, 180)
-        self.__emission = _Angle(emission, 'emission', 0, 90)
-        self.__phase = _Angle(phase, 'phase', 0, 180)
+        self.__emission = _Angle(emission, 'emission', 0, 180)
+        self.__azimuth = _Angle(azimuth, 'azimuth', 0, 360)
+        self.__azimuth0 = _Angle(azimuth0, 'azimuth0', 0, 360)
 
-        #self.__raise_error_if_angles_are_bad()
+        self.__raise_value_error_if_inputs_have_wrong_shapes()
 
         self.__mu0 = self.__compute_mu0()
         self.__mu = self.__compute_mu()
-        self.__phi0 = self.__make_phi0()
-        self.__phi = self.__compute_phi()
 
-    def __raise_error_if_angles_are_bad(self) -> None:
-        self.__raise_value_error_if_angles_are_not_all_same_shape()
+    def __raise_value_error_if_inputs_have_wrong_shapes(self) -> None:
+        self.__raise_value_error_if_pixel_dimensions_do_not_match()
 
-    # TODO: possibly one incidence angle, but many emissions, phases...
-    def __raise_value_error_if_angles_are_not_all_same_shape(self) -> None:
-        if not self.__incidence.shape == self.__emission.shape == \
-               self.__phase.shape:
-            message = 'incidence, emission, and phase must all have the same ' \
-                      'shape.'
+    def __raise_value_error_if_pixel_dimensions_do_not_match(self) -> None:
+        if not (self.__incidence.val.shape == self.__emission.val.shape[:-1] ==
+                self.__azimuth0.val.shape == self.__azimuth.val.shape[: -1]):
+            message = 'The pixel dimensions do not match.'
             raise ValueError(message)
 
     def __compute_mu0(self) -> np.ndarray:
@@ -72,24 +88,6 @@ class Angles:
 
     def __compute_mu(self) -> np.ndarray:
         return self.__compute_angle_cosine(self.__emission.val)
-
-    # TODO: Presumably a user could want phi0 that's not all 0s, so add that
-    #  ability and remake property docstring
-    def __make_phi0(self) -> np.ndarray:
-        return np.zeros(self.__phase.shape)
-
-    # TODO: is there a cleaner way to make this variable?
-    def __compute_phi(self) -> np.ndarray:
-        sin_emission_angle = np.sin(np.radians(self.__emission.val))
-        sin_solar_zenith_angle = np.sin(np.radians(self.__incidence.val))
-        cos_phase_angle = self.__compute_angle_cosine(self.__phase.val)
-        with np.errstate(divide='ignore', invalid='ignore'):
-            tmp_arg = np.true_divide(
-                cos_phase_angle - self.mu * self.mu0,
-                sin_emission_angle * sin_solar_zenith_angle)
-            tmp_arg[~np.isfinite(tmp_arg)] = -1
-            d_phi = np.arccos(np.clip(tmp_arg, -1, 1))
-        return self.phi0 + 180 - np.degrees(d_phi)
 
     @staticmethod
     def __compute_angle_cosine(angle: np.ndarray) -> np.ndarray:
@@ -108,13 +106,6 @@ class Angles:
 
         """
         return self.__emission.val
-
-    @property
-    def phase(self) -> np.ndarray:
-        """Get the input phase angle [degrees].
-
-        """
-        return self.__phase.val
 
     @property
     def mu0(self) -> np.ndarray:
@@ -140,14 +131,14 @@ class Angles:
 
     @property
     def phi0(self) -> np.ndarray:
-        r"""Get :math:`\phi_0`. I assume this is always an array of 0s.
+        r"""Get :math:`\phi_0`---the zenith angle [degrees].
 
         Notes
         -----
         Each element in this variable is named ``PHI0`` in DISORT.
 
         """
-        return self.__phi0
+        return self.__azimuth0.val
 
     @property
     def phi(self) -> np.ndarray:
@@ -158,7 +149,7 @@ class Angles:
         Each element in this variable is named ``PHI`` in DISORT.
 
         """
-        return self.__phi
+        return self.__azimuth.val
 
 
 class _Angle:
@@ -220,6 +211,52 @@ class _Angle:
     @property
     def val(self) -> np.ndarray:
         return self.__angle
+
+
+# TODO: Is there a cleaner way to compute this?
+# TODO: Check the shapes match? I think this would be desirable
+def spacecraft_angles(incidence: np.ndarray, emission: np.ndarray,
+                      phase: np.ndarray) -> Angles:
+    """Compute the angles for a typical spacecraft observing geometry, where the
+    phase angles are known but the azimuth angles are unknown.
+
+    Parameters
+    ----------
+    incidence
+        Pixel incidence (solar zenith) angle [degrees]. All values must be
+        between 0 and 180 degrees.
+    emission
+        Pixel emission (emergence) angle [degrees]. All values must be
+        between 0 and 180 degrees.
+    phase
+        Pixel phase angle [degrees]. All values must be between 0 and 180
+        degrees.
+
+    Raises
+    ------
+    TypeError
+        Raised if any of the angles are not a numpy.ndarray.
+    ValueError
+        Raised if any of the input arrays contain values outside of their
+        mathematically valid range.
+
+    """
+    phi0 = np.zeros(phase.shape)
+
+    mu = np.cos(np.radians(emission))
+    mu0 = np.cos(np.radians(incidence))
+    sin_emission_angle = np.sin(np.radians(emission))
+    sin_solar_zenith_angle = np.sin(np.radians(incidence))
+    cos_phase_angle = np.cos(np.radians(phase))
+    with np.errstate(divide='ignore', invalid='ignore'):
+        tmp_arg = np.true_divide(
+            cos_phase_angle - mu * mu0,
+            sin_emission_angle * sin_solar_zenith_angle)
+        tmp_arg[~np.isfinite(tmp_arg)] = -1
+        d_phi = np.arccos(np.clip(tmp_arg, -1, 1))
+
+    phi = phi0 + 180 - np.degrees(d_phi)
+    return Angles(incidence, emission[:, np.newaxis], phi[:, np.newaxis], phi0)
 
 
 class Spectral:
@@ -392,3 +429,10 @@ class _Wavelength:
 
         """
         return 10 ** 4 / self.__wavelength
+
+
+if __name__ == '__main__':
+    sza = np.array([10, 70])
+    ang = spacecraft_angles(sza, sza, sza)
+    print(ang.phi.shape)
+    print(ang.mu0.shape)

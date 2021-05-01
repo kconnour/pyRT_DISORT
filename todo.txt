@@ -1,10 +1,7 @@
 Misc:
-- add HG phase function
 - type hint ndarray shapes
 - fix eos Raises bullet points
 - test if pip installs the tests directory (it does)
-- why have a requirements.txt?
-- consider having a disort folder parallel to pyRT_DISORT
 - attempt to recombine docs and builddocs
 
 Refresh part 2:
@@ -44,3 +41,9 @@ Tests:
 Miscellaneous
 --- Josh says there are nicer things than fits, so consider using that format
     instead of astropy. scipy has netCDF built in
+
+Suggestions
+--- disort wrapper with defaults
+--- Change defaults in the boolean classes?
+--- user levels --> output arrays
+--- Add __str__ to OA and OB

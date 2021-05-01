@@ -20,13 +20,13 @@ needs.
 
    sfc.make_lambertian()
 
-   ALBEDO = lamb.albedo
-   LAMBER = lamb.lambertian
-   RHOU = lamb.rhou
-   RHOQ = lamb.rhoq
-   BEMST = lamb.bemst
-   EMUST = lamb.emust
-   RHO_ACCURATE = lamb.rho_accurate
+   ALBEDO = sfc.albedo
+   LAMBER = sfc.lambertian
+   RHOU = sfc.rhou
+   RHOQ = sfc.rhoq
+   BEMST = sfc.bemst
+   EMUST = sfc.emust
+   RHO_ACCURATE = sfc.rho_accurate
 
 With these defined, we've now created all the variables that DISORT needs!
 

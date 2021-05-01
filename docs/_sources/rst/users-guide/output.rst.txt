@@ -20,7 +20,7 @@ the parameters we'll need. Let's add them to :class:`~output.OutputArrays`.
    FLUP = oa.diffuse_up_flux
    RFLDN = oa.diffuse_down_flux
    RFLDIR = oa.direct_beam_flux
-   DRDT = oa.flux_divergence
+   DFDT = oa.flux_divergence
    UU = oa.intensity
    UAVG = oa.mean_intensity
    TRNMED = oa.transmissivity_medium
