@@ -43,8 +43,10 @@ class Angles:
 
         See Also
         --------
-        spacecraft_angles: Create instances of this class using a typical
-                           spacecraft geometry.
+        angles_from_phase: Create instances of this class if the phase angles
+                           are known (and presumably the azimuth angles are
+                           unknown).
+        sky_image_angles: Create instances of this class using a sky image.
 
         Notes
         -----
@@ -214,35 +216,19 @@ class _Angle:
 
 
 # TODO: Is there a cleaner way to compute this?
-# TODO: Check the shapes match? I think this would be desirable
-def spacecraft_angles(incidence: np.ndarray, emission: np.ndarray,
-                      phase: np.ndarray) -> Angles:
-    """Compute the angles for a typical spacecraft observing geometry, where the
-    phase angles are known but the azimuth angles are unknown.
+def azimuth_from_phase(incidence, emission, phase) -> np.ndarray:
+    """Construct the azimuth angles in the case where the phase angle is known.
 
     Parameters
     ----------
     incidence
-        Pixel incidence (solar zenith) angle [degrees]. All values must be
-        between 0 and 180 degrees.
+        The incidence angle [degrees].
     emission
-        Pixel emission (emergence) angle [degrees]. All values must be
-        between 0 and 180 degrees.
+        The emission angle [degrees].
     phase
-        Pixel phase angle [degrees]. All values must be between 0 and 180
-        degrees.
-
-    Raises
-    ------
-    TypeError
-        Raised if any of the angles are not a numpy.ndarray.
-    ValueError
-        Raised if any of the input arrays contain values outside of their
-        mathematically valid range.
+        The phase angle [degrees].
 
     """
-    phi0 = np.zeros(phase.shape)
-
     mu = np.cos(np.radians(emission))
     mu0 = np.cos(np.radians(incidence))
     sin_emission_angle = np.sin(np.radians(emission))
@@ -255,8 +241,54 @@ def spacecraft_angles(incidence: np.ndarray, emission: np.ndarray,
         tmp_arg[~np.isfinite(tmp_arg)] = -1
         d_phi = np.arccos(np.clip(tmp_arg, -1, 1))
 
-    phi = phi0 + 180 - np.degrees(d_phi)
+    return 180 - np.degrees(d_phi)
+
+
+# TODO: Check the shapes match? I think this would be desirable
+def angles_from_phase(incidence, emission, phase) -> Angles:
+    """Construct an instance of Angles from the phase angles.
+
+    Parameters
+    ----------
+    incidence
+        The incidence angle [degrees].
+    emission
+        The emission angle [degrees].
+    phase
+        The phase angle [degrees].
+
+    """
+    phi = azimuth_from_phase(incidence, emission, phase)
+    phi0 = np.zeros(phase.shape)
     return Angles(incidence, emission[:, np.newaxis], phi[:, np.newaxis], phi0)
+
+
+def sky_image_angles(incidence, emission, azimuth, azimuth0) -> Angles:
+    """Create an instance of Angles from a typical sky image---that is, a single
+    incidence and azimuth0 are known and the observational geometry defines a
+    1D array of emission and azimuth angles.
+
+    Parameters
+    ----------
+    incidence
+        Pixel incidence (solar zenith) angle [degrees]. All values must be
+        between 0 and 180 degrees.
+    emission
+        Pixel emission (emergence) angle [degrees]. All values must be
+        between 0 and 180 degrees.
+    azimuth
+        Azimuthal output angles [degrees]. All values must be between 0 and
+        360 degrees.
+    azimuth0
+        The azimuth angle of the incident beam [degrees]. Must be between
+        0 and 360 degrees.
+
+    """
+    incidence = np.array([incidence])
+    emission = emission[np.newaxis, :]
+    azimuth = azimuth[np.newaxis, :]
+    azimuth0 = np.array([azimuth0])
+    return Angles(incidence, emission, azimuth, azimuth0)
 
 
 class Spectral:
@@ -429,10 +461,3 @@ class _Wavelength:
 
         """
         return 10 ** 4 / self.__wavelength
-
-
-if __name__ == '__main__':
-    sza = np.array([10, 70])
-    ang = spacecraft_angles(sza, sza, sza)
-    print(ang.phi.shape)
-    print(ang.mu0.shape)
