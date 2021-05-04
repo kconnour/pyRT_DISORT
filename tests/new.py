@@ -8,7 +8,6 @@ angles = Angles(dummy_angles, dummy_angles, dummy_angles)
 
 incidence = angles.incidence
 emission = angles.emission
-phase = angles.phase
 mu = angles.mu
 mu0 = angles.mu0
 phi = angles.phi

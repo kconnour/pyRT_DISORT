@@ -216,7 +216,8 @@ class _Angle:
 
 
 # TODO: Is there a cleaner way to compute this?
-def azimuth_from_phase(incidence, emission, phase) -> np.ndarray:
+def azimuth_from_phase(incidence: np.ndarray, emission: np.ndarray,
+                       phase: np.ndarray) -> np.ndarray:
     """Construct the azimuth angles in the case where the phase angle is known.
 
     Parameters
@@ -245,7 +246,8 @@ def azimuth_from_phase(incidence, emission, phase) -> np.ndarray:
 
 
 # TODO: Check the shapes match? I think this would be desirable
-def angles_from_phase(incidence, emission, phase) -> Angles:
+def angles_from_phase(incidence: np.ndarray, emission: np.ndarray,
+                      phase: np.ndarray) -> Angles:
     """Construct an instance of Angles from the phase angles.
 
     Parameters
@@ -263,7 +265,8 @@ def angles_from_phase(incidence, emission, phase) -> Angles:
     return Angles(incidence, emission[:, np.newaxis], phi[:, np.newaxis], phi0)
 
 
-def sky_image_angles(incidence, emission, azimuth, azimuth0) -> Angles:
+def sky_image_angles(incidence: float, emission: np.ndarray,
+                     azimuth: np.ndarray, azimuth0: float) -> Angles:
     """Create an instance of Angles from a typical sky image---that is, a single
     incidence and azimuth0 are known and the observational geometry defines a
     1D array of emission and azimuth angles.
@@ -271,7 +274,7 @@ def sky_image_angles(incidence, emission, azimuth, azimuth0) -> Angles:
     Parameters
     ----------
     incidence
-        Pixel incidence (solar zenith) angle [degrees]. All values must be
+        Pixel incidence (solar zenith) angle [degrees]. Value must be
         between 0 and 180 degrees.
     emission
         Pixel emission (emergence) angle [degrees]. All values must be

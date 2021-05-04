@@ -202,14 +202,17 @@ between 0 and 180 degrees.</p></li>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>TypeError</strong> – Raised if any of the angles are not a numpy.ndarray.</p></li>
 <li><p><strong>ValueError</strong> – Raised if any of the input arrays contain values outside of their
-    mathematically valid range.</p></li>
+    mathematically valid range, or if the input arrays do not have the
+    same pixel dimension. See the notes section for more information.</p></li>
 </ul>
 </dd>
 </dl>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <dl class="simple">
-<dt><a class="reference internal" href="#observation.spacecraft_angles" title="observation.spacecraft_angles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spacecraft_angles</span></code></a></dt><dd><p>Create instances of this class using a typical spacecraft geometry.</p>
+<dt><a class="reference internal" href="#observation.angles_from_phase" title="observation.angles_from_phase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">angles_from_phase</span></code></a></dt><dd><p>Create instances of this class if the phase angles are known (and presumably the azimuth angles are unknown).</p>
+</dd>
+<dt><a class="reference internal" href="#observation.sky_image_angles" title="observation.sky_image_angles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sky_image_angles</span></code></a></dt><dd><p>Create instances of this class using a sky image.</p>
 </dd>
 </dl>
 </div>
@@ -218,16 +221,14 @@ between 0 and 180 degrees.</p></li>
 <code class="code docutils literal notranslate"><span class="pre">UMU</span></code> and <code class="code docutils literal notranslate"><span class="pre">PHI</span></code> to be 1D arrays. pyRT_DISORT can do the
 pre-processing all at once. If you want to use this option, both
 <code class="code docutils literal notranslate"><span class="pre">incidence</span></code> and <code class="code docutils literal notranslate"><span class="pre">azimuth0</span></code> should be the same shape.
-:code`emission` should have the same shape but with another axis tacked
+<code class="code docutils literal notranslate"><span class="pre">emission</span></code> should have the same shape but with another axis tacked
 on to the end; the same is true for <code class="code docutils literal notranslate"><span class="pre">azimuth</span></code>.</p>
 <p>For example, if you have an MxN image, both <code class="code docutils literal notranslate"><span class="pre">incidence</span></code> and
 <code class="code docutils literal notranslate"><span class="pre">azimuth0</span></code> should have shape MxN. If you have A polar angles and
 B azimuth angles, <code class="code docutils literal notranslate"><span class="pre">emission</span></code> should have shape MxNxA whereas
 <code class="code docutils literal notranslate"><span class="pre">azimuth</span></code> should have shape MxNxB. In the case where each pixel
 has its own set of angles, A=B=1. In the case of a single incidence
-and incidence azimuth angle, the first dimension should have shape of 1.
-In either of these cases you’ll need to iterate over the pixel dimension
-when calling DISORT.</p>
+and incidence azimuth angle, the first dimension should have shape of 1.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -395,30 +396,62 @@ to <code class="docutils literal notranslate"><span class="pre">True</span></cod
 </dd></dl>
 
 <dl class="py function">
-<dt id="observation.spacecraft_angles">
-<code class="sig-prename descclassname"><span class="pre">observation.</span></code><code class="sig-name descname"><span class="pre">spacecraft_angles</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">incidence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emission</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#observation.spacecraft_angles" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the angles for a typical spacecraft observing geometry, where the
-phase angles are known but the azimuth angles are unknown.</p>
+<dt id="observation.angles_from_phase">
+<code class="sig-prename descclassname"><span class="pre">observation.</span></code><code class="sig-name descname"><span class="pre">angles_from_phase</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">incidence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emission</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#observation.angles_from_phase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct an instance of Angles from the phase angles.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>incidence</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Pixel incidence (solar zenith) angle [degrees]. All values must be
+<li><p><strong>incidence</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The incidence angle [degrees].</p></li>
+<li><p><strong>emission</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The emission angle [degrees].</p></li>
+<li><p><strong>phase</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The phase angle [degrees].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#observation.Angles" title="observation.Angles"><code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="observation.azimuth_from_phase">
+<code class="sig-prename descclassname"><span class="pre">observation.</span></code><code class="sig-name descname"><span class="pre">azimuth_from_phase</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">incidence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emission</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#observation.azimuth_from_phase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct the azimuth angles in the case where the phase angle is known.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>incidence</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The incidence angle [degrees].</p></li>
+<li><p><strong>emission</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The emission angle [degrees].</p></li>
+<li><p><strong>phase</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The phase angle [degrees].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="observation.sky_image_angles">
+<code class="sig-prename descclassname"><span class="pre">observation.</span></code><code class="sig-name descname"><span class="pre">sky_image_angles</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">incidence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emission</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azimuth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azimuth0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#observation.sky_image_angles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an instance of Angles from a typical sky image—that is, a single
+incidence and azimuth0 are known and the observational geometry defines a
+1D array of emission and azimuth angles.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>incidence</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Pixel incidence (solar zenith) angle [degrees]. All values must be
 between 0 and 180 degrees.</p></li>
 <li><p><strong>emission</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Pixel emission (emergence) angle [degrees]. All values must be
 between 0 and 180 degrees.</p></li>
-<li><p><strong>phase</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Pixel phase angle [degrees]. All values must be between 0 and 180
-degrees.</p></li>
+<li><p><strong>azimuth</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Azimuthal output angles [degrees]. All values must be between 0 and
+360 degrees.</p></li>
+<li><p><strong>azimuth0</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The azimuth angle of the incident beam [degrees]. Must be between
+0 and 360 degrees.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>TypeError</strong> – Raised if any of the angles are not a numpy.ndarray.</p></li>
-<li><p><strong>ValueError</strong> – Raised if any of the input arrays contain values outside of their
-    mathematically valid range.</p></li>
-</ul>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#observation.Angles" title="observation.Angles"><code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code></a></p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#observation.Angles" title="observation.Angles"><code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
