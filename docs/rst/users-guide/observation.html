@@ -90,7 +90,8 @@
 <li class="toctree-l2"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">The observation module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#angles">Angles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rover-angles">Rover Angles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#spacecraft-angles">Spacecraft Angles</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#spectral">Spectral</a></li>
 </ul>
 </li>
@@ -182,28 +183,99 @@
 <h1>The observation module<a class="headerlink" href="#the-observation-module" title="Permalink to this headline">¶</a></h1>
 <p>Let’s begin by considering some of the quantities found in a typical
 observation—the angles and wavelengths at which some instrument collected
-data. For this example I’ll consider the most general case: a hyperspectral
-imager containing an MxN grid of pixels that takes data at W wavelengths.</p>
-<div class="section" id="angles">
-<h2>Angles<a class="headerlink" href="#angles" title="Permalink to this headline">¶</a></h2>
+data. I’ll go through two typical, distinct cases in this example in parallel:</p>
+<ol class="arabic simple">
+<li><p>“Rover”: An image contains a single incidence angle but it images over
+M polar angles and N azimuthal angles.</p></li>
+<li><p>“Spacecraft”: Each pixel has a single incidence, emission, and phase angle.
+These values are different for each pixel. I call this the spacecraft case
+since this scenario would apply to a typical orbiter.</p></li>
+</ol>
+<p>You can choose either one case or the other as an example for your case.
+However, I recommend reading both cases for a complete discussion of the
+code’s behavior.</p>
+<div class="section" id="rover-angles">
+<h2>Rover Angles<a class="headerlink" href="#rover-angles" title="Permalink to this headline">¶</a></h2>
+<p>Let’s say we have some angles defined over a grid. These values would normally
+be found in a data product, but we need some values to play with. Let’s suppose
+we have an image of shape (40, 25), where we have 40 emission angles and 25
+azimuthal angles. I’ll define that here, along with the scalar incidence angle
+and azimuthal angle of the incidence beam.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">emission_angles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+<span class="n">azimuthal_angles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">80</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
+<span class="n">incidence_angle</span> <span class="o">=</span> <span class="mi">35</span>
+<span class="n">azimuth0</span> <span class="o">=</span> <span class="mi">20</span>
+</pre></div>
+</div>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>The angles must be in degrees.</p>
+</div>
+<p>Our goal is to create an instance of <a class="reference internal" href="../api-reference/observation.html#observation.Angles" title="observation.Angles"><code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code></a> to hold on to
+all the values we’ll need. Instead of creating this object directly, let’s
+use a function designed for this case—one that simply coerces these inputs
+into a form that <code class="code docutils literal notranslate"><span class="pre">Angles</span></code> likes and returns an instance of it. We can
+get the attributes from this object as shown below.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.observation</span> <span class="kn">import</span> <span class="n">sky_image_angles</span>
+
+<span class="n">angles</span> <span class="o">=</span> <span class="n">sky_image_angles</span><span class="p">(</span><span class="n">incidence_angle</span><span class="p">,</span> <span class="n">emission_angles</span><span class="p">,</span>
+                          <span class="n">azimuthal_angles</span><span class="p">,</span> <span class="n">azimuth0</span><span class="p">)</span>
+
+<span class="n">incidence</span> <span class="o">=</span> <span class="n">angles</span><span class="o">.</span><span class="n">incidence</span>
+<span class="n">emission</span> <span class="o">=</span> <span class="n">angles</span><span class="o">.</span><span class="n">emission</span>
+<span class="n">mu</span> <span class="o">=</span> <span class="n">angles</span><span class="o">.</span><span class="n">mu</span>
+<span class="n">mu0</span> <span class="o">=</span> <span class="n">angles</span><span class="o">.</span><span class="n">mu0</span>
+<span class="n">phi</span> <span class="o">=</span> <span class="n">angles</span><span class="o">.</span><span class="n">phi</span>
+<span class="n">phi0</span> <span class="o">=</span> <span class="n">angles</span><span class="o">.</span><span class="n">phi0</span>
+</pre></div>
+</div>
+<p>The shapes of both <code class="code docutils literal notranslate"><span class="pre">mu0</span></code> and <code class="code docutils literal notranslate"><span class="pre">phi0</span></code> are (1,), whereas <code class="code docutils literal notranslate"><span class="pre">mu</span></code>
+has shape (1, 40) and <code class="code docutils literal notranslate"><span class="pre">phi</span></code> has shape (1, 25).
+This class creates the angular variables that DISORT wants all at once and can
+even compute all these variables at multiple incidence and beam azimuth angles.
+Consequently, <em>you must pick the index for this set of angles</em> in order to get
+something that DISORT wants. We only have one set of these angles so let’s do
+that below.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">UMU</span> <span class="o">=</span> <span class="n">mu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">UMU0</span> <span class="o">=</span> <span class="n">mu0</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+<span class="n">PHI</span> <span class="o">=</span> <span class="n">phi</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+<span class="n">PHI0</span> <span class="o">=</span> <span class="n">phi0</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Now the variables ending in 0 are floats and the others are 1D vectors, which
+is precisely what DISORT wants.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For those of that have experience working with DISORT directly, I’ll name
+the variables in this example with the same names that DISORT uses. For
+those unfamiliar with DISORT/FORTRAN, variables in ALL CAPS will be the ones
+that we ultimately plug into DISORT.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>I originally designed this example to only go through the spacecraft case,
+so some of the upcoming modules may not work well with this case. I will
+update them when I have the opportunity.</p>
+</div>
+</div>
+<div class="section" id="spacecraft-angles">
+<h2>Spacecraft Angles<a class="headerlink" href="#spacecraft-angles" title="Permalink to this headline">¶</a></h2>
 <p>Each pixel will presumably have its own unique combination of incidence,
 emission, and phase angles that don’t depend on wavelength. This data would
 normally be found in a data product, but we need some values to play with
-for the time being. Let’s start by importing the modules we’ll need.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">pyRT_DISORT.observation</span> <span class="kn">import</span> <span class="n">Angles</span>
-</pre></div>
-</div>
-<p>We can go ahead and create some angles (for the simplicity of the example let’s
+for the time being. We can go ahead and create some angles (for the simplicity
+of the example let’s
 assume that the incidence, emission, and phase angles are all the same).</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dummy_angles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">15</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">20</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>We can then add these to <a class="reference internal" href="../api-reference/observation.html#observation.Angles" title="observation.Angles"><code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code></a>. This object simply holds
-on to the input angles and computes the angular quantities required by DISORT.
-You can access the input angles and these computed angular quantities via the
-class properties, as shown below.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">angles</span> <span class="o">=</span> <span class="n">Angles</span><span class="p">(</span><span class="n">dummy_angles</span><span class="p">,</span> <span class="n">dummy_angles</span><span class="p">,</span> <span class="n">dummy_angles</span><span class="p">)</span>
+<p>Like the rover example, we can call a helper function that’ll turn phase angles
+into azimuthal angles and return an instance of <code class="code docutils literal notranslate"><span class="pre">Angles</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.observation</span> <span class="kn">import</span> <span class="n">angles_from_phase</span>
+
+<span class="n">angles</span> <span class="o">=</span> <span class="n">angles_from_phase</span><span class="p">(</span><span class="n">dummy_angles</span><span class="p">,</span> <span class="n">dummy_angles</span><span class="p">,</span> <span class="n">dummy_angles</span><span class="p">)</span>
 
 <span class="n">incidence</span> <span class="o">=</span> <span class="n">angles</span><span class="o">.</span><span class="n">incidence</span>
 <span class="n">emission</span> <span class="o">=</span> <span class="n">angles</span><span class="o">.</span><span class="n">emission</span>
@@ -214,38 +286,16 @@ class properties, as shown below.</p>
 <span class="n">phi0</span> <span class="o">=</span> <span class="n">angles</span><span class="o">.</span><span class="n">phi0</span>
 </pre></div>
 </div>
-<div class="admonition attention">
-<p class="admonition-title">Attention</p>
-<p>The angles must be in degrees.</p>
-</div>
-<div class="admonition caution">
-<p class="admonition-title">Caution</p>
-<p>It’s not memory efficient to make a new variable that’s simply a copy of a
-variable you already have as part of a class. I’m only showing you this to
-highlight the object’s properties.</p>
-</div>
-<p>These newly created arrays have the same shape as the input
-arrays—(15, 20)—so there’s a 1-to-1 correspondence between them. This
-vectorization allows us to compute all of the angular quantities across the
-observation at once, which can provide some significant computational benefits.
-In general, pyRT_DISORT can handle N-dimensional input to its classes; however,
-I want to keep things somewhat simple for this example so for the remainder of
-this retrieval I’ll only consider quantities on a per pixel basis. Let’s get
-quantities from one of the pixels.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">UMU</span> <span class="o">=</span> <span class="n">mu</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<p>In this case, the shapes of both <code class="code docutils literal notranslate"><span class="pre">mu0</span></code> and <code class="code docutils literal notranslate"><span class="pre">phi0</span></code> are (15, 20)—
+the same shape as the input angles—whereas <code class="code docutils literal notranslate"><span class="pre">mu</span></code> and <code class="code docutils literal notranslate"><span class="pre">phi</span></code> both
+have shapes (15, 20, 1). That’s to say, each incidence angle has only 1 set
+emission and azimuth angle. We can choose a single pixel index like below.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">UMU</span> <span class="o">=</span> <span class="n">mu</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
 <span class="n">UMU0</span> <span class="o">=</span> <span class="n">mu0</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
-<span class="n">PHI</span> <span class="o">=</span> <span class="n">phi</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">PHI</span> <span class="o">=</span> <span class="n">phi</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
 <span class="n">PHI0</span> <span class="o">=</span> <span class="n">phi0</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>For those of that have experience working with DISORT directly, I’ll name
-the variables in this example with the same names that DISORT uses. For
-those unfamiliar with DISORT/FORTRAN, variables in ALL CAPS will be the ones
-that we ultimately plug into DISORT.</p>
-</div>
-<p>With that, we already computed 4 of the variables DISORT needs!</p>
 </div>
 <div class="section" id="spectral">
 <h2>Spectral<a class="headerlink" href="#spectral" title="Permalink to this headline">¶</a></h2>
