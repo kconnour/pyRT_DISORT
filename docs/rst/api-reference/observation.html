@@ -173,19 +173,22 @@
             
   <div class="section" id="module-observation">
 <span id="observation"></span><h1>Observation<a class="headerlink" href="#module-observation" title="Permalink to this headline">¶</a></h1>
-<p>The <code class="code docutils literal notranslate"><span class="pre">observation</span></code> module contains data structures to hold and compute
-quantities commonly found in an observation.</p>
+<p>This module contains tools to hold and compute quantities commonly found in
+an observation.</p>
 <dl class="py class">
 <dt id="observation.Angles">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">observation.</span></code><code class="sig-name descname"><span class="pre">Angles</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">incidence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emission</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azimuth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azimuth0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#observation.Angles" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">observation.</span></code><code class="sig-name descname"><span class="pre">Angles</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">incidence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emission</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azimuth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azimuth_beam</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#observation.Angles" title="Permalink to this definition">¶</a></dt>
 <dd><p>A data structure that contains angles required by DISORT.</p>
-<p>Angles accepts the incidence, emission, and azimuth angles (both <span class="math notranslate nohighlight">\(\phi\)</span>
-and <span class="math notranslate nohighlight">\(\phi_0\)</span> from an observation and
-computes <span class="math notranslate nohighlight">\(\mu\)</span> and <span class="math notranslate nohighlight">\(\mu_0\)</span> from these angles.</p>
-<dl class="py method">
-<dt id="observation.Angles.__init__">
-<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">incidence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emission</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azimuth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azimuth0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#observation.Angles.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<p>It accepts both the incidence angle and the azimuth angle of the incident
+beam, as well as emission and azimuth angles from an observation. It holds
+these values and computes both <span class="math notranslate nohighlight">\(\mu_0\)</span> and <span class="math notranslate nohighlight">\(\mu\)</span> from these
+angles.</p>
+<p>This class can compute all angular quantities required by DISORT at once,
+even multiple observations. Both <code class="code docutils literal notranslate"><span class="pre">incidence</span></code> and <code class="code docutils literal notranslate"><span class="pre">azimuth_beam</span></code>
+must have the same shape. Both <code class="code docutils literal notranslate"><span class="pre">emission</span></code> and <code class="code docutils literal notranslate"><span class="pre">azimuth</span></code> must
+have that same shape with an additional axis at the end, though the length
+of that axis can be different for both of these inputs.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>incidence</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Pixel incidence (solar zenith) angle [degrees]. All values must be
@@ -194,46 +197,102 @@ between 0 and 180 degrees.</p></li>
 between 0 and 180 degrees.</p></li>
 <li><p><strong>azimuth</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Azimuthal output angles [degrees]. All values must be between 0 and
 360 degrees.</p></li>
-<li><p><strong>azimuth0</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The azimuth angle of the incident beam [degrees]. Must be between
+<li><p><strong>azimuth_beam</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The azimuth angle of the incident beam [degrees]. Must be between
 0 and 360 degrees.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><ul class="simple">
+</dl>
+<dl class="py attribute">
+<dt id="observation.Angles.incidence">
+<code class="sig-name descname"><span class="pre">incidence</span></code><a class="headerlink" href="#observation.Angles.incidence" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="observation.Angles.emission">
+<code class="sig-name descname"><span class="pre">emission</span></code><a class="headerlink" href="#observation.Angles.emission" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="observation.Angles.mu">
+<code class="sig-name descname"><span class="pre">mu</span></code><a class="headerlink" href="#observation.Angles.mu" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="observation.Angles.mu0">
+<code class="sig-name descname"><span class="pre">mu0</span></code><a class="headerlink" href="#observation.Angles.mu0" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="observation.Angles.phi">
+<code class="sig-name descname"><span class="pre">phi</span></code><a class="headerlink" href="#observation.Angles.phi" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="observation.Angles.phi0">
+<code class="sig-name descname"><span class="pre">phi0</span></code><a class="headerlink" href="#observation.Angles.phi0" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
 <li><p><strong>TypeError</strong> – Raised if any of the angles are not a numpy.ndarray.</p></li>
 <li><p><strong>ValueError</strong> – Raised if any of the input arrays contain values outside of their
     mathematically valid range, or if the input arrays do not have the
-    same pixel dimension. See the notes section for more information.</p></li>
+    same pixel dimension.</p></li>
 </ul>
 </dd>
 </dl>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <dl class="simple">
-<dt><a class="reference internal" href="#observation.angles_from_phase" title="observation.angles_from_phase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">angles_from_phase</span></code></a></dt><dd><p>Create instances of this class if the phase angles are known (and presumably the azimuth angles are unknown).</p>
+<dt><a class="reference internal" href="#observation.angles_from_phase" title="observation.angles_from_phase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">angles_from_phase</span></code></a></dt><dd><p>Create instances of this class if only the phase angles are known.</p>
 </dd>
-<dt><a class="reference internal" href="#observation.sky_image_angles" title="observation.sky_image_angles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sky_image_angles</span></code></a></dt><dd><p>Create instances of this class using a sky image.</p>
+<dt><a class="reference internal" href="#observation.sky_image_angles" title="observation.sky_image_angles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sky_image_angles</span></code></a></dt><dd><p>Create instances of this class using a single sky image.</p>
 </dd>
 </dl>
 </div>
 <p class="rubric">Notes</p>
-<p>DISORT expects <code class="code docutils literal notranslate"><span class="pre">UMU0</span></code> and <code class="code docutils literal notranslate"><span class="pre">PHI0</span></code> to be floats and
-<code class="code docutils literal notranslate"><span class="pre">UMU</span></code> and <code class="code docutils literal notranslate"><span class="pre">PHI</span></code> to be 1D arrays. pyRT_DISORT can do the
-pre-processing all at once. If you want to use this option, both
-<code class="code docutils literal notranslate"><span class="pre">incidence</span></code> and <code class="code docutils literal notranslate"><span class="pre">azimuth0</span></code> should be the same shape.
-<code class="code docutils literal notranslate"><span class="pre">emission</span></code> should have the same shape but with another axis tacked
-on to the end; the same is true for <code class="code docutils literal notranslate"><span class="pre">azimuth</span></code>.</p>
-<p>For example, if you have an MxN image, both <code class="code docutils literal notranslate"><span class="pre">incidence</span></code> and
-<code class="code docutils literal notranslate"><span class="pre">azimuth0</span></code> should have shape MxN. If you have A polar angles and
-B azimuth angles, <code class="code docutils literal notranslate"><span class="pre">emission</span></code> should have shape MxNxA whereas
-<code class="code docutils literal notranslate"><span class="pre">azimuth</span></code> should have shape MxNxB. In the case where each pixel
-has its own set of angles, A=B=1. In the case of a single incidence
-and incidence azimuth angle, the first dimension should have shape of 1.</p>
-</dd></dl>
-
+<p>DISORT wants a float for <code class="code docutils literal notranslate"><span class="pre">UMU0</span></code> and <code class="code docutils literal notranslate"><span class="pre">PHI0</span></code>; it wants a 1D array
+for <code class="code docutils literal notranslate"><span class="pre">UMU</span></code> and <code class="code docutils literal notranslate"><span class="pre">PHI</span></code>. Selecting the proper starting indices is
+necessary to get these data types.</p>
+<p class="rubric">Examples</p>
+<p>For a (3, 5) sky image with a single incident beam:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">incidence_ang</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">30</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">beam_azimuth</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">40</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">emission_ang</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">3</span><span class="p">)[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">azimuth_ang</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">5</span><span class="p">)[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">angles</span> <span class="o">=</span> <span class="n">Angles</span><span class="p">(</span><span class="n">incidence_ang</span><span class="p">,</span> <span class="n">emission_ang</span><span class="p">,</span> <span class="n">azimuth_ang</span><span class="p">,</span> <span class="n">beam_azimuth</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">angles</span><span class="p">)</span>
+<span class="go">Angles:</span>
+<span class="go">   mu = [[0.8660254  0.70710678 0.5       ]]</span>
+<span class="go">   mu0 = [0.8660254]</span>
+<span class="go">   phi = [[20.  27.5 35.  42.5 50. ]]</span>
+<span class="go">   phi0 = [40]</span>
+</pre></div>
+</div>
+<p>For a sequence of 50 images at a fixed position over a period time where the
+incidence angle and beam azimuth angle of each image varies:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">incidence_ang</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">beam_azimuth</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">emission_ang</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">azimuth_ang</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span> <span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">angles</span> <span class="o">=</span> <span class="n">Angles</span><span class="p">(</span><span class="n">incidence_ang</span><span class="p">,</span> <span class="n">emission_ang</span><span class="p">,</span> <span class="n">azimuth_ang</span><span class="p">,</span> <span class="n">beam_azimuth</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">angles</span><span class="o">.</span><span class="n">mu0</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">angles</span><span class="o">.</span><span class="n">mu</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">angles</span><span class="o">.</span><span class="n">phi</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="go">(50,) (50, 3) (50, 5)</span>
+</pre></div>
+</div>
+<p>For a (40, 50) image where each pixel has its own set of angles:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ang</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">40</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">50</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">expanded_ang</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">ang</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">angles</span> <span class="o">=</span> <span class="n">Angles</span><span class="p">(</span><span class="n">ang</span><span class="p">,</span> <span class="n">expanded_ang</span><span class="p">,</span> <span class="n">expanded_ang</span><span class="p">,</span> <span class="n">ang</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">angles</span><span class="o">.</span><span class="n">mu0</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">angles</span><span class="o">.</span><span class="n">mu</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">angles</span><span class="o">.</span><span class="n">phi</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="go">(40, 50) (40, 50, 1) (40, 50, 1)</span>
+</pre></div>
+</div>
 <dl class="py method">
-<dt id="observation.Angles.emission">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">emission</span></code><a class="headerlink" href="#observation.Angles.emission" title="Permalink to this definition">¶</a></dt>
+<dt id="id0">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">emission</span></code><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input emission angle [degrees].</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -243,8 +302,8 @@ and incidence azimuth angle, the first dimension should have shape of 1.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="observation.Angles.incidence">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">incidence</span></code><a class="headerlink" href="#observation.Angles.incidence" title="Permalink to this definition">¶</a></dt>
+<dt id="id1">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">incidence</span></code><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input incidence angle [degrees].</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -254,8 +313,8 @@ and incidence azimuth angle, the first dimension should have shape of 1.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="observation.Angles.mu">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">mu</span></code><a class="headerlink" href="#observation.Angles.mu" title="Permalink to this definition">¶</a></dt>
+<dt id="id2">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">mu</span></code><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get <span class="math notranslate nohighlight">\(\mu\)</span>—the cosine of <code class="docutils literal notranslate"><span class="pre">emission</span></code>.</p>
 <p class="rubric">Notes</p>
 <p>Each element in this variable is named <code class="docutils literal notranslate"><span class="pre">UMU</span></code> in DISORT.</p>
@@ -267,8 +326,8 @@ and incidence azimuth angle, the first dimension should have shape of 1.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="observation.Angles.mu0">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">mu0</span></code><a class="headerlink" href="#observation.Angles.mu0" title="Permalink to this definition">¶</a></dt>
+<dt id="id3">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">mu0</span></code><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get <span class="math notranslate nohighlight">\(\mu_0\)</span>—the cosine of <code class="docutils literal notranslate"><span class="pre">incidence</span></code>.</p>
 <p class="rubric">Notes</p>
 <p>Each element in this variable is named <code class="docutils literal notranslate"><span class="pre">UMU0</span></code> in DISORT.</p>
@@ -280,8 +339,8 @@ and incidence azimuth angle, the first dimension should have shape of 1.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="observation.Angles.phi">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">phi</span></code><a class="headerlink" href="#observation.Angles.phi" title="Permalink to this definition">¶</a></dt>
+<dt id="id4">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">phi</span></code><a class="headerlink" href="#id4" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get <span class="math notranslate nohighlight">\(\phi\)</span>—the azimuth angle [degrees].</p>
 <p class="rubric">Notes</p>
 <p>Each element in this variable is named <code class="docutils literal notranslate"><span class="pre">PHI</span></code> in DISORT.</p>
@@ -293,8 +352,8 @@ and incidence azimuth angle, the first dimension should have shape of 1.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="observation.Angles.phi0">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">phi0</span></code><a class="headerlink" href="#observation.Angles.phi0" title="Permalink to this definition">¶</a></dt>
+<dt id="id5">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">phi0</span></code><a class="headerlink" href="#id5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get <span class="math notranslate nohighlight">\(\phi_0\)</span>—the zenith angle [degrees].</p>
 <p class="rubric">Notes</p>
 <p>Each element in this variable is named <code class="docutils literal notranslate"><span class="pre">PHI0</span></code> in DISORT.</p>
@@ -313,32 +372,6 @@ and incidence azimuth angle, the first dimension should have shape of 1.</p>
 <dd><p>A data structure that contains spectral info required by DISORT.</p>
 <p>Spectral accepts the short and long wavelength from an observation and
 computes their corresponding wavenumber.</p>
-<dl class="py method">
-<dt id="observation.Spectral.__init__">
-<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">short_wavelength</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long_wavelength</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#observation.Spectral.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>short_wavelength</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The short wavelength [microns] of each spectral bin.</p></li>
-<li><p><strong>long_wavelength</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The long wavelength [microns] of each spectral bin.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>TypeError</strong> – Raised if either of the wavelengths are not a numpy.ndarray.</p></li>
-<li><p><strong>ValueError</strong> – Raised if either of the input arrays are not the same shape, if any
-    values in <code class="docutils literal notranslate"><span class="pre">short_wavelength</span></code> are not larger than the corresponding
-    values in <code class="docutils literal notranslate"><span class="pre">long_wavelength</span></code>, or if either of the input arrays
-    contain values outside of 0.1 to 50 microns (I assume this is the
-    valid range to do retrievals).</p></li>
-</ul>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>This class can accommodate arrays of any shape as long as they both have
-the same shape.</p>
-</dd></dl>
-
 <dl class="py method">
 <dt id="observation.Spectral.high_wavenumber">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">high_wavenumber</span></code><a class="headerlink" href="#observation.Spectral.high_wavenumber" title="Permalink to this definition">¶</a></dt>

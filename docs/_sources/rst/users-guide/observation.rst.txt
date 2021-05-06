@@ -64,8 +64,8 @@ that below.
 
 .. code-block:: python
 
-   UMU = mu[0]
-   UMU0 = mu0[0, :]
+   UMU = mu[0, :]
+   UMU0 = mu0[0]
    PHI = phi[0, :]
    PHI0 = phi0[0]
 
