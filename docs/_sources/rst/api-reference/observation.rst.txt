@@ -3,4 +3,3 @@ Observation
 
 .. automodule:: observation
    :members:
-   :exclude-members: Angles.emission, Angles.incidence

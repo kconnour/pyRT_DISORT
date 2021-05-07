@@ -303,6 +303,17 @@ def make_azimuth(incidence: np.ndarray, emission: np.ndarray,
     shape, but this is not strictly enforced. In any case, the input arrays
     must have compatible shapes.
 
+    Examples
+    --------
+    Make the azimuth angles at an assortment of input angles.
+
+    >>> import numpy as np
+    >>> incidence = np.array([20, 30, 40])
+    >>> emission = np.array([30, 40, 50])
+    >>> phase = np.array([25, 30, 35])
+    >>> make_azimuth(incidence, emission, phase)
+    array([122.74921226, 129.08074256, 131.57329276])
+
     """
     incidence = _Angle(incidence, 'incidence', 0, 180)
     emission = _Angle(emission, 'emission', 0, 180)
@@ -342,11 +353,36 @@ def phase_to_angles(incidence: np.ndarray, emission: np.ndarray,
         Raised if any of the input arrays contain values outside of their
         mathematically valid range.
 
+    Warnings
+    --------
+    UserWarning
+        Issued if any values in :code:`incidence` are greater than 90 degrees.
+
     Notes
     -----
     It would almost always be beneficial for all of the inputs to have the same
     shape, but this is not strictly enforced. In any case, the input arrays
     must have compatible shapes.
+
+    Examples
+    --------
+    Make an instance of Angles at a random assortment of input angles.
+
+    >>> import numpy as np
+    >>> incidence = np.array([20, 30, 40])
+    >>> emission = np.array([30, 40, 50])
+    >>> phase = np.array([25, 30, 35])
+    >>> angles = phase_to_angles(incidence, emission, phase)
+    >>> print(angles)
+    Angles:
+       mu = [[0.8660254 ]
+     [0.76604444]
+     [0.64278761]]
+       mu0 = [0.93969262 0.8660254  0.76604444]
+       phi = [[122.74921226]
+     [129.08074256]
+     [131.57329276]]
+       phi0 = [0. 0. 0.]
 
     """
     phi = make_azimuth(incidence, emission, phase)
@@ -388,6 +424,23 @@ def sky_image(incidence: float, emission: np.ndarray, azimuth: np.ndarray,
     UserWarning
         Issued if any values in :code:`incidence` are greater than 90 degrees.
 
+    Examples
+    --------
+    For a (3, 5) sky image with a single incident beam:
+
+    >>> import numpy as np
+    >>> incidence_ang = 30
+    >>> beam_azimuth = 40
+    >>> emission_ang = np.linspace(30, 60, num=3)
+    >>> azimuth_ang = np.linspace(20, 50, num=5)
+    >>> angles = sky_image(incidence_ang, emission_ang, azimuth_ang, beam_azimuth)
+    >>> print(angles)
+    Angles:
+       mu = [[0.8660254  0.70710678 0.5       ]]
+       mu0 = [0.8660254]
+       phi = [[20.  27.5 35.  42.5 50. ]]
+       phi0 = [40]
+
     """
     incidence = np.array([incidence])
     emission = np.expand_dims(emission, axis=0)
@@ -399,38 +452,36 @@ def sky_image(incidence: float, emission: np.ndarray, azimuth: np.ndarray,
 class Spectral:
     """A data structure that contains spectral info required by DISORT.
 
-    Spectral accepts the short and long wavelength from an observation and
-    computes their corresponding wavenumber.
+    It accepts the short and long wavelength from an observation and computes
+    their corresponding wavenumber.
+
+    Parameters
+    ----------
+    short_wavelength
+        The short wavelength [microns] of each spectral bin.
+    long_wavelength
+        The long wavelength [microns] of each spectral bin.
+
+    Raises
+    ------
+    TypeError
+        Raised if either of the wavelengths are not a numpy.ndarray.
+    ValueError
+        Raised if either of the input arrays are not the same shape, if any
+        values in ``short_wavelength`` are not larger than the corresponding
+        values in ``long_wavelength``, or if either of the input arrays
+        contain values outside of 0.1 to 50 microns (I assume this is the
+        valid range to do retrievals).
+
+    Notes
+    -----
+    This class can accommodate arrays of any shape as long as they both have
+    the same shape.
 
     """
-
     def __init__(self, short_wavelength: np.ndarray,
                  long_wavelength: np.ndarray) -> None:
-        """
-        Parameters
-        ----------
-        short_wavelength
-            The short wavelength [microns] of each spectral bin.
-        long_wavelength
-            The long wavelength [microns] of each spectral bin.
 
-        Raises
-        ------
-        TypeError
-            Raised if either of the wavelengths are not a numpy.ndarray.
-        ValueError
-            Raised if either of the input arrays are not the same shape, if any
-            values in ``short_wavelength`` are not larger than the corresponding
-            values in ``long_wavelength``, or if either of the input arrays
-            contain values outside of 0.1 to 50 microns (I assume this is the
-            valid range to do retrievals).
-
-        Notes
-        -----
-        This class can accommodate arrays of any shape as long as they both have
-        the same shape.
-
-        """
         self.__short_wavelength = _Wavelength(short_wavelength,
                                               'short_wavelength')
         self.__long_wavelength = _Wavelength(long_wavelength, 'long_wavelength')
