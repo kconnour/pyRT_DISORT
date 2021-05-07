@@ -185,51 +185,31 @@ these values and computes both <span class="math notranslate nohighlight">\(\mu_
 angles.</p>
 <p>This class can compute all angular quantities required by DISORT at once,
 even multiple observations. Both <code class="code docutils literal notranslate"><span class="pre">incidence</span></code> and <code class="code docutils literal notranslate"><span class="pre">azimuth_beam</span></code>
-must have the same shape. Both <code class="code docutils literal notranslate"><span class="pre">emission</span></code> and <code class="code docutils literal notranslate"><span class="pre">azimuth</span></code> must
-have that same shape with an additional axis at the end, though the length
-of that axis can be different for both of these inputs.</p>
+must have the same shape (the “observation shape”). Both <code class="code docutils literal notranslate"><span class="pre">emission</span></code>
+and <code class="code docutils literal notranslate"><span class="pre">azimuth</span></code> must have that same shape with an additional axis at the
+end, though the length of that axis can be different for both of these
+inputs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>incidence</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Pixel incidence (solar zenith) angle [degrees]. All values must be
-between 0 and 180 degrees.</p></li>
-<li><p><strong>emission</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Pixel emission (emergence) angle [degrees]. All values must be
-between 0 and 180 degrees.</p></li>
-<li><p><strong>azimuth</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Azimuthal output angles [degrees]. All values must be between 0 and
-360 degrees.</p></li>
-<li><p><strong>azimuth_beam</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The azimuth angle of the incident beam [degrees]. Must be between
+<li><p><strong>incidence</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Incidence (solar zenith) angle [degrees]. All values must be between 0
+and 180 degrees.</p></li>
+<li><p><strong>emission</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Emission (emergence) angle [degrees]. All values must be between 0 and
+180 degrees.</p></li>
+<li><p><strong>azimuth</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Azimuth angle [degrees]. All values must be between 0 and 360 degrees.</p></li>
+<li><p><strong>azimuth_beam</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Azimuth angle of the incident beam [degrees]. All values must be between
 0 and 360 degrees.</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="py attribute">
-<dt id="observation.Angles.incidence">
-<code class="sig-name descname"><span class="pre">incidence</span></code><a class="headerlink" href="#observation.Angles.incidence" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="py attribute">
 <dt id="observation.Angles.emission">
 <code class="sig-name descname"><span class="pre">emission</span></code><a class="headerlink" href="#observation.Angles.emission" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="observation.Angles.mu">
-<code class="sig-name descname"><span class="pre">mu</span></code><a class="headerlink" href="#observation.Angles.mu" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt id="observation.Angles.mu0">
-<code class="sig-name descname"><span class="pre">mu0</span></code><a class="headerlink" href="#observation.Angles.mu0" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt id="observation.Angles.phi">
-<code class="sig-name descname"><span class="pre">phi</span></code><a class="headerlink" href="#observation.Angles.phi" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt id="observation.Angles.phi0">
-<code class="sig-name descname"><span class="pre">phi0</span></code><a class="headerlink" href="#observation.Angles.phi0" title="Permalink to this definition">¶</a></dt>
+<dt id="observation.Angles.incidence">
+<code class="sig-name descname"><span class="pre">incidence</span></code><a class="headerlink" href="#observation.Angles.incidence" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="field-list simple">
@@ -238,10 +218,17 @@ between 0 and 180 degrees.</p></li>
 <li><p><strong>TypeError</strong> – Raised if any of the angles are not a numpy.ndarray.</p></li>
 <li><p><strong>ValueError</strong> – Raised if any of the input arrays contain values outside of their
     mathematically valid range, or if the input arrays do not have the
-    same pixel dimension.</p></li>
+    same observation shape.</p></li>
 </ul>
 </dd>
 </dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<dl class="simple">
+<dt>UserWarning</dt><dd><p>Issued if any values in <code class="code docutils literal notranslate"><span class="pre">incidence</span></code> are greater than 90 degrees.</p>
+</dd>
+</dl>
+</div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <dl class="simple">
@@ -253,8 +240,8 @@ between 0 and 180 degrees.</p></li>
 </div>
 <p class="rubric">Notes</p>
 <p>DISORT wants a float for <code class="code docutils literal notranslate"><span class="pre">UMU0</span></code> and <code class="code docutils literal notranslate"><span class="pre">PHI0</span></code>; it wants a 1D array
-for <code class="code docutils literal notranslate"><span class="pre">UMU</span></code> and <code class="code docutils literal notranslate"><span class="pre">PHI</span></code>. Selecting the proper starting indices is
-necessary to get these data types.</p>
+for <code class="code docutils literal notranslate"><span class="pre">UMU</span></code> and <code class="code docutils literal notranslate"><span class="pre">PHI</span></code>. Selecting the proper indices from the
+observation dimension(s) is necessary to get these data types.</p>
 <p class="rubric">Examples</p>
 <p>For a (3, 5) sky image with a single incident beam:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -313,11 +300,12 @@ incidence angle and beam azimuth angle of each image varies:</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="id2">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">mu</span></code><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<dt id="observation.Angles.mu">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">mu</span></code><a class="headerlink" href="#observation.Angles.mu" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get <span class="math notranslate nohighlight">\(\mu\)</span>—the cosine of <code class="docutils literal notranslate"><span class="pre">emission</span></code>.</p>
 <p class="rubric">Notes</p>
-<p>Each element in this variable is named <code class="docutils literal notranslate"><span class="pre">UMU</span></code> in DISORT.</p>
+<p>Each element along the observation dimension(s) is named <code class="code docutils literal notranslate"><span class="pre">UMU</span></code> in
+DISORT.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
@@ -326,11 +314,12 @@ incidence angle and beam azimuth angle of each image varies:</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="id3">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">mu0</span></code><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
+<dt id="observation.Angles.mu0">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">mu0</span></code><a class="headerlink" href="#observation.Angles.mu0" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get <span class="math notranslate nohighlight">\(\mu_0\)</span>—the cosine of <code class="docutils literal notranslate"><span class="pre">incidence</span></code>.</p>
 <p class="rubric">Notes</p>
-<p>Each element in this variable is named <code class="docutils literal notranslate"><span class="pre">UMU0</span></code> in DISORT.</p>
+<p>Each element along the observation dimension(s) is named <code class="code docutils literal notranslate"><span class="pre">UMU0</span></code> in
+DISORT.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
@@ -339,11 +328,13 @@ incidence angle and beam azimuth angle of each image varies:</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="id4">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">phi</span></code><a class="headerlink" href="#id4" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get <span class="math notranslate nohighlight">\(\phi\)</span>—the azimuth angle [degrees].</p>
+<dt id="observation.Angles.phi">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">phi</span></code><a class="headerlink" href="#observation.Angles.phi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get <span class="math notranslate nohighlight">\(\phi\)</span>—the azimuth angle [degrees]. This is the same as
+the input to <code class="code docutils literal notranslate"><span class="pre">azimuth</span></code>.</p>
 <p class="rubric">Notes</p>
-<p>Each element in this variable is named <code class="docutils literal notranslate"><span class="pre">PHI</span></code> in DISORT.</p>
+<p>Each element along the observation dimension(s) is named <code class="code docutils literal notranslate"><span class="pre">PHI</span></code> in
+DISORT.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
@@ -352,11 +343,13 @@ incidence angle and beam azimuth angle of each image varies:</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="id5">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">phi0</span></code><a class="headerlink" href="#id5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get <span class="math notranslate nohighlight">\(\phi_0\)</span>—the zenith angle [degrees].</p>
+<dt id="observation.Angles.phi0">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">phi0</span></code><a class="headerlink" href="#observation.Angles.phi0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get <span class="math notranslate nohighlight">\(\phi_0\)</span>—the azimuth angle of the incident beam
+[degrees]. This is the same as the input to <code class="code docutils literal notranslate"><span class="pre">azimuth_beam</span></code>.</p>
 <p class="rubric">Notes</p>
-<p>Each element in this variable is named <code class="docutils literal notranslate"><span class="pre">PHI0</span></code> in DISORT.</p>
+<p>Each element along the observation dimension(s) is named <code class="code docutils literal notranslate"><span class="pre">PHI0</span></code> in
+DISORT.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>

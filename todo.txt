@@ -1,5 +1,4 @@
 Misc:
-- type hint ndarray shapes
 - fix eos Raises bullet points
 - test if pip installs the tests directory (it does)
 - attempt to recombine docs and builddocs
@@ -10,12 +9,16 @@ Refresh part 2:
 
 User's guide part 2:
 --- Add info on the new utilities
---- Add an example of how to solve for dust OD + parallelize
 
 Documentation:
 --- try to make a dummy index.html so docs can all be on one folder
 --- Have "next" and "previous" only go through the example
 --- Can I remove the .pytest_cache once I'm done with all tests?
+--- Put links to each class/function on the left hand menu for the API page
+--- I want to add an Attributes section but can't figure out how to make
+    Sphinx not complain
+--- Perhaps I never noticed it but it seems odd that it puts documentation in
+    ../../../../../../../home/<wherever>
 
 Additions:
 --- Add an automatic linter
@@ -25,9 +28,6 @@ Additions:
 --- Make ice PMOM
 --- Add ozone
 --- Correlated k
-
-Possible additions:
---- Remake the DISORT examples with the new classes
 
 Tests:
 --- What happens when phase functions are defined at different wavelengths? Like dust and ice at short wavs
@@ -44,6 +44,6 @@ Miscellaneous
 
 Suggestions
 --- disort wrapper with defaults
---- Change defaults in the boolean classes?
+--- Change defaults in the boolean classes? Or none at all
 --- user levels --> output arrays
---- Add __str__ to OA and OB
+--- Add __str__
