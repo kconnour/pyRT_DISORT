@@ -181,7 +181,7 @@ class Angles:
     @property
     def phi0(self) -> np.ndarray:
         r"""Get :math:`\phi_0`---the azimuth angle of the incident beam
-        [degrees]. This is the same as the input to :code:`azimuth_beam`.
+        [degrees]. This is the same as the input to :code:`beam_azimuth`.
 
         Notes
         -----
@@ -430,10 +430,10 @@ def sky_image(incidence: float, emission: np.ndarray, azimuth: np.ndarray,
 
     >>> import numpy as np
     >>> incidence_ang = 30
-    >>> beam_azimuth = 40
+    >>> beam_az = 40
     >>> emission_ang = np.linspace(30, 60, num=3)
     >>> azimuth_ang = np.linspace(20, 50, num=5)
-    >>> angles = sky_image(incidence_ang, emission_ang, azimuth_ang, beam_azimuth)
+    >>> angles = sky_image(incidence_ang, emission_ang, azimuth_ang, beam_az)
     >>> print(angles)
     Angles:
        mu = [[0.8660254  0.70710678 0.5       ]]
@@ -476,7 +476,29 @@ class Spectral:
     Notes
     -----
     This class can accommodate arrays of any shape as long as they both have
-    the same shape.
+    the same shape. If you do not plan to use thermal emission, there is
+    probably little benefit making an instance of this class.
+
+    Examples
+    --------
+    For an observation taken at 1 to 30 microns, with each channel having a 50
+    nm spectral width:
+
+    >>> import numpy as np
+    >>> center = np.linspace(1, 30, num=30)
+    >>> half_width = 0.025
+    >>> wavelengths = Spectral(center - half_width, center + half_width)
+    >>> print(wavelengths.low_wavenumber.shape)
+    (30,)
+
+    For an image of shape (50, 60) with the same 20 wavelengths in each pixel:
+
+    >>> center = np.linspace(1, 20, num=20)
+    >>> half_width = 0.025
+    >>> wav_grid = np.broadcast_to(center, (50, 60, 20))
+    >>> wavelengths = Spectral(wav_grid - half_width, wav_grid + half_width)
+    >>> print(wavelengths.low_wavenumber.shape)
+    (50, 60, 20)
 
     """
     def __init__(self, short_wavelength: np.ndarray,
@@ -534,9 +556,10 @@ class Spectral:
 
         Notes
         -----
-        In DISORT, this variable is named ``WVNMHI``. It is only needed by
-        DISORT if :py:attr:`~radiation.ThermalEmission.thermal_emission` is set
-        to ``True``.
+        Each element along the observation dimension(s) is named :code:`WVNMHI`
+        in DISORT. It is only needed by DISORT if
+        :py:attr:`~radiation.ThermalEmission.thermal_emission` is set to
+        :code:`True`.
 
         """
         return self.__high_wavenumber
@@ -548,9 +571,10 @@ class Spectral:
 
         Notes
         -----
-        In DISORT, this variable is named ``WVNMLO``. It is only needed by
-        DISORT if :py:attr:`~radiation.ThermalEmission.thermal_emission` is set
-        to ``True``.
+        Each element along the observation dimension(s) is named :code:`WVNMLO`
+        in DISORT. It is only needed by DISORT if
+        :py:attr:`~radiation.ThermalEmission.thermal_emission` is set to
+        :code:`True`.
 
         """
         return self.__low_wavenumber
@@ -559,11 +583,10 @@ class Spectral:
 class _Wavelength:
     """A data structure to hold on to an array of wavelengths.
 
-    _Wavelength accepts a numpy.ndarray of wavelengths and ensures all values
+    It accepts a numpy.ndarray of wavelengths and ensures all values
     in the array are acceptable for retrievals.
 
     """
-
     def __init__(self, wavelength: np.ndarray, name: str) -> None:
         """
         Parameters
@@ -576,9 +599,9 @@ class _Wavelength:
         Raises
         ------
         TypeError
-            Raised if ``wavelength`` is not a numpy.ndarray.
+            Raised if :code`wavelength` is not a numpy.ndarray.
         ValueError
-            Raised if any values in ``wavelength`` are not between 0.1 and 50
+            Raised if any values in :code`wavelength` are not between 0.1 and 50
             microns (I assume this is the valid range to do retrievals).
 
         """
@@ -607,13 +630,45 @@ class _Wavelength:
 
     @property
     def val(self) -> np.ndarray:
-        """Get the value of the input wavelength.
-
-        """
         return self.__wavelength
 
     def wavelength_to_wavenumber(self) -> np.ndarray:
-        """Convert the input wavelength to wavenumber.
-
-        """
         return 10 ** 4 / self.__wavelength
+
+
+# TODO: this is easy to break cause I don't test the inputs
+def constant_width(center_wavelength: np.ndarray, width: float) -> Spectral:
+    """A data structure that contains spectral info required by DISORT.
+
+    It accepts the short and long wavelength from an observation and computes
+    their corresponding wavenumber.
+
+    Parameters
+    ----------
+    center_wavelength
+        The center wavelength [microns] of each spectral bin.
+    width
+        The spectral width of each spectral bin.
+
+    Raises
+    ------
+    TypeError
+        Raised if :code:`center_wavelength` is not a numpy.ndarray.
+    ValueError
+        I'll add this later.
+
+    Examples
+    --------
+    For an observation taken at 1 to 30 microns, with each channel having a 50
+    nm spectral width:
+
+    >>> import numpy as np
+    >>> center = np.linspace(1, 30, num=30)
+    >>> width = 0.05
+    >>> wavelengths = constant_width(center, width)
+    >>> print(wavelengths.low_wavenumber.shape)
+    (30,)
+
+    """
+    half = width / 2
+    return Spectral(center_wavelength - half, center_wavelength + half)

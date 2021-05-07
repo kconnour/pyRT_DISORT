@@ -19,6 +19,7 @@ Documentation:
     Sphinx not complain
 --- Perhaps I never noticed it but it seems odd that it puts documentation in
     ../../../../../../../home/<wherever>
+--- The Warning and See also sections have a grey bar that extends too long
 
 Additions:
 --- Add an automatic linter
