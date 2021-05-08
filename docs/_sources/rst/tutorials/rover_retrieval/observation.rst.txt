@@ -1,51 +1,42 @@
+######################
 The observation module
-======================
+######################
 Let's begin by considering some of the quantities found in a typical
 observation---the angles and wavelengths at which some instrument collected
-data. I'll go through two typical, distinct cases in this example in parallel:
+data. In the "rover" case, I'll assume we have an rover than takes 2D images
+such that the data have shape (M, N) and each pixel in the MxN grid
+contains W wavelengths. The MxN array corresponds to emission and azimuthal
+angles.
 
-1. "Rover": An image contains a single incidence angle but it images over
-   M polar angles and N azimuthal angles.
-2. "Spacecraft": Each pixel has a single incidence, emission, and phase angle.
-   These values are different for each pixel. I call this the spacecraft case
-   since this scenario would apply to a typical orbiter.
-
-You can choose either one case or the other as an example for your case.
-However, I recommend reading both cases for a complete discussion of the
-code's behavior.
-
-Rover Angles
-------------
-Let's say we have some angles defined over a grid. These values would normally
-be found in a data product, but we need some values to play with. Let's suppose
-we have an image of shape (40, 25), where we have 40 emission angles and 25
-azimuthal angles. I'll define that here, along with the scalar incidence angle
-and azimuthal angle of the incidence beam.
+******
+Angles
+******
+Suppose that we have an image that has shape (15, 20). In this case there's
+a single incidence and beam azimuth angle, 15 emission angles, and 20 azimuth
+angles. Let's create a set of these angles.
 
 .. code-block:: python
 
    import numpy as np
 
-   emission_angles = np.linspace(20, 50, num=40)
-   azimuthal_angles = np.linspace(80, 30, num=25)
-   incidence_angle = 35
-   azimuth0 = 20
-
-.. attention::
-   The angles must be in degrees.
+   incidence = 30
+   beam_azimuth = 25
+   emission = np.linspace(130, 160, num=15)
+   azimuth = np.linspace(30, 40, num=20)
 
 Our goal is to create an instance of :class:`~observation.Angles` to hold on to
-all the values we'll need. Instead of creating this object directly, let's
-use a function designed for this case---one that simply coerces these inputs
-into a form that :code:`Angles` likes and returns an instance of it. We can
-get the attributes from this object as shown below.
+all the angular values DISORT wants. This class turns incidence and emission
+angles into :math:`\mu_0` and :math:`\mu` and also holds on to azimuthal
+angles. We could directly instantiate this class, but pyRT_DISORT comes with a
+helper function (:func:`~observation.sky_image`) that makes the inputs to and
+returns an instance of :class:`~observation.Angles`. Let's do this below and
+look at the object's properties.
 
 .. code-block:: python
 
-   from pyRT_DISORT.observation import sky_image_angles
+   from pyRT_DISORT.observation import sky_image
 
-   angles = sky_image_angles(incidence_angle, emission_angles,
-                             azimuthal_angles, azimuth0)
+   angles = sky_image(incidence, emission, azimuth, beam_azimuth)
 
    incidence = angles.incidence
    emission = angles.emission
@@ -54,13 +45,13 @@ get the attributes from this object as shown below.
    phi = angles.phi
    phi0 = angles.phi0
 
-The shapes of both :code:`mu0` and :code:`phi0` are (1,), whereas :code:`mu`
-has shape (1, 40) and :code:`phi` has shape (1, 25).
-This class creates the angular variables that DISORT wants all at once and can
-even compute all these variables at multiple incidence and beam azimuth angles.
-Consequently, *you must pick the index for this set of angles* in order to get
-something that DISORT wants. We only have one set of these angles so let's do
-that below.
+.. attention::
+   The angles must be in degrees.
+
+In this case, the shapes of both :code:`mu0` and :code:`phi0` are (1,), which
+is to say they're vectors with a single element in them. :code:`mu` has shape
+(1, 15) and :code:`phi` has shape (1, 20). We can then choose appropriate
+values by choosing a pixel index, like the following:
 
 .. code-block:: python
 
@@ -69,19 +60,25 @@ that below.
    PHI = phi[0, :]
    PHI0 = phi0[0]
 
-Now the variables ending in 0 are floats and the others are 1D vectors, which
-is precisely what DISORT wants.
+DISORT expects the input of :code:`UMU0` and :code:`PHI0` to be floats which we
+obtained by choosing the pixel's index. It expects :code:`UMU` and :code:`PHI`
+to both be 1D arrays which we got the same way.
+
+It may seem weird that there's a dimension of 1 in this example, but consider
+the case where the camera takes a movie---which is to say, a collection of
+multiple images. If it took 50 images in rapid succession, you can input arrays
+of shape (50,) for the incidence and beam azimuth angles, and arrays of shape
+(50, 15) for the emission angles, and (50, 20) for the azimuth angles. You must
+choose a pixel index but this class can do all computations at once, offering
+potentially significant computational time savings.
 
 .. note::
    For those of that have experience working with DISORT directly, I'll name
    the variables in this example with the same names that DISORT uses. For
-   those unfamiliar with DISORT/FORTRAN, variables in ALL CAPS will be the ones
-   that we ultimately plug into DISORT.
+   those unfamiliar with DISORT/FORTRAN, variables in all caps will be the ones
+   that we ultimately plug into the DISORT call.
 
-.. warning::
-   I originally designed this example to only go through the spacecraft case,
-   so some of the upcoming modules may not work well with this case. I will
-   update them when I have the opportunity.
+
 
 Spacecraft Angles
 -----------------
@@ -125,39 +122,45 @@ emission and azimuth angle. We can choose a single pixel index like below.
    PHI = phi[0, 0, :]
    PHI0 = phi0[0, 0]
 
+********
 Spectral
---------
-Let's assume that our hyperspectral imager takes data at W wavelengths in our
-pixel and that there's a constant spectral width to each bin. I'll go ahead and
-define some wavelengths here so we have some values to work with.
+********
+Let's assume that the hyperspectral imager takes data at W wavelengths in each
+pixel and that there's a constant spectral width to each bin. Suppose it took
+data at 5 wavelengths, and each spectral pixel had a width of 100 nm. Let's go
+ahead and define some wavelengths here so we have some values to work with.
 
 .. code-block:: python
 
    pixel_wavelengths = np.array([1, 2, 3, 4, 5])
    n_wavelengths = len(pixel_wavelengths)
-   width = 0.05
+   width = 0.1
 
 .. attention::
    The wavelengths must be in microns.
 
-Once we have these values, we can add them to :class:`~observation.Spectral`.
-This class holds the input wavelengths and computes the corresponding
-wavenumbers. As before, these values can be accessed via the class properties.
+Our goal is to create an instance of :class:`~observation.Spectral` to hold on
+to all the spectral values DISORT wants. This class will hold on to the input
+wavelengths and compute the wavenumbers at the edges of each spectral bin.
+We could instantiate this class directly, but let's use a helper function that
+comes with pyRT_DISORT (:func:`~observation.constant_width`) do the work for us
+and then look at the object's properties.
 
 .. code-block:: python
 
-   from pyRT_DISORT.observation import Spectral
+   from pyRT_DISORT.observation import constant_width
 
-   spectral = Spectral(pixel_wavelengths - width, pixel_wavelengths + width)
+   spectral = constant_width(pixel_wavelengths, width)
 
    short_wavelength = spectral.short_wavelength
    long_wavelength = spectral.long_wavelength
    WVNMHI = spectral.high_wavenumber
-   WVNMLO = spectral.low_wavenumber
+   WVNMHI = spectral.low_wavenumber
 
 These spectral quantities have shape (5,)---the same as the input wavelengths.
 For now, I'll keep the spectral dimension but be aware that we'll cut off the
-spectral dimension closer to when we do the simulation.
+spectral dimension closer to when we do the simulation because DISORT requires
+a separate call for each wavelength.
 
 The only other thing you'd need from an observation is the signal your
 instrument recorded. We won't need that value until much later on, so let's

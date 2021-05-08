@@ -23,25 +23,15 @@ Documentation:
 
 Additions:
 --- Add an automatic linter
---- Add ability to run all unit/integration tests with one command (see tox)
---- Move path.py to the utilities folder
+--- Add ability to run all unit tests with one command (see tox)
 --- It still feels messy to me to have the disort4.0.99 stuff where it is
---- Make ice PMOM
---- Add ozone
 --- Correlated k
 
 Tests:
---- What happens when phase functions are defined at different wavelengths? Like dust and ice at short wavs
---- Add checks throughout to ensure the same wavelengths, moments, etc. are used. We don't want one aerosol observed
-    at different wavelenghts than another. Also ensure they CAN have different r_effective
 --- Rename the integrated tests as "test1" etc. since there's really no way
     I can say what they're testing in the name. But do provide a docstring
     at the top that states specifically what it tests for. Also, now that I can
     do many pixels at once, I can combine a number of the tests.
-
-Miscellaneous
---- Josh says there are nicer things than fits, so consider using that format
-    instead of astropy. scipy has netCDF built in
 
 Suggestions
 --- disort wrapper with defaults

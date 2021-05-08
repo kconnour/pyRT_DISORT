@@ -32,6 +32,7 @@
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -92,8 +93,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../spacecraft_retrieval.html">Spacecraft Retrieval</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../rover_retrieval.html">Rover Retrieval</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">The observation module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#rover-angles">Rover Angles</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#spacecraft-angles">Spacecraft Angles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#angles">Angles</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#spectral">Spectral</a></li>
 </ul>
 </li>
@@ -178,45 +178,33 @@
 <h1>The observation module<a class="headerlink" href="#the-observation-module" title="Permalink to this headline">¶</a></h1>
 <p>Let’s begin by considering some of the quantities found in a typical
 observation—the angles and wavelengths at which some instrument collected
-data. I’ll go through two typical, distinct cases in this example in parallel:</p>
-<ol class="arabic simple">
-<li><p>“Rover”: An image contains a single incidence angle but it images over
-M polar angles and N azimuthal angles.</p></li>
-<li><p>“Spacecraft”: Each pixel has a single incidence, emission, and phase angle.
-These values are different for each pixel. I call this the spacecraft case
-since this scenario would apply to a typical orbiter.</p></li>
-</ol>
-<p>You can choose either one case or the other as an example for your case.
-However, I recommend reading both cases for a complete discussion of the
-code’s behavior.</p>
-<div class="section" id="rover-angles">
-<h2>Rover Angles<a class="headerlink" href="#rover-angles" title="Permalink to this headline">¶</a></h2>
-<p>Let’s say we have some angles defined over a grid. These values would normally
-be found in a data product, but we need some values to play with. Let’s suppose
-we have an image of shape (40, 25), where we have 40 emission angles and 25
-azimuthal angles. I’ll define that here, along with the scalar incidence angle
-and azimuthal angle of the incidence beam.</p>
+data. In the “rover” case, I’ll assume we have an rover than takes 2D images
+such that the data have shape (M, N) and each pixel in the MxN grid
+contains W wavelengths. The MxN array corresponds to emission and azimuthal
+angles.</p>
+<div class="section" id="angles">
+<h2>Angles<a class="headerlink" href="#angles" title="Permalink to this headline">¶</a></h2>
+<p>Suppose that we have an image that has shape (15, 20). In this case there’s
+a single incidence and beam azimuth angle, 15 emission angles, and 20 azimuth
+angles. Let’s create a set of these angles.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="n">emission_angles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
-<span class="n">azimuthal_angles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">80</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
-<span class="n">incidence_angle</span> <span class="o">=</span> <span class="mi">35</span>
-<span class="n">azimuth0</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">incidence</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="n">beam_azimuth</span> <span class="o">=</span> <span class="mi">25</span>
+<span class="n">emission</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">130</span><span class="p">,</span> <span class="mi">160</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">azimuth</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="admonition attention">
-<p class="admonition-title">Attention</p>
-<p>The angles must be in degrees.</p>
-</div>
 <p>Our goal is to create an instance of <a class="reference internal" href="../../api-reference/observation.html#observation.Angles" title="observation.Angles"><code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code></a> to hold on to
-all the values we’ll need. Instead of creating this object directly, let’s
-use a function designed for this case—one that simply coerces these inputs
-into a form that <code class="code docutils literal notranslate"><span class="pre">Angles</span></code> likes and returns an instance of it. We can
-get the attributes from this object as shown below.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.observation</span> <span class="kn">import</span> <span class="n">sky_image_angles</span>
+all the angular values DISORT wants. This class turns incidence and emission
+angles into <span class="math notranslate nohighlight">\(\mu_0\)</span> and <span class="math notranslate nohighlight">\(\mu\)</span> and also holds on to azimuthal
+angles. We could directly instantiate this class, but pyRT_DISORT comes with a
+helper function (<a class="reference internal" href="../../api-reference/observation.html#observation.sky_image" title="observation.sky_image"><code class="xref py py-func docutils literal notranslate"><span class="pre">sky_image()</span></code></a>) that makes the inputs to and
+returns an instance of <a class="reference internal" href="../../api-reference/observation.html#observation.Angles" title="observation.Angles"><code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code></a>. Let’s do this below and
+look at the object’s properties.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.observation</span> <span class="kn">import</span> <span class="n">sky_image</span>
 
-<span class="n">angles</span> <span class="o">=</span> <span class="n">sky_image_angles</span><span class="p">(</span><span class="n">incidence_angle</span><span class="p">,</span> <span class="n">emission_angles</span><span class="p">,</span>
-                          <span class="n">azimuthal_angles</span><span class="p">,</span> <span class="n">azimuth0</span><span class="p">)</span>
+<span class="n">angles</span> <span class="o">=</span> <span class="n">sky_image</span><span class="p">(</span><span class="n">incidence</span><span class="p">,</span> <span class="n">emission</span><span class="p">,</span> <span class="n">azimuth</span><span class="p">,</span> <span class="n">beam_azimuth</span><span class="p">)</span>
 
 <span class="n">incidence</span> <span class="o">=</span> <span class="n">angles</span><span class="o">.</span><span class="n">incidence</span>
 <span class="n">emission</span> <span class="o">=</span> <span class="n">angles</span><span class="o">.</span><span class="n">emission</span>
@@ -226,37 +214,39 @@ get the attributes from this object as shown below.</p>
 <span class="n">phi0</span> <span class="o">=</span> <span class="n">angles</span><span class="o">.</span><span class="n">phi0</span>
 </pre></div>
 </div>
-<p>The shapes of both <code class="code docutils literal notranslate"><span class="pre">mu0</span></code> and <code class="code docutils literal notranslate"><span class="pre">phi0</span></code> are (1,), whereas <code class="code docutils literal notranslate"><span class="pre">mu</span></code>
-has shape (1, 40) and <code class="code docutils literal notranslate"><span class="pre">phi</span></code> has shape (1, 25).
-This class creates the angular variables that DISORT wants all at once and can
-even compute all these variables at multiple incidence and beam azimuth angles.
-Consequently, <em>you must pick the index for this set of angles</em> in order to get
-something that DISORT wants. We only have one set of these angles so let’s do
-that below.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>The angles must be in degrees.</p>
+</div>
+<p>In this case, the shapes of both <code class="code docutils literal notranslate"><span class="pre">mu0</span></code> and <code class="code docutils literal notranslate"><span class="pre">phi0</span></code> are (1,), which
+is to say they’re vectors with a single element in them. <code class="code docutils literal notranslate"><span class="pre">mu</span></code> has shape
+(1, 15) and <code class="code docutils literal notranslate"><span class="pre">phi</span></code> has shape (1, 20). We can then choose appropriate
+values by choosing a pixel index, like the following:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">UMU</span> <span class="o">=</span> <span class="n">mu</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
 <span class="n">UMU0</span> <span class="o">=</span> <span class="n">mu0</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">PHI</span> <span class="o">=</span> <span class="n">phi</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
 <span class="n">PHI0</span> <span class="o">=</span> <span class="n">phi0</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 </pre></div>
 </div>
-<p>Now the variables ending in 0 are floats and the others are 1D vectors, which
-is precisely what DISORT wants.</p>
+<p>DISORT expects the input of <code class="code docutils literal notranslate"><span class="pre">UMU0</span></code> and <code class="code docutils literal notranslate"><span class="pre">PHI0</span></code> to be floats which we
+obtained by choosing the pixel’s index. It expects <code class="code docutils literal notranslate"><span class="pre">UMU</span></code> and <code class="code docutils literal notranslate"><span class="pre">PHI</span></code>
+to both be 1D arrays which we got the same way.</p>
+<p>It may seem weird that there’s a dimension of 1 in this example, but consider
+the case where the camera takes a movie—which is to say, a collection of
+multiple images. If it took 50 images in rapid succession, you can input arrays
+of shape (50,) for the incidence and beam azimuth angles, and arrays of shape
+(50, 15) for the emission angles, and (50, 20) for the azimuth angles. You must
+choose a pixel index but this class can do all computations at once, offering
+potentially significant computational time savings.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>For those of that have experience working with DISORT directly, I’ll name
 the variables in this example with the same names that DISORT uses. For
-those unfamiliar with DISORT/FORTRAN, variables in ALL CAPS will be the ones
-that we ultimately plug into DISORT.</p>
-</div>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>I originally designed this example to only go through the spacecraft case,
-so some of the upcoming modules may not work well with this case. I will
-update them when I have the opportunity.</p>
-</div>
+those unfamiliar with DISORT/FORTRAN, variables in all caps will be the ones
+that we ultimately plug into the DISORT call.</p>
 </div>
 <div class="section" id="spacecraft-angles">
-<h2>Spacecraft Angles<a class="headerlink" href="#spacecraft-angles" title="Permalink to this headline">¶</a></h2>
+<h3>Spacecraft Angles<a class="headerlink" href="#spacecraft-angles" title="Permalink to this headline">¶</a></h3>
 <p>Each pixel will presumably have its own unique combination of incidence,
 emission, and phase angles that don’t depend on wavelength. This data would
 normally be found in a data product, but we need some values to play with
@@ -292,36 +282,42 @@ emission and azimuth angle. We can choose a single pixel index like below.</p>
 </pre></div>
 </div>
 </div>
+</div>
 <div class="section" id="spectral">
 <h2>Spectral<a class="headerlink" href="#spectral" title="Permalink to this headline">¶</a></h2>
-<p>Let’s assume that our hyperspectral imager takes data at W wavelengths in our
-pixel and that there’s a constant spectral width to each bin. I’ll go ahead and
-define some wavelengths here so we have some values to work with.</p>
+<p>Let’s assume that the hyperspectral imager takes data at W wavelengths in each
+pixel and that there’s a constant spectral width to each bin. Suppose it took
+data at 5 wavelengths, and each spectral pixel had a width of 100 nm. Let’s go
+ahead and define some wavelengths here so we have some values to work with.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pixel_wavelengths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
 <span class="n">n_wavelengths</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pixel_wavelengths</span><span class="p">)</span>
-<span class="n">width</span> <span class="o">=</span> <span class="mf">0.05</span>
+<span class="n">width</span> <span class="o">=</span> <span class="mf">0.1</span>
 </pre></div>
 </div>
 <div class="admonition attention">
 <p class="admonition-title">Attention</p>
 <p>The wavelengths must be in microns.</p>
 </div>
-<p>Once we have these values, we can add them to <a class="reference internal" href="../../api-reference/observation.html#observation.Spectral" title="observation.Spectral"><code class="xref py py-class docutils literal notranslate"><span class="pre">Spectral</span></code></a>.
-This class holds the input wavelengths and computes the corresponding
-wavenumbers. As before, these values can be accessed via the class properties.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.observation</span> <span class="kn">import</span> <span class="n">Spectral</span>
+<p>Our goal is to create an instance of <a class="reference internal" href="../../api-reference/observation.html#observation.Spectral" title="observation.Spectral"><code class="xref py py-class docutils literal notranslate"><span class="pre">Spectral</span></code></a> to hold on
+to all the spectral values DISORT wants. This class will hold on to the input
+wavelengths and compute the wavenumbers at the edges of each spectral bin.
+We could instantiate this class directly, but let’s use a helper function that
+comes with pyRT_DISORT (<a class="reference internal" href="../../api-reference/observation.html#observation.constant_width" title="observation.constant_width"><code class="xref py py-func docutils literal notranslate"><span class="pre">constant_width()</span></code></a>) do the work for us
+and then look at the object’s properties.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.observation</span> <span class="kn">import</span> <span class="n">constant_width</span>
 
-<span class="n">spectral</span> <span class="o">=</span> <span class="n">Spectral</span><span class="p">(</span><span class="n">pixel_wavelengths</span> <span class="o">-</span> <span class="n">width</span><span class="p">,</span> <span class="n">pixel_wavelengths</span> <span class="o">+</span> <span class="n">width</span><span class="p">)</span>
+<span class="n">spectral</span> <span class="o">=</span> <span class="n">constant_width</span><span class="p">(</span><span class="n">pixel_wavelengths</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
 
 <span class="n">short_wavelength</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">short_wavelength</span>
 <span class="n">long_wavelength</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">long_wavelength</span>
 <span class="n">WVNMHI</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">high_wavenumber</span>
-<span class="n">WVNMLO</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">low_wavenumber</span>
+<span class="n">WVNMHI</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">low_wavenumber</span>
 </pre></div>
 </div>
 <p>These spectral quantities have shape (5,)—the same as the input wavelengths.
 For now, I’ll keep the spectral dimension but be aware that we’ll cut off the
-spectral dimension closer to when we do the simulation.</p>
+spectral dimension closer to when we do the simulation because DISORT requires
+a separate call for each wavelength.</p>
 <p>The only other thing you’d need from an observation is the signal your
 instrument recorded. We won’t need that value until much later on, so let’s
 wait until later to input those values.</p>

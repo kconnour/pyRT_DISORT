@@ -198,8 +198,8 @@ certain special cases.</p>
 <dt id="observation.Angles">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">observation.</span></code><code class="sig-name descname"><span class="pre">Angles</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">incidence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emission</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azimuth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beam_azimuth</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#observation.Angles" title="Permalink to this definition">¶</a></dt>
 <dd><p>A data structure that contains angles required by DISORT.</p>
-<p>It accepts both the incidence angle and the azimuth angle of the incident
-beam, as well as emission and azimuth angles from an observation. It holds
+<p>It accepts both the incidence and azimuth angles of the incident beam
+as well as emission and azimuth angles from an observation. It holds
 these values and computes both <span class="math notranslate nohighlight">\(\mu_0\)</span> and <span class="math notranslate nohighlight">\(\mu\)</span> from these
 angles.</p>
 <p>This class can compute all angular quantities required by DISORT at once,
@@ -211,13 +211,13 @@ inputs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>incidence</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Incidence (solar zenith) angle [degrees]. All values must be between 0
+<li><p><strong>incidence</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Incidence (solar zenith) angles [degrees]. All values must be between 0
 and 180 degrees.</p></li>
-<li><p><strong>emission</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Emission (emergence) angle [degrees]. All values must be between 0 and
+<li><p><strong>emission</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Emission (emergence) angles [degrees]. All values must be between 0 and
 180 degrees.</p></li>
-<li><p><strong>azimuth</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Azimuth angle [degrees]. All values must be between 0 and 360 degrees.</p></li>
-<li><p><strong>beam_azimuth</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Azimuth angle of the incident beam [degrees]. All values must be between
-0 and 360 degrees.</p></li>
+<li><p><strong>azimuth</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Azimuth angles [degrees]. All values must be between 0 and 360 degrees.</p></li>
+<li><p><strong>beam_azimuth</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Azimuth angles of the incident beam [degrees]. All values must be
+between 0 and 360 degrees.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
@@ -287,7 +287,7 @@ incidence angle and beam azimuth angle of each image varies:</p>
 <dl class="py method">
 <dt id="observation.Angles.emission">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">emission</span></code><a class="headerlink" href="#observation.Angles.emission" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the input emission angle [degrees].</p>
+<dd><p>Get the input emission angles [degrees].</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
@@ -298,7 +298,7 @@ incidence angle and beam azimuth angle of each image varies:</p>
 <dl class="py method">
 <dt id="observation.Angles.incidence">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">incidence</span></code><a class="headerlink" href="#observation.Angles.incidence" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the input incidence angle [degrees].</p>
+<dd><p>Get the input incidence angles [degrees].</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
@@ -337,7 +337,7 @@ DISORT.</p>
 <dl class="py method">
 <dt id="observation.Angles.phi">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">phi</span></code><a class="headerlink" href="#observation.Angles.phi" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get <span class="math notranslate nohighlight">\(\phi\)</span>—the azimuth angle [degrees]. This is the same as
+<dd><p>Get <span class="math notranslate nohighlight">\(\phi\)</span>—the azimuth angles [degrees]. This is the same as
 the input to <code class="code docutils literal notranslate"><span class="pre">azimuth</span></code>.</p>
 <p class="rubric">Notes</p>
 <p>Each element along the observation dimension(s) is named <code class="code docutils literal notranslate"><span class="pre">PHI</span></code> in
@@ -352,7 +352,7 @@ DISORT.</p>
 <dl class="py method">
 <dt id="observation.Angles.phi0">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">phi0</span></code><a class="headerlink" href="#observation.Angles.phi0" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get <span class="math notranslate nohighlight">\(\phi_0\)</span>—the azimuth angle of the incident beam
+<dd><p>Get <span class="math notranslate nohighlight">\(\phi_0\)</span>—the azimuth angles of the incident beam
 [degrees]. This is the same as the input to <code class="code docutils literal notranslate"><span class="pre">beam_azimuth</span></code>.</p>
 <p class="rubric">Notes</p>
 <p>Each element along the observation dimension(s) is named <code class="code docutils literal notranslate"><span class="pre">PHI0</span></code> in
@@ -371,16 +371,16 @@ DISORT.</p>
 <dl class="py function">
 <dt id="observation.make_azimuth">
 <code class="sig-prename descclassname"><span class="pre">observation.</span></code><code class="sig-name descname"><span class="pre">make_azimuth</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">incidence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emission</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#observation.make_azimuth" title="Permalink to this definition">¶</a></dt>
-<dd><p>Construct azimuth angles in the case where phase angles are known (and
-presumably azimuth angles are unknown).</p>
+<dd><p>Construct azimuth angles from a set of incidence, emission, and phase
+angles.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>incidence</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Incidence (solar zenith) angle [degrees]. All values must be between 0
+<li><p><strong>incidence</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Incidence (solar zenith) angles [degrees]. All values must be between 0
 and 180 degrees.</p></li>
-<li><p><strong>emission</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Emission (emergence) angle [degrees]. All values must be between 0 and
+<li><p><strong>emission</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Emission (emergence) angles [degrees]. All values must be between 0 and
 180 degrees.</p></li>
-<li><p><strong>phase</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Phase angle [degrees]. All values must be between 0 and 180 degrees.</p></li>
+<li><p><strong>phase</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Phase angles [degrees]. All values must be between 0 and 180 degrees.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
@@ -396,7 +396,7 @@ and 180 degrees.</p></li>
 shape, but this is not strictly enforced. In any case, the input arrays
 must have compatible shapes.</p>
 <p class="rubric">Examples</p>
-<p>Make the azimuth angles at an assortment of input angles.</p>
+<p>For a random assortment of input angles:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">incidence</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">emission</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">])</span>
@@ -423,11 +423,11 @@ known (and presumably azimuth angles are unknown).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>incidence</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Incidence (solar zenith) angle [degrees]. All values must be between 0
+<li><p><strong>incidence</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Incidence (solar zenith) angles [degrees]. All values must be between 0
 and 180 degrees.</p></li>
-<li><p><strong>emission</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Emission (emergence) angle [degrees]. All values must be between 0 and
+<li><p><strong>emission</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Emission (emergence) angles [degrees]. All values must be between 0 and
 180 degrees.</p></li>
-<li><p><strong>phase</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Phase angle [degrees]. All values must be between 0 and 180 degrees.</p></li>
+<li><p><strong>phase</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Phase angles [degrees]. All values must be between 0 and 180 degrees.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
@@ -450,7 +450,7 @@ and 180 degrees.</p></li>
 shape, but this is not strictly enforced. In any case, the input arrays
 must have compatible shapes.</p>
 <p class="rubric">Examples</p>
-<p>Make an instance of Angles at a random assortment of input angles.</p>
+<p>For a random assortment of input angles:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">incidence</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">emission</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">])</span>

@@ -9,8 +9,8 @@ import numpy as np
 class Angles:
     r"""A data structure that contains angles required by DISORT.
 
-    It accepts both the incidence angle and the azimuth angle of the incident
-    beam, as well as emission and azimuth angles from an observation. It holds
+    It accepts both the incidence and azimuth angles of the incident beam
+    as well as emission and azimuth angles from an observation. It holds
     these values and computes both :math:`\mu_0` and :math:`\mu` from these
     angles.
 
@@ -24,16 +24,16 @@ class Angles:
     Parameters
     ----------
     incidence
-        Incidence (solar zenith) angle [degrees]. All values must be between 0
+        Incidence (solar zenith) angles [degrees]. All values must be between 0
         and 180 degrees.
     emission
-        Emission (emergence) angle [degrees]. All values must be between 0 and
+        Emission (emergence) angles [degrees]. All values must be between 0 and
         180 degrees.
     azimuth
-        Azimuth angle [degrees]. All values must be between 0 and 360 degrees.
+        Azimuth angles [degrees]. All values must be between 0 and 360 degrees.
     beam_azimuth
-        Azimuth angle of the incident beam [degrees]. All values must be between
-        0 and 360 degrees.
+        Azimuth angles of the incident beam [degrees]. All values must be
+        between 0 and 360 degrees.
 
     Raises
     ------
@@ -142,14 +142,14 @@ class Angles:
 
     @property
     def incidence(self) -> np.ndarray:
-        """Get the input incidence angle [degrees].
+        """Get the input incidence angles [degrees].
 
         """
         return self.__incidence.val
 
     @property
     def emission(self) -> np.ndarray:
-        """Get the input emission angle [degrees].
+        """Get the input emission angles [degrees].
 
         """
         return self.__emission.val
@@ -180,7 +180,7 @@ class Angles:
 
     @property
     def phi0(self) -> np.ndarray:
-        r"""Get :math:`\phi_0`---the azimuth angle of the incident beam
+        r"""Get :math:`\phi_0`---the azimuth angles of the incident beam
         [degrees]. This is the same as the input to :code:`beam_azimuth`.
 
         Notes
@@ -193,7 +193,7 @@ class Angles:
 
     @property
     def phi(self) -> np.ndarray:
-        r"""Get :math:`\phi`---the azimuth angle [degrees]. This is the same as
+        r"""Get :math:`\phi`---the azimuth angles [degrees]. This is the same as
         the input to :code:`azimuth`.
 
         Notes
@@ -275,19 +275,19 @@ class _Angle:
 # TODO: Test shapes match? If not the computation will break
 def make_azimuth(incidence: np.ndarray, emission: np.ndarray,
                  phase: np.ndarray) -> np.ndarray:
-    r"""Construct azimuth angles in the case where phase angles are known (and
-    presumably azimuth angles are unknown).
+    r"""Construct azimuth angles from a set of incidence, emission, and phase
+    angles.
 
     Parameters
     ----------
     incidence
-        Incidence (solar zenith) angle [degrees]. All values must be between 0
+        Incidence (solar zenith) angles [degrees]. All values must be between 0
         and 180 degrees.
     emission
-        Emission (emergence) angle [degrees]. All values must be between 0 and
+        Emission (emergence) angles [degrees]. All values must be between 0 and
         180 degrees.
     phase
-        Phase angle [degrees]. All values must be between 0 and 180 degrees.
+        Phase angles [degrees]. All values must be between 0 and 180 degrees.
 
     Raises
     ------
@@ -305,7 +305,7 @@ def make_azimuth(incidence: np.ndarray, emission: np.ndarray,
 
     Examples
     --------
-    Make the azimuth angles at an assortment of input angles.
+    For a random assortment of input angles:
 
     >>> import numpy as np
     >>> incidence = np.array([20, 30, 40])
@@ -337,13 +337,13 @@ def phase_to_angles(incidence: np.ndarray, emission: np.ndarray,
     Parameters
     ----------
     incidence
-        Incidence (solar zenith) angle [degrees]. All values must be between 0
+        Incidence (solar zenith) angles [degrees]. All values must be between 0
         and 180 degrees.
     emission
-        Emission (emergence) angle [degrees]. All values must be between 0 and
+        Emission (emergence) angles [degrees]. All values must be between 0 and
         180 degrees.
     phase
-        Phase angle [degrees]. All values must be between 0 and 180 degrees.
+        Phase angles [degrees]. All values must be between 0 and 180 degrees.
 
     Raises
     ------
@@ -366,7 +366,7 @@ def phase_to_angles(incidence: np.ndarray, emission: np.ndarray,
 
     Examples
     --------
-    Make an instance of Angles at a random assortment of input angles.
+    For a random assortment of input angles:
 
     >>> import numpy as np
     >>> incidence = np.array([20, 30, 40])

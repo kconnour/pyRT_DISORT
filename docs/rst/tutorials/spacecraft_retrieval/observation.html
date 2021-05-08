@@ -190,7 +190,7 @@
 observation—the angles and wavelengths at which some instrument collected
 data. In the “spacecraft” case, I’ll assume we have an orbiter than takes 2D
 images such that the data have shape (M, N) and each pixel in the MxN grid
-contain W wavelengths.</p>
+contains W wavelengths.</p>
 <div class="section" id="angles">
 <h2>Angles<a class="headerlink" href="#angles" title="Permalink to this headline">¶</a></h2>
 <p>Each pixel will have its own unique combination of incidence, emission, and
@@ -217,7 +217,6 @@ look at the object’s properties.</p>
 
 <span class="n">incidence</span> <span class="o">=</span> <span class="n">angles</span><span class="o">.</span><span class="n">incidence</span>
 <span class="n">emission</span> <span class="o">=</span> <span class="n">angles</span><span class="o">.</span><span class="n">emission</span>
-<span class="n">phase</span> <span class="o">=</span> <span class="n">angles</span><span class="o">.</span><span class="n">phase</span>
 <span class="n">mu</span> <span class="o">=</span> <span class="n">angles</span><span class="o">.</span><span class="n">mu</span>
 <span class="n">mu0</span> <span class="o">=</span> <span class="n">angles</span><span class="o">.</span><span class="n">mu0</span>
 <span class="n">phi</span> <span class="o">=</span> <span class="n">angles</span><span class="o">.</span><span class="n">phi</span>
@@ -244,13 +243,13 @@ obtained by choosing the pixel’s M and N indices. It expects <code class="code
 <code class="code docutils literal notranslate"><span class="pre">PHI</span></code> to both be 1D arrays (here, both are length 1) which we got the
 same way. This class offers the ability to compute all of the angular
 quantities in an image at once, offering potentially significant computational
-time savings. For the remainder of this example, I’ll only stick to using a
-single pixel.</p>
+time savings. For simplicity, I’ll stick to only using a single pixel for the
+remainder of the example.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>For those of that have experience working with DISORT directly, I’ll name
 the variables in this example with the same names that DISORT uses. For
-those unfamiliar with DISORT/FORTRAN, variables in ALL CAPS will be the ones
+those unfamiliar with DISORT/FORTRAN, variables in all caps will be the ones
 that we ultimately plug into the DISORT call.</p>
 </div>
 </div>

@@ -5,7 +5,7 @@ Let's begin by considering some of the quantities found in a typical
 observation---the angles and wavelengths at which some instrument collected
 data. In the "spacecraft" case, I'll assume we have an orbiter than takes 2D
 images such that the data have shape (M, N) and each pixel in the MxN grid
-contain W wavelengths.
+contains W wavelengths.
 
 ******
 Angles
@@ -39,7 +39,6 @@ look at the object's properties.
 
    incidence = angles.incidence
    emission = angles.emission
-   phase = angles.phase
    mu = angles.mu
    mu0 = angles.mu0
    phi = angles.phi
