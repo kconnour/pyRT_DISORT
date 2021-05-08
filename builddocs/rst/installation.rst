@@ -40,3 +40,9 @@ You can now import the libraries with :code:`import disort` and/or
    and :code:`RHOU` (without this modification, the code could not run) so
    :code:`disort` isn't precisely the same as the official distribution. I'm
    working to resolve this discrepancy.
+
+.. warning::
+   Some users have reported troubles with the installation. If you're having
+   issues, check out `this issue
+   <https://github.com/kconnour/pyRT_DISORT/issues/2>`_ to look for possible
+   solutions as we work to get a more robust installation.

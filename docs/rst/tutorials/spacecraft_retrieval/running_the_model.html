@@ -1,0 +1,271 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Running the model &mdash; pyRT_DISORT  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Retrieval" href="retrieval.html" />
+    <link rel="prev" title="The surface module" href="surface.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> pyRT_DISORT
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Useful links</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../spacecraft_retrieval.html">Spacecraft Retrieval</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="observation.html">The observation module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eos.html">The eos module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rayleigh.html">The rayleigh module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="aerosol.html">The aerosol module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="atmosphere.html">The atmosphere module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="controller.html">The controller module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="radiation.html">The radiation module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="output.html">The output module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="surface.html">The surface module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Running the model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="retrieval.html">Retrieval</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../rover_retrieval.html">Rover Retrieval</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../api-reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../about-DISORT.html">About DISORT</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pyRT_DISORT</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../tutorials.html">Tutorials</a> &raquo;</li>
+        
+          <li><a href="../spacecraft_retrieval.html">Spacecraft Retrieval</a> &raquo;</li>
+        
+      <li>Running the model</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../../_sources/rst/tutorials/spacecraft_retrieval/running_the_model.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="running-the-model">
+<h1>Running the model<a class="headerlink" href="#running-the-model" title="Permalink to this headline">¶</a></h1>
+<p>We have all the variables we need to simulate some reflectance curves. Recall
+that we’ve been making properties (where applicable) at all 5 wavelengths at
+once. Unfortunately DISORT can’t natively handle this, so we need to loop over
+wavelength. I’ll import the necessary module and create an array that’ll be
+filled as DISORT runs.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">disort</span>
+
+<span class="n">test_run</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">pixel_wavelengths</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Once we carefully put all ~50 variables in the correct order and remember to
+only select parts of the arrays we need (slicing off the wavelength dimension),
+we can do simulations.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">pixel_wavelengths</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+    <span class="n">rfldir</span><span class="p">,</span> <span class="n">rfldn</span><span class="p">,</span> <span class="n">flup</span><span class="p">,</span> <span class="n">dfdt</span><span class="p">,</span> <span class="n">uavg</span><span class="p">,</span> <span class="n">uu</span><span class="p">,</span> <span class="n">albmed</span><span class="p">,</span> <span class="n">trnmed</span> <span class="o">=</span> \
+        <span class="n">disort</span><span class="o">.</span><span class="n">disort</span><span class="p">(</span><span class="n">USRANG</span><span class="p">,</span> <span class="n">USRTAU</span><span class="p">,</span> <span class="n">IBCND</span><span class="p">,</span> <span class="n">ONLYFL</span><span class="p">,</span> <span class="n">PRNT</span><span class="p">,</span> <span class="n">PLANK</span><span class="p">,</span> <span class="n">LAMBER</span><span class="p">,</span>
+                      <span class="n">DELTAMPLUS</span><span class="p">,</span> <span class="n">DO_PSEUDO_SPHERE</span><span class="p">,</span> <span class="n">DTAUC</span><span class="p">[:,</span> <span class="n">ind</span><span class="p">],</span> <span class="n">SSALB</span><span class="p">[:,</span> <span class="n">ind</span><span class="p">],</span>
+                      <span class="n">PMOM</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">ind</span><span class="p">],</span> <span class="n">TEMPER</span><span class="p">,</span> <span class="n">WVNMLO</span><span class="p">,</span> <span class="n">WVNMHI</span><span class="p">,</span>
+                      <span class="n">UTAU</span><span class="p">,</span> <span class="n">UMU0</span><span class="p">,</span> <span class="n">PHI0</span><span class="p">,</span> <span class="n">UMU</span><span class="p">,</span> <span class="n">PHI</span><span class="p">,</span> <span class="n">FBEAM</span><span class="p">,</span> <span class="n">FISOT</span><span class="p">,</span>
+                      <span class="n">ALBEDO</span><span class="p">,</span> <span class="n">BTEMP</span><span class="p">,</span> <span class="n">TTEMP</span><span class="p">,</span> <span class="n">TEMIS</span><span class="p">,</span> <span class="n">EARTH_RADIUS</span><span class="p">,</span> <span class="n">H_LYR</span><span class="p">,</span> <span class="n">RHOQ</span><span class="p">,</span> <span class="n">RHOU</span><span class="p">,</span>
+                      <span class="n">RHO_ACCURATE</span><span class="p">,</span> <span class="n">BEMST</span><span class="p">,</span> <span class="n">EMUST</span><span class="p">,</span> <span class="n">ACCUR</span><span class="p">,</span> <span class="n">HEADER</span><span class="p">,</span> <span class="n">RFLDIR</span><span class="p">,</span>
+                      <span class="n">RFLDN</span><span class="p">,</span> <span class="n">FLUP</span><span class="p">,</span> <span class="n">DFDT</span><span class="p">,</span> <span class="n">UAVG</span><span class="p">,</span> <span class="n">UU</span><span class="p">,</span> <span class="n">ALBMED</span><span class="p">,</span> <span class="n">TRNMED</span><span class="p">)</span>
+
+    <span class="n">test_run</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="n">uu</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">test_run</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This prints <code class="code docutils literal notranslate"><span class="pre">[0.20444766</span> <span class="pre">0.18252057</span> <span class="pre">0.07527761</span> <span class="pre">0.11988172</span> <span class="pre">0.10403387]</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It seems pretty tedious to me to have to put in all the variables in the
+proper order. At some point I may make a function/class that accepts
+instances of classes that you’ve already created and then extracts the
+proper variables from those class attributes. But I can only do so much at
+once.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="retrieval.html" class="btn btn-neutral float-right" title="Retrieval" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="surface.html" class="btn btn-neutral float-left" title="The surface module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, kconnour.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

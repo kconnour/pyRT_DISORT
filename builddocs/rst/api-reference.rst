@@ -1,10 +1,10 @@
-pyRT_DISORT API reference
-=========================
-
+#############
+API reference
+#############
 Here you can find documentation on the included modules with pyRT_DISORT.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: pyRT_DISORT's modules:
 
    api-reference/aerosol

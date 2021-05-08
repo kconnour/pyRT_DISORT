@@ -1,0 +1,346 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>The observation module &mdash; pyRT_DISORT  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="The eos module" href="eos.html" />
+    <link rel="prev" title="Spacecraft Retrieval" href="../spacecraft_retrieval.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> pyRT_DISORT
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Useful links</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../spacecraft_retrieval.html">Spacecraft Retrieval</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">The observation module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#angles">Angles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#spectral">Spectral</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="eos.html">The eos module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rayleigh.html">The rayleigh module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="aerosol.html">The aerosol module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="atmosphere.html">The atmosphere module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="controller.html">The controller module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="radiation.html">The radiation module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="output.html">The output module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="surface.html">The surface module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="running_the_model.html">Running the model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="retrieval.html">Retrieval</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../rover_retrieval.html">Rover Retrieval</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../api-reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../about-DISORT.html">About DISORT</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pyRT_DISORT</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../tutorials.html">Tutorials</a> &raquo;</li>
+        
+          <li><a href="../spacecraft_retrieval.html">Spacecraft Retrieval</a> &raquo;</li>
+        
+      <li>The observation module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../../_sources/rst/tutorials/spacecraft_retrieval/observation.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="the-observation-module">
+<h1>The observation module<a class="headerlink" href="#the-observation-module" title="Permalink to this headline">¶</a></h1>
+<p>Let’s begin by considering some of the quantities found in a typical
+observation—the angles and wavelengths at which some instrument collected
+data. In the “spacecraft” case, I’ll assume we have an orbiter than takes 2D
+images such that the data have shape (M, N) and each pixel in the MxN grid
+contain W wavelengths.</p>
+<div class="section" id="angles">
+<h2>Angles<a class="headerlink" href="#angles" title="Permalink to this headline">¶</a></h2>
+<p>Each pixel will have its own unique combination of incidence, emission, and
+phase angles that doesn’t depend on wavelength. Suppose that we have an image
+that has shape (15, 20). Let’s create a set of angles defined in each of these
+300 pixels to use in this example (for simplicity of the example, let’s assume
+that all three of these angles are the same).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">dummy_angles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">15</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">20</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Our goal is to create an instance of <a class="reference internal" href="../../api-reference/observation.html#observation.Angles" title="observation.Angles"><code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code></a> to hold on to
+all the angular values DISORT wants. This class turns incidence and emission
+angles into <span class="math notranslate nohighlight">\(\mu_0\)</span> and <span class="math notranslate nohighlight">\(\mu\)</span> and also holds on to azimuthal
+angles. We cannot directly instantiate this class because we have phase angles
+and not azimuthal angles, but pyRT_DISORT comes with a helper function
+(<a class="reference internal" href="../../api-reference/observation.html#observation.phase_to_angles" title="observation.phase_to_angles"><code class="xref py py-func docutils literal notranslate"><span class="pre">phase_to_angles()</span></code></a>) that creates azimuthal angles and
+returns an instance of <a class="reference internal" href="../../api-reference/observation.html#observation.Angles" title="observation.Angles"><code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code></a>. Let’s do this below and
+look at the object’s properties.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.observation</span> <span class="kn">import</span> <span class="n">phase_to_angles</span>
+
+<span class="n">angles</span> <span class="o">=</span> <span class="n">phase_to_angles</span><span class="p">(</span><span class="n">dummy_angles</span><span class="p">,</span> <span class="n">dummy_angles</span><span class="p">,</span> <span class="n">dummy_angles</span><span class="p">)</span>
+
+<span class="n">incidence</span> <span class="o">=</span> <span class="n">angles</span><span class="o">.</span><span class="n">incidence</span>
+<span class="n">emission</span> <span class="o">=</span> <span class="n">angles</span><span class="o">.</span><span class="n">emission</span>
+<span class="n">phase</span> <span class="o">=</span> <span class="n">angles</span><span class="o">.</span><span class="n">phase</span>
+<span class="n">mu</span> <span class="o">=</span> <span class="n">angles</span><span class="o">.</span><span class="n">mu</span>
+<span class="n">mu0</span> <span class="o">=</span> <span class="n">angles</span><span class="o">.</span><span class="n">mu0</span>
+<span class="n">phi</span> <span class="o">=</span> <span class="n">angles</span><span class="o">.</span><span class="n">phi</span>
+<span class="n">phi0</span> <span class="o">=</span> <span class="n">angles</span><span class="o">.</span><span class="n">phi0</span>
+</pre></div>
+</div>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>The angles must be in degrees.</p>
+</div>
+<p>In this case, the shapes of both <code class="code docutils literal notranslate"><span class="pre">mu0</span></code> and <code class="code docutils literal notranslate"><span class="pre">phi0</span></code> are (15, 20)—
+the same shape as the input angles—whereas <code class="code docutils literal notranslate"><span class="pre">mu</span></code> and <code class="code docutils literal notranslate"><span class="pre">phi</span></code> both
+have shapes (15, 20, 1). That’s to say, each “observation” has only 1 set of
+emission and azimuth angles. We can then choose appropriate values by choosing
+a pixel index, like the following:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">UMU</span> <span class="o">=</span> <span class="n">mu</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+<span class="n">UMU0</span> <span class="o">=</span> <span class="n">mu0</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">PHI</span> <span class="o">=</span> <span class="n">phi</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+<span class="n">PHI0</span> <span class="o">=</span> <span class="n">phi0</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>DISORT expects the input of <code class="code docutils literal notranslate"><span class="pre">UMU0</span></code> and <code class="code docutils literal notranslate"><span class="pre">PHI0</span></code> to be floats which we
+obtained by choosing the pixel’s M and N indices. It expects <code class="code docutils literal notranslate"><span class="pre">UMU</span></code> and
+<code class="code docutils literal notranslate"><span class="pre">PHI</span></code> to both be 1D arrays (here, both are length 1) which we got the
+same way. This class offers the ability to compute all of the angular
+quantities in an image at once, offering potentially significant computational
+time savings. For the remainder of this example, I’ll only stick to using a
+single pixel.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For those of that have experience working with DISORT directly, I’ll name
+the variables in this example with the same names that DISORT uses. For
+those unfamiliar with DISORT/FORTRAN, variables in ALL CAPS will be the ones
+that we ultimately plug into the DISORT call.</p>
+</div>
+</div>
+<div class="section" id="spectral">
+<h2>Spectral<a class="headerlink" href="#spectral" title="Permalink to this headline">¶</a></h2>
+<p>Let’s assume that the hyperspectral imager takes data at W wavelengths in each
+pixel and that there’s a constant spectral width to each bin. Suppose it took
+data at 5 wavelengths, and each spectral pixel had a width of 100 nm. Let’s go
+ahead and define some wavelengths here so we have some values to work with.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pixel_wavelengths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
+<span class="n">n_wavelengths</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pixel_wavelengths</span><span class="p">)</span>
+<span class="n">width</span> <span class="o">=</span> <span class="mf">0.1</span>
+</pre></div>
+</div>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>The wavelengths must be in microns.</p>
+</div>
+<p>Our goal is to create an instance of <a class="reference internal" href="../../api-reference/observation.html#observation.Spectral" title="observation.Spectral"><code class="xref py py-class docutils literal notranslate"><span class="pre">Spectral</span></code></a> to hold on
+to all the spectral values DISORT wants. This class will hold on to the input
+wavelengths and compute the wavenumbers at the edges of each spectral bin.
+We could instantiate this class directly, but let’s use a helper function that
+comes with pyRT_DISORT (<a class="reference internal" href="../../api-reference/observation.html#observation.constant_width" title="observation.constant_width"><code class="xref py py-func docutils literal notranslate"><span class="pre">constant_width()</span></code></a>) do the work for us
+and then look at the object’s properties.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.observation</span> <span class="kn">import</span> <span class="n">constant_width</span>
+
+<span class="n">spectral</span> <span class="o">=</span> <span class="n">constant_width</span><span class="p">(</span><span class="n">pixel_wavelengths</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
+
+<span class="n">short_wavelength</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">short_wavelength</span>
+<span class="n">long_wavelength</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">long_wavelength</span>
+<span class="n">WVNMHI</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">high_wavenumber</span>
+<span class="n">WVNMHI</span> <span class="o">=</span> <span class="n">spectral</span><span class="o">.</span><span class="n">low_wavenumber</span>
+</pre></div>
+</div>
+<p>These spectral quantities have shape (5,)—the same as the input wavelengths.
+For now, I’ll keep the spectral dimension but be aware that we’ll cut off the
+spectral dimension closer to when we do the simulation because DISORT requires
+a separate call for each wavelength.</p>
+<p>The only other thing you’d need from an observation is the signal your
+instrument recorded. We won’t need that value until much later on, so let’s
+wait until later to input those values.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="eos.html" class="btn btn-neutral float-right" title="The eos module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../spacecraft_retrieval.html" class="btn btn-neutral float-left" title="Spacecraft Retrieval" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, kconnour.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

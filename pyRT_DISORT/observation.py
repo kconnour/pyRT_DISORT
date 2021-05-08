@@ -638,10 +638,8 @@ class _Wavelength:
 
 # TODO: this is easy to break cause I don't test the inputs
 def constant_width(center_wavelength: np.ndarray, width: float) -> Spectral:
-    """A data structure that contains spectral info required by DISORT.
-
-    It accepts the short and long wavelength from an observation and computes
-    their corresponding wavenumber.
+    """Create an instance of Spectral assuming the wavelengths all have a
+    constant spectral width.
 
     Parameters
     ----------
