@@ -5,6 +5,9 @@ import numpy as np
 from disort import disobrdf
 
 
+# TODO: the surface isn't designed to be interacted with. Instead, wrap functions
+#  around the methods so the user doesn't have to remember to call methods
+
 # TODO: I still don't really know what bemst, emust, rhoq, rhou, or rho_accurate
 #  are... get better names.
 class Surface:
