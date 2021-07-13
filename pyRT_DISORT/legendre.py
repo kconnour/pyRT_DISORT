@@ -1,7 +1,7 @@
 """The legendre module provides functions for making Legendre decompositions."""
 from warnings import warn
 import numpy as np
-from scipy import integrate, interpolate
+from scipy import integrate
 
 
 class _PhaseFunction(np.ndarray):
