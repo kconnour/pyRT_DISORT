@@ -185,7 +185,7 @@
 DISORT’s surface treatment.</p>
 <dl class="py class">
 <dt id="surface.Surface">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">surface.</span></code><code class="sig-name descname"><span class="pre">Surface</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">albedo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_streams</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_polar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_azimuth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_angles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_fluxes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_mug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surface.Surface" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">surface.</span></code><code class="sig-name descname"><span class="pre">Surface</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">albedo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_streams</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_polar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_azimuth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_angles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_fluxes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_mug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/surface.html#Surface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#surface.Surface" title="Permalink to this definition">¶</a></dt>
 <dd><p>A structure to compute all the surface parameterization.</p>
 <p>Surface accepts parameters that define the surface arrays required by
 DISORT. The methods in Surface will compute those arrays.</p>
@@ -213,35 +213,6 @@ bidirectional reflectivity.</p></li>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
-<dl class="py method">
-<dt id="surface.Surface.__init__">
-<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">albedo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_streams</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_polar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_azimuth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_angles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_fluxes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_mug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surface.Surface.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>albedo</strong> (<em>float</em>) – The surface albedo. Only used by DISORT if the bottom boundary is
-Lambertian.</p></li>
-<li><p><strong>n_streams</strong> (<em>int</em>) – The number of streams.</p></li>
-<li><p><strong>n_polar</strong> (<em>int</em>) – The number of polar angles.</p></li>
-<li><p><strong>n_azimuth</strong> (<em>int</em>) – The number of azimuth angles.</p></li>
-<li><p><strong>n_mug</strong> (<em>int</em>) – The number of angle cosine quadrature points for integrating the
-bidirectional reflectivity.</p></li>
-<li><p><strong>user_angles</strong> (<em>bool</em>) – </p></li>
-<li><p><strong>only_fluxes</strong> (<em>bool</em>) – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>TypeError</strong> – Raised if a number of things…</p></li>
-<li><p><strong>ValueError</strong> – Raised if albedo is not between 0 and 1.</p></li>
-</ul>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py method">
 <dt id="surface.Surface.albedo">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">albedo</span></code><a class="headerlink" href="#surface.Surface.albedo" title="Permalink to this definition">¶</a></dt>
@@ -276,7 +247,7 @@ bidirectional reflectivity.</p></li>
 
 <dl class="py method">
 <dt id="surface.Surface.make_hapke">
-<code class="sig-name descname"><span class="pre">make_hapke</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beam_flux</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surface.Surface.make_hapke" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">make_hapke</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beam_flux</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/surface.html#Surface.make_hapke"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#surface.Surface.make_hapke" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make a basic Hapke surface.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -303,7 +274,7 @@ bidirectional reflectivity.</p></li>
 
 <dl class="py method">
 <dt id="surface.Surface.make_hapkeHG2">
-<code class="sig-name descname"><span class="pre">make_hapkeHG2</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">asym</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frac</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beam_flux</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surface.Surface.make_hapkeHG2" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">make_hapkeHG2</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">asym</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frac</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beam_flux</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/surface.html#Surface.make_hapkeHG2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#surface.Surface.make_hapkeHG2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make a Hapke surface with 2 lobed Henyey-Greenstein surface phase
 function.</p>
 <dl class="field-list simple">
@@ -333,7 +304,7 @@ function.</p>
 
 <dl class="py method">
 <dt id="surface.Surface.make_hapkeHG2_roughness">
-<code class="sig-name descname"><span class="pre">make_hapkeHG2_roughness</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">asym</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">roughness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frac</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beam_flux</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surface.Surface.make_hapkeHG2_roughness" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">make_hapkeHG2_roughness</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">asym</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">roughness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frac</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beam_flux</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/surface.html#Surface.make_hapkeHG2_roughness"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#surface.Surface.make_hapkeHG2_roughness" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make a Hapke surface with 2 lobed Henyey-Greenstein surface phase
 function and surface roughness parameter.</p>
 <dl class="field-list simple">
@@ -364,7 +335,7 @@ function and surface roughness parameter.</p>
 
 <dl class="py method">
 <dt id="surface.Surface.make_lambertian">
-<code class="sig-name descname"><span class="pre">make_lambertian</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#surface.Surface.make_lambertian" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">make_lambertian</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/surface.html#Surface.make_lambertian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#surface.Surface.make_lambertian" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make the surface a Lambertian surface.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>

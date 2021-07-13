@@ -186,7 +186,7 @@
 of state variables used throughout pyRT_DISORT.</p>
 <dl class="py class">
 <dt id="eos.Hydrostatic">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">eos.</span></code><code class="sig-name descname"><span class="pre">Hydrostatic</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">altitude_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude_boundaries</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_mass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gravity</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eos.Hydrostatic" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">eos.</span></code><code class="sig-name descname"><span class="pre">Hydrostatic</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">altitude_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude_boundaries</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_mass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gravity</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/eos.html#Hydrostatic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eos.Hydrostatic" title="Permalink to this definition">¶</a></dt>
 <dd><p>A data structure that computes a hydrostatic equation of state.</p>
 <p>Hydrostatic accepts equation of state variables and regrids them to a
 user-specified altitude grid using linear interpolation. Then, it computes
@@ -250,67 +250,6 @@ smaller the atmosphere’s scale height is. I’m working to reduce the
 errors. In the meantime the column density is fairly close to analytical
 results but should be improved.</p>
 <dl class="py method">
-<dt id="eos.Hydrostatic.__init__">
-<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">altitude_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude_boundaries</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_mass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gravity</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eos.Hydrostatic.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>altitude_grid</strong> (<em>numpy.ndarray</em>) – The altitude grid [km] over which the equation of state variables
-are defined. See the note below for additional conditions.</p></li>
-<li><p><strong>pressure_grid</strong> (<em>numpy.ndarray</em>) – The pressure [Pa] at all values in <code class="docutils literal notranslate"><span class="pre">altitude_grid</span></code>.</p></li>
-<li><p><strong>temperature_grid</strong> (<em>numpy.ndarray</em>) – The temperature [K] at all values in <code class="docutils literal notranslate"><span class="pre">altitude_grid</span></code>.</p></li>
-<li><p><strong>altitude_boundaries</strong> (<em>numpy.ndarray</em>) – The desired boundary altitude [km]. See the note below for
-additional conditions.</p></li>
-<li><p><strong>particle_mass</strong> (<em>float</em>) – The average mass [kg] of atmospheric particles.</p></li>
-<li><p><strong>gravity</strong> (<em>float</em>) – The gravitational acceleration
-[<span class="math notranslate nohighlight">\(\frac{\text{kg m}}{\text{s}^2}\)</span>] of the atmosphere.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>TypeError</strong> – Raised if <code class="docutils literal notranslate"><span class="pre">altitude_grid</span></code>, <code class="docutils literal notranslate"><span class="pre">pressure_grid</span></code>,
-    <code class="docutils literal notranslate"><span class="pre">temperature_grid</span></code>, or <code class="docutils literal notranslate"><span class="pre">altitude_boundaries</span></code> are not all
-    numpy.ndarrays; or if <code class="docutils literal notranslate"><span class="pre">particle_mass</span></code> or <code class="docutils literal notranslate"><span class="pre">gravity</span></code> are not
-    floats.</p></li>
-<li><p><strong>ValueError</strong> – Raised if:
-       * <code class="docutils literal notranslate"><span class="pre">altitude_grid</span></code>, <code class="docutils literal notranslate"><span class="pre">pressure_grid</span></code>, or
-          <code class="docutils literal notranslate"><span class="pre">temperature_grid</span></code> do not have the same shapes
-       * <code class="docutils literal notranslate"><span class="pre">altitude_grid</span></code> or <code class="docutils literal notranslate"><span class="pre">altitude_boundaries</span></code> have
-         incompatible pixel dimensions
-       * <code class="docutils literal notranslate"><span class="pre">altitude_grid</span></code> or <code class="docutils literal notranslate"><span class="pre">altitude_boundaries</span></code> are not
-         monotonically decreasing along the 0 <sup>th</sup> axis;
-       * <code class="docutils literal notranslate"><span class="pre">pressure_grid</span></code>, or <code class="docutils literal notranslate"><span class="pre">temperature_grid</span></code> contain
-         non-positive, finite values
-       * <code class="docutils literal notranslate"><span class="pre">altitude_boundaries</span></code> does not contain at least 2
-         boundaries
-       * <code class="docutils literal notranslate"><span class="pre">particle_mass</span></code> or <code class="docutils literal notranslate"><span class="pre">gravity</span></code> are not positive, finite</p></li>
-</ul>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>This class assumes the atmosphere follows the equation</p>
-<div class="math notranslate nohighlight" id="equation-hydrostatic-equation">
-<span class="eqno">(2)<a class="headerlink" href="#equation-hydrostatic-equation" title="Permalink to this equation">¶</a></span>\[P = n k_B T\]</div>
-<p>where <span class="math notranslate nohighlight">\(P\)</span> is the pressure, <span class="math notranslate nohighlight">\(n\)</span> is the number density,
-<span class="math notranslate nohighlight">\(k_B\)</span> is Boltzmann’s constant, and <span class="math notranslate nohighlight">\(T\)</span> is the temperature.</p>
-<p>The inputs can be ND arrays, as long as they have compatible shapes. In
-this scenario, <code class="code docutils literal notranslate"><span class="pre">altitude_grid</span></code>, <code class="code docutils literal notranslate"><span class="pre">pressure_grid</span></code>, and
-<code class="code docutils literal notranslate"><span class="pre">temperature_grid</span></code> must be of shape Mx(pixels) whereas
-<code class="code docutils literal notranslate"><span class="pre">altitude_boundaries</span></code> must be of shape Nx(pixels), as long as
-N &gt; 1 to ensure that the model has at least 1 layer.</p>
-<p>To keep with DISORT’s convention, <code class="code docutils literal notranslate"><span class="pre">altitude_grid</span></code> and
-<code class="code docutils literal notranslate"><span class="pre">altitude_boundaries</span></code> must be monotonically decreasing. If these
-are ND arrays, this condition only applies to the 0 <sup>th</sup> axis.</p>
-<p>Also, scipy’s Gaussian quadrature routine becomes less accurate the
-smaller the atmosphere’s scale height is. I’m working to reduce the
-errors. In the meantime the column density is fairly close to analytical
-results but should be improved.</p>
-</dd></dl>
-
-<dl class="py method">
 <dt id="eos.Hydrostatic.altitude">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">altitude</span></code><a class="headerlink" href="#eos.Hydrostatic.altitude" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input boundary altitude [km].</p>
@@ -349,7 +288,7 @@ package, this variable is optional).</p>
 at the boundary altitude.</p>
 <p class="rubric">Notes</p>
 <p>This variable is obtained by getting the pressure and temperature at the
-boundary altitude, then solving <a class="reference internal" href="#equation-hydrostatic-equation">(2)</a>.</p>
+boundary altitude, then solving <a class="reference internal" href="#equation-hydrostatic-equation">(1)</a>.</p>
 </dd></dl>
 
 <dl class="py method">
