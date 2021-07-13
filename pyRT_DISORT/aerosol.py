@@ -662,7 +662,7 @@ class HenyeyGreenstein:
         the 0 :sup:`th` coefficient is 1.
 
         """
-        moments = np.linspace(0, n_moments, num=n_moments+1)
+        moments = np.linspace(0, n_moments-1, num=n_moments)
         coeff = (2 * moments + 1) * np.power.outer(self.__g, moments)
         return np.moveaxis(coeff, -1, 0)
 

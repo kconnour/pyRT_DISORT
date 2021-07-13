@@ -1,4 +1,5 @@
 """The legendre module provides functions for making Legendre decompositions."""
+from warnings import warn
 import numpy as np
 from scipy import integrate, interpolate
 
@@ -130,7 +131,29 @@ class _PhaseFunctionBundle:
         return 2 * resampled_pf / resampled_norm
 
 
-class Samples(int):
+class NMoments(int):
+    """Designate that a number represents the number of moments.
+
+    Parameters
+    ----------
+    value
+        The number of moments to use.
+
+    Raises
+    ------
+    TypeError
+        Raised if the input cannot be converted into an int.
+    ValueError
+        Raised if the number of samples is not positive.
+    """
+
+    def __new__(cls, value: int, *args, **kwargs):
+        if value <= 0:
+            raise ValueError("The number of moments must be positive.")
+        return super(cls, cls).__new__(cls, value)
+
+
+class NSamples(int):
     """Designate that a number represents the number of samples.
 
     Parameters
@@ -153,19 +176,41 @@ class Samples(int):
 
 
 class _LegendreDecomposer:
-    def __init__(self, phase_function: np.ndarray, angles: np.ndarray, n_moments: int, n_samples: int):
-        self.bundle = _PhaseFunctionBundle(phase_function, angles)
-        self._n_moments = n_moments
-        self._n_samples = n_samples
+    """ A collection of methods for decomposing a phase function into
+    polynomials.
 
-        self.resamp_norm_pf = self.bundle.normalize_resampled_phase_function(n_samples) - 1   # due to not fitting c0 = 1
+    This class can decompose a phase function into Legendre polynomials. In
+    principle it can decompose any function into those polynomials but it's set
+    up specifically for that task.
+
+    Parameters
+    ----------
+    phase_function
+    angles
+    n_moments
+    n_samples
+
+    Raises
+    ------
+    TypeError
+        Raised if any of the inputs cannot be cast to the correct shape.
+    ValueError
+        Raised in any of the inputs are unphysical.
+
+    """
+    def __init__(self, phase_function: np.ndarray, angles: np.ndarray,
+                 n_moments: int, n_samples: int):
+        self.bundle = _PhaseFunctionBundle(phase_function, angles)
+        self.n_moments = NMoments(n_moments)
+        self.n_samples = NSamples(n_samples)
+
+        # Fit P(x) = c0 + c1*L1(x) + ... where I force c0 = 1 for DISORT
+        self.resamp_norm_pf = \
+            self.bundle.normalize_resampled_phase_function(self.n_samples) - 1
         self.lpoly = self._make_legendre_polynomials()
 
-    def _make_legendre_polynomials(self):
-        """
-
-        Returns
-        -------
+    def _make_legendre_polynomials(self) -> np.ndarray:
+        """Make an array of Legendre polynomials at the input angles.
 
         Notes
         -----
@@ -174,30 +219,28 @@ class _LegendreDecomposer:
         polynomial (L3) evaluated at the 6th angle
 
         """
-        resampled_theta = self.bundle.resample_angles(self._n_samples)
-        ones = np.ones((self._n_moments, self._n_samples))
+        resampled_theta = self.bundle.resample_angles(self.n_samples)
+        ones = np.ones((self.n_moments, self.n_samples))
 
-        # This creates an MxN array with 1s on the diagonal; 0s elsewhere
+        # This creates an MxN array with 1s on the diagonal and 0s elsewhere
         diag_mask = np.triu(ones) + np.tril(ones) - 1
 
         # Evaluate the polynomials at the input angles. I don't know why
-        return np.polynomial.legendre.legval(np.cos(resampled_theta),
-                                             diag_mask)[1:self._n_moments, :]
+        return np.polynomial.legendre.legval(
+            np.cos(resampled_theta), diag_mask)[1:self.n_moments, :]
 
     def decompose(self) -> np.ndarray:
-        """
-
-        Returns
-        -------
+        """Decompose the phase function into its Legendre moments.
 
         """
         normal_matrix = self._make_normal_matrix()
         normal_vector = self.__make_normal_vector()
-        cholesky_factorization = self._cholesky_decomposition(normal_matrix)
-        first_solution = self._solve_first_system(cholesky_factorization, normal_vector)
-        second_solution = self._solve_second_system(cholesky_factorization, first_solution)
-        fit_coefficients = self._filter_negative_coefficients(second_solution)
-        return fit_coefficients
+        cholesky = np.linalg.cholesky(normal_matrix)
+        first_solution = np.linalg.solve(cholesky, normal_vector)
+        second_solution = np.linalg.solve(cholesky.T, first_solution)
+        coeff = np.concatenate((np.array([1]), second_solution))
+        self._warn_if_negative_coefficients(coeff)
+        return coeff
 
     def _make_normal_matrix(self) -> np.ndarray:
         return np.sum(self.lpoly[:, None, :] * self.lpoly[None, :, :] /
@@ -206,268 +249,74 @@ class _LegendreDecomposer:
     def __make_normal_vector(self) -> np.ndarray:
         return np.sum(self.lpoly / self.resamp_norm_pf, axis=-1)
 
-    @staticmethod
-    def _cholesky_decomposition(normal_matrix: np.ndarray) -> np.ndarray:
-        return np.linalg.cholesky(normal_matrix)
-
-    @staticmethod
-    def _solve_first_system(cholesky_factorization, normal_vector) -> np.ndarray:
-        return np.linalg.solve(cholesky_factorization, normal_vector)
-
-    @staticmethod
-    def _solve_second_system(cholesky_factorization, first_solution) -> np.ndarray:
-        return np.linalg.solve(cholesky_factorization.T, first_solution)
-
-    @staticmethod
-    def _filter_negative_coefficients(second_solution) -> np.ndarray:
-        coefficients = np.concatenate((np.array([1]), second_solution))
-        first_negative_index = np.argmax(coefficients < 0)
+    def _warn_if_negative_coefficients(self, coeff):
+        first_negative_index = self._get_first_negative_coefficient_index(coeff)
         if first_negative_index:
-            print(f"Setting coefficients to zero starting with coefficient {first_negative_index}")
-            coefficients[first_negative_index:] = 0
-        return coefficients
+            message = f'Coefficient {first_negative_index} is negative.'
+            warn(message)
+
+    @staticmethod
+    def _get_first_negative_coefficient_index(coeff: np.ndarray) -> np.ndarray:
+        return np.argmax(coeff < 0)
+
+    def filter_negative_coefficients(self, coeff: np.ndarray) -> np.ndarray:
+        """Set all coefficients at the first negative one to 0.
+
+        Parameters
+        ----------
+        coeff
+            The Legendre coefficients.
+
+        """
+        first_negative_index = self._get_first_negative_coefficient_index(coeff)
+        if first_negative_index:
+            coeff[first_negative_index:] = 0
+        return coeff
 
 
 def decompose_phase_function(
-        empirical_phase_function: np.ndarray, angles: np.ndarray,
+        phase_function: np.ndarray, angles: np.ndarray,
         n_moments: int, n_samples: int) -> np.ndarray:
     """Decompose a phase function into its Legendre moments.
 
     Parameters
     ----------
-    empirical_phase_function
+    phase_function
+        The phase function to decompose.
     angles
+        The angles where the phase function is defined.
     n_moments
+        The number of Legendre moments to decompose the phase function into.
     n_samples
+        The number of samples to use for the resampling. Must be >= the number
+        of moments.
+
+    Examples
+    --------
+    Let's suppose we have a Henyey-Greenstein phase function with asymmetry
+    parameter of 0.6. Let's create its first 65 moments along with the angles
+    over which it's defined.
+
+    >>> from pyRT_DISORT.aerosol import HenyeyGreenstein
+    >>> analytic_moments = HenyeyGreenstein(0.6).legendre_decomposition(65)
+    >>> angles = np.radians(np.linspace(0, 180, num=181))
+
+    We can convert it to a phase fuction with the following:
+
+    >>> import numpy as np
+    >>> phase = np.polynomial.legendre.legval(np.cos(angles), analytic_moments)
+
+    If we decompose the phase fuction into Legendre coefficients, we should get
+    what we started with. Let's decompose the phase fuction back into 65 moments
+    and use 360 samples to make sure the resolution is good.
+
+    >>> from pyRT_DISORT.legendre import decompose_phase_function
+    >>> decomp_moments = decompose_phase_function(phase, angles, 65, 360)
+    >>> np.amax((analytic_moments - decomp_moments)**2)
+    1.6443715589020334e-07
+
+    We've recovered the original moments pretty well!
 
     """
-    ld = _LegendreDecomposer(empirical_phase_function, angles, n_moments, n_samples)
+    ld = _LegendreDecomposer(phase_function, angles, n_moments, n_samples)
     return ld.decompose()
-
-
-class PhaseFunction:
-    """A PhaseFunction object holds input phase function and can create its Legendre decomposition"""
-    def __init__(self, empirical_phase_function, angles):
-        """
-        Parameters
-        ----------
-        empirical_phase_function: np.ndarray
-            1D array of the empirical phase function
-        angles: np.ndarray
-            1D array of the angles [radians] at which empirical_phase_function is defined
-
-        Attributes
-        ----------
-        empirical_phase_function: np.ndarray
-            The input empirical phase function
-        angles: np.ndarray
-            The input angles
-        mu: np.ndarray
-            The cosine of angles
-        n_angles: int
-            The length of angles
-        """
-        self.empirical_phase_function = empirical_phase_function
-        self.angles = angles
-
-        self.__check_inputs_are_physical()
-
-        self.mu = np.cos(self.angles)
-        self.n_angles = len(self.angles)
-
-    def __check_inputs_are_physical(self):
-        self.__check_epf_matches_angles_shape()
-
-    def __check_epf_matches_angles_shape(self):
-        if self.empirical_phase_function.shape != self.angles.shape:
-            raise ValueError('empirical_phase_function and angles must have the same shape')
-
-    def create_legendre_coefficients(self, n_moments, n_samples):
-        """Create the Legendre coefficient decomposition for the input phase function
-
-        Parameters
-        ----------
-        n_moments: int
-            The desired number of moments to find a solution for
-        n_samples: int
-            Resample the input phase function to n_samples. Must be >= n_moments
-
-        Returns
-        -------
-        fit_coefficients: np.ndarray
-            A 1D array of fitted coefficients of length n_moments
-        """
-        self.__check_inputs_are_expected(n_moments, n_samples)
-        resampled_angles = self.__resample_angles(n_samples)
-        resampled_phase_function = self.__resample_phase_function(resampled_angles)
-        norm_resampled_phase_function = self.__normalize_phase_function(resampled_phase_function, resampled_angles)
-
-        # Since we're forcing c0 = 1 and fitting p = c0 + c1 * L1 + ..., p - 1 = c1 * L1 + ..., which is what we want!
-        phase_function_to_fit = norm_resampled_phase_function - 1
-
-        legendre_polynomials = self.__make_legendre_polynomials(n_moments, n_samples, resampled_angles)
-        normal_matrix = self.__make_normal_matrix(legendre_polynomials, phase_function_to_fit)
-        normal_vector = self.__make_normal_vector(legendre_polynomials, phase_function_to_fit)
-        cholesky_factorization = self.__cholesky_decomposition(normal_matrix)
-        first_solution = self.__solve_first_system(cholesky_factorization, normal_vector)
-        second_solution = self.__solve_second_system(cholesky_factorization, first_solution)
-        fit_coefficients = self.__filter_negative_coefficients(second_solution)
-        return fit_coefficients
-
-    def __check_inputs_are_expected(self, n_moments, n_samples):
-        self.__check_input_is_int(n_moments, 'n_moments')
-        self.__check_input_is_int(n_samples, 'n_samples')
-        self.__check_samples_greater_than_moments(n_moments, n_samples)
-
-    @staticmethod
-    def __check_input_is_int(input_variable, variable_name):
-        if not isinstance(input_variable, int):
-            raise TypeError(f'{variable_name} must be an int')
-
-    @staticmethod
-    def __check_samples_greater_than_moments(n_moments, n_samples):
-        if not n_samples >= n_moments:
-            raise ValueError('n_samples must be >= n_moments')
-
-    def __resample_angles(self, n_samples):
-        return np.linspace(0, self.angles[-1], num=n_samples)
-
-    def __resample_phase_function(self, resampled_theta):
-        f = interpolate.interp1d(self.mu, self.empirical_phase_function)
-        resampled_mu = np.cos(resampled_theta)
-        return f(resampled_mu)
-
-    @staticmethod
-    def __normalize_phase_function(interp_phase_function, resampled_theta):
-        resampled_norm = np.abs(integrate.simps(interp_phase_function, np.cos(resampled_theta)))
-        return 2 * interp_phase_function / resampled_norm
-
-    @staticmethod
-    def __make_legendre_polynomials(n_moments, n_samples, resampled_theta):
-        # Note: This returns a 2D array. The 0th index is the i+1 polynomial and the 1st index is the angle.
-        # So index [2, 6] will be the 3rd Legendre polynomial (L3) evaluated at the 6th angle
-
-        # Make a 2D array with 1s on the diagonal to pick out only the desired Legendre polynomial
-        diagonal = np.diag(np.ones(n_moments))
-        dummy_coeff = np.zeros((n_moments, n_samples))
-        dummy_coeff[:, :n_moments] = diagonal
-
-        # Evaluate the polynomials at the input angles. I have no idea why legval resizes the output array,
-        # so slice off the 0th moment (which we aren't fitting), and only get up to n_moments
-        return np.polynomial.legendre.legval(np.cos(resampled_theta), dummy_coeff)[1:n_moments, :]
-
-    @staticmethod
-    def __make_normal_matrix(legendre_coefficients, phase_function_to_fit):
-        return np.sum(legendre_coefficients[:, None, :] * legendre_coefficients[None, :, :] / phase_function_to_fit**2,
-                      axis=-1)
-
-    @staticmethod
-    def __make_normal_vector(legendre_coefficients, phase_function_to_fit):
-        return np.sum(legendre_coefficients / phase_function_to_fit, axis=-1)
-
-    @staticmethod
-    def __cholesky_decomposition(normal_matrix):
-        return np.linalg.cholesky(normal_matrix)
-
-    @staticmethod
-    def __solve_first_system(cholesky_factorization, normal_vector):
-        return np.linalg.solve(cholesky_factorization, normal_vector)
-
-    @staticmethod
-    def __solve_second_system(cholesky_factorization, first_solution):
-        return np.linalg.solve(cholesky_factorization.T, first_solution)
-
-    @staticmethod
-    def __filter_negative_coefficients(second_solution):
-        coefficients = np.concatenate((np.array([1]), second_solution))
-        first_negative_index = np.argmax(coefficients < 0)
-        if first_negative_index:
-            print(f"Setting coefficients to zero starting with coefficient {first_negative_index}")
-            coefficients[first_negative_index:] = 0
-        return coefficients
-
-
-if __name__ == '__main__':
-    s = Samples('foo')
-    t = s + 56
-    print(t, type(t))
-
-    raise SystemExit(9)
-
-    import time
-    from scipy.interpolate import interp2d
-    from scipy.optimize import minimize
-    # 0. Load files
-    lut_loc = '/home/kyle/dustssa/kyle_iuvs_2/'
-
-    cext_lut = np.load(f'{lut_loc}cext_lut.npy')
-    csca_lut = np.load(f'{lut_loc}csca_lut.npy')  # shape: (3, 4, 8)
-    z11_lut = np.load(f'{lut_loc}z11_lut.npy')  # shape: (181, 3, 4, 8)
-    ssa_lut = csca_lut / cext_lut
-
-    lut_wavs = np.array([230, 260, 300])
-    lut_reff = np.array([1.4, 1.6, 1.8, 2])
-    lut_k = np.array([1, 10, 30, 60, 100, 200, 300, 500])
-
-    retrieval15 = np.genfromtxt('/home/kyle/dustssa/1-5microns.csv',
-                                delimiter=',')
-    retrieval20 = np.genfromtxt('/home/kyle/dustssa/2-0microns.csv',
-                                delimiter=',')
-
-    # 1. Turn SSA into k
-    k_spectra = np.zeros((4, 19))
-
-
-    def fit_k(k_guess, wavelength, retr_ssa):
-        return (interp(wavelength, k_guess) - retr_ssa) ** 2
-
-
-    for reff in range(lut_reff.shape[0]):
-        interp = interp2d(lut_wavs, lut_k,
-                          ssa_lut[:, reff, :].T)  # ssa = f(wavelength, k)
-
-        # Invert: knowing ssa and wavelength, get k
-        for i in range(retrieval15[:, 0].shape[0]):
-            if reff < 2:
-                m = minimize(fit_k, 150,
-                             args=(retrieval15[i, 0], retrieval15[i, 1])).x[0]
-                # m = np.interp()
-            else:
-                m = minimize(fit_k, 150,
-                             args=(retrieval20[i, 0], retrieval20[i, 1])).x[0]
-            k_spectra[reff, i] = m
-
-    # 2. Get c_sca, c_ext, and z11 at k
-    new_csca = np.zeros((4, 19))
-    new_cext = np.zeros((4, 19))
-
-    for reff in range(lut_reff.shape[0]):
-        f = interp2d(lut_wavs, lut_k, csca_lut[:, reff, :].T)
-        g = interp2d(lut_wavs, lut_k, cext_lut[:, reff, :].T)
-        for w in range(19):
-            new_csca[reff, w] = f(retrieval15[w, 0], k_spectra[reff, w])[0]
-            new_cext[reff, w] = g(retrieval15[w, 0], k_spectra[reff, w])[0]
-
-    # Get z11 at k
-    new_z11 = np.zeros((181, 4, 19))
-
-    for ang in range(181):
-        for reff in range(lut_reff.shape[0]):
-            f = interp2d(lut_wavs, lut_k, z11_lut[ang, :, reff, :].T)
-            for w in range(19):
-                new_z11[ang, reff, w] = \
-                f(retrieval15[w, 0], k_spectra[reff, w])[0]
-
-    # 3. Make P(theta)
-    p = 4 * np.pi * new_z11 / new_csca   # 181, 4, 19
-
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
-    testp = p[:, 0, 0]
-    angles = np.radians(np.linspace(0, 180, num=181))
-
-    pf = PhaseFunction(testp, angles)
-    a = pf.create_legendre_coefficients(65, 360)
-
-    b = decompose_phase_function(testp, angles, 65, 360)
-
-    print(np.amax((b-a)**2))
