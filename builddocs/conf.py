@@ -13,7 +13,7 @@ import sphinx_rtd_theme
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../pyRT_DISORT/'))
+sys.path.insert(0, os.path.abspath('../pyRT_DISORT'))
 
 
 # -- Project information -----------------------------------------------------

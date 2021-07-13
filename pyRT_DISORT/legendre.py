@@ -131,7 +131,7 @@ class _PhaseFunctionBundle:
         return 2 * resampled_pf / resampled_norm
 
 
-class NMoments(int):
+class _NMoments(int):
     """Designate that a number represents the number of moments.
 
     Parameters
@@ -153,7 +153,7 @@ class NMoments(int):
         return super(cls, cls).__new__(cls, value)
 
 
-class NSamples(int):
+class _NSamples(int):
     """Designate that a number represents the number of samples.
 
     Parameters
@@ -201,8 +201,8 @@ class _LegendreDecomposer:
     def __init__(self, phase_function: np.ndarray, angles: np.ndarray,
                  n_moments: int, n_samples: int):
         self.bundle = _PhaseFunctionBundle(phase_function, angles)
-        self.n_moments = NMoments(n_moments)
-        self.n_samples = NSamples(n_samples)
+        self.n_moments = _NMoments(n_moments)
+        self.n_samples = _NSamples(n_samples)
 
         # Fit P(x) = c0 + c1*L1(x) + ... where I force c0 = 1 for DISORT
         self.resamp_norm_pf = \
@@ -288,14 +288,14 @@ def decompose_phase_function(
     n_moments
         The number of Legendre moments to decompose the phase function into.
     n_samples
-        The number of samples to use for the resampling. Must be >= the number
-        of moments.
+        The number of samples to use for the resampling. Must be greater than
+        or equal to :code:`n_moments`.
 
     Examples
     --------
     Let's suppose we have a Henyey-Greenstein phase function with asymmetry
     parameter of 0.6. Let's create its first 65 moments along with the angles
-    over which it's defined.
+    where it's defined.
 
     >>> from pyRT_DISORT.aerosol import HenyeyGreenstein
     >>> analytic_moments = HenyeyGreenstein(0.6).legendre_decomposition(65)

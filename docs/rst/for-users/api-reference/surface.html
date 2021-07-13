@@ -1,0 +1,464 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Surface &mdash; pyRT_DISORT  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Contributions" href="../../for-contributors/contributions.html" />
+    <link rel="prev" title="Rayleigh" href="rayleigh.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> pyRT_DISORT
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">About this project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../about-this-project/about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../about-this-project/about-DISORT.html">About DISORT</a></li>
+</ul>
+<p class="caption"><span class="caption-text">For users</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api-reference.html">API reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="aerosol.html">Aerosol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atmosphere.html">Atmosphere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="controller.html">Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eos.html">Equation of State</a></li>
+<li class="toctree-l2"><a class="reference internal" href="legendre.html">Legendre</a></li>
+<li class="toctree-l2"><a class="reference internal" href="observation.html">Observation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radiation.html">Radiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rayleigh.html">Rayleigh</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Surface</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">For contributors</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../for-contributors/contributions.html">Contributions</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pyRT_DISORT</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../api-reference.html">API reference</a> &raquo;</li>
+        
+      <li>Surface</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../../_sources/rst/for-users/api-reference/surface.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-surface">
+<span id="surface"></span><h1>Surface<a class="headerlink" href="#module-surface" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="code docutils literal notranslate"><span class="pre">surface</span></code> module contains structures for creating arrays related to
+DISORT’s surface treatment.</p>
+<dl class="py class">
+<dt id="surface.Surface">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">surface.</span></code><code class="sig-name descname"><span class="pre">Surface</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">albedo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_streams</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_polar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_azimuth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_angles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_fluxes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_mug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surface.Surface" title="Permalink to this definition">¶</a></dt>
+<dd><p>A structure to compute all the surface parameterization.</p>
+<p>Surface accepts parameters that define the surface arrays required by
+DISORT. The methods in Surface will compute those arrays.</p>
+<dl class="py method">
+<dt id="surface.Surface.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">albedo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_streams</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_polar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_azimuth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_angles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_fluxes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_mug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surface.Surface.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>albedo</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The surface albedo. Only used by DISORT if the bottom boundary is
+Lambertian.</p></li>
+<li><p><strong>n_streams</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The number of streams.</p></li>
+<li><p><strong>n_polar</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The number of polar angles.</p></li>
+<li><p><strong>n_azimuth</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The number of azimuth angles.</p></li>
+<li><p><strong>n_mug</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The number of angle cosine quadrature points for integrating the
+bidirectional reflectivity.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – Raised if a number of things…</p></li>
+<li><p><strong>ValueError</strong> – Raised if albedo is not between 0 and 1.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="surface.Surface.albedo">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">albedo</span></code><a class="headerlink" href="#surface.Surface.albedo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the input albedo.</p>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">ALBEDO</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="surface.Surface.bemst">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">bemst</span></code><a class="headerlink" href="#surface.Surface.bemst" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the directional emissivity at quadrature angles.</p>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">BEMST</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="surface.Surface.emust">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">emust</span></code><a class="headerlink" href="#surface.Surface.emust" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the directional emissivity at user angles.</p>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">EMUST</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="surface.Surface.lambertian">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">lambertian</span></code><a class="headerlink" href="#surface.Surface.lambertian" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get whether the bottom boundary used in the model will be Lambertian.</p>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">LAMBER</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="surface.Surface.make_hapke">
+<code class="sig-name descname"><span class="pre">make_hapke</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beam_flux</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surface.Surface.make_hapke" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a basic Hapke surface.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>b0</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The strength of the opposition surge.</p></li>
+<li><p><strong>h</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The width of the opposition surge.</p></li>
+<li><p><strong>w</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The surface single scattering albedo.</p></li>
+<li><p><strong>mu</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The cosine of emission.</p></li>
+<li><p><strong>mu0</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The cosine of incidence.</p></li>
+<li><p><strong>phi</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The azimuth angle.</p></li>
+<li><p><strong>phi0</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Phi0</p></li>
+<li><p><strong>beam_flux</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The incident beam flux.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="observation.html#observation.Angles" title="observation.Angles"><code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code></a>, <a class="reference internal" href="radiation.html#radiation.IncidentFlux" title="radiation.IncidentFlux"><code class="xref py py-class docutils literal notranslate"><span class="pre">IncidentFlux</span></code></a></p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="surface.Surface.make_hapkeHG2">
+<code class="sig-name descname"><span class="pre">make_hapkeHG2</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">asym</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frac</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beam_flux</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surface.Surface.make_hapkeHG2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a Hapke surface with 2 lobed Henyey-Greenstein surface phase
+function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>b0</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The strength of the opposition surge.</p></li>
+<li><p><strong>h</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The width of the opposition surge.</p></li>
+<li><p><strong>w</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The surface single scattering albedo.</p></li>
+<li><p><strong>asym</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The asymmetry parameter.</p></li>
+<li><p><strong>frac</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The forward scattering fraction.</p></li>
+<li><p><strong>mu</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The cosine of emission.</p></li>
+<li><p><strong>mu0</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The cosine of incidence.</p></li>
+<li><p><strong>phi</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The azimuth angle.</p></li>
+<li><p><strong>phi0</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Phi0</p></li>
+<li><p><strong>beam_flux</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The incident beam flux.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="observation.html#observation.Angles" title="observation.Angles"><code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code></a>, <a class="reference internal" href="radiation.html#radiation.IncidentFlux" title="radiation.IncidentFlux"><code class="xref py py-class docutils literal notranslate"><span class="pre">IncidentFlux</span></code></a></p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="surface.Surface.make_hapkeHG2_roughness">
+<code class="sig-name descname"><span class="pre">make_hapkeHG2_roughness</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">asym</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">roughness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frac</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beam_flux</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surface.Surface.make_hapkeHG2_roughness" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a Hapke surface with 2 lobed Henyey-Greenstein surface phase
+function and surface roughness parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>b0</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The strength of the opposition surge.</p></li>
+<li><p><strong>h</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The width of the opposition surge.</p></li>
+<li><p><strong>w</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The surface single scattering albedo.</p></li>
+<li><p><strong>asym</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The asymmetry parameter.</p></li>
+<li><p><strong>frac</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The forward scattering fraction.</p></li>
+<li><p><strong>roughness</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The roughness parameter.</p></li>
+<li><p><strong>mu</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The cosine of emission.</p></li>
+<li><p><strong>mu0</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The cosine of incidence.</p></li>
+<li><p><strong>phi</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The azimuth angle.</p></li>
+<li><p><strong>phi0</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Phi0</p></li>
+<li><p><strong>beam_flux</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The incident beam flux.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="observation.html#observation.Angles" title="observation.Angles"><code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code></a>, <a class="reference internal" href="radiation.html#radiation.IncidentFlux" title="radiation.IncidentFlux"><code class="xref py py-class docutils literal notranslate"><span class="pre">IncidentFlux</span></code></a></p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="surface.Surface.make_lambertian">
+<code class="sig-name descname"><span class="pre">make_lambertian</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#surface.Surface.make_lambertian" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make the surface a Lambertian surface.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="surface.Surface.rho_accurate">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">rho_accurate</span></code><a class="headerlink" href="#surface.Surface.rho_accurate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the analytic BRDF results.</p>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">RHO_ACCURATE</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="surface.Surface.rhoq">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">rhoq</span></code><a class="headerlink" href="#surface.Surface.rhoq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the quadrature fourier expanded BRDF.</p>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">RHOQ</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="surface.Surface.rhou">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">rhou</span></code><a class="headerlink" href="#surface.Surface.rhou" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the user defined fourier expanded BRDF.</p>
+<p class="rubric">Notes</p>
+<p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">RHOU</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="../../for-contributors/contributions.html" class="btn btn-neutral float-right" title="Contributions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="rayleigh.html" class="btn btn-neutral float-left" title="Rayleigh" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, kconnour.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
