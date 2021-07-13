@@ -219,12 +219,12 @@ inputs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>incidence</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Incidence (solar zenith) angles [degrees]. All values must be between 0
+<li><p><strong>incidence</strong> (<em>numpy.ndarray</em>) – Incidence (solar zenith) angles [degrees]. All values must be between 0
 and 180 degrees.</p></li>
-<li><p><strong>emission</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Emission (emergence) angles [degrees]. All values must be between 0 and
+<li><p><strong>emission</strong> (<em>numpy.ndarray</em>) – Emission (emergence) angles [degrees]. All values must be between 0 and
 180 degrees.</p></li>
-<li><p><strong>azimuth</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Azimuth angles [degrees]. All values must be between 0 and 360 degrees.</p></li>
-<li><p><strong>beam_azimuth</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Azimuth angles of the incident beam [degrees]. All values must be
+<li><p><strong>azimuth</strong> (<em>numpy.ndarray</em>) – Azimuth angles [degrees]. All values must be between 0 and 360 degrees.</p></li>
+<li><p><strong>beam_azimuth</strong> (<em>numpy.ndarray</em>) – Azimuth angles of the incident beam [degrees]. All values must be
 between 0 and 360 degrees.</p></li>
 </ul>
 </dd>
@@ -235,6 +235,9 @@ between 0 and 360 degrees.</p></li>
     mathematically valid range, or if the input arrays do not have the
     same observation shape.</p></li>
 </ul>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 <div class="admonition warning">
@@ -296,22 +299,12 @@ incidence angle and beam azimuth angle of each image varies:</p>
 <dt id="observation.Angles.emission">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">emission</span></code><a class="headerlink" href="#observation.Angles.emission" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input emission angles [degrees].</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt id="observation.Angles.incidence">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">incidence</span></code><a class="headerlink" href="#observation.Angles.incidence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input incidence angles [degrees].</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -321,11 +314,6 @@ incidence angle and beam azimuth angle of each image varies:</p>
 <p class="rubric">Notes</p>
 <p>Each element along the observation dimension(s) is named <code class="code docutils literal notranslate"><span class="pre">UMU</span></code> in
 DISORT.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -335,11 +323,6 @@ DISORT.</p>
 <p class="rubric">Notes</p>
 <p>Each element along the observation dimension(s) is named <code class="code docutils literal notranslate"><span class="pre">UMU0</span></code> in
 DISORT.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -350,11 +333,6 @@ the input to <code class="code docutils literal notranslate"><span class="pre">a
 <p class="rubric">Notes</p>
 <p>Each element along the observation dimension(s) is named <code class="code docutils literal notranslate"><span class="pre">PHI</span></code> in
 DISORT.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -365,11 +343,6 @@ DISORT.</p>
 <p class="rubric">Notes</p>
 <p>Each element along the observation dimension(s) is named <code class="code docutils literal notranslate"><span class="pre">PHI0</span></code> in
 DISORT.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
-</dd>
-</dl>
 </dd></dl>
 
 </dd></dl>
@@ -384,11 +357,11 @@ angles.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>incidence</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Incidence (solar zenith) angles [degrees]. All values must be between 0
+<li><p><strong>incidence</strong> (<em>numpy.ndarray</em>) – Incidence (solar zenith) angles [degrees]. All values must be between 0
 and 180 degrees.</p></li>
-<li><p><strong>emission</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Emission (emergence) angles [degrees]. All values must be between 0 and
+<li><p><strong>emission</strong> (<em>numpy.ndarray</em>) – Emission (emergence) angles [degrees]. All values must be between 0 and
 180 degrees.</p></li>
-<li><p><strong>phase</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Phase angles [degrees]. All values must be between 0 and 180 degrees.</p></li>
+<li><p><strong>phase</strong> (<em>numpy.ndarray</em>) – Phase angles [degrees]. All values must be between 0 and 180 degrees.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
@@ -397,6 +370,9 @@ and 180 degrees.</p></li>
 <li><p><strong>ValueError</strong> – Raised if any of the input arrays contain values outside of their
     mathematically valid range.</p></li>
 </ul>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -413,11 +389,6 @@ must have compatible shapes.</p>
 <span class="go">array([122.74921226, 129.08074256, 131.57329276])</span>
 </pre></div>
 </div>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
-</dd>
-</dl>
 </dd></dl>
 
 </div>
@@ -431,11 +402,11 @@ known (and presumably azimuth angles are unknown).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>incidence</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Incidence (solar zenith) angles [degrees]. All values must be between 0
+<li><p><strong>incidence</strong> (<em>numpy.ndarray</em>) – Incidence (solar zenith) angles [degrees]. All values must be between 0
 and 180 degrees.</p></li>
-<li><p><strong>emission</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Emission (emergence) angles [degrees]. All values must be between 0 and
+<li><p><strong>emission</strong> (<em>numpy.ndarray</em>) – Emission (emergence) angles [degrees]. All values must be between 0 and
 180 degrees.</p></li>
-<li><p><strong>phase</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Phase angles [degrees]. All values must be between 0 and 180 degrees.</p></li>
+<li><p><strong>phase</strong> (<em>numpy.ndarray</em>) – Phase angles [degrees]. All values must be between 0 and 180 degrees.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
@@ -444,6 +415,9 @@ and 180 degrees.</p></li>
 <li><p><strong>ValueError</strong> – Raised if any of the input arrays contain values outside of their
     mathematically valid range.</p></li>
 </ul>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#observation.Angles" title="observation.Angles">observation.Angles</a></p>
 </dd>
 </dl>
 <div class="admonition warning">
@@ -476,11 +450,6 @@ must have compatible shapes.</p>
 <span class="go">   phi0 = [0. 0. 0.]</span>
 </pre></div>
 </div>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#observation.Angles" title="observation.Angles"><code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code></a></p>
-</dd>
-</dl>
 </dd></dl>
 
 </div>
@@ -495,12 +464,12 @@ defines a 1D array of emission and azimuth angles.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>incidence</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Incidence (solar zenith) angle [degrees]. Value must be between 0 and
+<li><p><strong>incidence</strong> (<em>float</em>) – Incidence (solar zenith) angle [degrees]. Value must be between 0 and
 180 degrees.</p></li>
-<li><p><strong>emission</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Emission (emergence) angle [degrees]. All values must be between 0 and
+<li><p><strong>emission</strong> (<em>numpy.ndarray</em>) – Emission (emergence) angle [degrees]. All values must be between 0 and
 180 degrees.</p></li>
-<li><p><strong>azimuth</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Azimuthal angle [degrees]. All values must be between 0 and 360 degrees.</p></li>
-<li><p><strong>beam_azimuth</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Azimuth angle of the incident beam [degrees]. Value must be between 0
+<li><p><strong>azimuth</strong> (<em>numpy.ndarray</em>) – Azimuthal angle [degrees]. All values must be between 0 and 360 degrees.</p></li>
+<li><p><strong>beam_azimuth</strong> (<em>float</em>) – Azimuth angle of the incident beam [degrees]. Value must be between 0
 and 360 degrees.</p></li>
 </ul>
 </dd>
@@ -511,6 +480,9 @@ and 360 degrees.</p></li>
     mathematically valid range, or if the input arrays do not have the
     same observation shape.</p></li>
 </ul>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#observation.Angles" title="observation.Angles">observation.Angles</a></p>
 </dd>
 </dl>
 <div class="admonition warning">
@@ -536,11 +508,6 @@ and 360 degrees.</p></li>
 <span class="go">   phi0 = [40]</span>
 </pre></div>
 </div>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#observation.Angles" title="observation.Angles"><code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code></a></p>
-</dd>
-</dl>
 </dd></dl>
 
 </div>
@@ -559,8 +526,8 @@ their corresponding wavenumber.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>short_wavelength</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The short wavelength [microns] of each spectral bin.</p></li>
-<li><p><strong>long_wavelength</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The long wavelength [microns] of each spectral bin.</p></li>
+<li><p><strong>short_wavelength</strong> (<em>numpy.ndarray</em>) – The short wavelength [microns] of each spectral bin.</p></li>
+<li><p><strong>long_wavelength</strong> (<em>numpy.ndarray</em>) – The long wavelength [microns] of each spectral bin.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
@@ -572,6 +539,9 @@ their corresponding wavenumber.</p>
     contain values outside of 0.1 to 50 microns (I assume this is the
     valid range to do retrievals).</p></li>
 </ul>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -608,22 +578,12 @@ corresponding to <code class="docutils literal notranslate"><span class="pre">sh
 in DISORT. It is only needed by DISORT if
 <a class="reference internal" href="radiation.html#radiation.ThermalEmission.thermal_emission" title="radiation.ThermalEmission.thermal_emission"><code class="xref py py-attr docutils literal notranslate"><span class="pre">thermal_emission</span></code></a> is set to
 <code class="code docutils literal notranslate"><span class="pre">True</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt id="observation.Spectral.long_wavelength">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">long_wavelength</span></code><a class="headerlink" href="#observation.Spectral.long_wavelength" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input long wavelength [microns].</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -636,22 +596,12 @@ to <code class="docutils literal notranslate"><span class="pre">long_wavelength<
 in DISORT. It is only needed by DISORT if
 <a class="reference internal" href="radiation.html#radiation.ThermalEmission.thermal_emission" title="radiation.ThermalEmission.thermal_emission"><code class="xref py py-attr docutils literal notranslate"><span class="pre">thermal_emission</span></code></a> is set to
 <code class="code docutils literal notranslate"><span class="pre">True</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt id="observation.Spectral.short_wavelength">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">short_wavelength</span></code><a class="headerlink" href="#observation.Spectral.short_wavelength" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input short wavelength [microns].</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
-</dd>
-</dl>
 </dd></dl>
 
 </dd></dl>
@@ -666,8 +616,8 @@ constant spectral width.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>center_wavelength</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The center wavelength [microns] of each spectral bin.</p></li>
-<li><p><strong>width</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The spectral width of each spectral bin.</p></li>
+<li><p><strong>center_wavelength</strong> (<em>numpy.ndarray</em>) – The center wavelength [microns] of each spectral bin.</p></li>
+<li><p><strong>width</strong> (<em>float</em>) – The spectral width of each spectral bin.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
@@ -675,6 +625,9 @@ constant spectral width.</p>
 <li><p><strong>TypeError</strong> – Raised if <code class="code docutils literal notranslate"><span class="pre">center_wavelength</span></code> is not a numpy.ndarray.</p></li>
 <li><p><strong>ValueError</strong> – I’ll add this later.</p></li>
 </ul>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#observation.Spectral" title="observation.Spectral">observation.Spectral</a></p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -688,11 +641,6 @@ nm spectral width:</p>
 <span class="go">(30,)</span>
 </pre></div>
 </div>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#observation.Spectral" title="observation.Spectral"><code class="xref py py-class docutils literal notranslate"><span class="pre">Spectral</span></code></a></p>
-</dd>
-</dl>
 </dd></dl>
 
 </div>

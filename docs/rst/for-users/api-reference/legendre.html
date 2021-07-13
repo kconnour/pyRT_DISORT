@@ -189,12 +189,15 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>phase_function</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The phase function to decompose.</p></li>
-<li><p><strong>angles</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The angles where the phase function is defined.</p></li>
-<li><p><strong>n_moments</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The number of Legendre moments to decompose the phase function into.</p></li>
-<li><p><strong>n_samples</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The number of samples to use for the resampling. Must be greater than
+<li><p><strong>phase_function</strong> (<em>numpy.ndarray</em>) – The phase function to decompose.</p></li>
+<li><p><strong>angles</strong> (<em>numpy.ndarray</em>) – The angles where the phase function is defined.</p></li>
+<li><p><strong>n_moments</strong> (<em>int</em>) – The number of Legendre moments to decompose the phase function into.</p></li>
+<li><p><strong>n_samples</strong> (<em>int</em>) – The number of samples to use for the resampling. Must be greater than
 or equal to <code class="code docutils literal notranslate"><span class="pre">n_moments</span></code>.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>numpy.ndarray</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -221,11 +224,6 @@ and use 360 samples to make sure the resolution is good.</p>
 </pre></div>
 </div>
 <p>We’ve recovered the original moments pretty well!</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
-</dd>
-</dl>
 </dd></dl>
 
 </div>

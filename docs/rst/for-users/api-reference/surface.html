@@ -189,19 +189,18 @@ DISORT’s surface treatment.</p>
 <dd><p>A structure to compute all the surface parameterization.</p>
 <p>Surface accepts parameters that define the surface arrays required by
 DISORT. The methods in Surface will compute those arrays.</p>
-<dl class="py method">
-<dt id="surface.Surface.__init__">
-<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">albedo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_streams</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_polar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_azimuth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_angles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_fluxes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_mug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surface.Surface.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>albedo</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The surface albedo. Only used by DISORT if the bottom boundary is
+<li><p><strong>albedo</strong> (<em>float</em>) – The surface albedo. Only used by DISORT if the bottom boundary is
 Lambertian.</p></li>
-<li><p><strong>n_streams</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The number of streams.</p></li>
-<li><p><strong>n_polar</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The number of polar angles.</p></li>
-<li><p><strong>n_azimuth</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The number of azimuth angles.</p></li>
-<li><p><strong>n_mug</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The number of angle cosine quadrature points for integrating the
+<li><p><strong>n_streams</strong> (<em>int</em>) – The number of streams.</p></li>
+<li><p><strong>n_polar</strong> (<em>int</em>) – The number of polar angles.</p></li>
+<li><p><strong>n_azimuth</strong> (<em>int</em>) – The number of azimuth angles.</p></li>
+<li><p><strong>n_mug</strong> (<em>int</em>) – The number of angle cosine quadrature points for integrating the
 bidirectional reflectivity.</p></li>
+<li><p><strong>user_angles</strong> (<em>bool</em>) – </p></li>
+<li><p><strong>only_fluxes</strong> (<em>bool</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
@@ -209,6 +208,36 @@ bidirectional reflectivity.</p></li>
 <li><p><strong>TypeError</strong> – Raised if a number of things…</p></li>
 <li><p><strong>ValueError</strong> – Raised if albedo is not between 0 and 1.</p></li>
 </ul>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="surface.Surface.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">albedo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_streams</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_polar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_azimuth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_angles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_fluxes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_mug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#surface.Surface.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>albedo</strong> (<em>float</em>) – The surface albedo. Only used by DISORT if the bottom boundary is
+Lambertian.</p></li>
+<li><p><strong>n_streams</strong> (<em>int</em>) – The number of streams.</p></li>
+<li><p><strong>n_polar</strong> (<em>int</em>) – The number of polar angles.</p></li>
+<li><p><strong>n_azimuth</strong> (<em>int</em>) – The number of azimuth angles.</p></li>
+<li><p><strong>n_mug</strong> (<em>int</em>) – The number of angle cosine quadrature points for integrating the
+bidirectional reflectivity.</p></li>
+<li><p><strong>user_angles</strong> (<em>bool</em>) – </p></li>
+<li><p><strong>only_fluxes</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – Raised if a number of things…</p></li>
+<li><p><strong>ValueError</strong> – Raised if albedo is not between 0 and 1.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -219,11 +248,6 @@ bidirectional reflectivity.</p></li>
 <dd><p>Get the input albedo.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">ALBEDO</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -232,11 +256,6 @@ bidirectional reflectivity.</p></li>
 <dd><p>Get the directional emissivity at quadrature angles.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">BEMST</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -245,11 +264,6 @@ bidirectional reflectivity.</p></li>
 <dd><p>Get the directional emissivity at user angles.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">EMUST</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -258,11 +272,6 @@ bidirectional reflectivity.</p></li>
 <dd><p>Get whether the bottom boundary used in the model will be Lambertian.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">LAMBER</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -272,26 +281,24 @@ bidirectional reflectivity.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>b0</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The strength of the opposition surge.</p></li>
-<li><p><strong>h</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The width of the opposition surge.</p></li>
-<li><p><strong>w</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The surface single scattering albedo.</p></li>
-<li><p><strong>mu</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The cosine of emission.</p></li>
-<li><p><strong>mu0</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The cosine of incidence.</p></li>
-<li><p><strong>phi</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The azimuth angle.</p></li>
-<li><p><strong>phi0</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Phi0</p></li>
-<li><p><strong>beam_flux</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The incident beam flux.</p></li>
+<li><p><strong>b0</strong> (<em>float</em>) – The strength of the opposition surge.</p></li>
+<li><p><strong>h</strong> (<em>float</em>) – The width of the opposition surge.</p></li>
+<li><p><strong>w</strong> (<em>float</em>) – The surface single scattering albedo.</p></li>
+<li><p><strong>mu</strong> (<em>float</em>) – The cosine of emission.</p></li>
+<li><p><strong>mu0</strong> (<em>float</em>) – The cosine of incidence.</p></li>
+<li><p><strong>phi</strong> (<em>float</em>) – The azimuth angle.</p></li>
+<li><p><strong>phi0</strong> (<em>float</em>) – Phi0</p></li>
+<li><p><strong>beam_flux</strong> (<em>float</em>) – The incident beam flux.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <p><a class="reference internal" href="observation.html#observation.Angles" title="observation.Angles"><code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code></a>, <a class="reference internal" href="radiation.html#radiation.IncidentFlux" title="radiation.IncidentFlux"><code class="xref py py-class docutils literal notranslate"><span class="pre">IncidentFlux</span></code></a></p>
 </div>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -302,28 +309,26 @@ function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>b0</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The strength of the opposition surge.</p></li>
-<li><p><strong>h</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The width of the opposition surge.</p></li>
-<li><p><strong>w</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The surface single scattering albedo.</p></li>
-<li><p><strong>asym</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The asymmetry parameter.</p></li>
-<li><p><strong>frac</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The forward scattering fraction.</p></li>
-<li><p><strong>mu</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The cosine of emission.</p></li>
-<li><p><strong>mu0</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The cosine of incidence.</p></li>
-<li><p><strong>phi</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The azimuth angle.</p></li>
-<li><p><strong>phi0</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Phi0</p></li>
-<li><p><strong>beam_flux</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The incident beam flux.</p></li>
+<li><p><strong>b0</strong> (<em>float</em>) – The strength of the opposition surge.</p></li>
+<li><p><strong>h</strong> (<em>float</em>) – The width of the opposition surge.</p></li>
+<li><p><strong>w</strong> (<em>float</em>) – The surface single scattering albedo.</p></li>
+<li><p><strong>asym</strong> (<em>float</em>) – The asymmetry parameter.</p></li>
+<li><p><strong>frac</strong> (<em>float</em>) – The forward scattering fraction.</p></li>
+<li><p><strong>mu</strong> (<em>float</em>) – The cosine of emission.</p></li>
+<li><p><strong>mu0</strong> (<em>float</em>) – The cosine of incidence.</p></li>
+<li><p><strong>phi</strong> (<em>float</em>) – The azimuth angle.</p></li>
+<li><p><strong>phi0</strong> (<em>float</em>) – Phi0</p></li>
+<li><p><strong>beam_flux</strong> (<em>float</em>) – The incident beam flux.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <p><a class="reference internal" href="observation.html#observation.Angles" title="observation.Angles"><code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code></a>, <a class="reference internal" href="radiation.html#radiation.IncidentFlux" title="radiation.IncidentFlux"><code class="xref py py-class docutils literal notranslate"><span class="pre">IncidentFlux</span></code></a></p>
 </div>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -334,29 +339,27 @@ function and surface roughness parameter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>b0</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The strength of the opposition surge.</p></li>
-<li><p><strong>h</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The width of the opposition surge.</p></li>
-<li><p><strong>w</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The surface single scattering albedo.</p></li>
-<li><p><strong>asym</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The asymmetry parameter.</p></li>
-<li><p><strong>frac</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The forward scattering fraction.</p></li>
-<li><p><strong>roughness</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The roughness parameter.</p></li>
-<li><p><strong>mu</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The cosine of emission.</p></li>
-<li><p><strong>mu0</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The cosine of incidence.</p></li>
-<li><p><strong>phi</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The azimuth angle.</p></li>
-<li><p><strong>phi0</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Phi0</p></li>
-<li><p><strong>beam_flux</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The incident beam flux.</p></li>
+<li><p><strong>b0</strong> (<em>float</em>) – The strength of the opposition surge.</p></li>
+<li><p><strong>h</strong> (<em>float</em>) – The width of the opposition surge.</p></li>
+<li><p><strong>w</strong> (<em>float</em>) – The surface single scattering albedo.</p></li>
+<li><p><strong>asym</strong> (<em>float</em>) – The asymmetry parameter.</p></li>
+<li><p><strong>frac</strong> (<em>float</em>) – The forward scattering fraction.</p></li>
+<li><p><strong>roughness</strong> (<em>float</em>) – The roughness parameter.</p></li>
+<li><p><strong>mu</strong> (<em>float</em>) – The cosine of emission.</p></li>
+<li><p><strong>mu0</strong> (<em>float</em>) – The cosine of incidence.</p></li>
+<li><p><strong>phi</strong> (<em>float</em>) – The azimuth angle.</p></li>
+<li><p><strong>phi0</strong> (<em>float</em>) – Phi0</p></li>
+<li><p><strong>beam_flux</strong> (<em>float</em>) – The incident beam flux.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <p><a class="reference internal" href="observation.html#observation.Angles" title="observation.Angles"><code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code></a>, <a class="reference internal" href="radiation.html#radiation.IncidentFlux" title="radiation.IncidentFlux"><code class="xref py py-class docutils literal notranslate"><span class="pre">IncidentFlux</span></code></a></p>
 </div>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -365,7 +368,7 @@ function and surface roughness parameter.</p>
 <dd><p>Make the surface a Lambertian surface.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -376,11 +379,6 @@ function and surface roughness parameter.</p>
 <dd><p>Get the analytic BRDF results.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">RHO_ACCURATE</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -389,11 +387,6 @@ function and surface roughness parameter.</p>
 <dd><p>Get the quadrature fourier expanded BRDF.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">RHOQ</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -402,11 +395,6 @@ function and surface roughness parameter.</p>
 <dd><p>Get the user defined fourier expanded BRDF.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">RHOU</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
-</dd>
-</dl>
 </dd></dl>
 
 </dd></dl>
