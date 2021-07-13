@@ -11,6 +11,7 @@ Here you can find documentation on the included modules with pyRT_DISORT.
    api-reference/atmosphere
    api-reference/controller
    api-reference/eos
+   api-reference/legendre
    api-reference/observation
    api-reference/output
    api-reference/radiation
