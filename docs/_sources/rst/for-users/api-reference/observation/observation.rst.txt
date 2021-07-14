@@ -1,0 +1,38 @@
+pyRT_DISORT.observation
+=======================
+.. automodule:: observation
+
+Angles
+------
+:class:`Angles` is the fundamental class for holding on to the angular geometry
+from an observation. pyRT_DISORT also includes functions to help create its
+input, along with functions to create instances of :class:`Angles` under
+certain special cases.
+
+.. autoclass:: observation.Angles
+   :members:
+
+make_azimuth
+************
+.. autofunction:: observation.make_azimuth
+
+phase_to_angles
+***************
+.. autofunction:: observation.phase_to_angles
+
+sky_image
+*********
+.. autofunction:: observation.sky_image
+
+Spectral
+--------
+:class:`Spectral` is the fundamental class for holding on to the spectral
+information from an observation. pyRT_DISORT also includes functions to help
+create instances of :class:`Spectral` under certain special cases.
+
+.. autoclass:: observation.Spectral
+   :members:
+
+constant_width
+**************
+.. autofunction:: constant_width

@@ -1,5 +1,6 @@
-"""This module contains tools to hold and compute quantities commonly found in
-an observation.
+"""This module provides a number of classes (and functions to help create those
+classes) useful for computing quantities required by DISORT that are commonly
+found in an observation.
 
 """
 import warnings
@@ -38,7 +39,7 @@ class Angles:
     Raises
     ------
     TypeError
-        Raised if any of the angles are not a numpy.ndarray.
+        Raised if any of the inputs are not a numpy.ndarray.
     ValueError
         Raised if any of the input arrays contain values outside of their
         mathematically valid range, or if the input arrays do not have the
@@ -63,9 +64,11 @@ class Angles:
 
     Examples
     --------
-    For a (3, 5) sky image with a single incident beam:
+    Instantiate this class for a (3, 5) sky image with a single incident beam.
+    This could represent a single image taken from a rover.
 
     >>> import numpy as np
+    >>> from pyRT_DISORT.observation import Angles
     >>> incidence_ang = np.array([30])
     >>> beam_azimuth = np.array([40])
     >>> emission_ang = np.linspace(30, 60, num=3)[np.newaxis, :]
@@ -78,9 +81,12 @@ class Angles:
        phi = [[20.  27.5 35.  42.5 50. ]]
        phi0 = [40]
 
-    For a sequence of 50 images at a fixed position over a period time where the
-    incidence angle and beam azimuth angle of each image varies:
+    Instantiate this class for a sequence of 50 images at a fixed position over
+    a period time where the incidence angle and beam azimuth angle varies from
+    image to image. This could represent a movie taken from a rover.
 
+    >>> import numpy as np
+    >>> from pyRT_DISORT.observation import Angles
     >>> incidence_ang = np.linspace(30, 35, num=50)
     >>> beam_azimuth = np.linspace(40, 50, num=50)
     >>> emission_ang = np.broadcast_to(np.linspace(30, 60, num=3), (50, 3))
@@ -89,8 +95,11 @@ class Angles:
     >>> print(angles.mu0.shape, angles.mu.shape, angles.phi.shape)
     (50,) (50, 3) (50, 5)
 
-    For a (40, 50) image where each pixel has its own set of angles:
+    Instantiate this class for a (40, 50) image where each pixel has its own
+    set of angles. This could represent an image taken from orbit.
 
+    >>> import numpy as np
+    >>> from pyRT_DISORT.observation import Angles
     >>> ang = np.outer(np.linspace(1, 2, num=40), np.linspace(10, 40, num=50))
     >>> expanded_ang = np.expand_dims(ang, -1)
     >>> angles = Angles(ang, expanded_ang, expanded_ang, ang)
@@ -100,16 +109,16 @@ class Angles:
     """
     def __init__(self, incidence: np.ndarray, emission: np.ndarray,
                  azimuth: np.ndarray, beam_azimuth: np.ndarray) -> None:
-        self.__incidence = _Angle(incidence, 'incidence', 0, 180)
-        self.__emission = _Angle(emission, 'emission', 0, 180)
-        self.__azimuth = _Angle(azimuth, 'azimuth', 0, 360)
-        self.__azimuth0 = _Angle(beam_azimuth, 'beam_azimuth', 0, 360)
+        self._incidence = _Angle(incidence, 'incidence', 0, 180)
+        self._emission = _Angle(emission, 'emission', 0, 180)
+        self._azimuth = _Angle(azimuth, 'azimuth', 0, 360)
+        self._azimuth0 = _Angle(beam_azimuth, 'beam_azimuth', 0, 360)
 
-        self.__raise_value_error_if_inputs_have_different_obs_shapes()
-        self.__warn_if_incidence_angle_is_greater_than_90()
+        self._raise_value_error_if_inputs_have_different_obs_shapes()
+        self._warn_if_incidence_angle_is_greater_than_90()
 
-        self.__mu0 = self.__compute_mu0()
-        self.__mu = self.__compute_mu()
+        self._mu0 = self.__compute_mu0()
+        self._mu = self.__compute_mu()
 
     def __str__(self) -> str:
         return f'Angles:\n' \
@@ -118,41 +127,41 @@ class Angles:
                f'   phi = {self.phi}\n' \
                f'   phi0 = {self.phi0}'
 
-    def __raise_value_error_if_inputs_have_different_obs_shapes(self) -> None:
-        self.__raise_value_error_if_observation_dimensions_do_not_match()
+    def _raise_value_error_if_inputs_have_different_obs_shapes(self) -> None:
+        self._raise_value_error_if_observation_dimensions_do_not_match()
 
-    def __raise_value_error_if_observation_dimensions_do_not_match(self) \
+    def _raise_value_error_if_observation_dimensions_do_not_match(self) \
             -> None:
-        if not (self.__incidence.val.shape == self.__emission.val.shape[:-1] ==
-                self.__azimuth0.val.shape == self.__azimuth.val.shape[: -1]):
-            print(self.__incidence.val.shape, self.__azimuth0.val.shape)
+        if not (self._incidence.val.shape == self._emission.val.shape[:-1] ==
+                self._azimuth0.val.shape == self._azimuth.val.shape[: -1]):
+            print(self._incidence.val.shape, self._azimuth0.val.shape)
             message = 'The pixel dimensions do not match.'
             raise ValueError(message)
 
-    def __warn_if_incidence_angle_is_greater_than_90(self) -> None:
-        if np.any(self.__incidence.val > 90):
+    def _warn_if_incidence_angle_is_greater_than_90(self) -> None:
+        if np.any(self._incidence.val > 90):
             message = 'Some values in incidence are greater than 90 degrees.'
             warnings.warn(message)
 
     def __compute_mu0(self) -> np.ndarray:
-        return self.__incidence.cosine()
+        return self._incidence.cosine()
 
     def __compute_mu(self) -> np.ndarray:
-        return self.__emission.cosine()
+        return self._emission.cosine()
 
     @property
     def incidence(self) -> np.ndarray:
         """Get the input incidence angles [degrees].
 
         """
-        return self.__incidence.val
+        return self._incidence.val
 
     @property
     def emission(self) -> np.ndarray:
         """Get the input emission angles [degrees].
 
         """
-        return self.__emission.val
+        return self._emission.val
 
     @property
     def mu0(self) -> np.ndarray:
@@ -164,7 +173,7 @@ class Angles:
         DISORT.
 
         """
-        return self.__mu0
+        return self._mu0
 
     @property
     def mu(self) -> np.ndarray:
@@ -176,7 +185,7 @@ class Angles:
         DISORT.
 
         """
-        return self.__mu
+        return self._mu
 
     @property
     def phi0(self) -> np.ndarray:
@@ -189,7 +198,7 @@ class Angles:
         DISORT.
 
         """
-        return self.__azimuth0.val
+        return self._azimuth0.val
 
     @property
     def phi(self) -> np.ndarray:
@@ -202,7 +211,7 @@ class Angles:
         DISORT.
 
         """
-        return self.__azimuth.val
+        return self._azimuth.val
 
 
 class _Angle:
@@ -478,6 +487,11 @@ class Spectral:
     This class can accommodate arrays of any shape as long as they both have
     the same shape. If you do not plan to use thermal emission, there is
     probably little benefit making an instance of this class.
+
+    See Also
+    --------
+    constant_width: Create instances of this class if the wavelengths are
+                    equally spaced.
 
     Examples
     --------

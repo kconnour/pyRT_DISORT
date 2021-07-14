@@ -162,15 +162,16 @@
            <div itemprop="articleBody">
             
   <h1>Source code for observation</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;This module contains tools to hold and compute quantities commonly found in</span>
-<span class="sd">an observation.</span>
+<span></span><span class="sd">&quot;&quot;&quot;This module provides a number of classes (and functions to help create those</span>
+<span class="sd">classes) useful for computing quantities required by DISORT that are commonly</span>
+<span class="sd">found in an observation.</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 
-<div class="viewcode-block" id="Angles"><a class="viewcode-back" href="../rst/for-users/api-reference/observation.html#observation.Angles">[docs]</a><span class="k">class</span> <span class="nc">Angles</span><span class="p">:</span>
+<div class="viewcode-block" id="Angles"><a class="viewcode-back" href="../rst/for-users/api-reference/observation/Angles.html#observation.Angles">[docs]</a><span class="k">class</span> <span class="nc">Angles</span><span class="p">:</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;A data structure that contains angles required by DISORT.</span>
 
 <span class="sd">    It accepts both the incidence and azimuth angles of the incident beam</span>
@@ -437,7 +438,7 @@
 
 <span class="c1"># TODO: Is there a cleaner way to compute this?</span>
 <span class="c1"># TODO: Test shapes match? If not the computation will break</span>
-<div class="viewcode-block" id="make_azimuth"><a class="viewcode-back" href="../rst/for-users/api-reference/observation.html#observation.make_azimuth">[docs]</a><span class="k">def</span> <span class="nf">make_azimuth</span><span class="p">(</span><span class="n">incidence</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">emission</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+<div class="viewcode-block" id="make_azimuth"><a class="viewcode-back" href="../rst/for-users/api-reference/observation/make_azimuth.html#observation.make_azimuth">[docs]</a><span class="k">def</span> <span class="nf">make_azimuth</span><span class="p">(</span><span class="n">incidence</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">emission</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                  <span class="n">phase</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Construct azimuth angles from a set of incidence, emission, and phase</span>
 <span class="sd">    angles.</span>
@@ -493,7 +494,7 @@
     <span class="k">return</span> <span class="mi">180</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">d_phi</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="phase_to_angles"><a class="viewcode-back" href="../rst/for-users/api-reference/observation.html#observation.phase_to_angles">[docs]</a><span class="k">def</span> <span class="nf">phase_to_angles</span><span class="p">(</span><span class="n">incidence</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">emission</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+<div class="viewcode-block" id="phase_to_angles"><a class="viewcode-back" href="../rst/for-users/api-reference/observation/phase_to_angles.html#observation.phase_to_angles">[docs]</a><span class="k">def</span> <span class="nf">phase_to_angles</span><span class="p">(</span><span class="n">incidence</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">emission</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                     <span class="n">phase</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Angles</span><span class="p">:</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Construct an instance of Angles in the case where the phase angles are</span>
 <span class="sd">    known (and presumably azimuth angles are unknown).</span>
@@ -554,7 +555,7 @@
     <span class="k">return</span> <span class="n">Angles</span><span class="p">(</span><span class="n">incidence</span><span class="p">,</span> <span class="n">emission</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span> <span class="n">phi</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span> <span class="n">phi0</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="sky_image"><a class="viewcode-back" href="../rst/for-users/api-reference/observation.html#observation.sky_image">[docs]</a><span class="k">def</span> <span class="nf">sky_image</span><span class="p">(</span><span class="n">incidence</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">emission</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">azimuth</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+<div class="viewcode-block" id="sky_image"><a class="viewcode-back" href="../rst/for-users/api-reference/observation/sky_image.html#observation.sky_image">[docs]</a><span class="k">def</span> <span class="nf">sky_image</span><span class="p">(</span><span class="n">incidence</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">emission</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">azimuth</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
               <span class="n">beam_azimuth</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Angles</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Create an instance of Angles from a typical sky image---that is, a single</span>
 <span class="sd">    incidence and beam azimuth angle are known, and the observational geometry</span>
@@ -613,7 +614,7 @@
     <span class="k">return</span> <span class="n">Angles</span><span class="p">(</span><span class="n">incidence</span><span class="p">,</span> <span class="n">emission</span><span class="p">,</span> <span class="n">azimuth</span><span class="p">,</span> <span class="n">beam_azimuth</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="Spectral"><a class="viewcode-back" href="../rst/for-users/api-reference/observation.html#observation.Spectral">[docs]</a><span class="k">class</span> <span class="nc">Spectral</span><span class="p">:</span>
+<div class="viewcode-block" id="Spectral"><a class="viewcode-back" href="../rst/for-users/api-reference/observation/Spectral.html#observation.Spectral">[docs]</a><span class="k">class</span> <span class="nc">Spectral</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;A data structure that contains spectral info required by DISORT.</span>
 
 <span class="sd">    It accepts the short and long wavelength from an observation and computes</span>
@@ -642,6 +643,11 @@
 <span class="sd">    This class can accommodate arrays of any shape as long as they both have</span>
 <span class="sd">    the same shape. If you do not plan to use thermal emission, there is</span>
 <span class="sd">    probably little benefit making an instance of this class.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    constant_width: Create instances of this class if the wavelengths are</span>
+<span class="sd">                    equally spaced.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -801,7 +807,7 @@
 
 
 <span class="c1"># TODO: this is easy to break cause I don&#39;t test the inputs</span>
-<div class="viewcode-block" id="constant_width"><a class="viewcode-back" href="../rst/for-users/api-reference/observation.html#observation.constant_width">[docs]</a><span class="k">def</span> <span class="nf">constant_width</span><span class="p">(</span><span class="n">center_wavelength</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Spectral</span><span class="p">:</span>
+<div class="viewcode-block" id="constant_width"><a class="viewcode-back" href="../rst/for-users/api-reference/observation/constant_width.html#observation.constant_width">[docs]</a><span class="k">def</span> <span class="nf">constant_width</span><span class="p">(</span><span class="n">center_wavelength</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Spectral</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Create an instance of Spectral assuming the wavelengths all have a</span>
 <span class="sd">    constant spectral width.</span>
 
