@@ -7,6 +7,108 @@ import warnings
 import numpy as np
 
 
+class _Angle(np.ndarray):
+    """Designate an array as representing an abstract angle.
+
+    Parameters
+    ----------
+    array
+        Any array of angles.
+
+    Raises
+    ------
+    ValueError
+        Raised if any values of the input array are outside the input range.
+
+    """
+
+    def __new__(cls, array: np.ndarray, low: float, high: float):
+        obj = np.asarray(array).view(cls)
+        obj.low = low
+        obj.high = high
+        cls.__raise_value_error_if_array_is_not_in_range(obj)
+        return obj
+
+    def __array_finalize__(self, obj: np.ndarray):
+        if obj is None:
+            return
+        self.low = getattr(obj, 'low', None)
+        self.high = getattr(obj, 'high', None)
+
+    @staticmethod
+    def __raise_value_error_if_array_is_not_in_range(obj):
+        if ((obj < obj.low) | (obj > obj.high)).any():
+            message = f'All values in the input angles must be between ' \
+                      f'{obj.low} and {obj.high} degrees.'
+            raise ValueError(message)
+
+    def sin(self) -> np.ndarray:
+        return np.sin(np.radians(self))
+
+    def cos(self) -> np.ndarray:
+        return np.cos(np.radians(self))
+
+
+class _SolarZenithAngle(_Angle):
+    """Designate an array as representing solar zenith angles.
+
+    Parameters
+    ----------
+    array
+        Any array of angles.
+
+    Raises
+    ------
+    ValueError
+        Raised if any values of the input array are not between 0 and 180
+        degrees.
+
+    """
+    def __new__(cls, array):
+        obj = super().__new__(cls, array, 0, 180)
+        return obj
+
+
+class _EmissionAngle(_Angle):
+    """Designate an array as representing emission angles.
+
+    Parameters
+    ----------
+    array
+        Any array of angles.
+
+    Raises
+    ------
+    ValueError
+        Raised if any values of the input array are not between 0 and 90
+        degrees.
+
+    """
+    def __new__(cls, array):
+        obj = super().__new__(cls, array, 0, 90)
+        return obj
+
+
+class _PhaseAngle(_Angle):
+    """Designate an array as representing phase angles.
+
+    Parameters
+    ----------
+    array
+        Any array of angles.
+
+    Raises
+    ------
+    ValueError
+        Raised if any values of the input array are not between 0 and 180
+        degrees.
+
+    """
+    def __new__(cls, array):
+        obj = super().__new__(cls, array, 0, 180)
+        return obj
+
+
 class Angles:
     r"""A data structure that contains angles required by DISORT.
 
@@ -214,7 +316,10 @@ class Angles:
         return self._azimuth.val
 
 
-class _Angle:
+
+
+
+'''class _Angle:
     """A class to work with angles.
 
     It accepts a numpy.ndarray of angles and ensures all values in the array
@@ -277,7 +382,7 @@ class _Angle:
         return np.cos(np.radians(self.__angle))
 
     def sine(self) -> np.ndarray:
-        return np.sin(np.radians(self.__angle))
+        return np.sin(np.radians(self.__angle))'''
 
 
 # TODO: Is there a cleaner way to compute this?
@@ -684,3 +789,9 @@ def constant_width(center_wavelength: np.ndarray, width: float) -> Spectral:
     """
     half = width / 2
     return Spectral(center_wavelength - half, center_wavelength + half)
+
+
+if __name__ == '__main__':
+    a = np.linspace(0, 180,num=181)
+    sza = _SolarZenithAngle(a)
+    print(sza.sine())
