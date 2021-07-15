@@ -3,110 +3,10 @@ classes) useful for computing quantities required by DISORT that are commonly
 found in an observation.
 
 """
+# TODO: It would be better to have a BelowHorizon warning, or something like
+#  that, instead of a generic UserWarning
 import warnings
 import numpy as np
-
-
-class _Angle(np.ndarray):
-    """Designate an array as representing an abstract angle.
-
-    Parameters
-    ----------
-    array
-        Any array of angles.
-
-    Raises
-    ------
-    ValueError
-        Raised if any values of the input array are outside the input range.
-
-    """
-
-    def __new__(cls, array: np.ndarray, low: float, high: float):
-        obj = np.asarray(array).view(cls)
-        obj.low = low
-        obj.high = high
-        cls.__raise_value_error_if_array_is_not_in_range(obj)
-        return obj
-
-    def __array_finalize__(self, obj: np.ndarray):
-        if obj is None:
-            return
-        self.low = getattr(obj, 'low', None)
-        self.high = getattr(obj, 'high', None)
-
-    @staticmethod
-    def __raise_value_error_if_array_is_not_in_range(obj):
-        if ((obj < obj.low) | (obj > obj.high)).any():
-            message = f'All values in the input angles must be between ' \
-                      f'{obj.low} and {obj.high} degrees.'
-            raise ValueError(message)
-
-    def sin(self) -> np.ndarray:
-        return np.sin(np.radians(self))
-
-    def cos(self) -> np.ndarray:
-        return np.cos(np.radians(self))
-
-
-class _SolarZenithAngle(_Angle):
-    """Designate an array as representing solar zenith angles.
-
-    Parameters
-    ----------
-    array
-        Any array of angles.
-
-    Raises
-    ------
-    ValueError
-        Raised if any values of the input array are not between 0 and 180
-        degrees.
-
-    """
-    def __new__(cls, array):
-        obj = super().__new__(cls, array, 0, 180)
-        return obj
-
-
-class _EmissionAngle(_Angle):
-    """Designate an array as representing emission angles.
-
-    Parameters
-    ----------
-    array
-        Any array of angles.
-
-    Raises
-    ------
-    ValueError
-        Raised if any values of the input array are not between 0 and 90
-        degrees.
-
-    """
-    def __new__(cls, array):
-        obj = super().__new__(cls, array, 0, 90)
-        return obj
-
-
-class _PhaseAngle(_Angle):
-    """Designate an array as representing phase angles.
-
-    Parameters
-    ----------
-    array
-        Any array of angles.
-
-    Raises
-    ------
-    ValueError
-        Raised if any values of the input array are not between 0 and 180
-        degrees.
-
-    """
-    def __new__(cls, array):
-        obj = super().__new__(cls, array, 0, 180)
-        return obj
 
 
 class Angles:
@@ -141,16 +41,18 @@ class Angles:
     Raises
     ------
     TypeError
-        Raised if any of the inputs are not a numpy.ndarray.
+        Raised if the inputs cannot be cast into an ndarray or if any values in
+        the inputs are not numeric.
+
     ValueError
-        Raised if any of the input arrays contain values outside of their
-        mathematically valid range, or if the input arrays do not have the
-        same observation shape.
+        Raised if any values of the input arrays are outside their
+        mathematically valid range, or if the inputs do not have the same
+        observation shape.
 
     Warnings
     --------
     UserWarning
-        Issued if any values in :code:`incidence` are greater than 90 degrees.
+        Raised if any values in :code:`incidence` are greater than 90 degrees.
 
     See Also
     --------
@@ -167,7 +69,6 @@ class Angles:
     Examples
     --------
     Instantiate this class for a (3, 5) sky image with a single incident beam.
-    This could represent a single image taken from a rover.
 
     >>> import numpy as np
     >>> from pyRT_DISORT.observation import Angles
@@ -185,7 +86,7 @@ class Angles:
 
     Instantiate this class for a sequence of 50 images at a fixed position over
     a period time where the incidence angle and beam azimuth angle varies from
-    image to image. This could represent a movie taken from a rover.
+    image to image.
 
     >>> import numpy as np
     >>> from pyRT_DISORT.observation import Angles
@@ -198,7 +99,7 @@ class Angles:
     (50,) (50, 3) (50, 5)
 
     Instantiate this class for a (40, 50) image where each pixel has its own
-    set of angles. This could represent an image taken from orbit.
+    set of angles.
 
     >>> import numpy as np
     >>> from pyRT_DISORT.observation import Angles
@@ -211,59 +112,27 @@ class Angles:
     """
     def __init__(self, incidence: np.ndarray, emission: np.ndarray,
                  azimuth: np.ndarray, beam_azimuth: np.ndarray) -> None:
-        self._incidence = _Angle(incidence, 'incidence', 0, 180)
-        self._emission = _Angle(emission, 'emission', 0, 180)
-        self._azimuth = _Angle(azimuth, 'azimuth', 0, 360)
-        self._azimuth0 = _Angle(beam_azimuth, 'beam_azimuth', 0, 360)
+        self._bundle = \
+            _RoverAngleBundle(incidence, emission, azimuth, beam_azimuth)
 
-        self._raise_value_error_if_inputs_have_different_obs_shapes()
-        self._warn_if_incidence_angle_is_greater_than_90()
+        self._mu0 = self._compute_mu0()
+        self._mu = self._compute_mu()
 
-        self._mu0 = self.__compute_mu0()
-        self._mu = self.__compute_mu()
+    # def __str__(self):
+    #
 
-    def __str__(self) -> str:
+    def __repr__(self):
         return f'Angles:\n' \
                f'   mu = {self.mu}\n' \
                f'   mu0 = {self.mu0}\n' \
                f'   phi = {self.phi}\n' \
                f'   phi0 = {self.phi0}'
 
-    def _raise_value_error_if_inputs_have_different_obs_shapes(self) -> None:
-        self._raise_value_error_if_observation_dimensions_do_not_match()
+    def _compute_mu0(self) -> np.ndarray:
+        return self._bundle.incidence.cos()
 
-    def _raise_value_error_if_observation_dimensions_do_not_match(self) \
-            -> None:
-        if not (self._incidence.val.shape == self._emission.val.shape[:-1] ==
-                self._azimuth0.val.shape == self._azimuth.val.shape[: -1]):
-            print(self._incidence.val.shape, self._azimuth0.val.shape)
-            message = 'The pixel dimensions do not match.'
-            raise ValueError(message)
-
-    def _warn_if_incidence_angle_is_greater_than_90(self) -> None:
-        if np.any(self._incidence.val > 90):
-            message = 'Some values in incidence are greater than 90 degrees.'
-            warnings.warn(message)
-
-    def __compute_mu0(self) -> np.ndarray:
-        return self._incidence.cosine()
-
-    def __compute_mu(self) -> np.ndarray:
-        return self._emission.cosine()
-
-    @property
-    def incidence(self) -> np.ndarray:
-        """Get the input incidence angles [degrees].
-
-        """
-        return self._incidence.val
-
-    @property
-    def emission(self) -> np.ndarray:
-        """Get the input emission angles [degrees].
-
-        """
-        return self._emission.val
+    def _compute_mu(self) -> np.ndarray:
+        return self._bundle.emission.cos()
 
     @property
     def mu0(self) -> np.ndarray:
@@ -292,7 +161,7 @@ class Angles:
     @property
     def phi0(self) -> np.ndarray:
         r"""Get :math:`\phi_0`---the azimuth angles of the incident beam
-        [degrees]. This is the same as the input to :code:`beam_azimuth`.
+        [degrees] (the input to :code:`beam_azimuth`).
 
         Notes
         -----
@@ -300,12 +169,12 @@ class Angles:
         DISORT.
 
         """
-        return self._azimuth0.val
+        return self._bundle.beam_azimuth
 
     @property
     def phi(self) -> np.ndarray:
-        r"""Get :math:`\phi`---the azimuth angles [degrees]. This is the same as
-        the input to :code:`azimuth`.
+        r"""Get :math:`\phi`---the azimuth angles [degrees] (the input to
+        :code:`azimuth`).
 
         Notes
         -----
@@ -313,76 +182,7 @@ class Angles:
         DISORT.
 
         """
-        return self._azimuth.val
-
-
-
-
-
-'''class _Angle:
-    """A class to work with angles.
-
-    It accepts a numpy.ndarray of angles and ensures all values in the array
-    are within a range of values (inclusive). It provides basic methods for
-    manipulating these angles.
-
-    """
-    def __init__(self, angle: np.ndarray, name: str, low: float, high: float) \
-            -> None:
-        """
-        Parameters
-        ----------
-        angle
-            Arbitrary array of angles [degrees].
-        name
-            Name of the angle.
-        low
-            The lowest value any value in :code:`angle` can be.
-        high
-            The highest value any value in :code:`angle` can be.
-
-        Raises
-        ------
-        TypeError
-            Raised if :code:`angle` is not a numpy.ndarray.
-        ValueError
-            Raised if any value in :code:`angle` is outside its allowable range.
-
-        """
-        self.__angle = angle
-        self.__name = name
-        self.__low = low
-        self.__high = high
-
-        self.__raise_error_if_angle_is_bad()
-
-    def __getattr__(self, method):
-        return getattr(self.__angle, method)
-
-    def __raise_error_if_angle_is_bad(self) -> None:
-        self.__raise_type_error_if_angle_is_not_ndarray()
-        self.__raise_value_error_if_values_in_angle_are_not_in_range()
-
-    def __raise_type_error_if_angle_is_not_ndarray(self) -> None:
-        if not isinstance(self.__angle, np.ndarray):
-            message = f'{self.__name} must be a numpy.ndarray.'
-            raise TypeError(message)
-
-    def __raise_value_error_if_values_in_angle_are_not_in_range(self) -> None:
-        if np.any(self.val < self.__low) or np.any(self.val > self.__high):
-            message = f'All values in {self.__name} must be between ' \
-                      f'{self.__low} and {self.__high} degrees.'
-            raise ValueError(message)
-
-    @property
-    def val(self) -> np.ndarray:
-        return self.__angle
-
-    def cosine(self) -> np.ndarray:
-        return np.cos(np.radians(self.__angle))
-
-    def sine(self) -> np.ndarray:
-        return np.sin(np.radians(self.__angle))'''
+        return self._bundle.azimuth
 
 
 # TODO: Is there a cleaner way to compute this?
@@ -791,7 +591,269 @@ def constant_width(center_wavelength: np.ndarray, width: float) -> Spectral:
     return Spectral(center_wavelength - half, center_wavelength + half)
 
 
+class _Angle(np.ndarray):
+    """An abstract base class for designating that an input array represents
+    angles.
+
+    Parameters
+    ----------
+    array
+        Any array of angles.
+    low
+        The lowest value any value in the array is allowed to be.
+    high
+        The highest value any value in the array is allowed to be.
+
+    Raises
+    ------
+    TypeError
+        Raised if any values in the input array are not numeric.
+    ValueError
+        Raised if any values in the input array are outside the input range.
+
+    """
+
+    def __new__(cls, array: np.ndarray, low: float, high: float):
+        obj = np.asarray(array).view(cls)
+        obj.low = low
+        obj.high = high
+        cls.__raise_value_error_if_array_is_not_in_range(obj)
+        return obj
+
+    def __array_finalize__(self, obj: np.ndarray):
+        if obj is None:
+            return
+        self.low = getattr(obj, 'low', None)
+        self.high = getattr(obj, 'high', None)
+
+    @staticmethod
+    def __raise_value_error_if_array_is_not_in_range(obj) -> None:
+        if not np.all(((obj.low <= obj) & (obj <= obj.high))):
+            message = f'All values in the input angles must be between ' \
+                      f'{obj.low} and {obj.high} degrees.'
+            raise ValueError(message)
+
+    def sin(self) -> np.ndarray:
+        """Compute the sine of the input angles.
+
+        """
+        return np.sin(np.radians(self))
+
+    def cos(self) -> np.ndarray:
+        """Compute the cosine of the input angles.
+
+        """
+        return np.cos(np.radians(self))
+
+
+class _IncidenceAngle(_Angle):
+    """Designate that an input array represents incidence (solar zenith) angles.
+
+    Parameters
+    ----------
+    array
+        Any array of incidence angles. Must be between 0 and 180 degrees.
+
+    Raises
+    ------
+    TypeError
+        Raised if any values in the input array are not numeric.
+    ValueError
+        Raised if any values in the input array are not between 0 and 180
+        degrees.
+
+    Warnings
+    --------
+    UserWarning
+        Raised if any values in the input array are greater than 90 degrees.
+
+    """
+    def __new__(cls, array: np.ndarray):
+        obj = super().__new__(cls, array, 0, 180)
+        cls.__warn_if_incidence_angle_is_greater_than_90(obj)
+        return obj
+
+    @staticmethod
+    def __warn_if_incidence_angle_is_greater_than_90(obj: np.ndarray) -> None:
+        if np.any(obj > 90):
+            message = 'Some values in incidence are greater than 90 degrees.'
+            warnings.warn(message)
+
+
+class _EmissionAngle(_Angle):
+    """Designate that an input array represents emission (emergence) angles.
+
+    Parameters
+    ----------
+    array
+        Any array of emission angles. Must be between 0 and 90 degrees.
+
+    Raises
+    ------
+    TypeError
+        Raised if any values in the input array are not numeric.
+    ValueError
+        Raised if any values in the input array are not between 0 and 90
+        degrees.
+
+    """
+    def __new__(cls, array: np.ndarray):
+        obj = super().__new__(cls, array, 0, 90)
+        return obj
+
+
+class _PhaseAngle(_Angle):
+    """Designate that an input array represents phase angles.
+
+    Parameters
+    ----------
+    array
+        Any array of phase angles. Must be between 0 and 180 degrees.
+
+    Raises
+    ------
+    TypeError
+        Raised if any values in the input array are not numeric.
+    ValueError
+        Raised if any values in the input array are not between 0 and 180
+        degrees.
+
+    """
+    def __new__(cls, array: np.ndarray):
+        obj = super().__new__(cls, array, 0, 180)
+        return obj
+
+
+class _AzimuthAngle(_Angle):
+    """Designate that an input array represents azimuth angles.
+
+    Parameters
+    ----------
+    array
+        Any array of angles. Must be between 0 and 360 degrees.
+
+    Raises
+    ------
+    TypeError
+        Raised if any values in the input array are not numeric.
+    ValueError
+        Raised if any values in the input array are not between 0 and 360
+        degrees.
+
+    """
+    def __new__(cls, array: np.ndarray):
+        obj = super().__new__(cls, array, 0, 360)
+        return obj
+
+
+class _OrbiterAngleBundle:
+    """Designate a collection of angles that represent those found in an
+    orbiter observation as being linked.
+
+    Parameters
+    ----------
+    incidence
+        Incidence (solar zenith) angles [degrees]. All values must be between 0
+        and 180 degrees.
+    emission
+        Emission (emergence) angles [degrees]. All values must be between 0 and
+        180 degrees.
+    phase
+        Phase angles [degrees]. All values must be between 0 and 180 degrees.
+
+    Raises
+    ------
+    TypeError
+        Raised if any values in the input arrays are not numeric.
+    ValueError
+        Raised if any values of the input arrays are outside their
+        mathematically valid range, or if the input arrays do not have the same
+        shapes.
+
+    Warnings
+    --------
+    UserWarning
+        Raised if any values in :code:`incidence_angle` are greater than 90
+        degrees.
+
+    """
+    def __init__(self, incidence: np.ndarray, emission: np.ndarray,
+                 phase: np.ndarray):
+        self.incidence = _IncidenceAngle(incidence)
+        self.emission = _EmissionAngle(emission)
+        self.phase = _PhaseAngle(phase)
+
+        self.__raise_value_error_if_angle_shapes_do_not_match()
+
+    def __raise_value_error_if_angle_shapes_do_not_match(self) -> None:
+        if not (self.incidence.shape == self.emission.shape ==
+                self.phase.shape):
+            message = f'The shapes of the arrays must match. They are ' \
+                      f'{self.incidence.shape}, {self.emission.shape}, and ' \
+                      f'{self.phase.shape}'
+            raise ValueError(message)
+
+
+class _RoverAngleBundle:
+    """Designate a collection of angles that represent those found in a rover
+    observation as being linked.
+
+    Parameters
+    ----------
+    incidence
+        Incidence (solar zenith) angles [degrees]. All values must be between 0
+        and 180 degrees.
+    emission
+        Emission (emergence) angles [degrees]. All values must be between 0 and
+        180 degrees.
+    azimuth
+        Azimuth angles [degrees]. All values must be between 0 and 360 degrees.
+    beam_azimuth
+        Azimuth angles of the incident beam [degrees]. All values must be
+        between 0 and 360 degrees.
+
+    Raises
+    ------
+    TypeError
+        Raised if any values in the input arrays are not numeric.
+    ValueError
+        Raised if any values of the input arrays are outside their
+        mathematically valid range, or if the inputs do not have the same
+        observation shape.
+
+    Warnings
+    --------
+    UserWarning
+        Raised if any values in :code:`incidence` are greater than 90 degrees.
+
+    """
+    def __init__(self, incidence: np.ndarray, emission: np.ndarray,
+                 azimuth: np.ndarray, beam_azimuth: np.ndarray):
+        self.incidence = _IncidenceAngle(incidence)
+        self.emission = _EmissionAngle(emission)
+        self.azimuth = _AzimuthAngle(azimuth)
+        self.beam_azimuth = _AzimuthAngle(beam_azimuth)
+
+        self.__raise_value_error_if_observation_dimensions_do_not_match()
+
+    def __raise_value_error_if_observation_dimensions_do_not_match(self) \
+            -> None:
+        if not (self.incidence.shape == self.emission.shape[:-1] ==
+                self.azimuth.shape[: -1] == self.beam_azimuth.shape):
+            message = f'The pixel dimension of the arrays must match. They ' \
+                      f'are {self.incidence.shape}, ' \
+                      f'{self.emission.shape[:-1]}, ' \
+                      f'{self.azimuth.shape[:-1]}, and ' \
+                      f'{self.beam_azimuth.shape}.'
+            raise ValueError(message)
+
+
 if __name__ == '__main__':
-    a = np.linspace(0, 180,num=181)
-    sza = _SolarZenithAngle(a)
-    print(sza.sine())
+    a = np.array('ajkf')
+    _IncidenceAngle(a)
+    #incidence_ang = 30
+    #beam_azimuth = 40
+    #emission_ang = np.linspace(30, 60, num=3)[np.newaxis, :]
+    #azimuth_ang = np.linspace(20, 50, num=5)[np.newaxis, :]
+    #angles = Angles(incidence_ang, emission_ang, azimuth_ang, beam_azimuth)
+    #print(angles)
