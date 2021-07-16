@@ -89,6 +89,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../about-this-project/about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../about-this-project/about-DISORT.html">About DISORT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../about-this-project/release-notes.html">Release notes</a></li>
 </ul>
 <p class="caption"><span class="caption-text">For users</span></p>
 <ul class="current">
@@ -200,7 +201,7 @@
 <p>It accepts both the incidence and azimuth angles of the incident beam
 as well as emission and azimuth angles from an observation. It holds
 these values and computes both <span class="math notranslate nohighlight">\(\mu_0\)</span> and <span class="math notranslate nohighlight">\(\mu\)</span> from these
-angles. See the notes for explanation of the required array shapes.</p>
+angles.</p>
 <p>This class can compute all angular quantities required by DISORT at once,
 even multiple observations. Both <code class="code docutils literal notranslate"><span class="pre">incidence</span></code> and <code class="code docutils literal notranslate"><span class="pre">beam_azimuth</span></code>
 must have the same shape (the “beam measurement shape”), representing
@@ -251,8 +252,8 @@ between 0 and 360.</p></li>
 </div>
 <p class="rubric">Notes</p>
 <p>In the case of a rover taking a single image from the surface along an MxN
-emission and azimuth grid, the image is taken with a single incident beam.
-Thus, <code class="code docutils literal notranslate"><span class="pre">incidence</span></code> and <code class="code docutils literal notranslate"><span class="pre">beam_azimuth</span></code> should be scalars (or
+emission and azimuth angle grid, the image is taken with a single incident
+beam. Thus, <code class="code docutils literal notranslate"><span class="pre">incidence</span></code> and <code class="code docutils literal notranslate"><span class="pre">beam_azimuth</span></code> should be scalars (or
 single valued arrays) whereas <code class="code docutils literal notranslate"><span class="pre">emission</span></code> should have shape (1, M) and
 <code class="code docutils literal notranslate"><span class="pre">azimuth</span></code> should have shape (1, N).</p>
 <p>In the case of an orbiter taking an MxN image, each is pixel is illuminated
@@ -261,7 +262,7 @@ by a different incident beam. In this case <code class="code docutils literal no
 <code class="code docutils literal notranslate"><span class="pre">azimuth</span></code> should have shape (M, N, 1).</p>
 <p>DISORT wants a float for <code class="code docutils literal notranslate"><span class="pre">UMU0</span></code> and <code class="code docutils literal notranslate"><span class="pre">PHI0</span></code>; it wants a 1D array
 for <code class="code docutils literal notranslate"><span class="pre">UMU</span></code> and <code class="code docutils literal notranslate"><span class="pre">PHI</span></code>. Selecting the proper indices from the
-beam measurement dimension(s) is necessary to get these data types.</p>
+beam measurement axes is necessary to get these data types.</p>
 <p class="rubric">Examples</p>
 <p>Import the relevant modules</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -282,7 +283,7 @@ azimuth angle grid, with a single incident beam.</p>
 <span class="go">   phi = [[20.  27.5 35.  42.5 50. ]]</span>
 </pre></div>
 </div>
-<p>Instantiate this class for a sequence of 50 images taken from a fixed
+<p>Instantiate this class for a sequence of 50 (3, 5) images taken from a fixed
 position over a period time where the incidence angle and beam azimuth angle
 varied from image to image.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">incidence</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>

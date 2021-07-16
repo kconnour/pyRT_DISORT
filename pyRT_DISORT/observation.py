@@ -194,8 +194,8 @@ class Angles:
 
 
 # TODO: Is there a cleaner way to compute this?
-def make_azimuth(incidence: np.ndarray, emission: np.ndarray,
-                 phase: np.ndarray) -> np.ndarray:
+def make_azimuth(incidence: ArrayLike, emission: ArrayLike,
+                 phase: ArrayLike) -> np.ndarray:
     r"""Construct azimuth angles from a set of incidence, emission, and phase
     angles.
 
@@ -203,17 +203,17 @@ def make_azimuth(incidence: np.ndarray, emission: np.ndarray,
     ----------
     incidence
         Incidence (solar zenith) angles [degrees]. All values must be between 0
-        and 180 degrees.
+        and 180.
     emission
         Emission (emergence) angles [degrees]. All values must be between 0 and
-        180 degrees.
+        180.
     phase
-        Phase angles [degrees]. All values must be between 0 and 180 degrees.
+        Phase angles [degrees]. All values must be between 0 and 180.
 
     Raises
     ------
     TypeError
-        Raised if any values in the input arrays are not numeric.
+        Raised if any values in the input arrays are nonnumerical.
     ValueError
         Raised if any values of the input arrays are outside their
         mathematically valid range, or if the input arrays do not have the same

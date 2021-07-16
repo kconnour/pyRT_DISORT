@@ -88,6 +88,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../about-this-project/about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../about-this-project/about-DISORT.html">About DISORT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../about-this-project/release-notes.html">Release notes</a></li>
 </ul>
 <p class="caption"><span class="caption-text">For users</span></p>
 <ul class="current">
@@ -199,16 +200,16 @@ angles.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>incidence</strong> (<em>numpy.ndarray</em>) – Incidence (solar zenith) angles [degrees]. All values must be between 0
-and 180 degrees.</p></li>
-<li><p><strong>emission</strong> (<em>numpy.ndarray</em>) – Emission (emergence) angles [degrees]. All values must be between 0 and
-180 degrees.</p></li>
-<li><p><strong>phase</strong> (<em>numpy.ndarray</em>) – Phase angles [degrees]. All values must be between 0 and 180 degrees.</p></li>
+<li><p><strong>incidence</strong> (<em>numpy.typing.ArrayLike</em>) – Incidence (solar zenith) angles [degrees]. All values must be between 0
+and 180.</p></li>
+<li><p><strong>emission</strong> (<em>numpy.typing.ArrayLike</em>) – Emission (emergence) angles [degrees]. All values must be between 0 and
+180.</p></li>
+<li><p><strong>phase</strong> (<em>numpy.typing.ArrayLike</em>) – Phase angles [degrees]. All values must be between 0 and 180.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>TypeError</strong> – Raised if any values in the input arrays are not numeric.</p></li>
+<li><p><strong>TypeError</strong> – Raised if any values in the input arrays are nonnumerical.</p></li>
 <li><p><strong>ValueError</strong> – Raised if any values of the input arrays are outside their
     mathematically valid range, or if the input arrays do not have the same
     shapes.</p></li>

@@ -86,6 +86,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../rst/about-this-project/about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../rst/about-this-project/about-DISORT.html">About DISORT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/about-this-project/release-notes.html">Release notes</a></li>
 </ul>
 <p class="caption"><span class="caption-text">For users</span></p>
 <ul>
@@ -178,7 +179,7 @@
 <span class="sd">    It accepts both the incidence and azimuth angles of the incident beam</span>
 <span class="sd">    as well as emission and azimuth angles from an observation. It holds</span>
 <span class="sd">    these values and computes both :math:`\mu_0` and :math:`\mu` from these</span>
-<span class="sd">    angles. See the notes for explanation of the required array shapes.</span>
+<span class="sd">    angles.</span>
 
 <span class="sd">    This class can compute all angular quantities required by DISORT at once,</span>
 <span class="sd">    even multiple observations. Both :code:`incidence` and :code:`beam_azimuth`</span>
@@ -226,8 +227,8 @@
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
 <span class="sd">    In the case of a rover taking a single image from the surface along an MxN</span>
-<span class="sd">    emission and azimuth grid, the image is taken with a single incident beam.</span>
-<span class="sd">    Thus, :code:`incidence` and :code:`beam_azimuth` should be scalars (or</span>
+<span class="sd">    emission and azimuth angle grid, the image is taken with a single incident</span>
+<span class="sd">    beam. Thus, :code:`incidence` and :code:`beam_azimuth` should be scalars (or</span>
 <span class="sd">    single valued arrays) whereas :code:`emission` should have shape (1, M) and</span>
 <span class="sd">    :code:`azimuth` should have shape (1, N).</span>
 
@@ -238,7 +239,7 @@
 
 <span class="sd">    DISORT wants a float for :code:`UMU0` and :code:`PHI0`; it wants a 1D array</span>
 <span class="sd">    for :code:`UMU` and :code:`PHI`. Selecting the proper indices from the</span>
-<span class="sd">    beam measurement dimension(s) is necessary to get these data types.</span>
+<span class="sd">    beam measurement axes is necessary to get these data types.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -261,7 +262,7 @@
 <span class="sd">       mu = [[0.8660254  0.70710678 0.5       ]]</span>
 <span class="sd">       phi = [[20.  27.5 35.  42.5 50. ]]</span>
 
-<span class="sd">    Instantiate this class for a sequence of 50 images taken from a fixed</span>
+<span class="sd">    Instantiate this class for a sequence of 50 (3, 5) images taken from a fixed</span>
 <span class="sd">    position over a period time where the incidence angle and beam azimuth angle</span>
 <span class="sd">    varied from image to image.</span>
 
@@ -358,8 +359,8 @@
 
 
 <span class="c1"># TODO: Is there a cleaner way to compute this?</span>
-<div class="viewcode-block" id="make_azimuth"><a class="viewcode-back" href="../rst/for-users/api-reference/observation/make_azimuth.html#observation.make_azimuth">[docs]</a><span class="k">def</span> <span class="nf">make_azimuth</span><span class="p">(</span><span class="n">incidence</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">emission</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-                 <span class="n">phase</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<div class="viewcode-block" id="make_azimuth"><a class="viewcode-back" href="../rst/for-users/api-reference/observation/make_azimuth.html#observation.make_azimuth">[docs]</a><span class="k">def</span> <span class="nf">make_azimuth</span><span class="p">(</span><span class="n">incidence</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">emission</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+                 <span class="n">phase</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Construct azimuth angles from a set of incidence, emission, and phase</span>
 <span class="sd">    angles.</span>
 
@@ -367,17 +368,17 @@
 <span class="sd">    ----------</span>
 <span class="sd">    incidence</span>
 <span class="sd">        Incidence (solar zenith) angles [degrees]. All values must be between 0</span>
-<span class="sd">        and 180 degrees.</span>
+<span class="sd">        and 180.</span>
 <span class="sd">    emission</span>
 <span class="sd">        Emission (emergence) angles [degrees]. All values must be between 0 and</span>
-<span class="sd">        180 degrees.</span>
+<span class="sd">        180.</span>
 <span class="sd">    phase</span>
-<span class="sd">        Phase angles [degrees]. All values must be between 0 and 180 degrees.</span>
+<span class="sd">        Phase angles [degrees]. All values must be between 0 and 180.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    TypeError</span>
-<span class="sd">        Raised if any values in the input arrays are not numeric.</span>
+<span class="sd">        Raised if any values in the input arrays are nonnumerical.</span>
 <span class="sd">    ValueError</span>
 <span class="sd">        Raised if any values of the input arrays are outside their</span>
 <span class="sd">        mathematically valid range, or if the input arrays do not have the same</span>

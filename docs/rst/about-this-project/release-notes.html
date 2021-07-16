@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Tutorials &mdash; pyRT_DISORT  documentation</title>
+  <title>Release notes &mdash; pyRT_DISORT  documentation</title>
   
 
   
@@ -38,8 +38,8 @@
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Spacecraft Retrieval" href="tutorials/spacecraft_retrieval.html" />
-    <link rel="prev" title="Installation" href="installation.html" /> 
+    <link rel="next" title="Installation" href="../for-users/installation.html" />
+    <link rel="prev" title="About DISORT" href="about-DISORT.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -85,20 +85,19 @@
             
             
               <p class="caption"><span class="caption-text">About this project</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../about-this-project/about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../about-this-project/about-DISORT.html">About DISORT</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../about-this-project/release-notes.html">Release notes</a></li>
-</ul>
-<p class="caption"><span class="caption-text">For users</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorials</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/spacecraft_retrieval.html">Spacecraft Retrieval</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/rover_retrieval.html">Rover Retrieval</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about-DISORT.html">About DISORT</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Release notes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#v0-0-2">v0.0.2</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="api-reference.html">API reference</a></li>
+</ul>
+<p class="caption"><span class="caption-text">For users</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../for-users/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../for-users/tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../for-users/api-reference.html">API reference</a></li>
 </ul>
 <p class="caption"><span class="caption-text">For contributors</span></p>
 <ul>
@@ -151,13 +150,13 @@
     
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>Tutorials</li>
+      <li>Release notes</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../../_sources/rst/for-users/tutorials.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/rst/about-this-project/release-notes.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -170,14 +169,20 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="tutorials">
-<h1>Tutorials<a class="headerlink" href="#tutorials" title="Permalink to this headline">¶</a></h1>
-<p>This page contains some explanatory guides for combining the tools found in
-pyRT_DISORT in a useful way.</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/spacecraft_retrieval.html">Spacecraft Retrieval</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/rover_retrieval.html">Rover Retrieval</a></li>
+  <div class="section" id="release-notes">
+<h1>Release notes<a class="headerlink" href="#release-notes" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="v0-0-2">
+<h2>v0.0.2<a class="headerlink" href="#v0-0-2" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Change observation.Angles to accept a different call signature, grouping
+the incident beam together instead of phi and phi0 together.</p></li>
+<li><p>Update documentation page on the observation module to be more like numpy.</p></li>
+<li><p>Angles and Spectral now both contain __str__ and __repr__ methods.</p></li>
+<li><p>All classes and functions in the observation module now accept ArrayLike
+inputs, instead of strictly requiring ndarrays.</p></li>
+<li><p>Improved error handling by creating a number of abstract arrays to validate
+inputs.</p></li>
+<li><p>Minor speed and memory improvements.</p></li>
 </ul>
 </div>
 </div>
@@ -188,8 +193,8 @@ pyRT_DISORT in a useful way.</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="tutorials/spacecraft_retrieval.html" class="btn btn-neutral float-right" title="Spacecraft Retrieval" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../for-users/installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="about-DISORT.html" class="btn btn-neutral float-left" title="About DISORT" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>
