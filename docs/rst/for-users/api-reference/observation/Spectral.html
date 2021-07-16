@@ -234,13 +234,24 @@ probably little benefit making an instance of this class.</p>
 </dl>
 </div>
 <p class="rubric">Examples</p>
-<p>For an observation taken at 1 to 30 microns, with each channel having a 50
-nm spectral width:</p>
+<p>Instantiate this class for a simple set of wavelengths.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyRT_DISORT.observation</span> <span class="kn">import</span> <span class="n">Spectral</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">short</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">long</span> <span class="o">=</span> <span class="n">short</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Spectral</span><span class="p">(</span><span class="n">short</span><span class="p">,</span> <span class="n">long</span><span class="p">)</span>
+<span class="go">Spectral:</span>
+<span class="go">   low_wavenumber = [1000.          909.09090909]</span>
+<span class="go">   high_wavenumber = [1111.11111111 1000.        ]</span>
+</pre></div>
+</div>
+<p>Instantiate this class for an observation taken at 1 to 30 microns, with
+each channel having a 50 nm spectral width.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">center</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">half_width</span> <span class="o">=</span> <span class="mf">0.025</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">wavelengths</span> <span class="o">=</span> <span class="n">Spectral</span><span class="p">(</span><span class="n">center</span> <span class="o">-</span> <span class="n">half_width</span><span class="p">,</span> <span class="n">center</span> <span class="o">+</span> <span class="n">half_width</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">wavelengths</span><span class="o">.</span><span class="n">low_wavenumber</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wavelengths</span><span class="o">.</span><span class="n">low_wavenumber</span><span class="o">.</span><span class="n">shape</span>
 <span class="go">(30,)</span>
 </pre></div>
 </div>
@@ -249,7 +260,7 @@ nm spectral width:</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">half_width</span> <span class="o">=</span> <span class="mf">0.025</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">wav_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">wavelengths</span> <span class="o">=</span> <span class="n">Spectral</span><span class="p">(</span><span class="n">wav_grid</span> <span class="o">-</span> <span class="n">half_width</span><span class="p">,</span> <span class="n">wav_grid</span> <span class="o">+</span> <span class="n">half_width</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">wavelengths</span><span class="o">.</span><span class="n">low_wavenumber</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wavelengths</span><span class="o">.</span><span class="n">low_wavenumber</span><span class="o">.</span><span class="n">shape</span>
 <span class="go">(50, 60, 20)</span>
 </pre></div>
 </div>
@@ -266,12 +277,6 @@ in DISORT. It is only needed by DISORT if
 </dd></dl>
 
 <dl class="py method">
-<dt id="observation.Spectral.long_wavelength">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">long_wavelength</span></code><a class="headerlink" href="#observation.Spectral.long_wavelength" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the input long wavelength [microns].</p>
-</dd></dl>
-
-<dl class="py method">
 <dt id="observation.Spectral.low_wavenumber">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">low_wavenumber</span></code><a class="headerlink" href="#observation.Spectral.low_wavenumber" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the low wavenumber [cm <sup>-1</sup>]—the wavenumber corresponding
@@ -281,12 +286,6 @@ to <code class="docutils literal notranslate"><span class="pre">long_wavelength<
 in DISORT. It is only needed by DISORT if
 <a class="reference internal" href="../radiation.html#radiation.ThermalEmission.thermal_emission" title="radiation.ThermalEmission.thermal_emission"><code class="xref py py-attr docutils literal notranslate"><span class="pre">thermal_emission</span></code></a> is set to
 <code class="code docutils literal notranslate"><span class="pre">True</span></code>.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="observation.Spectral.short_wavelength">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">short_wavelength</span></code><a class="headerlink" href="#observation.Spectral.short_wavelength" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the input short wavelength [microns].</p>
 </dd></dl>
 
 </dd></dl>

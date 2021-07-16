@@ -194,9 +194,9 @@
 <dl class="py function">
 <dt id="observation.sky_image">
 <code class="sig-prename descclassname"><span class="pre">observation.</span></code><code class="sig-name descname"><span class="pre">sky_image</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">incidence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emission</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azimuth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beam_azimuth</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/observation.html#sky_image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#observation.sky_image" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create an instance of Angles from a typical sky image—that is, a single
-incidence and beam azimuth angle are known, and the observational geometry
-defines a 1D array of emission and azimuth angles.</p>
+<dd><p>Create an instance of <a class="reference internal" href="Angles.html#observation.Angles" title="observation.Angles"><code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code></a> from a typical sky image—that is,
+a single incidence and beam azimuth angle are known, and the observational
+geometry defines a 1D array of emission and azimuth angles.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -235,8 +235,7 @@ and 360 degrees.</p></li>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">beam_az</span> <span class="o">=</span> <span class="mi">40</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">emission_ang</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">azimuth_ang</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">angles</span> <span class="o">=</span> <span class="n">sky_image</span><span class="p">(</span><span class="n">incidence_ang</span><span class="p">,</span> <span class="n">emission_ang</span><span class="p">,</span> <span class="n">azimuth_ang</span><span class="p">,</span> <span class="n">beam_az</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">angles</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sky_image</span><span class="p">(</span><span class="n">incidence_ang</span><span class="p">,</span> <span class="n">emission_ang</span><span class="p">,</span> <span class="n">azimuth_ang</span><span class="p">,</span> <span class="n">beam_az</span><span class="p">)</span>
 <span class="go">Angles:</span>
 <span class="go">   mu = [[0.8660254  0.70710678 0.5       ]]</span>
 <span class="go">   mu0 = [0.8660254]</span>

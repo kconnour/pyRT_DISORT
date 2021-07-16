@@ -208,15 +208,23 @@ and 180 degrees.</p></li>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>TypeError</strong> – Raised if any of the angles are not a numpy.ndarray.</p></li>
-<li><p><strong>ValueError</strong> – Raised if any of the input arrays contain values outside of their
-    mathematically valid range.</p></li>
+<li><p><strong>TypeError</strong> – Raised if any values in the input arrays are not numeric.</p></li>
+<li><p><strong>ValueError</strong> – Raised if any values of the input arrays are outside their
+    mathematically valid range, or if the input arrays do not have the same
+    shapes.</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>numpy.ndarray</p>
 </dd>
 </dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<dl class="simple">
+<dt>UserWarning</dt><dd><p>Raised if any values in <code class="code docutils literal notranslate"><span class="pre">incidence</span></code> are greater than 90 degrees.</p>
+</dd>
+</dl>
+</div>
 <p class="rubric">Notes</p>
 <p>It would almost always be beneficial for all of the inputs to have the same
 shape, but this is not strictly enforced. In any case, the input arrays
@@ -224,10 +232,10 @@ must have compatible shapes.</p>
 <p class="rubric">Examples</p>
 <p>For a random assortment of input angles:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">incidence</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">emission</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">phase</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">25</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">35</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">make_azimuth</span><span class="p">(</span><span class="n">incidence</span><span class="p">,</span> <span class="n">emission</span><span class="p">,</span> <span class="n">phase</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">incidence_angles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">emission_angles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">phase_angles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">25</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">35</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">make_azimuth</span><span class="p">(</span><span class="n">incidence_angles</span><span class="p">,</span> <span class="n">emission_angles</span><span class="p">,</span> <span class="n">phase_angles</span><span class="p">)</span>
 <span class="go">array([122.74921226, 129.08074256, 131.57329276])</span>
 </pre></div>
 </div>
