@@ -216,7 +216,7 @@
 <span class="sd">    Warnings</span>
 <span class="sd">    --------</span>
 <span class="sd">    UserWarning</span>
-<span class="sd">        Raised if any values in :code:`incidence` are greater than 90 degrees.</span>
+<span class="sd">        Issued if any values in :code:`incidence` are greater than 90 degrees.</span>
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
@@ -371,7 +371,7 @@
 <span class="sd">        and 180.</span>
 <span class="sd">    emission</span>
 <span class="sd">        Emission (emergence) angles [degrees]. All values must be between 0 and</span>
-<span class="sd">        180.</span>
+<span class="sd">        90.</span>
 <span class="sd">    phase</span>
 <span class="sd">        Phase angles [degrees]. All values must be between 0 and 180.</span>
 
@@ -381,25 +381,20 @@
 <span class="sd">        Raised if any values in the input arrays are nonnumerical.</span>
 <span class="sd">    ValueError</span>
 <span class="sd">        Raised if any values of the input arrays are outside their</span>
-<span class="sd">        mathematically valid range, or if the input arrays do not have the same</span>
+<span class="sd">        mathematically valid range or if the input arrays do not have the same</span>
 <span class="sd">        shapes.</span>
 
 <span class="sd">    Warnings</span>
 <span class="sd">    --------</span>
 <span class="sd">    UserWarning</span>
-<span class="sd">        Raised if any values in :code:`incidence` are greater than 90 degrees.</span>
-
-<span class="sd">    Notes</span>
-<span class="sd">    -----</span>
-<span class="sd">    It would almost always be beneficial for all of the inputs to have the same</span>
-<span class="sd">    shape, but this is not strictly enforced. In any case, the input arrays</span>
-<span class="sd">    must have compatible shapes.</span>
+<span class="sd">        Issued if any values in :code:`incidence` are greater than 90 degrees.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-<span class="sd">    For a random assortment of input angles:</span>
+<span class="sd">    Create the azimuth angles from an assortment of angles.</span>
 
 <span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; from pyRT_DISORT.observation import make_azimuth</span>
 <span class="sd">    &gt;&gt;&gt; incidence_angles = np.array([20, 30, 40])</span>
 <span class="sd">    &gt;&gt;&gt; emission_angles = np.array([30, 40, 50])</span>
 <span class="sd">    &gt;&gt;&gt; phase_angles = np.array([25, 30, 35])</span>
@@ -419,29 +414,29 @@
     <span class="k">return</span> <span class="mi">180</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">d_phi</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="phase_to_angles"><a class="viewcode-back" href="../rst/for-users/api-reference/observation/phase_to_angles.html#observation.phase_to_angles">[docs]</a><span class="k">def</span> <span class="nf">phase_to_angles</span><span class="p">(</span><span class="n">incidence</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">emission</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-                    <span class="n">phase</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Angles</span><span class="p">:</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Construct an instance of Angles in the case where the phase angles are</span>
-<span class="sd">    known but azimuth angles are unknown.</span>
+<div class="viewcode-block" id="phase_to_angles"><a class="viewcode-back" href="../rst/for-users/api-reference/observation/phase_to_angles.html#observation.phase_to_angles">[docs]</a><span class="k">def</span> <span class="nf">phase_to_angles</span><span class="p">(</span><span class="n">incidence</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">emission</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+                    <span class="n">phase</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Angles</span><span class="p">:</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Construct an instance of :class:`Angles` in the case where phase angles</span>
+<span class="sd">    are known but azimuth angles are unknown.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    incidence</span>
 <span class="sd">        Incidence (solar zenith) angles [degrees]. All values must be between 0</span>
-<span class="sd">        and 180 degrees.</span>
+<span class="sd">        and 180.</span>
 <span class="sd">    emission</span>
 <span class="sd">        Emission (emergence) angles [degrees]. All values must be between 0 and</span>
-<span class="sd">        180 degrees.</span>
+<span class="sd">        90.</span>
 <span class="sd">    phase</span>
-<span class="sd">        Phase angles [degrees]. All values must be between 0 and 180 degrees.</span>
+<span class="sd">        Phase angles [degrees]. All values must be between 0 and 180.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    TypeError</span>
-<span class="sd">        Raised if any values in the input arrays are not numeric.</span>
+<span class="sd">        Raised if any values in the input arrays are nonnumerical.</span>
 <span class="sd">    ValueError</span>
 <span class="sd">        Raised if any values of the input arrays are outside their</span>
-<span class="sd">        mathematically valid range, or if the input arrays do not have the same</span>
+<span class="sd">        mathematically valid range or if the input arrays do not have the same</span>
 <span class="sd">        shapes.</span>
 
 <span class="sd">    Warnings</span>
@@ -454,29 +449,31 @@
 <span class="sd">    For a random assortment of input angles:</span>
 
 <span class="sd">    &gt;&gt;&gt; import numpy as np</span>
-<span class="sd">    &gt;&gt;&gt; incidence_angles = np.array([20, 30, 40])</span>
-<span class="sd">    &gt;&gt;&gt; emission_angles = np.array([30, 40, 50])</span>
-<span class="sd">    &gt;&gt;&gt; phase_angles = np.array([25, 30, 35])</span>
-<span class="sd">    &gt;&gt;&gt; phase_to_angles(incidence_angles, emission_angles, phase_angles)</span>
+<span class="sd">    &gt;&gt;&gt; from pyRT_DISORT.observation import phase_to_angles</span>
+<span class="sd">    &gt;&gt;&gt; incidence = [20, 30, 40]</span>
+<span class="sd">    &gt;&gt;&gt; emission = [30, 40, 50]</span>
+<span class="sd">    &gt;&gt;&gt; phase = [25, 30, 35]</span>
+<span class="sd">    &gt;&gt;&gt; phase_to_angles(incidence, emission, phase)</span>
 <span class="sd">    Angles:</span>
+<span class="sd">       mu0 = [0.93969262 0.8660254  0.76604444]</span>
+<span class="sd">       phi0 = [0. 0. 0.]</span>
 <span class="sd">       mu = [[0.8660254 ]</span>
 <span class="sd">     [0.76604444]</span>
 <span class="sd">     [0.64278761]]</span>
-<span class="sd">       mu0 = [0.93969262 0.8660254  0.76604444]</span>
 <span class="sd">       phi = [[122.74921226]</span>
 <span class="sd">     [129.08074256]</span>
 <span class="sd">     [131.57329276]]</span>
-<span class="sd">       phi0 = [0. 0. 0.]</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">bundle</span> <span class="o">=</span> <span class="n">_OrbiterAngleBundle</span><span class="p">(</span><span class="n">incidence</span><span class="p">,</span> <span class="n">emission</span><span class="p">,</span> <span class="n">phase</span><span class="p">)</span>
     <span class="n">phi</span> <span class="o">=</span> <span class="n">make_azimuth</span><span class="p">(</span><span class="n">bundle</span><span class="o">.</span><span class="n">incidence</span><span class="p">,</span> <span class="n">bundle</span><span class="o">.</span><span class="n">emission</span><span class="p">,</span> <span class="n">bundle</span><span class="o">.</span><span class="n">phase</span><span class="p">)</span>
     <span class="n">phi0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">bundle</span><span class="o">.</span><span class="n">phase</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">Angles</span><span class="p">(</span><span class="n">bundle</span><span class="o">.</span><span class="n">incidence</span><span class="p">,</span> <span class="n">bundle</span><span class="o">.</span><span class="n">emission</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span> <span class="n">phi</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span> <span class="n">phi0</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">Angles</span><span class="p">(</span><span class="n">bundle</span><span class="o">.</span><span class="n">incidence</span><span class="p">,</span> <span class="n">phi0</span><span class="p">,</span>
+                  <span class="n">bundle</span><span class="o">.</span><span class="n">emission</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span> <span class="n">phi</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">])</span></div>
 
 
-<div class="viewcode-block" id="sky_image"><a class="viewcode-back" href="../rst/for-users/api-reference/observation/sky_image.html#observation.sky_image">[docs]</a><span class="k">def</span> <span class="nf">sky_image</span><span class="p">(</span><span class="n">incidence</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">emission</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">azimuth</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-              <span class="n">beam_azimuth</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Angles</span><span class="p">:</span>
+<div class="viewcode-block" id="sky_image"><a class="viewcode-back" href="../rst/for-users/api-reference/observation/sky_image.html#observation.sky_image">[docs]</a><span class="k">def</span> <span class="nf">sky_image</span><span class="p">(</span><span class="n">incidence</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">beam_azimuth</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">emission</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+              <span class="n">azimuth</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Angles</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Create an instance of :class:`Angles` from a typical sky image---that is,</span>
 <span class="sd">    a single incidence and beam azimuth angle are known, and the observational</span>
 <span class="sd">    geometry defines a 1D array of emission and azimuth angles.</span>
@@ -485,24 +482,24 @@
 <span class="sd">    ----------</span>
 <span class="sd">    incidence</span>
 <span class="sd">        Incidence (solar zenith) angle [degrees]. Value must be between 0 and</span>
-<span class="sd">        180 degrees.</span>
-<span class="sd">    emission</span>
-<span class="sd">        Emission (emergence) angle [degrees]. All values must be between 0 and</span>
-<span class="sd">        180 degrees.</span>
-<span class="sd">    azimuth</span>
-<span class="sd">        Azimuthal angle [degrees]. All values must be between 0 and 360 degrees.</span>
+<span class="sd">        180.</span>
 <span class="sd">    beam_azimuth</span>
 <span class="sd">        Azimuth angle of the incident beam [degrees]. Value must be between 0</span>
-<span class="sd">        and 360 degrees.</span>
+<span class="sd">        and 360.</span>
+<span class="sd">    emission</span>
+<span class="sd">        Emission (emergence) angle [degrees]. All values must be between 0 and</span>
+<span class="sd">        180.</span>
+<span class="sd">    azimuth</span>
+<span class="sd">        Azimuthal angle [degrees]. All values must be between 0 and 360.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    TypeError</span>
-<span class="sd">        Raised if any of the angles are not a numpy.ndarray.</span>
+<span class="sd">        Raised if any values in the input arrays are nonnumerical.</span>
 <span class="sd">    ValueError</span>
-<span class="sd">        Raised if any of the input arrays contain values outside of their</span>
-<span class="sd">        mathematically valid range, or if the input arrays do not have the</span>
-<span class="sd">        same observation shape.</span>
+<span class="sd">        Raised if any values of the input arrays are outside their</span>
+<span class="sd">        mathematically valid range, or if the inputs do not have the same beam</span>
+<span class="sd">        measurement shape.</span>
 
 <span class="sd">    Warnings</span>
 <span class="sd">    --------</span>
@@ -511,33 +508,37 @@
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-<span class="sd">    For a (3, 5) sky image with a single incident beam:</span>
+<span class="sd">    Create an instance of Angles for a (3, 5) sky image with a single incident</span>
+<span class="sd">    beam.</span>
 
 <span class="sd">    &gt;&gt;&gt; import numpy as np</span>
-<span class="sd">    &gt;&gt;&gt; incidence_ang = 30</span>
-<span class="sd">    &gt;&gt;&gt; beam_az = 40</span>
-<span class="sd">    &gt;&gt;&gt; emission_ang = np.linspace(30, 60, num=3)</span>
-<span class="sd">    &gt;&gt;&gt; azimuth_ang = np.linspace(20, 50, num=5)</span>
-<span class="sd">    &gt;&gt;&gt; sky_image(incidence_ang, emission_ang, azimuth_ang, beam_az)</span>
+<span class="sd">    &gt;&gt;&gt; from pyRT_DISORT.observation import sky_image</span>
+<span class="sd">    &gt;&gt;&gt; incidence = 30</span>
+<span class="sd">    &gt;&gt;&gt; beam_azimuth = 40</span>
+<span class="sd">    &gt;&gt;&gt; emission = np.linspace(30, 60, num=3)</span>
+<span class="sd">    &gt;&gt;&gt; azimuth = np.linspace(20, 50, num=5)</span>
+<span class="sd">    &gt;&gt;&gt; sky_image(incidence, beam_azimuth, emission, azimuth)</span>
 <span class="sd">    Angles:</span>
-<span class="sd">       mu = [[0.8660254  0.70710678 0.5       ]]</span>
 <span class="sd">       mu0 = [0.8660254]</span>
-<span class="sd">       phi = [[20.  27.5 35.  42.5 50. ]]</span>
 <span class="sd">       phi0 = [40]</span>
+<span class="sd">       mu = [[0.8660254  0.70710678 0.5       ]]</span>
+<span class="sd">       phi = [[20.  27.5 35.  42.5 50. ]]</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">incidence</span> <span class="o">=</span> <span class="n">_IncidenceAngle</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">incidence</span><span class="p">]))</span>
-    <span class="n">emission</span> <span class="o">=</span> <span class="n">_EmissionAngle</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">emission</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
-    <span class="n">azimuth</span> <span class="o">=</span> <span class="n">_AzimuthAngle</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">azimuth</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
-    <span class="n">beam_azimuth</span> <span class="o">=</span> <span class="n">_AzimuthAngle</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">beam_azimuth</span><span class="p">]))</span>
-    <span class="k">return</span> <span class="n">Angles</span><span class="p">(</span><span class="n">incidence</span><span class="p">,</span> <span class="n">emission</span><span class="p">,</span> <span class="n">azimuth</span><span class="p">,</span> <span class="n">beam_azimuth</span><span class="p">)</span></div>
+    <span class="n">incidence</span> <span class="o">=</span> <span class="n">_IncidenceAngles</span><span class="p">(</span><span class="n">incidence</span><span class="p">)</span>
+    <span class="n">beam_azimuth</span> <span class="o">=</span> <span class="n">_AzimuthAngles</span><span class="p">(</span><span class="n">beam_azimuth</span><span class="p">)</span>
+    <span class="n">emission</span> <span class="o">=</span> <span class="n">_EmissionAngles</span><span class="p">(</span><span class="n">emission</span><span class="p">)[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+    <span class="n">azimuth</span> <span class="o">=</span> <span class="n">_AzimuthAngles</span><span class="p">(</span><span class="n">azimuth</span><span class="p">)[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">Angles</span><span class="p">(</span><span class="n">incidence</span><span class="p">,</span> <span class="n">beam_azimuth</span><span class="p">,</span> <span class="n">emission</span><span class="p">,</span> <span class="n">azimuth</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Spectral"><a class="viewcode-back" href="../rst/for-users/api-reference/observation/Spectral.html#observation.Spectral">[docs]</a><span class="k">class</span> <span class="nc">Spectral</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;A data structure that contains spectral info required by DISORT.</span>
+    <span class="sd">&quot;&quot;&quot;A data structure that contains spectral information required by DISORT.</span>
 
-<span class="sd">    It accepts the short and long wavelength from an observation and computes</span>
-<span class="sd">    their corresponding wavenumber.</span>
+<span class="sd">    It accepts the short and long wavelengths from an observation and computes</span>
+<span class="sd">    their corresponding wavenumbers. It can accommodate arrays of any shape as</span>
+<span class="sd">    long as they have the same shape.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -549,7 +550,7 @@
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    TypeError</span>
-<span class="sd">        Raised if either of the wavelengths are not a numpy.ndarray.</span>
+<span class="sd">        Raised if any values in the input arrays are nonnumerical.</span>
 <span class="sd">    ValueError</span>
 <span class="sd">        Raised if either of the input arrays are not the same shape, if any</span>
 <span class="sd">        values in ``short_wavelength`` are not larger than the corresponding</span>
@@ -559,9 +560,10 @@
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    This class can accommodate arrays of any shape as long as they both have</span>
-<span class="sd">    the same shape. If you do not plan to use thermal emission, there is</span>
-<span class="sd">    probably little benefit making an instance of this class.</span>
+<span class="sd">    If you do not plan to use thermal emission, there is probably little benefit</span>
+<span class="sd">    to making an instance of this class. See</span>
+<span class="sd">    :py:class:`~radiation.ThermalEmission` for a discussion on thermal radiation</span>
+<span class="sd">    in DISORT.</span>
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
@@ -570,10 +572,13 @@
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-<span class="sd">    Instantiate this class for a simple set of wavelengths.</span>
+<span class="sd">    Import the relevant modules</span>
 
 <span class="sd">    &gt;&gt;&gt; import numpy as np</span>
 <span class="sd">    &gt;&gt;&gt; from pyRT_DISORT.observation import Spectral</span>
+
+<span class="sd">    Instantiate this class for a simple set of wavelengths.</span>
+
 <span class="sd">    &gt;&gt;&gt; short = np.array([9, 10])</span>
 <span class="sd">    &gt;&gt;&gt; long = short + 1</span>
 <span class="sd">    &gt;&gt;&gt; Spectral(short, long)</span>
@@ -581,28 +586,35 @@
 <span class="sd">       low_wavenumber = [1000.          909.09090909]</span>
 <span class="sd">       high_wavenumber = [1111.11111111 1000.        ]</span>
 
-<span class="sd">    Instantiate this class for an observation taken at 1 to 30 microns, with</span>
-<span class="sd">    each channel having a 50 nm spectral width.</span>
+<span class="sd">    Instantiate this class for measurements taken at 1 to 30 microns in 1 micron</span>
+<span class="sd">    increments, with each channel having a 50 nm spectral width.</span>
 
-<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
 <span class="sd">    &gt;&gt;&gt; center = np.linspace(1, 30, num=30)</span>
-<span class="sd">    &gt;&gt;&gt; half_width = 0.025</span>
+<span class="sd">    &gt;&gt;&gt; half_width = 0.05 / 2</span>
 <span class="sd">    &gt;&gt;&gt; wavelengths = Spectral(center - half_width, center + half_width)</span>
 <span class="sd">    &gt;&gt;&gt; wavelengths.low_wavenumber.shape</span>
 <span class="sd">    (30,)</span>
 
-<span class="sd">    For an image of shape (50, 60) with the same 20 wavelengths in each pixel:</span>
+<span class="sd">    Instantiate this class for an image of shape (50, 60), where each pixel</span>
+<span class="sd">    contains the same 20 wavelengths---wavelengths that span 1 to 20 microns in</span>
+<span class="sd">    1 micron increments with each channel having a 50 nm spectral width. Note</span>
+<span class="sd">    that this is not memory efficient, as each pixel along the &quot;measurement</span>
+<span class="sd">    shape&quot; contains the same information, but it may be useful for keeping</span>
+<span class="sd">    as many arrays as possible equally shaped.</span>
 
 <span class="sd">    &gt;&gt;&gt; center = np.linspace(1, 20, num=20)</span>
-<span class="sd">    &gt;&gt;&gt; half_width = 0.025</span>
+<span class="sd">    &gt;&gt;&gt; half_width = 0.05 / 2</span>
 <span class="sd">    &gt;&gt;&gt; wav_grid = np.broadcast_to(center, (50, 60, 20))</span>
 <span class="sd">    &gt;&gt;&gt; wavelengths = Spectral(wav_grid - half_width, wav_grid + half_width)</span>
 <span class="sd">    &gt;&gt;&gt; wavelengths.low_wavenumber.shape</span>
 <span class="sd">    (50, 60, 20)</span>
+<span class="sd">    &gt;&gt;&gt; np.array_equal(wavelengths.low_wavenumber[0, 0, :],</span>
+<span class="sd">    ...                wavelengths.low_wavenumber[9, 17, :])</span>
+<span class="sd">    True</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">short_wavelength</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-                 <span class="n">long_wavelength</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">short_wavelength</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+                 <span class="n">long_wavelength</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_bundle</span> <span class="o">=</span> <span class="n">_WavelengthBundle</span><span class="p">(</span><span class="n">short_wavelength</span><span class="p">,</span> <span class="n">long_wavelength</span><span class="p">)</span>
 
@@ -654,39 +666,42 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_low_wavenumber</span></div>
 
 
-<div class="viewcode-block" id="constant_width"><a class="viewcode-back" href="../rst/for-users/api-reference/observation/constant_width.html#observation.constant_width">[docs]</a><span class="k">def</span> <span class="nf">constant_width</span><span class="p">(</span><span class="n">center_wavelength</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Spectral</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Create an instance of Spectral assuming the wavelengths all have a</span>
-<span class="sd">    constant spectral width.</span>
+<div class="viewcode-block" id="constant_width"><a class="viewcode-back" href="../rst/for-users/api-reference/observation/constant_width.html#observation.constant_width">[docs]</a><span class="k">def</span> <span class="nf">constant_width</span><span class="p">(</span><span class="n">center_wavelength</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Spectral</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Create an instance of :class:`Spectral` assuming the wavelengths all have</span>
+<span class="sd">    a constant spectral width.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    center_wavelength</span>
 <span class="sd">        The center wavelength [microns] of each spectral bin.</span>
 <span class="sd">    width</span>
-<span class="sd">        The spectral width of each spectral bin.</span>
+<span class="sd">        The width of each spectral bin.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    TypeError</span>
-<span class="sd">        Raised if :code:`center_wavelength` is not a numpy.ndarray.</span>
+<span class="sd">        Raised if any values in the input arrays are nonnumerical.</span>
 <span class="sd">    ValueError</span>
 <span class="sd">        I&#39;ll add this later.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-<span class="sd">    For an observation taken at 1 to 30 microns, with each channel having a 50</span>
-<span class="sd">    nm spectral width:</span>
+<span class="sd">    Create an instance of Spectral for an observation taken at 1 to 3 microns</span>
+<span class="sd">    in 1 micron increments, with each channel having a 50 nm spectral width.</span>
 
 <span class="sd">    &gt;&gt;&gt; import numpy as np</span>
-<span class="sd">    &gt;&gt;&gt; center = np.linspace(1, 30, num=30)</span>
+<span class="sd">    &gt;&gt;&gt; from pyRT_DISORT.observation import constant_width</span>
+<span class="sd">    &gt;&gt;&gt; center = [1, 2, 3]</span>
 <span class="sd">    &gt;&gt;&gt; width = 0.05</span>
-<span class="sd">    &gt;&gt;&gt; wavelengths = constant_width(center, width)</span>
-<span class="sd">    &gt;&gt;&gt; print(wavelengths.low_wavenumber.shape)</span>
-<span class="sd">    (30,)</span>
+<span class="sd">    &gt;&gt;&gt; constant_width(center, width)</span>
+<span class="sd">    Spectral:</span>
+<span class="sd">       low_wavenumber = [9756.09756098 4938.27160494 3305.78512397]</span>
+<span class="sd">       high_wavenumber = [10256.41025641  5063.29113924  3361.34453782]</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">half</span> <span class="o">=</span> <span class="n">width</span> <span class="o">/</span> <span class="mi">2</span>
-    <span class="k">return</span> <span class="n">Spectral</span><span class="p">(</span><span class="n">center_wavelength</span> <span class="o">-</span> <span class="n">half</span><span class="p">,</span> <span class="n">center_wavelength</span> <span class="o">+</span> <span class="n">half</span><span class="p">)</span></div>
+    <span class="n">center</span> <span class="o">=</span> <span class="n">_Wavelength</span><span class="p">(</span><span class="n">center_wavelength</span><span class="p">,</span> <span class="s1">&#39;center_wavelength&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Spectral</span><span class="p">(</span><span class="n">center</span> <span class="o">-</span> <span class="n">half</span><span class="p">,</span> <span class="n">center</span> <span class="o">+</span> <span class="n">half</span><span class="p">)</span></div>
 
 
 <span class="k">class</span> <span class="nc">_Angles</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
@@ -978,7 +993,7 @@
 <span class="sd">        microns (I assume this is the valid range to do retrievals).</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">array</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">obj</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">array</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">cls</span><span class="o">.</span><span class="n">__raise_value_error_if_array_is_not_in_range</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
@@ -1048,32 +1063,6 @@
             <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Some values in long_wavelength are not larger &#39;</span> \
                       <span class="s1">&#39;than the corresponding values in short_wavelength.&#39;</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
-
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
-    <span class="n">b</span> <span class="o">=</span> <span class="n">_Angles</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">45</span><span class="p">)</span>
-    <span class="c1">#print(b)</span>
-    <span class="sd">&#39;&#39;&#39;print(_Angle(np.array([1, 2]), &#39;foo&#39;, 0, 100))</span>
-<span class="sd">    print(_Angle([1, 2], &#39;foo&#39;, 0, 100))</span>
-<span class="sd">    print(_Angle((1, 2), &#39;foo&#39;, 0, 100))</span>
-<span class="sd">    print(_Angle(1, &#39;foo&#39;, 0, 100))&#39;&#39;&#39;</span>
-    <span class="c1">#c = b.to_ndarray()</span>
-    <span class="c1">#print(c, type(c))</span>
-    <span class="c1">#print(b, type(b), isinstance(b, np.ndarray))</span>
-    <span class="c1">#c = np.linspace(1, 50) * b</span>
-    <span class="c1">#print(c, type(c))</span>
-    <span class="c1">#beam_azimuth = 40</span>
-    <span class="c1">#emission_ang = np.linspace(30, 60, num=3)[np.newaxis, :]</span>
-    <span class="c1">#azimuth_ang = np.linspace(20, 50, num=5)[np.newaxis, :]</span>
-    <span class="c1">#angles = Angles(incidence_ang, emission_ang, azimuth_ang, beam_azimuth)</span>
-    <span class="c1">#print(angles)</span>
-
-    <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
-    <span class="nb">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
-    <span class="n">c</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">to_ndarray</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
-
 </pre></div>
 
            </div>

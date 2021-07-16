@@ -173,16 +173,23 @@
 <h1>Release notes<a class="headerlink" href="#release-notes" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="v0-0-2">
 <h2>v0.0.2<a class="headerlink" href="#v0-0-2" title="Permalink to this headline">¶</a></h2>
+<p>This version was focused on improving the observation module.</p>
 <ul class="simple">
 <li><p>Change observation.Angles to accept a different call signature, grouping
 the incident beam together instead of phi and phi0 together.</p></li>
-<li><p>Update documentation page on the observation module to be more like numpy.</p></li>
+<li><p>Update documentation page on the observation module to be more like numpy.
+Now, the module has its own “home” page and each public class and function
+has its own page.</p></li>
+<li><p>Add a link to the quasi-source code in the signature of each class and
+function.</p></li>
 <li><p>Angles and Spectral now both contain __str__ and __repr__ methods.</p></li>
 <li><p>All classes and functions in the observation module now accept ArrayLike
 inputs, instead of strictly requiring ndarrays.</p></li>
 <li><p>Improved error handling by creating a number of abstract arrays to validate
 inputs.</p></li>
-<li><p>Minor speed and memory improvements.</p></li>
+<li><p>Improved docstring for the Angles class.</p></li>
+<li><p>Improved descriptions in the examples.</p></li>
+<li><p>Minor speed and memory improvements when using this module.</p></li>
 </ul>
 </div>
 </div>

@@ -1,5 +1,5 @@
-pyRT_DISORT.observation
-=======================
+observation
+===========
 .. automodule:: observation
 
 .. toctree::

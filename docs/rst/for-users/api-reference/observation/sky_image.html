@@ -100,7 +100,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../controller.html">Controller</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../eos.html">Equation of State</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../legendre.html">Legendre</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../observation.html">pyRT_DISORT.observation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../observation.html">observation</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="Angles.html">Angles</a></li>
 <li class="toctree-l3"><a class="reference internal" href="make_azimuth.html">make_azimuth</a></li>
 <li class="toctree-l3"><a class="reference internal" href="phase_to_angles.html">phase_to_angles</a></li>
@@ -169,7 +169,7 @@
         
           <li><a href="../../api-reference.html">API reference</a> &raquo;</li>
         
-          <li><a href="../observation.html">pyRT_DISORT.observation</a> &raquo;</li>
+          <li><a href="../observation.html">observation</a> &raquo;</li>
         
       <li>sky_image</li>
     
@@ -194,7 +194,7 @@
 <h1>sky_image<a class="headerlink" href="#sky-image" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt id="observation.sky_image">
-<code class="sig-prename descclassname"><span class="pre">observation.</span></code><code class="sig-name descname"><span class="pre">sky_image</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">incidence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emission</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azimuth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beam_azimuth</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/observation.html#sky_image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#observation.sky_image" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">observation.</span></code><code class="sig-name descname"><span class="pre">sky_image</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">incidence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beam_azimuth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emission</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azimuth</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/observation.html#sky_image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#observation.sky_image" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create an instance of <a class="reference internal" href="Angles.html#observation.Angles" title="observation.Angles"><code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code></a> from a typical sky image—that is,
 a single incidence and beam azimuth angle are known, and the observational
 geometry defines a 1D array of emission and azimuth angles.</p>
@@ -202,20 +202,20 @@ geometry defines a 1D array of emission and azimuth angles.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>incidence</strong> (<em>float</em>) – Incidence (solar zenith) angle [degrees]. Value must be between 0 and
-180 degrees.</p></li>
-<li><p><strong>emission</strong> (<em>numpy.ndarray</em>) – Emission (emergence) angle [degrees]. All values must be between 0 and
-180 degrees.</p></li>
-<li><p><strong>azimuth</strong> (<em>numpy.ndarray</em>) – Azimuthal angle [degrees]. All values must be between 0 and 360 degrees.</p></li>
+180.</p></li>
 <li><p><strong>beam_azimuth</strong> (<em>float</em>) – Azimuth angle of the incident beam [degrees]. Value must be between 0
-and 360 degrees.</p></li>
+and 360.</p></li>
+<li><p><strong>emission</strong> (<em>numpy.typing.ArrayLike</em>) – Emission (emergence) angle [degrees]. All values must be between 0 and
+180.</p></li>
+<li><p><strong>azimuth</strong> (<em>numpy.typing.ArrayLike</em>) – Azimuthal angle [degrees]. All values must be between 0 and 360.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>TypeError</strong> – Raised if any of the angles are not a numpy.ndarray.</p></li>
-<li><p><strong>ValueError</strong> – Raised if any of the input arrays contain values outside of their
-    mathematically valid range, or if the input arrays do not have the
-    same observation shape.</p></li>
+<li><p><strong>TypeError</strong> – Raised if any values in the input arrays are nonnumerical.</p></li>
+<li><p><strong>ValueError</strong> – Raised if any values of the input arrays are outside their
+    mathematically valid range, or if the inputs do not have the same beam
+    measurement shape.</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Return type</dt>
@@ -230,18 +230,20 @@ and 360 degrees.</p></li>
 </dl>
 </div>
 <p class="rubric">Examples</p>
-<p>For a (3, 5) sky image with a single incident beam:</p>
+<p>Create an instance of Angles for a (3, 5) sky image with a single incident
+beam.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">incidence_ang</span> <span class="o">=</span> <span class="mi">30</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">beam_az</span> <span class="o">=</span> <span class="mi">40</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">emission_ang</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">azimuth_ang</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sky_image</span><span class="p">(</span><span class="n">incidence_ang</span><span class="p">,</span> <span class="n">emission_ang</span><span class="p">,</span> <span class="n">azimuth_ang</span><span class="p">,</span> <span class="n">beam_az</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyRT_DISORT.observation</span> <span class="kn">import</span> <span class="n">sky_image</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">incidence</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">beam_azimuth</span> <span class="o">=</span> <span class="mi">40</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">emission</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">azimuth</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sky_image</span><span class="p">(</span><span class="n">incidence</span><span class="p">,</span> <span class="n">beam_azimuth</span><span class="p">,</span> <span class="n">emission</span><span class="p">,</span> <span class="n">azimuth</span><span class="p">)</span>
 <span class="go">Angles:</span>
-<span class="go">   mu = [[0.8660254  0.70710678 0.5       ]]</span>
 <span class="go">   mu0 = [0.8660254]</span>
-<span class="go">   phi = [[20.  27.5 35.  42.5 50. ]]</span>
 <span class="go">   phi0 = [40]</span>
+<span class="go">   mu = [[0.8660254  0.70710678 0.5       ]]</span>
+<span class="go">   phi = [[20.  27.5 35.  42.5 50. ]]</span>
 </pre></div>
 </div>
 </dd></dl>

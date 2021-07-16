@@ -51,7 +51,7 @@ class Angles:
     Warnings
     --------
     UserWarning
-        Raised if any values in :code:`incidence` are greater than 90 degrees.
+        Issued if any values in :code:`incidence` are greater than 90 degrees.
 
     See Also
     --------
@@ -206,7 +206,7 @@ def make_azimuth(incidence: ArrayLike, emission: ArrayLike,
         and 180.
     emission
         Emission (emergence) angles [degrees]. All values must be between 0 and
-        180.
+        90.
     phase
         Phase angles [degrees]. All values must be between 0 and 180.
 
@@ -216,25 +216,20 @@ def make_azimuth(incidence: ArrayLike, emission: ArrayLike,
         Raised if any values in the input arrays are nonnumerical.
     ValueError
         Raised if any values of the input arrays are outside their
-        mathematically valid range, or if the input arrays do not have the same
+        mathematically valid range or if the input arrays do not have the same
         shapes.
 
     Warnings
     --------
     UserWarning
-        Raised if any values in :code:`incidence` are greater than 90 degrees.
-
-    Notes
-    -----
-    It would almost always be beneficial for all of the inputs to have the same
-    shape, but this is not strictly enforced. In any case, the input arrays
-    must have compatible shapes.
+        Issued if any values in :code:`incidence` are greater than 90 degrees.
 
     Examples
     --------
-    For a random assortment of input angles:
+    Create the azimuth angles from an assortment of angles.
 
     >>> import numpy as np
+    >>> from pyRT_DISORT.observation import make_azimuth
     >>> incidence_angles = np.array([20, 30, 40])
     >>> emission_angles = np.array([30, 40, 50])
     >>> phase_angles = np.array([25, 30, 35])
@@ -254,29 +249,29 @@ def make_azimuth(incidence: ArrayLike, emission: ArrayLike,
     return 180 - np.degrees(d_phi)
 
 
-def phase_to_angles(incidence: np.ndarray, emission: np.ndarray,
-                    phase: np.ndarray) -> Angles:
-    r"""Construct an instance of Angles in the case where the phase angles are
-    known but azimuth angles are unknown.
+def phase_to_angles(incidence: ArrayLike, emission: ArrayLike,
+                    phase: ArrayLike) -> Angles:
+    r"""Construct an instance of :class:`Angles` in the case where phase angles
+    are known but azimuth angles are unknown.
 
     Parameters
     ----------
     incidence
         Incidence (solar zenith) angles [degrees]. All values must be between 0
-        and 180 degrees.
+        and 180.
     emission
         Emission (emergence) angles [degrees]. All values must be between 0 and
-        180 degrees.
+        90.
     phase
-        Phase angles [degrees]. All values must be between 0 and 180 degrees.
+        Phase angles [degrees]. All values must be between 0 and 180.
 
     Raises
     ------
     TypeError
-        Raised if any values in the input arrays are not numeric.
+        Raised if any values in the input arrays are nonnumerical.
     ValueError
         Raised if any values of the input arrays are outside their
-        mathematically valid range, or if the input arrays do not have the same
+        mathematically valid range or if the input arrays do not have the same
         shapes.
 
     Warnings
@@ -289,29 +284,31 @@ def phase_to_angles(incidence: np.ndarray, emission: np.ndarray,
     For a random assortment of input angles:
 
     >>> import numpy as np
-    >>> incidence_angles = np.array([20, 30, 40])
-    >>> emission_angles = np.array([30, 40, 50])
-    >>> phase_angles = np.array([25, 30, 35])
-    >>> phase_to_angles(incidence_angles, emission_angles, phase_angles)
+    >>> from pyRT_DISORT.observation import phase_to_angles
+    >>> incidence = [20, 30, 40]
+    >>> emission = [30, 40, 50]
+    >>> phase = [25, 30, 35]
+    >>> phase_to_angles(incidence, emission, phase)
     Angles:
+       mu0 = [0.93969262 0.8660254  0.76604444]
+       phi0 = [0. 0. 0.]
        mu = [[0.8660254 ]
      [0.76604444]
      [0.64278761]]
-       mu0 = [0.93969262 0.8660254  0.76604444]
        phi = [[122.74921226]
      [129.08074256]
      [131.57329276]]
-       phi0 = [0. 0. 0.]
 
     """
     bundle = _OrbiterAngleBundle(incidence, emission, phase)
     phi = make_azimuth(bundle.incidence, bundle.emission, bundle.phase)
     phi0 = np.zeros(bundle.phase.shape)
-    return Angles(bundle.incidence, bundle.emission[:, np.newaxis], phi[:, np.newaxis], phi0)
+    return Angles(bundle.incidence, phi0,
+                  bundle.emission[..., np.newaxis], phi[..., np.newaxis])
 
 
-def sky_image(incidence: float, emission: np.ndarray, azimuth: np.ndarray,
-              beam_azimuth: float) -> Angles:
+def sky_image(incidence: float, beam_azimuth: float, emission: ArrayLike,
+              azimuth: ArrayLike) -> Angles:
     """Create an instance of :class:`Angles` from a typical sky image---that is,
     a single incidence and beam azimuth angle are known, and the observational
     geometry defines a 1D array of emission and azimuth angles.
@@ -320,24 +317,24 @@ def sky_image(incidence: float, emission: np.ndarray, azimuth: np.ndarray,
     ----------
     incidence
         Incidence (solar zenith) angle [degrees]. Value must be between 0 and
-        180 degrees.
-    emission
-        Emission (emergence) angle [degrees]. All values must be between 0 and
-        180 degrees.
-    azimuth
-        Azimuthal angle [degrees]. All values must be between 0 and 360 degrees.
+        180.
     beam_azimuth
         Azimuth angle of the incident beam [degrees]. Value must be between 0
-        and 360 degrees.
+        and 360.
+    emission
+        Emission (emergence) angle [degrees]. All values must be between 0 and
+        180.
+    azimuth
+        Azimuthal angle [degrees]. All values must be between 0 and 360.
 
     Raises
     ------
     TypeError
-        Raised if any of the angles are not a numpy.ndarray.
+        Raised if any values in the input arrays are nonnumerical.
     ValueError
-        Raised if any of the input arrays contain values outside of their
-        mathematically valid range, or if the input arrays do not have the
-        same observation shape.
+        Raised if any values of the input arrays are outside their
+        mathematically valid range, or if the inputs do not have the same beam
+        measurement shape.
 
     Warnings
     --------
@@ -346,33 +343,37 @@ def sky_image(incidence: float, emission: np.ndarray, azimuth: np.ndarray,
 
     Examples
     --------
-    For a (3, 5) sky image with a single incident beam:
+    Create an instance of Angles for a (3, 5) sky image with a single incident
+    beam.
 
     >>> import numpy as np
-    >>> incidence_ang = 30
-    >>> beam_az = 40
-    >>> emission_ang = np.linspace(30, 60, num=3)
-    >>> azimuth_ang = np.linspace(20, 50, num=5)
-    >>> sky_image(incidence_ang, emission_ang, azimuth_ang, beam_az)
+    >>> from pyRT_DISORT.observation import sky_image
+    >>> incidence = 30
+    >>> beam_azimuth = 40
+    >>> emission = np.linspace(30, 60, num=3)
+    >>> azimuth = np.linspace(20, 50, num=5)
+    >>> sky_image(incidence, beam_azimuth, emission, azimuth)
     Angles:
-       mu = [[0.8660254  0.70710678 0.5       ]]
        mu0 = [0.8660254]
-       phi = [[20.  27.5 35.  42.5 50. ]]
        phi0 = [40]
+       mu = [[0.8660254  0.70710678 0.5       ]]
+       phi = [[20.  27.5 35.  42.5 50. ]]
 
     """
-    incidence = _IncidenceAngle(np.array([incidence]))
-    emission = _EmissionAngle(np.expand_dims(emission, axis=0))
-    azimuth = _AzimuthAngle(np.expand_dims(azimuth, axis=0))
-    beam_azimuth = _AzimuthAngle(np.array([beam_azimuth]))
-    return Angles(incidence, emission, azimuth, beam_azimuth)
+    incidence = _IncidenceAngles(incidence)
+    beam_azimuth = _AzimuthAngles(beam_azimuth)
+    emission = _EmissionAngles(emission)[np.newaxis, ...]
+    azimuth = _AzimuthAngles(azimuth)[np.newaxis, ...]
+
+    return Angles(incidence, beam_azimuth, emission, azimuth)
 
 
 class Spectral:
-    """A data structure that contains spectral info required by DISORT.
+    """A data structure that contains spectral information required by DISORT.
 
-    It accepts the short and long wavelength from an observation and computes
-    their corresponding wavenumber.
+    It accepts the short and long wavelengths from an observation and computes
+    their corresponding wavenumbers. It can accommodate arrays of any shape as
+    long as they have the same shape.
 
     Parameters
     ----------
@@ -384,7 +385,7 @@ class Spectral:
     Raises
     ------
     TypeError
-        Raised if either of the wavelengths are not a numpy.ndarray.
+        Raised if any values in the input arrays are nonnumerical.
     ValueError
         Raised if either of the input arrays are not the same shape, if any
         values in ``short_wavelength`` are not larger than the corresponding
@@ -394,9 +395,10 @@ class Spectral:
 
     Notes
     -----
-    This class can accommodate arrays of any shape as long as they both have
-    the same shape. If you do not plan to use thermal emission, there is
-    probably little benefit making an instance of this class.
+    If you do not plan to use thermal emission, there is probably little benefit
+    to making an instance of this class. See
+    :py:class:`~radiation.ThermalEmission` for a discussion on thermal radiation
+    in DISORT.
 
     See Also
     --------
@@ -405,10 +407,13 @@ class Spectral:
 
     Examples
     --------
-    Instantiate this class for a simple set of wavelengths.
+    Import the relevant modules
 
     >>> import numpy as np
     >>> from pyRT_DISORT.observation import Spectral
+
+    Instantiate this class for a simple set of wavelengths.
+
     >>> short = np.array([9, 10])
     >>> long = short + 1
     >>> Spectral(short, long)
@@ -416,28 +421,35 @@ class Spectral:
        low_wavenumber = [1000.          909.09090909]
        high_wavenumber = [1111.11111111 1000.        ]
 
-    Instantiate this class for an observation taken at 1 to 30 microns, with
-    each channel having a 50 nm spectral width.
+    Instantiate this class for measurements taken at 1 to 30 microns in 1 micron
+    increments, with each channel having a 50 nm spectral width.
 
-    >>> import numpy as np
     >>> center = np.linspace(1, 30, num=30)
-    >>> half_width = 0.025
+    >>> half_width = 0.05 / 2
     >>> wavelengths = Spectral(center - half_width, center + half_width)
     >>> wavelengths.low_wavenumber.shape
     (30,)
 
-    For an image of shape (50, 60) with the same 20 wavelengths in each pixel:
+    Instantiate this class for an image of shape (50, 60), where each pixel
+    contains the same 20 wavelengths---wavelengths that span 1 to 20 microns in
+    1 micron increments with each channel having a 50 nm spectral width. Note
+    that this is not memory efficient, as each pixel along the "measurement
+    shape" contains the same information, but it may be useful for keeping
+    as many arrays as possible equally shaped.
 
     >>> center = np.linspace(1, 20, num=20)
-    >>> half_width = 0.025
+    >>> half_width = 0.05 / 2
     >>> wav_grid = np.broadcast_to(center, (50, 60, 20))
     >>> wavelengths = Spectral(wav_grid - half_width, wav_grid + half_width)
     >>> wavelengths.low_wavenumber.shape
     (50, 60, 20)
+    >>> np.array_equal(wavelengths.low_wavenumber[0, 0, :],
+    ...                wavelengths.low_wavenumber[9, 17, :])
+    True
 
     """
-    def __init__(self, short_wavelength: np.ndarray,
-                 long_wavelength: np.ndarray) -> None:
+    def __init__(self, short_wavelength: ArrayLike,
+                 long_wavelength: ArrayLike) -> None:
 
         self._bundle = _WavelengthBundle(short_wavelength, long_wavelength)
 
@@ -489,39 +501,42 @@ class Spectral:
         return self._low_wavenumber
 
 
-def constant_width(center_wavelength: np.ndarray, width: float) -> Spectral:
-    """Create an instance of Spectral assuming the wavelengths all have a
-    constant spectral width.
+def constant_width(center_wavelength: ArrayLike, width: float) -> Spectral:
+    """Create an instance of :class:`Spectral` assuming the wavelengths all have
+    a constant spectral width.
 
     Parameters
     ----------
     center_wavelength
         The center wavelength [microns] of each spectral bin.
     width
-        The spectral width of each spectral bin.
+        The width of each spectral bin.
 
     Raises
     ------
     TypeError
-        Raised if :code:`center_wavelength` is not a numpy.ndarray.
+        Raised if any values in the input arrays are nonnumerical.
     ValueError
         I'll add this later.
 
     Examples
     --------
-    For an observation taken at 1 to 30 microns, with each channel having a 50
-    nm spectral width:
+    Create an instance of Spectral for an observation taken at 1 to 3 microns
+    in 1 micron increments, with each channel having a 50 nm spectral width.
 
     >>> import numpy as np
-    >>> center = np.linspace(1, 30, num=30)
+    >>> from pyRT_DISORT.observation import constant_width
+    >>> center = [1, 2, 3]
     >>> width = 0.05
-    >>> wavelengths = constant_width(center, width)
-    >>> print(wavelengths.low_wavenumber.shape)
-    (30,)
+    >>> constant_width(center, width)
+    Spectral:
+       low_wavenumber = [9756.09756098 4938.27160494 3305.78512397]
+       high_wavenumber = [10256.41025641  5063.29113924  3361.34453782]
 
     """
     half = width / 2
-    return Spectral(center_wavelength - half, center_wavelength + half)
+    center = _Wavelength(center_wavelength, 'center_wavelength')
+    return Spectral(center - half, center + half)
 
 
 class _Angles(np.ndarray):
@@ -813,7 +828,7 @@ class _Wavelength(np.ndarray):
         microns (I assume this is the valid range to do retrievals).
 
     """
-    def __new__(cls, array: np.ndarray, name: str):
+    def __new__(cls, array: ArrayLike, name: str):
         obj = np.asarray(array).view(cls)
         obj.name = name
         cls.__raise_value_error_if_array_is_not_in_range(obj)
@@ -883,29 +898,3 @@ class _WavelengthBundle:
             message = 'Some values in long_wavelength are not larger ' \
                       'than the corresponding values in short_wavelength.'
             raise ValueError(message)
-
-
-if __name__ == '__main__':
-    a = np.array(['foo', 1, 2])
-    b = _Angles(a, 'foo', 0, 45)
-    #print(b)
-    '''print(_Angle(np.array([1, 2]), 'foo', 0, 100))
-    print(_Angle([1, 2], 'foo', 0, 100))
-    print(_Angle((1, 2), 'foo', 0, 100))
-    print(_Angle(1, 'foo', 0, 100))'''
-    #c = b.to_ndarray()
-    #print(c, type(c))
-    #print(b, type(b), isinstance(b, np.ndarray))
-    #c = np.linspace(1, 50) * b
-    #print(c, type(c))
-    #beam_azimuth = 40
-    #emission_ang = np.linspace(30, 60, num=3)[np.newaxis, :]
-    #azimuth_ang = np.linspace(20, 50, num=5)[np.newaxis, :]
-    #angles = Angles(incidence_ang, emission_ang, azimuth_ang, beam_azimuth)
-    #print(angles)
-
-    print(str(b))
-    print(repr(b))
-    c = b.to_ndarray()
-    print(repr(c))
-
