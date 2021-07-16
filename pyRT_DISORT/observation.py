@@ -3,6 +3,9 @@ classes) useful for computing quantities required by DISORT that are commonly
 found in an observation.
 
 """
+# TODO: __new__ instead of __init__?
+# TODO: Only accept ndarrays throughout
+# TODO: Angle should have names, like how _Wavelength does
 # TODO: It would be better to have a BelowHorizon warning, or something like
 #  that, instead of a generic UserWarning
 import warnings
@@ -41,8 +44,8 @@ class Angles:
     Raises
     ------
     TypeError
-        Raised if the inputs cannot be cast into an ndarray or if any values in
-        the inputs are not numeric.
+        Raised if the inputs are not numpy.ndarrays or if they contain
+        nonnumerical values.
 
     ValueError
         Raised if any values of the input arrays are outside their
@@ -77,7 +80,7 @@ class Angles:
     >>> emission_ang = np.linspace(30, 60, num=3)[np.newaxis, :]
     >>> azimuth_ang = np.linspace(20, 50, num=5)[np.newaxis, :]
     >>> angles = Angles(incidence_ang, emission_ang, azimuth_ang, beam_azimuth)
-    >>> print(angles)
+    >>> angles
     Angles:
        mu = [[0.8660254  0.70710678 0.5       ]]
        mu0 = [0.8660254]
@@ -118,15 +121,15 @@ class Angles:
         self._mu0 = self._compute_mu0()
         self._mu = self._compute_mu()
 
-    # def __str__(self):
-    #
-
-    def __repr__(self):
+    def __str__(self):
         return f'Angles:\n' \
                f'   mu = {self.mu}\n' \
                f'   mu0 = {self.mu0}\n' \
                f'   phi = {self.phi}\n' \
                f'   phi0 = {self.phi0}'
+
+    def __repr__(self):
+        return self.__str__()
 
     def _compute_mu0(self) -> np.ndarray:
         return self._bundle.incidence.cos()
@@ -186,7 +189,6 @@ class Angles:
 
 
 # TODO: Is there a cleaner way to compute this?
-# TODO: Test shapes match? If not the computation will break
 def make_azimuth(incidence: np.ndarray, emission: np.ndarray,
                  phase: np.ndarray) -> np.ndarray:
     r"""Construct azimuth angles from a set of incidence, emission, and phase
@@ -206,10 +208,16 @@ def make_azimuth(incidence: np.ndarray, emission: np.ndarray,
     Raises
     ------
     TypeError
-        Raised if any of the angles are not a numpy.ndarray.
+        Raised if any values in the input arrays are not numeric.
     ValueError
-        Raised if any of the input arrays contain values outside of their
-        mathematically valid range.
+        Raised if any values of the input arrays are outside their
+        mathematically valid range, or if the input arrays do not have the same
+        shapes.
+
+    Warnings
+    --------
+    UserWarning
+        Raised if any values in :code:`incidence` are greater than 90 degrees.
 
     Notes
     -----
@@ -222,21 +230,19 @@ def make_azimuth(incidence: np.ndarray, emission: np.ndarray,
     For a random assortment of input angles:
 
     >>> import numpy as np
-    >>> incidence = np.array([20, 30, 40])
-    >>> emission = np.array([30, 40, 50])
-    >>> phase = np.array([25, 30, 35])
-    >>> make_azimuth(incidence, emission, phase)
+    >>> incidence_angles = np.array([20, 30, 40])
+    >>> emission_angles = np.array([30, 40, 50])
+    >>> phase_angles = np.array([25, 30, 35])
+    >>> make_azimuth(incidence_angles, emission_angles, phase_angles)
     array([122.74921226, 129.08074256, 131.57329276])
 
     """
-    incidence = _Angle(incidence, 'incidence', 0, 180)
-    emission = _Angle(emission, 'emission', 0, 180)
-    phase = _Angle(phase, 'phase', 0, 180)
+    bundle = _OrbiterAngleBundle(incidence, emission, phase)
 
     with np.errstate(divide='ignore', invalid='ignore'):
-        tmp_arg = np.true_divide(
-            phase.cosine() - emission.cosine() * incidence.cosine(),
-            emission.sine() * incidence.sine())
+        tmp_arg = (np.true_divide(
+            bundle.phase.cos() - bundle.emission.cos() * bundle.incidence.cos(),
+            bundle.emission.sin() * bundle.incidence.sin())).to_ndarray()
         tmp_arg[~np.isfinite(tmp_arg)] = -1
         d_phi = np.arccos(np.clip(tmp_arg, -1, 1))
 
@@ -246,7 +252,7 @@ def make_azimuth(incidence: np.ndarray, emission: np.ndarray,
 def phase_to_angles(incidence: np.ndarray, emission: np.ndarray,
                     phase: np.ndarray) -> Angles:
     r"""Construct an instance of Angles in the case where the phase angles are
-    known (and presumably azimuth angles are unknown).
+    known but azimuth angles are unknown.
 
     Parameters
     ----------
@@ -262,32 +268,26 @@ def phase_to_angles(incidence: np.ndarray, emission: np.ndarray,
     Raises
     ------
     TypeError
-        Raised if any of the angles are not a numpy.ndarray.
+        Raised if any values in the input arrays are not numeric.
     ValueError
-        Raised if any of the input arrays contain values outside of their
-        mathematically valid range.
+        Raised if any values of the input arrays are outside their
+        mathematically valid range, or if the input arrays do not have the same
+        shapes.
 
     Warnings
     --------
     UserWarning
         Issued if any values in :code:`incidence` are greater than 90 degrees.
 
-    Notes
-    -----
-    It would almost always be beneficial for all of the inputs to have the same
-    shape, but this is not strictly enforced. In any case, the input arrays
-    must have compatible shapes.
-
     Examples
     --------
     For a random assortment of input angles:
 
     >>> import numpy as np
-    >>> incidence = np.array([20, 30, 40])
-    >>> emission = np.array([30, 40, 50])
-    >>> phase = np.array([25, 30, 35])
-    >>> angles = phase_to_angles(incidence, emission, phase)
-    >>> print(angles)
+    >>> incidence_angles = np.array([20, 30, 40])
+    >>> emission_angles = np.array([30, 40, 50])
+    >>> phase_angles = np.array([25, 30, 35])
+    >>> phase_to_angles(incidence_angles, emission_angles, phase_angles)
     Angles:
        mu = [[0.8660254 ]
      [0.76604444]
@@ -306,9 +306,9 @@ def phase_to_angles(incidence: np.ndarray, emission: np.ndarray,
 
 def sky_image(incidence: float, emission: np.ndarray, azimuth: np.ndarray,
               beam_azimuth: float) -> Angles:
-    """Create an instance of Angles from a typical sky image---that is, a single
-    incidence and beam azimuth angle are known, and the observational geometry
-    defines a 1D array of emission and azimuth angles.
+    """Create an instance of :class:`Angles` from a typical sky image---that is,
+    a single incidence and beam azimuth angle are known, and the observational
+    geometry defines a 1D array of emission and azimuth angles.
 
     Parameters
     ----------
@@ -347,8 +347,7 @@ def sky_image(incidence: float, emission: np.ndarray, azimuth: np.ndarray,
     >>> beam_az = 40
     >>> emission_ang = np.linspace(30, 60, num=3)
     >>> azimuth_ang = np.linspace(20, 50, num=5)
-    >>> angles = sky_image(incidence_ang, emission_ang, azimuth_ang, beam_az)
-    >>> print(angles)
+    >>> sky_image(incidence_ang, emission_ang, azimuth_ang, beam_az)
     Angles:
        mu = [[0.8660254  0.70710678 0.5       ]]
        mu0 = [0.8660254]
@@ -356,10 +355,10 @@ def sky_image(incidence: float, emission: np.ndarray, azimuth: np.ndarray,
        phi0 = [40]
 
     """
-    incidence = np.array([incidence])
-    emission = np.expand_dims(emission, axis=0)
-    azimuth = np.expand_dims(azimuth, axis=0)
-    beam_azimuth = np.array([beam_azimuth])
+    incidence = _IncidenceAngle(np.array([incidence]))
+    emission = _EmissionAngle(np.expand_dims(emission, axis=0))
+    azimuth = _AzimuthAngle(np.expand_dims(azimuth, axis=0))
+    beam_azimuth = _AzimuthAngle(np.array([beam_azimuth]))
     return Angles(incidence, emission, azimuth, beam_azimuth)
 
 
@@ -400,14 +399,25 @@ class Spectral:
 
     Examples
     --------
-    For an observation taken at 1 to 30 microns, with each channel having a 50
-    nm spectral width:
+    Instantiate this class for a simple set of wavelengths.
+
+    >>> import numpy as np
+    >>> from pyRT_DISORT.observation import Spectral
+    >>> short = np.array([9, 10])
+    >>> long = short + 1
+    >>> Spectral(short, long)
+    Spectral:
+       low_wavenumber = [1000.          909.09090909]
+       high_wavenumber = [1111.11111111 1000.        ]
+
+    Instantiate this class for an observation taken at 1 to 30 microns, with
+    each channel having a 50 nm spectral width.
 
     >>> import numpy as np
     >>> center = np.linspace(1, 30, num=30)
     >>> half_width = 0.025
     >>> wavelengths = Spectral(center - half_width, center + half_width)
-    >>> print(wavelengths.low_wavenumber.shape)
+    >>> wavelengths.low_wavenumber.shape
     (30,)
 
     For an image of shape (50, 60) with the same 20 wavelengths in each pixel:
@@ -416,57 +426,31 @@ class Spectral:
     >>> half_width = 0.025
     >>> wav_grid = np.broadcast_to(center, (50, 60, 20))
     >>> wavelengths = Spectral(wav_grid - half_width, wav_grid + half_width)
-    >>> print(wavelengths.low_wavenumber.shape)
+    >>> wavelengths.low_wavenumber.shape
     (50, 60, 20)
 
     """
     def __init__(self, short_wavelength: np.ndarray,
                  long_wavelength: np.ndarray) -> None:
 
-        self.__short_wavelength = _Wavelength(short_wavelength,
-                                              'short_wavelength')
-        self.__long_wavelength = _Wavelength(long_wavelength, 'long_wavelength')
+        self._bundle = _WavelengthBundle(short_wavelength, long_wavelength)
 
-        self.__raise_error_if_wavelengths_are_bad()
+        self._high_wavenumber = self.__calculate_high_wavenumber()
+        self._low_wavenumber = self.__calculate_low_wavenumber()
 
-        self.__high_wavenumber = self.__calculate_high_wavenumber()
-        self.__low_wavenumber = self.__calculate_low_wavenumber()
+    def __str__(self):
+        return f'Spectral:\n' \
+               f'   low_wavenumber = {self._low_wavenumber}\n' \
+               f'   high_wavenumber = {self._high_wavenumber}'
 
-    def __raise_error_if_wavelengths_are_bad(self) -> None:
-        self.__raise_value_error_if_not_same_shape()
-        self.__raise_value_error_if_long_wavelength_is_not_larger()
-
-    def __raise_value_error_if_not_same_shape(self) -> None:
-        if self.__short_wavelength.shape != self.__long_wavelength.shape:
-            message = 'short_wavelength and long_wavelength must both have ' \
-                      'the same shape.'
-            raise ValueError(message)
-
-    def __raise_value_error_if_long_wavelength_is_not_larger(self) -> None:
-        if np.any(self.__short_wavelength.val >= self.__long_wavelength.val):
-            message = 'Some values in long_wavelength are not larger ' \
-                      'than the corresponding values in short_wavelength.'
-            raise ValueError(message)
+    def __repr__(self):
+        return self.__str__()
 
     def __calculate_high_wavenumber(self) -> np.ndarray:
-        return self.__short_wavelength.wavelength_to_wavenumber()
+        return self._bundle.short.to_wavenumber()
 
     def __calculate_low_wavenumber(self) -> np.ndarray:
-        return self.__long_wavelength.wavelength_to_wavenumber()
-
-    @property
-    def short_wavelength(self) -> np.ndarray:
-        """Get the input short wavelength [microns].
-
-        """
-        return self.__short_wavelength.val
-
-    @property
-    def long_wavelength(self) -> np.ndarray:
-        """Get the input long wavelength [microns].
-
-        """
-        return self.__long_wavelength.val
+        return self._bundle.long.to_wavenumber()
 
     @property
     def high_wavenumber(self) -> np.ndarray:
@@ -481,7 +465,7 @@ class Spectral:
         :code:`True`.
 
         """
-        return self.__high_wavenumber
+        return self._high_wavenumber
 
     @property
     def low_wavenumber(self) -> np.ndarray:
@@ -496,66 +480,9 @@ class Spectral:
         :code:`True`.
 
         """
-        return self.__low_wavenumber
+        return self._low_wavenumber
 
 
-class _Wavelength:
-    """A data structure to hold on to an array of wavelengths.
-
-    It accepts a numpy.ndarray of wavelengths and ensures all values
-    in the array are acceptable for retrievals.
-
-    """
-    def __init__(self, wavelength: np.ndarray, name: str) -> None:
-        """
-        Parameters
-        ----------
-        wavelength
-            Array of wavelengths [microns].
-        name
-            Name of the wavelength.
-
-        Raises
-        ------
-        TypeError
-            Raised if :code`wavelength` is not a numpy.ndarray.
-        ValueError
-            Raised if any values in :code`wavelength` are not between 0.1 and 50
-            microns (I assume this is the valid range to do retrievals).
-
-        """
-        self.__wavelength = wavelength
-        self.__name = name
-
-        self.__raise_error_if_wavelength_is_bad()
-
-    def __raise_error_if_wavelength_is_bad(self) -> None:
-        self.__raise_type_error_if_wavelength_is_not_ndarray()
-        self.__raise_value_error_if_wavelength_is_not_in_valid_range()
-
-    def __raise_type_error_if_wavelength_is_not_ndarray(self) -> None:
-        if not isinstance(self.__wavelength, np.ndarray):
-            message = 'wavelength must be a numpy.ndarray.'
-            raise TypeError(message)
-
-    def __raise_value_error_if_wavelength_is_not_in_valid_range(self) -> None:
-        if not np.all((0.1 <= self.__wavelength) & (self.__wavelength <= 50)):
-            message = f'All values in {self.__name} must be between 0.1 and ' \
-                      f'50 microns.'
-            raise ValueError(message)
-
-    def __getattr__(self, method):
-        return getattr(self.val, method)
-
-    @property
-    def val(self) -> np.ndarray:
-        return self.__wavelength
-
-    def wavelength_to_wavenumber(self) -> np.ndarray:
-        return 10 ** 4 / self.__wavelength
-
-
-# TODO: this is easy to break cause I don't test the inputs
 def constant_width(center_wavelength: np.ndarray, width: float) -> Spectral:
     """Create an instance of Spectral assuming the wavelengths all have a
     constant spectral width.
@@ -607,7 +534,7 @@ class _Angle(np.ndarray):
     Raises
     ------
     TypeError
-        Raised if any values in the input array are not numeric.
+        Raised if any values in the input array are nonnumerical.
     ValueError
         Raised if any values in the input array are outside the input range.
 
@@ -644,6 +571,12 @@ class _Angle(np.ndarray):
 
         """
         return np.cos(np.radians(self))
+
+    def to_ndarray(self) -> np.ndarray:
+        """Turn this object into a generic ndarray.
+
+        """
+        return np.array(self)
 
 
 class _IncidenceAngle(_Angle):
@@ -848,9 +781,95 @@ class _RoverAngleBundle:
             raise ValueError(message)
 
 
+class _Wavelength(np.ndarray):
+    """Designate that an input array represents wavelengths.
+
+    Parameters
+    ----------
+    array
+        Array of wavelengths [microns].
+    name
+        Name of the wavelength.
+
+    Raises
+    ------
+    ValueError
+        Raised if any values in :code`array` are not between 0.1 and 50
+        microns (I assume this is the valid range to do retrievals).
+
+    """
+    def __new__(cls, array: np.ndarray, name: str):
+        obj = np.asarray(array).view(cls)
+        obj.name = name
+        cls.__raise_value_error_if_array_is_not_in_range(obj)
+        return obj
+
+    def __array_finalize__(self, obj: np.ndarray):
+        if obj is None:
+            return
+        self.name = getattr(obj, 'name', None)
+
+    @staticmethod
+    def __raise_value_error_if_array_is_not_in_range(obj) -> None:
+        if not np.all((0.1 <= obj) & (obj <= 50)):
+            message = f'All values in {obj.name} must be between 0.1 and 50 ' \
+                      'microns.'
+            raise ValueError(message)
+
+    def to_ndarray(self) -> np.ndarray:
+        """Turn this object into a generic ndarray.
+
+        """
+        return np.array(self)
+
+    def to_wavenumber(self) -> np.ndarray:
+        return np.array(10 ** 4 / self)
+
+
+class _WavelengthBundle:
+    """Designate the short and long wavelength from an observation as being
+    linked.
+
+    Parameters
+    ----------
+    short_wavelength
+        Short wavelengths [microns].
+    long_wavelength
+        Long wavelengths [microns].
+
+    Raises
+    ------
+    ValueError
+        Raised if any values in the input arrays are not between 0.1 and 50
+        microns (I assume this is the valid range to do retrievals).
+
+    """
+    def __init__(self, short_wavelength: np.ndarray,
+                 long_wavelength: np.ndarray):
+        self.short = _Wavelength(short_wavelength, 'short_wavelength')
+        self.long = _Wavelength(long_wavelength, 'long_wavelength')
+
+        self.__raise_value_error_if_wavelengths_are_not_same_shape()
+        self.__raise_value_error_if_long_wavelength_is_not_larger()
+
+    def __raise_value_error_if_wavelengths_are_not_same_shape(self) -> None:
+        if self.short.shape != self.long.shape:
+            message = 'short_wavelength and long_wavelength must both have ' \
+                      'the same shape.'
+            raise ValueError(message)
+
+    def __raise_value_error_if_long_wavelength_is_not_larger(self) -> None:
+        if np.any(self.short >= self.long):
+            message = 'Some values in long_wavelength are not larger ' \
+                      'than the corresponding values in short_wavelength.'
+            raise ValueError(message)
+
+
 if __name__ == '__main__':
-    a = np.array('ajkf')
-    _IncidenceAngle(a)
+    a = np.array([10, 11])
+    b = np.array([12, 13])
+    c = Spectral(a, b)
+    print(type(c.low_wavenumber))
     #incidence_ang = 30
     #beam_azimuth = 40
     #emission_ang = np.linspace(30, 60, num=3)[np.newaxis, :]
