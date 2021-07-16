@@ -1,6 +1,5 @@
-#############
 API reference
-#############
+=============
 Here you can find documentation on the included modules with pyRT_DISORT.
 
 .. toctree::

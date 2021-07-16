@@ -9,6 +9,7 @@ you're here... and lucky for you pyRT_DISORT is here to help you out.
 
    rst/about-this-project/about-pyRT_DISORT
    rst/about-this-project/about-DISORT
+   rst/about-this-project/release-notes
 
 .. toctree::
    :maxdepth: 1

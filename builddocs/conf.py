@@ -31,6 +31,7 @@ author = 'kconnour'
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
+    'sphinx.ext.viewcode'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -58,13 +59,6 @@ html_static_path = []
 autoclass_content = 'both'
 autodoc_typehints = 'description'
 
-
-'''# Allow __init__ or other special functions to be defined
-napoleon_include_special_with_doc = True
-
-# Turn off type hints in the documentation
-autodoc_typehints = 'none'
-'''
 # Mock imports so autodoc can work
 # TODO: remove the utilities when possible
 autodoc_mock_imports = ['pyRT_DISORT', 'numpy', 'scipy', 'disort']

@@ -89,6 +89,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../about-this-project/about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../about-this-project/about-DISORT.html">About DISORT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../about-this-project/release-notes.html">Release notes</a></li>
 </ul>
 <p class="caption"><span class="caption-text">For users</span></p>
 <ul class="current">
@@ -100,7 +101,7 @@
 <li class="toctree-l2"><a class="reference internal" href="controller.html">Controller</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eos.html">Equation of State</a></li>
 <li class="toctree-l2"><a class="reference internal" href="legendre.html">Legendre</a></li>
-<li class="toctree-l2"><a class="reference internal" href="observation.html">Observation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="observation.html">observation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="output.html">Output</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Radiation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rayleigh.html">Rayleigh</a></li>
@@ -186,7 +187,7 @@
 radiation variables used in DISORT.</p>
 <dl class="py class">
 <dt id="radiation.IncidentFlux">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">radiation.</span></code><code class="sig-name descname"><span class="pre">IncidentFlux</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">beam_flux</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">numpy.pi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isotropic_flux</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#radiation.IncidentFlux" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">radiation.</span></code><code class="sig-name descname"><span class="pre">IncidentFlux</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">beam_flux</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">numpy.pi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isotropic_flux</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/radiation.html#IncidentFlux"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiation.IncidentFlux" title="Permalink to this definition">¶</a></dt>
 <dd><p>A data structure for holding the incident fluxes.</p>
 <p>IncidentFlux creates scalars for the incident beam and isotropic fluxes and
 performs checks that the input fluxes are valid inputs to DISORT.</p>
@@ -217,37 +218,6 @@ incident flux is umu0 * beam_flux and pi * isotropic_flux. If
 the output fluxes and
 intensities are assumed to have the same units as these variables.</p>
 <dl class="py method">
-<dt id="radiation.IncidentFlux.__init__">
-<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">beam_flux</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">numpy.pi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isotropic_flux</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#radiation.IncidentFlux.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>beam_flux</strong> (<em>float</em>) – The intensity of the incident beam at the top boundary.
-Ensure this variable and <code class="code docutils literal notranslate"><span class="pre">isotropic_flux</span></code> have the same units.
-Note that this is an infinitely wide beam.</p></li>
-<li><p><strong>isotropic_flux</strong> (<em>float</em>) – The intensity of the incident beam at the top boundary. Ensure this
-variable and <code class="code docutils literal notranslate"><span class="pre">beam_flux</span></code> have the same units.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><p><strong>TypeError</strong> – Raised if either input flux cannot be cast into a float.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>If <a class="reference internal" href="#radiation.ThermalEmission.thermal_emission" title="radiation.ThermalEmission.thermal_emission"><code class="xref py py-attr docutils literal notranslate"><span class="pre">thermal_emission</span></code></a> is set to <code class="code docutils literal notranslate"><span class="pre">True</span></code>,
-this is assumed to have the same units as <code class="code docutils literal notranslate"><span class="pre">PLKAVG</span></code> (which defaults
-to [<span class="math notranslate nohighlight">\(\frac{\text{W}}{\text{m}^2}\)</span>]) and the corresponding
-incident flux is umu0 * beam_flux and pi * isotropic_flux. If
-<a class="reference internal" href="#radiation.ThermalEmission.thermal_emission" title="radiation.ThermalEmission.thermal_emission"><code class="xref py py-attr docutils literal notranslate"><span class="pre">thermal_emission</span></code></a> is set to <code class="code docutils literal notranslate"><span class="pre">False</span></code>,
-<code class="code docutils literal notranslate"><span class="pre">beam_flux</span></code> and <code class="code docutils literal notranslate"><span class="pre">isotropic_flux</span></code> have arbitrary units, and
-the output fluxes and
-intensities are assumed to have the same units as these variables.</p>
-</dd></dl>
-
-<dl class="py method">
 <dt id="radiation.IncidentFlux.beam_flux">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">beam_flux</span></code><a class="headerlink" href="#radiation.IncidentFlux.beam_flux" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input flux of the incident beam at the top boundary.</p>
@@ -267,7 +237,7 @@ intensities are assumed to have the same units as these variables.</p>
 
 <dl class="py class">
 <dt id="radiation.ThermalEmission">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">radiation.</span></code><code class="sig-name descname"><span class="pre">ThermalEmission</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thermal_emission</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bottom_temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_emissivity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#radiation.ThermalEmission" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">radiation.</span></code><code class="sig-name descname"><span class="pre">ThermalEmission</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thermal_emission</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bottom_temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_emissivity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/radiation.html#ThermalEmission"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiation.ThermalEmission" title="Permalink to this definition">¶</a></dt>
 <dd><p>A data structure for holding thermal emission variables.</p>
 <p>ThermalEmission creates variables needs to include thermal emission in
 DISORT.</p>
@@ -308,52 +278,8 @@ thermal emission and all of the aforementioned variables.</p>
 </dl>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="observation.html#observation.Spectral" title="observation.Spectral"><code class="xref py py-class docutils literal notranslate"><span class="pre">Spectral</span></code></a>, <a class="reference internal" href="eos.html#eos.Hydrostatic" title="eos.Hydrostatic"><code class="xref py py-class docutils literal notranslate"><span class="pre">Hydrostatic</span></code></a></p>
+<p><a class="reference internal" href="observation/Spectral.html#observation.Spectral" title="observation.Spectral"><code class="xref py py-class docutils literal notranslate"><span class="pre">Spectral</span></code></a>, <a class="reference internal" href="eos.html#eos.Hydrostatic" title="eos.Hydrostatic"><code class="xref py py-class docutils literal notranslate"><span class="pre">Hydrostatic</span></code></a></p>
 </div>
-<dl class="py method">
-<dt id="radiation.ThermalEmission.__init__">
-<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thermal_emission</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bottom_temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_emissivity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#radiation.ThermalEmission.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>thermal_emission</strong> (<em>bool</em>) – <p>Denote whether to use thermal emission. If <code class="code docutils literal notranslate"><span class="pre">True</span></code>, DISORT will
-include thermal emission and will need the following variables:</p>
-<blockquote>
-<div><ul>
-<li><p><code class="code docutils literal notranslate"><span class="pre">bottom_temperature</span></code></p></li>
-<li><p><code class="code docutils literal notranslate"><span class="pre">top_temperature</span></code></p></li>
-<li><p><code class="code docutils literal notranslate"><span class="pre">top_emissivity</span></code></p></li>
-<li><p><code class="code docutils literal notranslate"><span class="pre">low_wavenumber</span></code> (aka <code class="code docutils literal notranslate"><span class="pre">WVNMLO</span></code>)</p></li>
-<li><p><code class="code docutils literal notranslate"><span class="pre">high_wavenumber</span></code> (aka <code class="code docutils literal notranslate"><span class="pre">WVNMHI</span></code>)</p></li>
-<li><p><code class="code docutils literal notranslate"><span class="pre">temperature</span></code> (aka <code class="code docutils literal notranslate"><span class="pre">TEMPER</span></code>)</p></li>
-</ul>
-</div></blockquote>
-<p>If <code class="code docutils literal notranslate"><span class="pre">False</span></code>, DISORT will save computation time by ignoring all
-thermal emission and all of the aforementioned variables.</p>
-</p></li>
-<li><p><strong>bottom_temperature</strong> (<em>float</em>) – The temperature of the bottom boundary [K].</p></li>
-<li><p><strong>top_temperature</strong> (<em>float</em>) – The temperature of the top boundary [K].</p></li>
-<li><p><strong>top_emissivity</strong> (<em>float</em>) – The emissivity of the top boundary.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>TypeError</strong> – Raised if bottom_temperature, top_temperature, or top_emissivity
-    cannot be cast to a float.</p></li>
-<li><p><strong>ValueError</strong> – Raised if bottom_temperature or top_temperature is negative, or if
-    top_emissivity is not between 0 and 1.</p></li>
-</ul>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<p><a class="reference internal" href="observation.html#observation.Spectral" title="observation.Spectral"><code class="xref py py-class docutils literal notranslate"><span class="pre">Spectral</span></code></a>, <a class="reference internal" href="eos.html#eos.Hydrostatic" title="eos.Hydrostatic"><code class="xref py py-class docutils literal notranslate"><span class="pre">Hydrostatic</span></code></a></p>
-</div>
-</dd></dl>
-
 <dl class="py method">
 <dt id="radiation.ThermalEmission.bottom_temperature">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">bottom_temperature</span></code><a class="headerlink" href="#radiation.ThermalEmission.bottom_temperature" title="Permalink to this definition">¶</a></dt>

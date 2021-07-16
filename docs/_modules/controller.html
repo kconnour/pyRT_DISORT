@@ -1,0 +1,644 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>controller &mdash; pyRT_DISORT  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> pyRT_DISORT
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">About this project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst/about-this-project/about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/about-this-project/about-DISORT.html">About DISORT</a></li>
+</ul>
+<p class="caption"><span class="caption-text">For users</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst/for-users/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/for-users/tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/for-users/api-reference.html">API reference</a></li>
+</ul>
+<p class="caption"><span class="caption-text">For contributors</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst/for-contributors/contributions.html">Contributions</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pyRT_DISORT</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>controller</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for controller</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;The :code:`controller` module holds miscellaneous classes responsible for</span>
+<span class="sd">creating variables that control how DISORT runs.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
+
+
+<div class="viewcode-block" id="ComputationalParameters"><a class="viewcode-back" href="../rst/for-users/api-reference/controller.html#controller.ComputationalParameters">[docs]</a><span class="k">class</span> <span class="nc">ComputationalParameters</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;A data structure for holding the size of computational parameters.</span>
+
+<span class="sd">    ComputationalParameters holds the number of model layers, streams, moments,</span>
+<span class="sd">    and angles. It also performs basic checks that these values are plausible.</span>
+<span class="sd">    Objects of this class are meant to be be used as inputs to other classes.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ComputationalParameters.__init__"><a class="viewcode-back" href="../rst/for-users/api-reference/controller.html#controller.ComputationalParameters.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_layers</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">n_moments</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">n_streams</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                 <span class="n">n_azimuth</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">n_polar</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">n_user_levels</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        n_layers</span>
+<span class="sd">            The number of layers to use in the model.</span>
+<span class="sd">        n_moments</span>
+<span class="sd">            The number of polynomial moments to use in the model. This number</span>
+<span class="sd">            should be greater than or equal to :code:`n_streams`.</span>
+<span class="sd">        n_streams</span>
+<span class="sd">            The number of streams (i.e. the number of computational polar</span>
+<span class="sd">            angles) to use in the model. This number should be even and at least</span>
+<span class="sd">            2.</span>
+<span class="sd">        n_azimuth</span>
+<span class="sd">            The number of azimuthal angles where DISORT should return radiant</span>
+<span class="sd">            quantities.</span>
+<span class="sd">        n_polar</span>
+<span class="sd">            The number of user-specified polar angles where DISORT should return</span>
+<span class="sd">            radiant quantities.</span>
+<span class="sd">        n_user_levels</span>
+<span class="sd">            The number of user levels to use in the model.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        TypeError</span>
+<span class="sd">            Raised if any of the inputs cannot be converted to an int.</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            Raised if any of the inputs are not positive finite.</span>
+
+<span class="sd">        Warnings</span>
+<span class="sd">        --------</span>
+<span class="sd">        UserWarning</span>
+<span class="sd">            Raised if n_streams is not even or if n_streams is greater than</span>
+<span class="sd">            n_moments.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__n_layers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__make_n_layers</span><span class="p">(</span><span class="n">n_layers</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__n_moments</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__make_n_moments</span><span class="p">(</span><span class="n">n_moments</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__n_streams</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__make_n_streams</span><span class="p">(</span><span class="n">n_streams</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__n_azimuth</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__make_n_azimuth</span><span class="p">(</span><span class="n">n_azimuth</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__n_polar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__make_n_polar</span><span class="p">(</span><span class="n">n_polar</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__n_user_levels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__make_n_user_levels</span><span class="p">(</span><span class="n">n_user_levels</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__warn_if_n_streams_is_not_even</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__warn_if_n_streams_is_greater_than_n_moments</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__make_n_layers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_layers</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">n_layers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__make_parameter</span><span class="p">(</span><span class="n">n_layers</span><span class="p">,</span> <span class="s1">&#39;n_layers&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_value_error_if_parameter_is_not_positive</span><span class="p">(</span>
+            <span class="n">n_layers</span><span class="p">,</span> <span class="s1">&#39;n_layers&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">n_layers</span>
+
+    <span class="k">def</span> <span class="nf">__make_n_moments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_moments</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">n_moments</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__make_parameter</span><span class="p">(</span><span class="n">n_moments</span><span class="p">,</span> <span class="s1">&#39;n_moments&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_value_error_if_parameter_is_not_positive</span><span class="p">(</span>
+            <span class="n">n_moments</span><span class="p">,</span> <span class="s1">&#39;n_moments&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">n_moments</span>
+
+    <span class="k">def</span> <span class="nf">__make_n_streams</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_streams</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">n_streams</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__make_parameter</span><span class="p">(</span><span class="n">n_streams</span><span class="p">,</span> <span class="s1">&#39;n_streams&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_value_error_if_parameter_is_not_positive</span><span class="p">(</span>
+            <span class="n">n_streams</span><span class="p">,</span> <span class="s1">&#39;n_streams&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">n_streams</span>
+
+    <span class="k">def</span> <span class="nf">__make_n_azimuth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_azimuth</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">n_azimuth</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__make_parameter</span><span class="p">(</span><span class="n">n_azimuth</span><span class="p">,</span> <span class="s1">&#39;n_azimuth&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_value_error_if_parameter_is_not_positive</span><span class="p">(</span>
+            <span class="n">n_azimuth</span><span class="p">,</span> <span class="s1">&#39;n_azimuth&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">n_azimuth</span>
+
+    <span class="k">def</span> <span class="nf">__make_n_polar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_polar</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">n_polar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__make_parameter</span><span class="p">(</span><span class="n">n_polar</span><span class="p">,</span> <span class="s1">&#39;n_polar&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_value_error_if_parameter_is_not_positive</span><span class="p">(</span>
+            <span class="n">n_polar</span><span class="p">,</span> <span class="s1">&#39;n_polar&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">n_polar</span>
+
+    <span class="k">def</span> <span class="nf">__make_n_user_levels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_user_levels</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">n_user_levels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__make_parameter</span><span class="p">(</span><span class="n">n_user_levels</span><span class="p">,</span> <span class="s1">&#39;n_user_levels&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_value_error_if_parameter_is_not_positive</span><span class="p">(</span>
+            <span class="n">n_user_levels</span><span class="p">,</span> <span class="s1">&#39;n_user_levels&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">n_user_levels</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__make_parameter</span><span class="p">(</span><span class="n">param</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">te</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Cannot convert </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> to an int.&#39;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">te</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">ve</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Cannot convert </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> to an int.&#39;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">ve</span>
+        <span class="k">except</span> <span class="ne">OverflowError</span> <span class="k">as</span> <span class="n">oe</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> must be finite.&#39;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">oe</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__raise_value_error_if_parameter_is_not_positive</span><span class="p">(</span>
+            <span class="n">param</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">param</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> must be positive.&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__warn_if_n_streams_is_not_even</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__n_streams</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">warn</span><span class="p">(</span><span class="s1">&#39;n_streams should be even.&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__warn_if_n_streams_is_greater_than_n_moments</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__n_streams</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">__n_moments</span><span class="p">:</span>
+            <span class="n">warn</span><span class="p">(</span><span class="s1">&#39;n_streams should not be greater than n_moments.&#39;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">n_layers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the input number of layers.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        In DISORT, this variable is named :code:`MAXCLY` (though in the</span>
+<span class="sd">        :code:`disort` package, this variable is optional).</span>
+
+<span class="sd">        In problems without scattering, this variable is not used.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__n_layers</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">n_moments</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the input number of moments.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        In DISORT, this variable is named :code:`MAXMOM` (though in the</span>
+<span class="sd">        :code:`disort` package, this variable is optional).</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__n_moments</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">n_streams</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the input number of streams.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        In DISORT, this variable is named :code:`MAXCMU` (though in the</span>
+<span class="sd">        :code:`disort` package, this variable is optional). In general, the more</span>
+<span class="sd">        streams used the more accurate DISORT&#39;s computations will be.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__n_streams</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">n_azimuth</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the input number of azimuthal angles.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        In DISORT, this variable is named :code:`MAXPHI` (though in the</span>
+<span class="sd">        :code:`disort` package, this variable is optional).</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__n_azimuth</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">n_polar</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the input number of user_specified polar angles.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        In DISORT, this variable is named :code:`MAXUMU` (though in the</span>
+<span class="sd">        :code:`disort` package, this variable is optional). Only used by DISORT</span>
+<span class="sd">        if :py:attr:`~output.OutputBehavior.user_angles` is set to ``True``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__n_polar</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">n_user_levels</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the input number of user levels.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        In DISORT, this variable is named :code:`MAXULV` (though in the</span>
+<span class="sd">        :code:`disort` package, this variable is optional).</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        :class:`~output.UserLevel`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__n_user_levels</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;ComputationalParameters: </span><span class="se">\n</span><span class="s1">&#39;</span> \
+               <span class="sa">f</span><span class="s1">&#39;   n_layers = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__n_layers</span><span class="si">}</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span> \
+               <span class="sa">f</span><span class="s1">&#39;   n_moments = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__n_moments</span><span class="si">}</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span> \
+               <span class="sa">f</span><span class="s1">&#39;   n_streams = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__n_streams</span><span class="si">}</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span> \
+               <span class="sa">f</span><span class="s1">&#39;   n_azimuth = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__n_azimuth</span><span class="si">}</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span> \
+               <span class="sa">f</span><span class="s1">&#39;   n_polar = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__n_polar</span><span class="si">}</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span> \
+               <span class="sa">f</span><span class="s1">&#39;   n_user_levels = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__n_user_levels</span><span class="si">}</span><span class="s1">&#39;</span></div>
+
+
+<span class="c1"># TODO: fix user_angles docstring. It&#39;s a mess</span>
+<div class="viewcode-block" id="ModelBehavior"><a class="viewcode-back" href="../rst/for-users/api-reference/controller.html#controller.ModelBehavior">[docs]</a><span class="k">class</span> <span class="nc">ModelBehavior</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;A data structure for holding the DISORT control variables.</span>
+
+<span class="sd">    ModelBehavior holds the control flags that dictate DISORT&#39;s behavior. It</span>
+<span class="sd">    also performs basic checks that the input control options are plausible.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ModelBehavior.__init__"><a class="viewcode-back" href="../rst/for-users/api-reference/controller.html#controller.ModelBehavior.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">accuracy</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">delta_m_plus</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                 <span class="n">do_pseudo_sphere</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">header</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                 <span class="n">print_variables</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6371.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        accuracy</span>
+<span class="sd">            The convergence criterion for azimuthal (Fourier cosine) series.</span>
+<span class="sd">            Will stop when the following occurs twice: largest term being added</span>
+<span class="sd">            is less than &#39;accuracy&#39; times total series sum (twice because</span>
+<span class="sd">            there are cases where terms are anomalously small but azimuthal</span>
+<span class="sd">            series has not converged). Should be between 0 and 0.01 to avoid</span>
+<span class="sd">            risk of serious non-convergence. Has no effect on problems lacking a</span>
+<span class="sd">            beam source, since azimuthal series has only one term in that case.</span>
+<span class="sd">        delta_m_plus</span>
+<span class="sd">            Denote whether to use the delta-M+ method of Lin et al. (2018).</span>
+<span class="sd">        do_pseudo_sphere</span>
+<span class="sd">            Denote whether to use a pseudo-spherical correction.</span>
+<span class="sd">        header</span>
+<span class="sd">            Use a 127- (or less) character header for prints, embedded in the</span>
+<span class="sd">            DISORT banner. Input headers greater than 127 characters will be</span>
+<span class="sd">            truncated. Setting :code:`header=&#39;&#39;` will eliminate both the banner</span>
+<span class="sd">            and the</span>
+<span class="sd">            header, and this is the only way to do so (:code:`header` is not</span>
+<span class="sd">            controlled by any of the :code:`print_variables` flags); :code:`header` can be used</span>
+<span class="sd">            to mark the progress of a calculation in which DISORT is called many</span>
+<span class="sd">            times, while leaving all other printing turned off.</span>
+<span class="sd">        print_variables</span>
+<span class="sd">            Make a list of variables that control what DISORT prints. The 5</span>
+<span class="sd">            booleans control whether each of the following is printed:</span>
+
+<span class="sd">            1. Input variables (except ``PMOM``)</span>
+<span class="sd">            2. Fluxes</span>
+<span class="sd">            3. Intensities at user levels and angles</span>
+<span class="sd">            4. Planar transmissivity and planar albedo as a function of solar</span>
+<span class="sd">               zenith angle (only used if</span>
+<span class="sd">               :py:attr:`~output.OutputBehavior.incidence_beam_conditions` is</span>
+<span class="sd">               set to ``True``)</span>
+<span class="sd">            5. PMOM for each layer (but only if 1. == True and only for layers</span>
+<span class="sd">               with scattering)</span>
+
+<span class="sd">            Default is :code:`None`, which makes</span>
+<span class="sd">            :code:`[False, False, False, False, False]`.</span>
+<span class="sd">        radius</span>
+<span class="sd">            The planetary radius. This is presumably only used if</span>
+<span class="sd">            :code:`do_pseudo_sphere` is set to :code:`True`, although there is no</span>
+<span class="sd">            documentation</span>
+<span class="sd">            on this</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        TypeError</span>
+<span class="sd">            Raised if any inputs cannot be cast to the correct type.</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            Raised if any inputs cannot be cast to the correct type or if</span>
+<span class="sd">            print_variables does not have 5 elements.</span>
+
+<span class="sd">        Warnings</span>
+<span class="sd">        --------</span>
+<span class="sd">        UserWarning</span>
+<span class="sd">            Raised if accuracy is not between 0 and 0.01.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__accuracy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__make_accuracy</span><span class="p">(</span><span class="n">accuracy</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__delta_m_plus</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__make_delta_m_plus</span><span class="p">(</span><span class="n">delta_m_plus</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__do_pseudo_sphere</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__make_do_pseudo_sphere</span><span class="p">(</span><span class="n">do_pseudo_sphere</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__make_header</span><span class="p">(</span><span class="n">header</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__print_variables</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__make_print_variables</span><span class="p">(</span><span class="n">print_variables</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__radius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__make_radius</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__warn_if_accuracy_is_outside_valid_range</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__make_accuracy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">accuracy</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__cast_variable_to_float</span><span class="p">(</span><span class="n">accuracy</span><span class="p">,</span> <span class="s1">&#39;accuracy&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__make_delta_m_plus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delta_m_plus</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__cast_variable_to_bool</span><span class="p">(</span><span class="n">delta_m_plus</span><span class="p">,</span> <span class="s1">&#39;delta_m_plus&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__make_do_pseudo_sphere</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">do_pseudo_sphere</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__cast_variable_to_bool</span><span class="p">(</span>
+            <span class="n">do_pseudo_sphere</span><span class="p">,</span> <span class="s1">&#39;do_pseudo_sphere&#39;</span><span class="p">)</span>
+
+    <span class="c1"># TODO: this does more than one thing</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__make_header</span><span class="p">(</span><span class="n">header</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">header</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">header</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">header</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">127</span><span class="p">:</span>
+                <span class="n">header</span> <span class="o">=</span> <span class="n">header</span><span class="p">[:</span><span class="mi">126</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">header</span>
+        <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">te</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;header cannot be cast into a string.&#39;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">te</span>
+
+    <span class="c1"># TODO: this does more than one thing</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__make_print_variables</span><span class="p">(</span><span class="n">pvar</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bool</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">pvar</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">prnt</span> <span class="o">=</span> <span class="p">[</span><span class="nb">bool</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">pvar</span><span class="p">]</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">prnt</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">5</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;print_variables should have 5 elements.&#39;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">prnt</span>
+            <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">te</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;print_variables should be a list of bools&#39;</span><span class="p">)</span> \
+                    <span class="kn">from</span> <span class="nn">te</span>
+
+    <span class="k">def</span> <span class="nf">__make_radius</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="n">radius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__cast_variable_to_float</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="s1">&#39;radius&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_value_error_if_radius_is_not_positive</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">radius</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__cast_variable_to_float</span><span class="p">(</span><span class="n">variable</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">variable</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">te</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> cannot be cast into a float.&#39;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">te</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">ve</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> cannot be cast into a float.&#39;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">ve</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__cast_variable_to_bool</span><span class="p">(</span><span class="n">variable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">variable</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">te</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> cannot be cast into a boolean.&#39;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">te</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__raise_value_error_if_radius_is_not_positive</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">radius</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;radius must be positive.&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__warn_if_accuracy_is_outside_valid_range</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__accuracy</span> <span class="o">&lt;=</span> <span class="mf">0.01</span><span class="p">:</span>
+            <span class="n">warn</span><span class="p">(</span><span class="s1">&#39;accuracy is expected to be between 0 and 0.01.&#39;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">accuracy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the input accuracy.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        In DISORT, this variable is named :code:`ACCUR`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__accuracy</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">delta_m_plus</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get whether to use delta-M+ scaling.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        In DISORT, this variable is named :code:`DELTAMPLUS`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__delta_m_plus</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">do_pseudo_sphere</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get whether to perform a pseudo-spherical correction.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        In DISORT, this variable is named :code:`DO_PSEUDO_SPHERE`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__do_pseudo_sphere</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">header</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the characters that will appear in the DISORT banner.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        In DISORT, this variable is named :code:`HEADER`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__header</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">print_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bool</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Get the variables to print.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        In DISORT, this variable is named :code:`PRNT`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__print_variables</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">radius</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the planetary radius.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        In DISORT, this variable is named :code:`EARTH_RADIUS`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__radius</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;ModelBehavior: </span><span class="se">\n</span><span class="s1">&#39;</span> \
+               <span class="sa">f</span><span class="s1">&#39;   accuracy = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__accuracy</span><span class="si">}</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span> \
+               <span class="sa">f</span><span class="s1">&#39;   delta_m_plus = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__delta_m_plus</span><span class="si">}</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span> \
+               <span class="sa">f</span><span class="s1">&#39;   do_pseudo_sphere = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__do_pseudo_sphere</span><span class="si">}</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span> \
+               <span class="sa">f</span><span class="s1">&#39;   header = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__header</span><span class="si">}</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span> \
+               <span class="sa">f</span><span class="s1">&#39;   print_variables = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__print_variables</span><span class="si">}</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span> \
+               <span class="sa">f</span><span class="s1">&#39;   radius = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__radius</span><span class="si">}</span><span class="s1">&#39;</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, kconnour.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Observation &mdash; pyRT_DISORT  documentation</title>
+  <title>observation &mdash; pyRT_DISORT  documentation</title>
   
 
   
@@ -32,14 +32,13 @@
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Output" href="output.html" />
+    <link rel="next" title="Angles" href="observation/Angles.html" />
     <link rel="prev" title="Legendre" href="legendre.html" /> 
 </head>
 
@@ -89,6 +88,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../about-this-project/about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../about-this-project/about-DISORT.html">About DISORT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../about-this-project/release-notes.html">Release notes</a></li>
 </ul>
 <p class="caption"><span class="caption-text">For users</span></p>
 <ul class="current">
@@ -100,17 +100,13 @@
 <li class="toctree-l2"><a class="reference internal" href="controller.html">Controller</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eos.html">Equation of State</a></li>
 <li class="toctree-l2"><a class="reference internal" href="legendre.html">Legendre</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Observation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#angles">Angles</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#make-azimuth">make_azimuth</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#phase-to-angles">phase_to_angles</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#sky-image">sky_image</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#spectral">Spectral</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#constant-width">constant_width</a></li>
-</ul>
-</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">observation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="observation/Angles.html">Angles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="observation/make_azimuth.html">make_azimuth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="observation/phase_to_angles.html">phase_to_angles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="observation/sky_image.html">sky_image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="observation/Spectral.html">Spectral</a></li>
+<li class="toctree-l3"><a class="reference internal" href="observation/constant_width.html">constant_width</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="output.html">Output</a></li>
@@ -173,7 +169,7 @@
         
           <li><a href="../api-reference.html">API reference</a> &raquo;</li>
         
-      <li>Observation</li>
+      <li>observation</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -193,457 +189,25 @@
            <div itemprop="articleBody">
             
   <div class="section" id="module-observation">
-<span id="observation"></span><h1>Observation<a class="headerlink" href="#module-observation" title="Permalink to this headline">¶</a></h1>
-<p>This module contains tools to hold and compute quantities commonly found in
-an observation.</p>
-<div class="section" id="angles">
-<h2>Angles<a class="headerlink" href="#angles" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference internal" href="#observation.Angles" title="observation.Angles"><code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code></a> is the fundamental class for holding on to the angular geometry
-from an observation. pyRT_DISORT also includes functions to help create its
-input, along with functions to create instances of <a class="reference internal" href="#observation.Angles" title="observation.Angles"><code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code></a> under
-certain special cases.</p>
-<dl class="py class">
-<dt id="observation.Angles">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">observation.</span></code><code class="sig-name descname"><span class="pre">Angles</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">incidence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emission</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azimuth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beam_azimuth</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#observation.Angles" title="Permalink to this definition">¶</a></dt>
-<dd><p>A data structure that contains angles required by DISORT.</p>
-<p>It accepts both the incidence and azimuth angles of the incident beam
-as well as emission and azimuth angles from an observation. It holds
-these values and computes both <span class="math notranslate nohighlight">\(\mu_0\)</span> and <span class="math notranslate nohighlight">\(\mu\)</span> from these
-angles.</p>
-<p>This class can compute all angular quantities required by DISORT at once,
-even multiple observations. Both <code class="code docutils literal notranslate"><span class="pre">incidence</span></code> and <code class="code docutils literal notranslate"><span class="pre">beam_azimuth</span></code>
-must have the same shape (the “observation shape”). Both <code class="code docutils literal notranslate"><span class="pre">emission</span></code>
-and <code class="code docutils literal notranslate"><span class="pre">azimuth</span></code> must have that same shape with an additional axis at the
-end, though the length of that axis can be different for both of these
-inputs.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>incidence</strong> (<em>numpy.ndarray</em>) – Incidence (solar zenith) angles [degrees]. All values must be between 0
-and 180 degrees.</p></li>
-<li><p><strong>emission</strong> (<em>numpy.ndarray</em>) – Emission (emergence) angles [degrees]. All values must be between 0 and
-180 degrees.</p></li>
-<li><p><strong>azimuth</strong> (<em>numpy.ndarray</em>) – Azimuth angles [degrees]. All values must be between 0 and 360 degrees.</p></li>
-<li><p><strong>beam_azimuth</strong> (<em>numpy.ndarray</em>) – Azimuth angles of the incident beam [degrees]. All values must be
-between 0 and 360 degrees.</p></li>
+<span id="observation"></span><h1>observation<a class="headerlink" href="#module-observation" title="Permalink to this headline">¶</a></h1>
+<p>This module provides a number of classes (and functions to help create those
+classes) useful for computing quantities required by DISORT that are commonly
+found in an observation.</p>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Angular info</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="observation/Angles.html">Angles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="observation/make_azimuth.html">make_azimuth</a></li>
+<li class="toctree-l1"><a class="reference internal" href="observation/phase_to_angles.html">phase_to_angles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="observation/sky_image.html">sky_image</a></li>
 </ul>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>TypeError</strong> – Raised if any of the angles are not a numpy.ndarray.</p></li>
-<li><p><strong>ValueError</strong> – Raised if any of the input arrays contain values outside of their
-    mathematically valid range, or if the input arrays do not have the
-    same observation shape.</p></li>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Spectral info</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="observation/Spectral.html">Spectral</a></li>
+<li class="toctree-l1"><a class="reference internal" href="observation/constant_width.html">constant_width</a></li>
 </ul>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<dl class="simple">
-<dt>UserWarning</dt><dd><p>Issued if any values in <code class="code docutils literal notranslate"><span class="pre">incidence</span></code> are greater than 90 degrees.</p>
-</dd>
-</dl>
-</div>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<dl class="simple">
-<dt><a class="reference internal" href="#observation.phase_to_angles" title="observation.phase_to_angles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">phase_to_angles</span></code></a></dt><dd><p>Create instances of this class if the phase angles are known, but the azimuth angles are unknown.</p>
-</dd>
-<dt><a class="reference internal" href="#observation.sky_image" title="observation.sky_image"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sky_image</span></code></a></dt><dd><p>Create instances of this class from a single sky image.</p>
-</dd>
-</dl>
-</div>
-<p class="rubric">Notes</p>
-<p>DISORT wants a float for <code class="code docutils literal notranslate"><span class="pre">UMU0</span></code> and <code class="code docutils literal notranslate"><span class="pre">PHI0</span></code>; it wants a 1D array
-for <code class="code docutils literal notranslate"><span class="pre">UMU</span></code> and <code class="code docutils literal notranslate"><span class="pre">PHI</span></code>. Selecting the proper indices from the
-observation dimension(s) is necessary to get these data types.</p>
-<p class="rubric">Examples</p>
-<p>For a (3, 5) sky image with a single incident beam:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">incidence_ang</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">30</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">beam_azimuth</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">40</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">emission_ang</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">3</span><span class="p">)[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">azimuth_ang</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">5</span><span class="p">)[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">angles</span> <span class="o">=</span> <span class="n">Angles</span><span class="p">(</span><span class="n">incidence_ang</span><span class="p">,</span> <span class="n">emission_ang</span><span class="p">,</span> <span class="n">azimuth_ang</span><span class="p">,</span> <span class="n">beam_azimuth</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">angles</span><span class="p">)</span>
-<span class="go">Angles:</span>
-<span class="go">   mu = [[0.8660254  0.70710678 0.5       ]]</span>
-<span class="go">   mu0 = [0.8660254]</span>
-<span class="go">   phi = [[20.  27.5 35.  42.5 50. ]]</span>
-<span class="go">   phi0 = [40]</span>
-</pre></div>
-</div>
-<p>For a sequence of 50 images at a fixed position over a period time where the
-incidence angle and beam azimuth angle of each image varies:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">incidence_ang</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">beam_azimuth</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">emission_ang</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">azimuth_ang</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span> <span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">angles</span> <span class="o">=</span> <span class="n">Angles</span><span class="p">(</span><span class="n">incidence_ang</span><span class="p">,</span> <span class="n">emission_ang</span><span class="p">,</span> <span class="n">azimuth_ang</span><span class="p">,</span> <span class="n">beam_azimuth</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">angles</span><span class="o">.</span><span class="n">mu0</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">angles</span><span class="o">.</span><span class="n">mu</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">angles</span><span class="o">.</span><span class="n">phi</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="go">(50,) (50, 3) (50, 5)</span>
-</pre></div>
-</div>
-<p>For a (40, 50) image where each pixel has its own set of angles:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ang</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">40</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">50</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">expanded_ang</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">ang</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">angles</span> <span class="o">=</span> <span class="n">Angles</span><span class="p">(</span><span class="n">ang</span><span class="p">,</span> <span class="n">expanded_ang</span><span class="p">,</span> <span class="n">expanded_ang</span><span class="p">,</span> <span class="n">ang</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">angles</span><span class="o">.</span><span class="n">mu0</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">angles</span><span class="o">.</span><span class="n">mu</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">angles</span><span class="o">.</span><span class="n">phi</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="go">(40, 50) (40, 50, 1) (40, 50, 1)</span>
-</pre></div>
-</div>
-<dl class="py method">
-<dt id="observation.Angles.emission">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">emission</span></code><a class="headerlink" href="#observation.Angles.emission" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the input emission angles [degrees].</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="observation.Angles.incidence">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">incidence</span></code><a class="headerlink" href="#observation.Angles.incidence" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the input incidence angles [degrees].</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="observation.Angles.mu">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">mu</span></code><a class="headerlink" href="#observation.Angles.mu" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get <span class="math notranslate nohighlight">\(\mu\)</span>—the cosine of <code class="docutils literal notranslate"><span class="pre">emission</span></code>.</p>
-<p class="rubric">Notes</p>
-<p>Each element along the observation dimension(s) is named <code class="code docutils literal notranslate"><span class="pre">UMU</span></code> in
-DISORT.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="observation.Angles.mu0">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">mu0</span></code><a class="headerlink" href="#observation.Angles.mu0" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get <span class="math notranslate nohighlight">\(\mu_0\)</span>—the cosine of <code class="docutils literal notranslate"><span class="pre">incidence</span></code>.</p>
-<p class="rubric">Notes</p>
-<p>Each element along the observation dimension(s) is named <code class="code docutils literal notranslate"><span class="pre">UMU0</span></code> in
-DISORT.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="observation.Angles.phi">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">phi</span></code><a class="headerlink" href="#observation.Angles.phi" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get <span class="math notranslate nohighlight">\(\phi\)</span>—the azimuth angles [degrees]. This is the same as
-the input to <code class="code docutils literal notranslate"><span class="pre">azimuth</span></code>.</p>
-<p class="rubric">Notes</p>
-<p>Each element along the observation dimension(s) is named <code class="code docutils literal notranslate"><span class="pre">PHI</span></code> in
-DISORT.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="observation.Angles.phi0">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">phi0</span></code><a class="headerlink" href="#observation.Angles.phi0" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get <span class="math notranslate nohighlight">\(\phi_0\)</span>—the azimuth angles of the incident beam
-[degrees]. This is the same as the input to <code class="code docutils literal notranslate"><span class="pre">beam_azimuth</span></code>.</p>
-<p class="rubric">Notes</p>
-<p>Each element along the observation dimension(s) is named <code class="code docutils literal notranslate"><span class="pre">PHI0</span></code> in
-DISORT.</p>
-</dd></dl>
-
-</dd></dl>
-
-<div class="section" id="make-azimuth">
-<h3>make_azimuth<a class="headerlink" href="#make-azimuth" title="Permalink to this headline">¶</a></h3>
-<dl class="py function">
-<dt id="observation.make_azimuth">
-<code class="sig-prename descclassname"><span class="pre">observation.</span></code><code class="sig-name descname"><span class="pre">make_azimuth</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">incidence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emission</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#observation.make_azimuth" title="Permalink to this definition">¶</a></dt>
-<dd><p>Construct azimuth angles from a set of incidence, emission, and phase
-angles.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>incidence</strong> (<em>numpy.ndarray</em>) – Incidence (solar zenith) angles [degrees]. All values must be between 0
-and 180 degrees.</p></li>
-<li><p><strong>emission</strong> (<em>numpy.ndarray</em>) – Emission (emergence) angles [degrees]. All values must be between 0 and
-180 degrees.</p></li>
-<li><p><strong>phase</strong> (<em>numpy.ndarray</em>) – Phase angles [degrees]. All values must be between 0 and 180 degrees.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>TypeError</strong> – Raised if any of the angles are not a numpy.ndarray.</p></li>
-<li><p><strong>ValueError</strong> – Raised if any of the input arrays contain values outside of their
-    mathematically valid range.</p></li>
-</ul>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>numpy.ndarray</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>It would almost always be beneficial for all of the inputs to have the same
-shape, but this is not strictly enforced. In any case, the input arrays
-must have compatible shapes.</p>
-<p class="rubric">Examples</p>
-<p>For a random assortment of input angles:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">incidence</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">emission</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">phase</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">25</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">35</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">make_azimuth</span><span class="p">(</span><span class="n">incidence</span><span class="p">,</span> <span class="n">emission</span><span class="p">,</span> <span class="n">phase</span><span class="p">)</span>
-<span class="go">array([122.74921226, 129.08074256, 131.57329276])</span>
-</pre></div>
-</div>
-</dd></dl>
-
-</div>
-<div class="section" id="phase-to-angles">
-<h3>phase_to_angles<a class="headerlink" href="#phase-to-angles" title="Permalink to this headline">¶</a></h3>
-<dl class="py function">
-<dt id="observation.phase_to_angles">
-<code class="sig-prename descclassname"><span class="pre">observation.</span></code><code class="sig-name descname"><span class="pre">phase_to_angles</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">incidence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emission</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#observation.phase_to_angles" title="Permalink to this definition">¶</a></dt>
-<dd><p>Construct an instance of Angles in the case where the phase angles are
-known (and presumably azimuth angles are unknown).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>incidence</strong> (<em>numpy.ndarray</em>) – Incidence (solar zenith) angles [degrees]. All values must be between 0
-and 180 degrees.</p></li>
-<li><p><strong>emission</strong> (<em>numpy.ndarray</em>) – Emission (emergence) angles [degrees]. All values must be between 0 and
-180 degrees.</p></li>
-<li><p><strong>phase</strong> (<em>numpy.ndarray</em>) – Phase angles [degrees]. All values must be between 0 and 180 degrees.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>TypeError</strong> – Raised if any of the angles are not a numpy.ndarray.</p></li>
-<li><p><strong>ValueError</strong> – Raised if any of the input arrays contain values outside of their
-    mathematically valid range.</p></li>
-</ul>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#observation.Angles" title="observation.Angles">observation.Angles</a></p>
-</dd>
-</dl>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<dl class="simple">
-<dt>UserWarning</dt><dd><p>Issued if any values in <code class="code docutils literal notranslate"><span class="pre">incidence</span></code> are greater than 90 degrees.</p>
-</dd>
-</dl>
-</div>
-<p class="rubric">Notes</p>
-<p>It would almost always be beneficial for all of the inputs to have the same
-shape, but this is not strictly enforced. In any case, the input arrays
-must have compatible shapes.</p>
-<p class="rubric">Examples</p>
-<p>For a random assortment of input angles:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">incidence</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">emission</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">phase</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">25</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">35</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">angles</span> <span class="o">=</span> <span class="n">phase_to_angles</span><span class="p">(</span><span class="n">incidence</span><span class="p">,</span> <span class="n">emission</span><span class="p">,</span> <span class="n">phase</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">angles</span><span class="p">)</span>
-<span class="go">Angles:</span>
-<span class="go">   mu = [[0.8660254 ]</span>
-<span class="go"> [0.76604444]</span>
-<span class="go"> [0.64278761]]</span>
-<span class="go">   mu0 = [0.93969262 0.8660254  0.76604444]</span>
-<span class="go">   phi = [[122.74921226]</span>
-<span class="go"> [129.08074256]</span>
-<span class="go"> [131.57329276]]</span>
-<span class="go">   phi0 = [0. 0. 0.]</span>
-</pre></div>
-</div>
-</dd></dl>
-
-</div>
-<div class="section" id="sky-image">
-<h3>sky_image<a class="headerlink" href="#sky-image" title="Permalink to this headline">¶</a></h3>
-<dl class="py function">
-<dt id="observation.sky_image">
-<code class="sig-prename descclassname"><span class="pre">observation.</span></code><code class="sig-name descname"><span class="pre">sky_image</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">incidence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emission</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azimuth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beam_azimuth</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#observation.sky_image" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create an instance of Angles from a typical sky image—that is, a single
-incidence and beam azimuth angle are known, and the observational geometry
-defines a 1D array of emission and azimuth angles.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>incidence</strong> (<em>float</em>) – Incidence (solar zenith) angle [degrees]. Value must be between 0 and
-180 degrees.</p></li>
-<li><p><strong>emission</strong> (<em>numpy.ndarray</em>) – Emission (emergence) angle [degrees]. All values must be between 0 and
-180 degrees.</p></li>
-<li><p><strong>azimuth</strong> (<em>numpy.ndarray</em>) – Azimuthal angle [degrees]. All values must be between 0 and 360 degrees.</p></li>
-<li><p><strong>beam_azimuth</strong> (<em>float</em>) – Azimuth angle of the incident beam [degrees]. Value must be between 0
-and 360 degrees.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>TypeError</strong> – Raised if any of the angles are not a numpy.ndarray.</p></li>
-<li><p><strong>ValueError</strong> – Raised if any of the input arrays contain values outside of their
-    mathematically valid range, or if the input arrays do not have the
-    same observation shape.</p></li>
-</ul>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#observation.Angles" title="observation.Angles">observation.Angles</a></p>
-</dd>
-</dl>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<dl class="simple">
-<dt>UserWarning</dt><dd><p>Issued if any values in <code class="code docutils literal notranslate"><span class="pre">incidence</span></code> are greater than 90 degrees.</p>
-</dd>
-</dl>
-</div>
-<p class="rubric">Examples</p>
-<p>For a (3, 5) sky image with a single incident beam:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">incidence_ang</span> <span class="o">=</span> <span class="mi">30</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">beam_az</span> <span class="o">=</span> <span class="mi">40</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">emission_ang</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">azimuth_ang</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">angles</span> <span class="o">=</span> <span class="n">sky_image</span><span class="p">(</span><span class="n">incidence_ang</span><span class="p">,</span> <span class="n">emission_ang</span><span class="p">,</span> <span class="n">azimuth_ang</span><span class="p">,</span> <span class="n">beam_az</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">angles</span><span class="p">)</span>
-<span class="go">Angles:</span>
-<span class="go">   mu = [[0.8660254  0.70710678 0.5       ]]</span>
-<span class="go">   mu0 = [0.8660254]</span>
-<span class="go">   phi = [[20.  27.5 35.  42.5 50. ]]</span>
-<span class="go">   phi0 = [40]</span>
-</pre></div>
-</div>
-</dd></dl>
-
-</div>
-</div>
-<div class="section" id="spectral">
-<h2>Spectral<a class="headerlink" href="#spectral" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference internal" href="#observation.Spectral" title="observation.Spectral"><code class="xref py py-class docutils literal notranslate"><span class="pre">Spectral</span></code></a> is the fundamental class for holding on to the spectral
-information from an observation. pyRT_DISORT also includes functions to help
-create instances of <a class="reference internal" href="#observation.Spectral" title="observation.Spectral"><code class="xref py py-class docutils literal notranslate"><span class="pre">Spectral</span></code></a> under certain special cases.</p>
-<dl class="py class">
-<dt id="observation.Spectral">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">observation.</span></code><code class="sig-name descname"><span class="pre">Spectral</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">short_wavelength</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long_wavelength</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#observation.Spectral" title="Permalink to this definition">¶</a></dt>
-<dd><p>A data structure that contains spectral info required by DISORT.</p>
-<p>It accepts the short and long wavelength from an observation and computes
-their corresponding wavenumber.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>short_wavelength</strong> (<em>numpy.ndarray</em>) – The short wavelength [microns] of each spectral bin.</p></li>
-<li><p><strong>long_wavelength</strong> (<em>numpy.ndarray</em>) – The long wavelength [microns] of each spectral bin.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>TypeError</strong> – Raised if either of the wavelengths are not a numpy.ndarray.</p></li>
-<li><p><strong>ValueError</strong> – Raised if either of the input arrays are not the same shape, if any
-    values in <code class="docutils literal notranslate"><span class="pre">short_wavelength</span></code> are not larger than the corresponding
-    values in <code class="docutils literal notranslate"><span class="pre">long_wavelength</span></code>, or if either of the input arrays
-    contain values outside of 0.1 to 50 microns (I assume this is the
-    valid range to do retrievals).</p></li>
-</ul>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>This class can accommodate arrays of any shape as long as they both have
-the same shape. If you do not plan to use thermal emission, there is
-probably little benefit making an instance of this class.</p>
-<p class="rubric">Examples</p>
-<p>For an observation taken at 1 to 30 microns, with each channel having a 50
-nm spectral width:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">center</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">half_width</span> <span class="o">=</span> <span class="mf">0.025</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">wavelengths</span> <span class="o">=</span> <span class="n">Spectral</span><span class="p">(</span><span class="n">center</span> <span class="o">-</span> <span class="n">half_width</span><span class="p">,</span> <span class="n">center</span> <span class="o">+</span> <span class="n">half_width</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">wavelengths</span><span class="o">.</span><span class="n">low_wavenumber</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="go">(30,)</span>
-</pre></div>
-</div>
-<p>For an image of shape (50, 60) with the same 20 wavelengths in each pixel:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">center</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">half_width</span> <span class="o">=</span> <span class="mf">0.025</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">wav_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">wavelengths</span> <span class="o">=</span> <span class="n">Spectral</span><span class="p">(</span><span class="n">wav_grid</span> <span class="o">-</span> <span class="n">half_width</span><span class="p">,</span> <span class="n">wav_grid</span> <span class="o">+</span> <span class="n">half_width</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">wavelengths</span><span class="o">.</span><span class="n">low_wavenumber</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="go">(50, 60, 20)</span>
-</pre></div>
-</div>
-<dl class="py method">
-<dt id="observation.Spectral.high_wavenumber">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">high_wavenumber</span></code><a class="headerlink" href="#observation.Spectral.high_wavenumber" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the high wavenumber [cm <sup>-1</sup>]—the wavenumber
-corresponding to <code class="docutils literal notranslate"><span class="pre">short_wavelength</span></code>.</p>
-<p class="rubric">Notes</p>
-<p>Each element along the observation dimension(s) is named <code class="code docutils literal notranslate"><span class="pre">WVNMHI</span></code>
-in DISORT. It is only needed by DISORT if
-<a class="reference internal" href="radiation.html#radiation.ThermalEmission.thermal_emission" title="radiation.ThermalEmission.thermal_emission"><code class="xref py py-attr docutils literal notranslate"><span class="pre">thermal_emission</span></code></a> is set to
-<code class="code docutils literal notranslate"><span class="pre">True</span></code>.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="observation.Spectral.long_wavelength">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">long_wavelength</span></code><a class="headerlink" href="#observation.Spectral.long_wavelength" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the input long wavelength [microns].</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="observation.Spectral.low_wavenumber">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">low_wavenumber</span></code><a class="headerlink" href="#observation.Spectral.low_wavenumber" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the low wavenumber [cm <sup>-1</sup>]—the wavenumber corresponding
-to <code class="docutils literal notranslate"><span class="pre">long_wavelength</span></code>.</p>
-<p class="rubric">Notes</p>
-<p>Each element along the observation dimension(s) is named <code class="code docutils literal notranslate"><span class="pre">WVNMLO</span></code>
-in DISORT. It is only needed by DISORT if
-<a class="reference internal" href="radiation.html#radiation.ThermalEmission.thermal_emission" title="radiation.ThermalEmission.thermal_emission"><code class="xref py py-attr docutils literal notranslate"><span class="pre">thermal_emission</span></code></a> is set to
-<code class="code docutils literal notranslate"><span class="pre">True</span></code>.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="observation.Spectral.short_wavelength">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">short_wavelength</span></code><a class="headerlink" href="#observation.Spectral.short_wavelength" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the input short wavelength [microns].</p>
-</dd></dl>
-
-</dd></dl>
-
-<div class="section" id="constant-width">
-<h3>constant_width<a class="headerlink" href="#constant-width" title="Permalink to this headline">¶</a></h3>
-<dl class="py function">
-<dt id="observation.constant_width">
-<code class="sig-prename descclassname"><span class="pre">observation.</span></code><code class="sig-name descname"><span class="pre">constant_width</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">center_wavelength</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#observation.constant_width" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create an instance of Spectral assuming the wavelengths all have a
-constant spectral width.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>center_wavelength</strong> (<em>numpy.ndarray</em>) – The center wavelength [microns] of each spectral bin.</p></li>
-<li><p><strong>width</strong> (<em>float</em>) – The spectral width of each spectral bin.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>TypeError</strong> – Raised if <code class="code docutils literal notranslate"><span class="pre">center_wavelength</span></code> is not a numpy.ndarray.</p></li>
-<li><p><strong>ValueError</strong> – I’ll add this later.</p></li>
-</ul>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#observation.Spectral" title="observation.Spectral">observation.Spectral</a></p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<p>For an observation taken at 1 to 30 microns, with each channel having a 50
-nm spectral width:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">center</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">width</span> <span class="o">=</span> <span class="mf">0.05</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">wavelengths</span> <span class="o">=</span> <span class="n">constant_width</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">wavelengths</span><span class="o">.</span><span class="n">low_wavenumber</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="go">(30,)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-</div>
 </div>
 </div>
 
@@ -653,7 +217,7 @@ nm spectral width:</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="output.html" class="btn btn-neutral float-right" title="Output" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="observation/Angles.html" class="btn btn-neutral float-right" title="Angles" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
         <a href="legendre.html" class="btn btn-neutral float-left" title="Legendre" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 

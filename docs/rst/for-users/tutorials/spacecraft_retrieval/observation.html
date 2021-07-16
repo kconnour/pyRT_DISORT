@@ -89,6 +89,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../about-this-project/about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../about-this-project/about-DISORT.html">About DISORT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../about-this-project/release-notes.html">Release notes</a></li>
 </ul>
 <p class="caption"><span class="caption-text">For users</span></p>
 <ul class="current">
@@ -210,13 +211,13 @@ that all three of these angles are the same).</p>
 <span class="n">dummy_angles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">15</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">20</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>Our goal is to create an instance of <a class="reference internal" href="../../api-reference/observation.html#observation.Angles" title="observation.Angles"><code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code></a> to hold on to
+<p>Our goal is to create an instance of <a class="reference internal" href="../../api-reference/observation/Angles.html#observation.Angles" title="observation.Angles"><code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code></a> to hold on to
 all the angular values DISORT wants. This class turns incidence and emission
 angles into <span class="math notranslate nohighlight">\(\mu_0\)</span> and <span class="math notranslate nohighlight">\(\mu\)</span> and also holds on to azimuthal
 angles. We cannot directly instantiate this class because we have phase angles
 and not azimuthal angles, but pyRT_DISORT comes with a helper function
-(<a class="reference internal" href="../../api-reference/observation.html#observation.phase_to_angles" title="observation.phase_to_angles"><code class="xref py py-func docutils literal notranslate"><span class="pre">phase_to_angles()</span></code></a>) that creates azimuthal angles and
-returns an instance of <a class="reference internal" href="../../api-reference/observation.html#observation.Angles" title="observation.Angles"><code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code></a>. Let’s do this below and
+(<a class="reference internal" href="../../api-reference/observation/phase_to_angles.html#observation.phase_to_angles" title="observation.phase_to_angles"><code class="xref py py-func docutils literal notranslate"><span class="pre">phase_to_angles()</span></code></a>) that creates azimuthal angles and
+returns an instance of <a class="reference internal" href="../../api-reference/observation/Angles.html#observation.Angles" title="observation.Angles"><code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code></a>. Let’s do this below and
 look at the object’s properties.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.observation</span> <span class="kn">import</span> <span class="n">phase_to_angles</span>
 
@@ -275,11 +276,11 @@ ahead and define some wavelengths here so we have some values to work with.</p>
 <p class="admonition-title">Attention</p>
 <p>The wavelengths must be in microns.</p>
 </div>
-<p>Our goal is to create an instance of <a class="reference internal" href="../../api-reference/observation.html#observation.Spectral" title="observation.Spectral"><code class="xref py py-class docutils literal notranslate"><span class="pre">Spectral</span></code></a> to hold on
+<p>Our goal is to create an instance of <a class="reference internal" href="../../api-reference/observation/Spectral.html#observation.Spectral" title="observation.Spectral"><code class="xref py py-class docutils literal notranslate"><span class="pre">Spectral</span></code></a> to hold on
 to all the spectral values DISORT wants. This class will hold on to the input
 wavelengths and compute the wavenumbers at the edges of each spectral bin.
 We could instantiate this class directly, but let’s use a helper function that
-comes with pyRT_DISORT (<a class="reference internal" href="../../api-reference/observation.html#observation.constant_width" title="observation.constant_width"><code class="xref py py-func docutils literal notranslate"><span class="pre">constant_width()</span></code></a>) do the work for us
+comes with pyRT_DISORT (<a class="reference internal" href="../../api-reference/observation/constant_width.html#observation.constant_width" title="observation.constant_width"><code class="xref py py-func docutils literal notranslate"><span class="pre">constant_width()</span></code></a>) do the work for us
 and then look at the object’s properties.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.observation</span> <span class="kn">import</span> <span class="n">constant_width</span>
 

@@ -6,8 +6,6 @@ dummy_angles = np.outer(np.linspace(5, 10, num=15), np.linspace(5, 8, num=20))
 
 angles = phase_to_angles(dummy_angles, dummy_angles, dummy_angles)
 
-incidence = angles.incidence
-emission = angles.emission
 mu = angles.mu
 mu0 = angles.mu0
 phi = angles.phi

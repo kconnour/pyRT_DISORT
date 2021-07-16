@@ -88,6 +88,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../about-this-project/about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../about-this-project/about-DISORT.html">About DISORT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../about-this-project/release-notes.html">Release notes</a></li>
 </ul>
 <p class="caption"><span class="caption-text">For users</span></p>
 <ul class="current">
@@ -99,7 +100,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Controller</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eos.html">Equation of State</a></li>
 <li class="toctree-l2"><a class="reference internal" href="legendre.html">Legendre</a></li>
-<li class="toctree-l2"><a class="reference internal" href="observation.html">Observation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="observation.html">observation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="output.html">Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="radiation.html">Radiation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rayleigh.html">Rayleigh</a></li>
@@ -185,7 +186,7 @@
 creating variables that control how DISORT runs.</p>
 <dl class="py class">
 <dt id="controller.ComputationalParameters">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">controller.</span></code><code class="sig-name descname"><span class="pre">ComputationalParameters</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_moments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_streams</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_azimuth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_polar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_user_levels</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.ComputationalParameters" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">controller.</span></code><code class="sig-name descname"><span class="pre">ComputationalParameters</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_moments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_streams</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_azimuth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_polar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_user_levels</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/controller.html#ComputationalParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.ComputationalParameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>A data structure for holding the size of computational parameters.</p>
 <p>ComputationalParameters holds the number of model layers, streams, moments,
 and angles. It also performs basic checks that these values are plausible.
@@ -224,45 +225,6 @@ n_moments.</p>
 </dd>
 </dl>
 </div>
-<dl class="py method">
-<dt id="controller.ComputationalParameters.__init__">
-<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_moments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_streams</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_azimuth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_polar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_user_levels</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.ComputationalParameters.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>n_layers</strong> (<em>int</em>) – The number of layers to use in the model.</p></li>
-<li><p><strong>n_moments</strong> (<em>int</em>) – The number of polynomial moments to use in the model. This number
-should be greater than or equal to <code class="code docutils literal notranslate"><span class="pre">n_streams</span></code>.</p></li>
-<li><p><strong>n_streams</strong> (<em>int</em>) – The number of streams (i.e. the number of computational polar
-angles) to use in the model. This number should be even and at least
-2.</p></li>
-<li><p><strong>n_azimuth</strong> (<em>int</em>) – The number of azimuthal angles where DISORT should return radiant
-quantities.</p></li>
-<li><p><strong>n_polar</strong> (<em>int</em>) – The number of user-specified polar angles where DISORT should return
-radiant quantities.</p></li>
-<li><p><strong>n_user_levels</strong> (<em>int</em>) – The number of user levels to use in the model.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>TypeError</strong> – Raised if any of the inputs cannot be converted to an int.</p></li>
-<li><p><strong>ValueError</strong> – Raised if any of the inputs are not positive finite.</p></li>
-</ul>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<dl class="simple">
-<dt>UserWarning</dt><dd><p>Raised if n_streams is not even or if n_streams is greater than
-n_moments.</p>
-</dd>
-</dl>
-</div>
-</dd></dl>
-
 <dl class="py method">
 <dt id="controller.ComputationalParameters.n_azimuth">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">n_azimuth</span></code><a class="headerlink" href="#controller.ComputationalParameters.n_azimuth" title="Permalink to this definition">¶</a></dt>
@@ -328,7 +290,7 @@ streams used the more accurate DISORT’s computations will be.</p>
 
 <dl class="py class">
 <dt id="controller.ModelBehavior">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">controller.</span></code><code class="sig-name descname"><span class="pre">ModelBehavior</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">accuracy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_m_plus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_pseudo_sphere</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_variables</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6371.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.ModelBehavior" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">controller.</span></code><code class="sig-name descname"><span class="pre">ModelBehavior</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">accuracy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_m_plus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_pseudo_sphere</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_variables</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6371.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/controller.html#ModelBehavior"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.ModelBehavior" title="Permalink to this definition">¶</a></dt>
 <dd><p>A data structure for holding the DISORT control variables.</p>
 <p>ModelBehavior holds the control flags that dictate DISORT’s behavior. It
 also performs basic checks that the input control options are plausible.</p>
@@ -392,71 +354,6 @@ on this</p></li>
 </dd>
 </dl>
 </div>
-<dl class="py method">
-<dt id="controller.ModelBehavior.__init__">
-<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">accuracy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_m_plus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_pseudo_sphere</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_variables</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6371.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#controller.ModelBehavior.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>accuracy</strong> (<em>float</em>) – The convergence criterion for azimuthal (Fourier cosine) series.
-Will stop when the following occurs twice: largest term being added
-is less than ‘accuracy’ times total series sum (twice because
-there are cases where terms are anomalously small but azimuthal
-series has not converged). Should be between 0 and 0.01 to avoid
-risk of serious non-convergence. Has no effect on problems lacking a
-beam source, since azimuthal series has only one term in that case.</p></li>
-<li><p><strong>delta_m_plus</strong> (<em>bool</em>) – Denote whether to use the delta-M+ method of Lin et al. (2018).</p></li>
-<li><p><strong>do_pseudo_sphere</strong> (<em>bool</em>) – Denote whether to use a pseudo-spherical correction.</p></li>
-<li><p><strong>header</strong> (<em>str</em>) – Use a 127- (or less) character header for prints, embedded in the
-DISORT banner. Input headers greater than 127 characters will be
-truncated. Setting <code class="code docutils literal notranslate"><span class="pre">header=''</span></code> will eliminate both the banner
-and the
-header, and this is the only way to do so (<code class="code docutils literal notranslate"><span class="pre">header</span></code> is not
-controlled by any of the <code class="code docutils literal notranslate"><span class="pre">print_variables</span></code> flags); <code class="code docutils literal notranslate"><span class="pre">header</span></code> can be used
-to mark the progress of a calculation in which DISORT is called many
-times, while leaving all other printing turned off.</p></li>
-<li><p><strong>print_variables</strong> (<em>Optional</em><em>[</em><em>list</em><em>]</em>) – <p>Make a list of variables that control what DISORT prints. The 5
-booleans control whether each of the following is printed:</p>
-<ol class="arabic simple">
-<li><p>Input variables (except <code class="docutils literal notranslate"><span class="pre">PMOM</span></code>)</p></li>
-<li><p>Fluxes</p></li>
-<li><p>Intensities at user levels and angles</p></li>
-<li><p>Planar transmissivity and planar albedo as a function of solar
-zenith angle (only used if
-<a class="reference internal" href="output.html#output.OutputBehavior.incidence_beam_conditions" title="output.OutputBehavior.incidence_beam_conditions"><code class="xref py py-attr docutils literal notranslate"><span class="pre">incidence_beam_conditions</span></code></a> is
-set to <code class="docutils literal notranslate"><span class="pre">True</span></code>)</p></li>
-<li><p>PMOM for each layer (but only if 1. == True and only for layers
-with scattering)</p></li>
-</ol>
-<p>Default is <code class="code docutils literal notranslate"><span class="pre">None</span></code>, which makes
-<code class="code docutils literal notranslate"><span class="pre">[False,</span> <span class="pre">False,</span> <span class="pre">False,</span> <span class="pre">False,</span> <span class="pre">False]</span></code>.</p>
-</p></li>
-<li><p><strong>radius</strong> (<em>float</em>) – The planetary radius. This is presumably only used if
-<code class="code docutils literal notranslate"><span class="pre">do_pseudo_sphere</span></code> is set to <code class="code docutils literal notranslate"><span class="pre">True</span></code>, although there is no
-documentation
-on this</p></li>
-</ul>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>TypeError</strong> – Raised if any inputs cannot be cast to the correct type.</p></li>
-<li><p><strong>ValueError</strong> – Raised if any inputs cannot be cast to the correct type or if
-    print_variables does not have 5 elements.</p></li>
-</ul>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<dl class="simple">
-<dt>UserWarning</dt><dd><p>Raised if accuracy is not between 0 and 0.01.</p>
-</dd>
-</dl>
-</div>
-</dd></dl>
-
 <dl class="py method">
 <dt id="controller.ModelBehavior.accuracy">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">accuracy</span></code><a class="headerlink" href="#controller.ModelBehavior.accuracy" title="Permalink to this definition">¶</a></dt>

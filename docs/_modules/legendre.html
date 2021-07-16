@@ -1,0 +1,532 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>legendre &mdash; pyRT_DISORT  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> pyRT_DISORT
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">About this project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst/about-this-project/about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/about-this-project/about-DISORT.html">About DISORT</a></li>
+</ul>
+<p class="caption"><span class="caption-text">For users</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst/for-users/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/for-users/tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/for-users/api-reference.html">API reference</a></li>
+</ul>
+<p class="caption"><span class="caption-text">For contributors</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst/for-contributors/contributions.html">Contributions</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pyRT_DISORT</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>legendre</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for legendre</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;The legendre module provides functions for making Legendre decompositions.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">integrate</span>
+
+
+<span class="k">class</span> <span class="nc">_PhaseFunction</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Designate an array as representing a phase function.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    array</span>
+<span class="sd">        Any phase function.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        Raised if the input array is not 1D or if it contains negative,</span>
+<span class="sd">        infinite, or NaN values.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">array</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">obj</span>
+
+    <span class="k">def</span> <span class="nf">__array_finalize__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_value_error_if_array_is_not_positive_finite</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_value_error_if_array_is_not_1d</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__raise_value_error_if_array_is_not_positive_finite</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">((</span><span class="n">obj</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">|</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">obj</span><span class="p">))</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Some values in the phase function are negative or &#39;</span> \
+                      <span class="s1">&#39;not finite.&#39;</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__raise_value_error_if_array_is_not_1d</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;The phase function should be 1D.&#39;</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">_PhaseFunctionAngles</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Designate an array as representing the angles where the phase function is</span>
+<span class="sd">    defined.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    array</span>
+<span class="sd">        The angles where the phase function is defined.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        Raised if the input array is not 1D; if contains negative, infinite,</span>
+<span class="sd">        or NaN values; or if it is not monotonically increasing.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">array</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">obj</span>
+
+    <span class="k">def</span> <span class="nf">__array_finalize__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_value_error_if_array_is_not_between_0_and_pi</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_value_error_if_array_is_not_1d</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_value_error_if_array_is_not_monotonically_inc</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__raise_value_error_if_array_is_not_between_0_and_pi</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">((</span><span class="n">obj</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">obj</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Some values in the phase function angles are not &#39;</span> \
+                      <span class="s1">&#39;between 0 and pi.&#39;</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__raise_value_error_if_array_is_not_1d</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;The phase function angles should be 1D.&#39;</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__raise_value_error_if_array_is_not_monotonically_inc</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="k">if</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;The phase function angles must be monotonically &#39;</span> \
+                      <span class="s1">&#39;increasing.&#39;</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">_PhaseFunctionBundle</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Bundle together the phase function and its associated angles.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    phase_function</span>
+<span class="sd">        The phase function.</span>
+<span class="sd">    angles</span>
+<span class="sd">        The angles where the phase function is defined.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        Raised if either :code:`phase_function` or :code:`angles` are unphysical</span>
+<span class="sd">        or if they do not have the same shape.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase_function</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">angles</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pf</span> <span class="o">=</span> <span class="n">_PhaseFunction</span><span class="p">(</span><span class="n">phase_function</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">angles</span> <span class="o">=</span> <span class="n">_PhaseFunctionAngles</span><span class="p">(</span><span class="n">angles</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_value_error_if_inputs_are_not_same_size</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__raise_value_error_if_inputs_are_not_same_size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pf</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">angles</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;The phase function and its associated angles must &#39;</span> \
+                      <span class="s1">&#39;have the same shape.&#39;</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">resample_phase_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resample_angles</span><span class="p">(</span><span class="n">n_samples</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">angles</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pf</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">resample_angles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">angles</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">angles</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">num</span><span class="o">=</span><span class="n">n_samples</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">normalize_resampled_phase_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">):</span>
+        <span class="n">resampled_pf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resample_phase_function</span><span class="p">(</span><span class="n">n_samples</span><span class="p">)</span>
+        <span class="n">resampled_angles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resample_angles</span><span class="p">(</span><span class="n">n_samples</span><span class="p">)</span>
+        <span class="n">resampled_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">integrate</span><span class="o">.</span><span class="n">simps</span><span class="p">(</span><span class="n">resampled_pf</span><span class="p">,</span>
+                                                <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">resampled_angles</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">resampled_pf</span> <span class="o">/</span> <span class="n">resampled_norm</span>
+
+
+<span class="k">class</span> <span class="nc">_NMoments</span><span class="p">(</span><span class="nb">int</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Designate that a number represents the number of moments.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    value</span>
+<span class="sd">        The number of moments to use.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        Raised if the input cannot be converted into an int.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        Raised if the number of samples is not positive.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The number of moments must be positive.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">_NSamples</span><span class="p">(</span><span class="nb">int</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Designate that a number represents the number of samples.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    value</span>
+<span class="sd">        The number of samples to use.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        Raised if the input cannot be converted into an int.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        Raised if the number of samples is not positive.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The number of samples must be positive.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">_LegendreDecomposer</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; A collection of methods for decomposing a phase function into</span>
+<span class="sd">    polynomials.</span>
+
+<span class="sd">    This class can decompose a phase function into Legendre polynomials. In</span>
+<span class="sd">    principle it can decompose any function into those polynomials but it&#39;s set</span>
+<span class="sd">    up specifically for that task.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    phase_function</span>
+<span class="sd">    angles</span>
+<span class="sd">    n_moments</span>
+<span class="sd">    n_samples</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        Raised if any of the inputs cannot be cast to the correct shape.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        Raised in any of the inputs are unphysical.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase_function</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">angles</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                 <span class="n">n_moments</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bundle</span> <span class="o">=</span> <span class="n">_PhaseFunctionBundle</span><span class="p">(</span><span class="n">phase_function</span><span class="p">,</span> <span class="n">angles</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_moments</span> <span class="o">=</span> <span class="n">_NMoments</span><span class="p">(</span><span class="n">n_moments</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_samples</span> <span class="o">=</span> <span class="n">_NSamples</span><span class="p">(</span><span class="n">n_samples</span><span class="p">)</span>
+
+        <span class="c1"># Fit P(x) = c0 + c1*L1(x) + ... where I force c0 = 1 for DISORT</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resamp_norm_pf</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">bundle</span><span class="o">.</span><span class="n">normalize_resampled_phase_function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_samples</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lpoly</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_legendre_polynomials</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_make_legendre_polynomials</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Make an array of Legendre polynomials at the input angles.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This returns a 2D array. The 0th index is the i+1 polynomial and the</span>
+<span class="sd">        1st index is the angle. So index [2, 6] will be the 3rd Legendre</span>
+<span class="sd">        polynomial (L3) evaluated at the 6th angle</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">resampled_theta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bundle</span><span class="o">.</span><span class="n">resample_angles</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_samples</span><span class="p">)</span>
+        <span class="n">ones</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">n_moments</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_samples</span><span class="p">))</span>
+
+        <span class="c1"># This creates an MxN array with 1s on the diagonal and 0s elsewhere</span>
+        <span class="n">diag_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">triu</span><span class="p">(</span><span class="n">ones</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">tril</span><span class="p">(</span><span class="n">ones</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+
+        <span class="c1"># Evaluate the polynomials at the input angles. I don&#39;t know why</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">polynomial</span><span class="o">.</span><span class="n">legendre</span><span class="o">.</span><span class="n">legval</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">resampled_theta</span><span class="p">),</span> <span class="n">diag_mask</span><span class="p">)[</span><span class="mi">1</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">n_moments</span><span class="p">,</span> <span class="p">:]</span>
+
+    <span class="k">def</span> <span class="nf">decompose</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Decompose the phase function into its Legendre moments.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">normal_matrix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_normal_matrix</span><span class="p">()</span>
+        <span class="n">normal_vector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__make_normal_vector</span><span class="p">()</span>
+        <span class="n">cholesky</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cholesky</span><span class="p">(</span><span class="n">normal_matrix</span><span class="p">)</span>
+        <span class="n">first_solution</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">cholesky</span><span class="p">,</span> <span class="n">normal_vector</span><span class="p">)</span>
+        <span class="n">second_solution</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">cholesky</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">first_solution</span><span class="p">)</span>
+        <span class="n">coeff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">]),</span> <span class="n">second_solution</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_warn_if_negative_coefficients</span><span class="p">(</span><span class="n">coeff</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">coeff</span>
+
+    <span class="k">def</span> <span class="nf">_make_normal_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lpoly</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">lpoly</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">/</span>
+                      <span class="bp">self</span><span class="o">.</span><span class="n">resamp_norm_pf</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__make_normal_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lpoly</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">resamp_norm_pf</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_warn_if_negative_coefficients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coeff</span><span class="p">):</span>
+        <span class="n">first_negative_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_first_negative_coefficient_index</span><span class="p">(</span><span class="n">coeff</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">first_negative_index</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Coefficient </span><span class="si">{</span><span class="n">first_negative_index</span><span class="si">}</span><span class="s1"> is negative.&#39;</span>
+            <span class="n">warn</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_get_first_negative_coefficient_index</span><span class="p">(</span><span class="n">coeff</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">coeff</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">filter_negative_coefficients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coeff</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Set all coefficients at the first negative one to 0.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        coeff</span>
+<span class="sd">            The Legendre coefficients.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">first_negative_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_first_negative_coefficient_index</span><span class="p">(</span><span class="n">coeff</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">first_negative_index</span><span class="p">:</span>
+            <span class="n">coeff</span><span class="p">[</span><span class="n">first_negative_index</span><span class="p">:]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="n">coeff</span>
+
+
+<div class="viewcode-block" id="decompose_phase_function"><a class="viewcode-back" href="../rst/for-users/api-reference/legendre.html#legendre.decompose_phase_function">[docs]</a><span class="k">def</span> <span class="nf">decompose_phase_function</span><span class="p">(</span>
+        <span class="n">phase_function</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">angles</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">n_moments</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Decompose a phase function into its Legendre moments.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    phase_function</span>
+<span class="sd">        The phase function to decompose.</span>
+<span class="sd">    angles</span>
+<span class="sd">        The angles where the phase function is defined.</span>
+<span class="sd">    n_moments</span>
+<span class="sd">        The number of Legendre moments to decompose the phase function into.</span>
+<span class="sd">    n_samples</span>
+<span class="sd">        The number of samples to use for the resampling. Must be greater than</span>
+<span class="sd">        or equal to :code:`n_moments`.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Let&#39;s suppose we have a Henyey-Greenstein phase function with asymmetry</span>
+<span class="sd">    parameter of 0.6. Let&#39;s create its first 65 moments along with the angles</span>
+<span class="sd">    where it&#39;s defined.</span>
+
+<span class="sd">    &gt;&gt;&gt; from pyRT_DISORT.aerosol import HenyeyGreenstein</span>
+<span class="sd">    &gt;&gt;&gt; analytic_moments = HenyeyGreenstein(0.6).legendre_decomposition(65)</span>
+<span class="sd">    &gt;&gt;&gt; angles = np.radians(np.linspace(0, 180, num=181))</span>
+
+<span class="sd">    We can convert it to a phase fuction with the following:</span>
+
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; phase = np.polynomial.legendre.legval(np.cos(angles), analytic_moments)</span>
+
+<span class="sd">    If we decompose the phase fuction into Legendre coefficients, we should get</span>
+<span class="sd">    what we started with. Let&#39;s decompose the phase fuction back into 65 moments</span>
+<span class="sd">    and use 360 samples to make sure the resolution is good.</span>
+
+<span class="sd">    &gt;&gt;&gt; from pyRT_DISORT.legendre import decompose_phase_function</span>
+<span class="sd">    &gt;&gt;&gt; decomp_moments = decompose_phase_function(phase, angles, 65, 360)</span>
+<span class="sd">    &gt;&gt;&gt; np.amax((analytic_moments - decomp_moments)**2)</span>
+<span class="sd">    1.6443715589020334e-07</span>
+
+<span class="sd">    We&#39;ve recovered the original moments pretty well!</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ld</span> <span class="o">=</span> <span class="n">_LegendreDecomposer</span><span class="p">(</span><span class="n">phase_function</span><span class="p">,</span> <span class="n">angles</span><span class="p">,</span> <span class="n">n_moments</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ld</span><span class="o">.</span><span class="n">decompose</span><span class="p">()</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, kconnour.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

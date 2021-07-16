@@ -88,6 +88,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../about-this-project/about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../about-this-project/about-DISORT.html">About DISORT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../about-this-project/release-notes.html">Release notes</a></li>
 </ul>
 <p class="caption"><span class="caption-text">For users</span></p>
 <ul class="current">
@@ -99,7 +100,7 @@
 <li class="toctree-l2"><a class="reference internal" href="controller.html">Controller</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eos.html">Equation of State</a></li>
 <li class="toctree-l2"><a class="reference internal" href="legendre.html">Legendre</a></li>
-<li class="toctree-l2"><a class="reference internal" href="observation.html">Observation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="observation.html">observation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="output.html">Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="radiation.html">Radiation</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Rayleigh</a></li>
@@ -185,7 +186,7 @@
 scattering.</p>
 <dl class="py class">
 <dt id="rayleigh.RayleighCO2">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">rayleigh.</span></code><code class="sig-name descname"><span class="pre">RayleighCO2</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wavelength</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_density</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rayleigh.RayleighCO2" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">rayleigh.</span></code><code class="sig-name descname"><span class="pre">RayleighCO2</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wavelength</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_density</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/rayleigh.html#RayleighCO2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rayleigh.RayleighCO2" title="Permalink to this definition">¶</a></dt>
 <dd><p>A structure to compute CO <sub>2</sub> Rayleigh scattering arrays.</p>
 <p>RayleighCO2 creates the optical depth, single scattering albedo, and
 Legendre coefficient decomposition phase function arrays due to Rayleigh
@@ -221,42 +222,6 @@ the same shape.</p>
 <p>The values used here are from <a class="reference external" href="https://doi.org/10.1016/j.jqsrt.2004.07.025">Sneep and Ubachs 2005</a></p>
 <p>Due to a typo in the paper, I changed the coefficient to 10 <sup>3</sup>
 when using equation 13 for computing the index of refraction.</p>
-<dl class="py method">
-<dt id="rayleigh.RayleighCO2.__init__">
-<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wavelength</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_density</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rayleigh.RayleighCO2.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>wavelength</strong> (<em>numpy.ndarray</em>) – Wavelength at which Rayleigh scattering will be computed.</p></li>
-<li><p><strong>column_density</strong> (<em>numpy.ndarray</em>) – Column density in the model layers.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>TypeError</strong> – Raised if <code class="code docutils literal notranslate"><span class="pre">wavelength</span></code> or <code class="code docutils literal notranslate"><span class="pre">column_density</span></code> is not a
-    numpy.ndarray.</p></li>
-<li><p><strong>ValueError</strong> – Raised if any values in <code class="code docutils literal notranslate"><span class="pre">wavelength</span></code> or <code class="code docutils literal notranslate"><span class="pre">column_density</span></code>
-    are unphysical, or if they have incompatible shapes. See the note
-    below for more details.</p></li>
-</ul>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>In the general case of a hyperspectral imager with MxN pixels and W
-wavelengths, <code class="docutils literal notranslate"><span class="pre">wavelength</span></code> can have shape WxMxN. In this case,
-<code class="docutils literal notranslate"><span class="pre">column_density</span></code> should have shape ZxMxN, where Z is the number
-of model layers. The 0 <sup>th</sup> dimension can have different shapes
-between the arrays but the subsequent dimensions (if any) should have
-the same shape.</p>
-<p class="rubric">References</p>
-<p>The values used here are from <a class="reference external" href="https://doi.org/10.1016/j.jqsrt.2004.07.025">Sneep and Ubachs 2005</a></p>
-<p>Due to a typo in the paper, I changed the coefficient to 10 <sup>3</sup>
-when using equation 13 for computing the index of refraction.</p>
-</dd></dl>
-
 <dl class="py method">
 <dt id="rayleigh.RayleighCO2.optical_depth">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">optical_depth</span></code><a class="headerlink" href="#rayleigh.RayleighCO2.optical_depth" title="Permalink to this definition">¶</a></dt>
