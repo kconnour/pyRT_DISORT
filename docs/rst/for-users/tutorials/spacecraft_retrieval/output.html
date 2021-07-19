@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/doctools.js"></script>
@@ -84,13 +87,13 @@
               
             
             
-              <p class="caption"><span class="caption-text">About this project</span></p>
+              <p class="caption" role="heading"><span class="caption-text">About this project</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../about-this-project/about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../about-this-project/about-DISORT.html">About DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../about-this-project/release-notes.html">Release notes</a></li>
 </ul>
-<p class="caption"><span class="caption-text">For users</span></p>
+<p class="caption" role="heading"><span class="caption-text">For users</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../tutorials.html">Tutorials</a><ul class="current">
@@ -113,12 +116,11 @@
 <li class="toctree-l3"><a class="reference internal" href="retrieval.html">Retrieval</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../rover_retrieval.html">Rover Retrieval</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../api-reference.html">API reference</a></li>
 </ul>
-<p class="caption"><span class="caption-text">For contributors</span></p>
+<p class="caption" role="heading"><span class="caption-text">For contributors</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../for-contributors/contributions.html">Contributions</a></li>
 </ul>
@@ -201,7 +203,7 @@ can run DISORT is create some output parameters and arrays.</p>
 <p>Let’s start by making the output arrays. These are arrays filled with 0s that
 will be populated with values as DISORT runs. We only need a few parameters to
 define the shape of these arrays, and we’ve already made
-the parameters we’ll need. Let’s add them to <a class="reference internal" href="../../api-reference/output.html#output.OutputArrays" title="output.OutputArrays"><code class="xref py py-class docutils literal notranslate"><span class="pre">OutputArrays</span></code></a>.</p>
+the parameters we’ll need. Let’s add them to <code class="xref py py-class docutils literal notranslate"><span class="pre">OutputArrays</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.output</span> <span class="kn">import</span> <span class="n">OutputArrays</span>
 
 <span class="n">oa</span> <span class="o">=</span> <span class="n">OutputArrays</span><span class="p">(</span><span class="n">cp</span><span class="o">.</span><span class="n">n_polar</span><span class="p">,</span> <span class="n">cp</span><span class="o">.</span><span class="n">n_user_levels</span><span class="p">,</span> <span class="n">cp</span><span class="o">.</span><span class="n">n_azimuth</span><span class="p">)</span>
@@ -220,7 +222,7 @@ the parameters we’ll need. Let’s add them to <a class="reference internal" h
 <div class="section" id="outputbehavior">
 <h2>OutputBehavior<a class="headerlink" href="#outputbehavior" title="Permalink to this headline">¶</a></h2>
 <p>Let’s now set some switches to define how DISORT will
-run. This is done with <a class="reference internal" href="../../api-reference/output.html#output.OutputBehavior" title="output.OutputBehavior"><code class="xref py py-class docutils literal notranslate"><span class="pre">OutputBehavior</span></code></a>, which sets some default
+run. This is done with <code class="xref py py-class docutils literal notranslate"><span class="pre">OutputBehavior</span></code>, which sets some default
 values for how DISORT should run, but as usual you’re free to override them.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.output</span> <span class="kn">import</span> <span class="n">OutputBehavior</span>
 

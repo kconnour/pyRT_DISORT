@@ -1,5 +1,5 @@
 Output
 ======
 
-.. automodule:: output
+.. automodule:: pyrt.output
    :members:

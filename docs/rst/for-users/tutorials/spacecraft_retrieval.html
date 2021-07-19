@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
@@ -84,13 +87,13 @@
               
             
             
-              <p class="caption"><span class="caption-text">About this project</span></p>
+              <p class="caption" role="heading"><span class="caption-text">About this project</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../about-this-project/about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../about-this-project/about-DISORT.html">About DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../about-this-project/release-notes.html">Release notes</a></li>
 </ul>
-<p class="caption"><span class="caption-text">For users</span></p>
+<p class="caption" role="heading"><span class="caption-text">For users</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul class="current">
@@ -108,12 +111,11 @@
 <li class="toctree-l3"><a class="reference internal" href="spacecraft_retrieval/retrieval.html">Retrieval</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="rover_retrieval.html">Rover Retrieval</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api-reference.html">API reference</a></li>
 </ul>
-<p class="caption"><span class="caption-text">For contributors</span></p>
+<p class="caption" role="heading"><span class="caption-text">For contributors</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../for-contributors/contributions.html">Contributions</a></li>
 </ul>
@@ -188,12 +190,11 @@
   <div class="section" id="spacecraft-retrieval">
 <h1>Spacecraft Retrieval<a class="headerlink" href="#spacecraft-retrieval" title="Permalink to this headline">¶</a></h1>
 <p>This tutorial will walk you through how to simulate reflectance spectra of an
-atmosphere containing Martian dust as though it were observed from an orbiter.
-Then, we’ll use these simulations to perform a retrieval. Along the way I’ll
-demonstrate some not-strictly-necessary features included in pyRT_DISORT that
-may make your life easier.</p>
-<p>Each step will show off one of the modules included in pyRT_DISORT. For an
-in-depth look at them, check out <a class="reference internal" href="../api-reference.html"><span class="doc">API reference</span></a>.</p>
+atmosphere containing Martian dust as observed from an orbiter. Then, we’ll use
+these simulations to perform a retrieval.</p>
+<p>Each step will show off one of the modules included in pyRT_DISORT, though it
+won’t cover all of them. For an in-depth look at them, check out
+<a class="reference internal" href="../api-reference.html"><span class="doc">API reference</span></a>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>For efficiency, pyRT_DISORT does computations using
@@ -201,22 +202,15 @@ in-depth look at them, check out <a class="reference internal" href="../api-refe
 objects whenever possible.</p>
 </div>
 <p>The modules in pyRT_DISORT are designed to operate independently—that is,
-(generally speaking) you won’t need to input a class instance into another
+generally speaking, you won’t need to input a pyrt class instance into another
 class. All the relevant classes can be instantiated from scratch, and you
 can choose to completely skip making some of these classes to your heart’s
 content. That also means that the order in which you make these modules
 doesn’t matter for the most part. I’m going to go through them in a way that’s
 sensible to me, but there’s no drawback to ordering them a different way when
 you adapt them to your own code.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>I started radiative transfer by working with Martian dust (hence the
-example) and therefore use arrays of dust properties when testing the code.
-I’ll provide these arrays for the example, but you’ll need to make arrays of
-the properties for whatever aerosols are relevant to your work.</p>
-</div>
 <div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">A sample retrieval from orbit</span></p>
+<p class="caption" role="heading"><span class="caption-text">A sample retrieval from orbit</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="spacecraft_retrieval/observation.html">The observation module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="spacecraft_retrieval/eos.html">The eos module</a></li>

@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/doctools.js"></script>
@@ -84,13 +87,13 @@
               
             
             
-              <p class="caption"><span class="caption-text">About this project</span></p>
+              <p class="caption" role="heading"><span class="caption-text">About this project</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../about-this-project/about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../about-this-project/about-DISORT.html">About DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../about-this-project/release-notes.html">Release notes</a></li>
 </ul>
-<p class="caption"><span class="caption-text">For users</span></p>
+<p class="caption" role="heading"><span class="caption-text">For users</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../tutorials.html">Tutorials</a><ul class="current">
@@ -112,12 +115,11 @@
 <li class="toctree-l3"><a class="reference internal" href="retrieval.html">Retrieval</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../rover_retrieval.html">Rover Retrieval</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../api-reference.html">API reference</a></li>
 </ul>
-<p class="caption"><span class="caption-text">For contributors</span></p>
+<p class="caption" role="heading"><span class="caption-text">For contributors</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../for-contributors/contributions.html">Contributions</a></li>
 </ul>
@@ -204,7 +206,7 @@ I’ll happily make these less disjoined.</p>
 <div class="section" id="computationalparameters">
 <h2>ComputationalParameters<a class="headerlink" href="#computationalparameters" title="Permalink to this headline">¶</a></h2>
 <p>We need to set a number of computational parameters. Let’s do that with
-<a class="reference internal" href="../../api-reference/controller.html#controller.ComputationalParameters" title="controller.ComputationalParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">ComputationalParameters</span></code></a>. We can just plug the number of
+<code class="xref py py-class docutils literal notranslate"><span class="pre">ComputationalParameters</span></code>. We can just plug the number of
 layers inferred from the number of altitudes to use from the equation of state.
 Let’s then use 64 moments, 16 streams, and 1 polar and azimuthal angle. Let’s
 also define the user levels to be at the same locations as our model
@@ -233,7 +235,7 @@ bundle all of these variables together.</p>
 <div class="section" id="model-behavior">
 <h2>Model Behavior<a class="headerlink" href="#model-behavior" title="Permalink to this headline">¶</a></h2>
 <p>Let’s also define how we want our model to run. We can do that with
-<a class="reference internal" href="../../api-reference/controller.html#controller.ModelBehavior" title="controller.ModelBehavior"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelBehavior</span></code></a>, which has some preset values—namely, not
+<code class="xref py py-class docutils literal notranslate"><span class="pre">ModelBehavior</span></code>, which has some preset values—namely, not
 to do any pseudo spherical correction or delta-M correction. Of course, you
 can change these to your liking.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.controller</span> <span class="kn">import</span> <span class="n">ModelBehavior</span>

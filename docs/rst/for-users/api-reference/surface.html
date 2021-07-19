@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
@@ -84,13 +87,13 @@
               
             
             
-              <p class="caption"><span class="caption-text">About this project</span></p>
+              <p class="caption" role="heading"><span class="caption-text">About this project</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../about-this-project/about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../about-this-project/about-DISORT.html">About DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../about-this-project/release-notes.html">Release notes</a></li>
 </ul>
-<p class="caption"><span class="caption-text">For users</span></p>
+<p class="caption" role="heading"><span class="caption-text">For users</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
@@ -108,7 +111,7 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">For contributors</span></p>
+<p class="caption" role="heading"><span class="caption-text">For contributors</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../for-contributors/contributions.html">Contributions</a></li>
 </ul>
@@ -180,13 +183,13 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-surface">
-<span id="surface"></span><h1>Surface<a class="headerlink" href="#module-surface" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-pyrt.surface">
+<span id="surface"></span><h1>Surface<a class="headerlink" href="#module-pyrt.surface" title="Permalink to this headline">¶</a></h1>
 <p>The <code class="code docutils literal notranslate"><span class="pre">surface</span></code> module contains structures for creating arrays related to
 DISORT’s surface treatment.</p>
 <dl class="py class">
-<dt id="surface.Surface">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">surface.</span></code><code class="sig-name descname"><span class="pre">Surface</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">albedo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_streams</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_polar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_azimuth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_angles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_fluxes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_mug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/surface.html#Surface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#surface.Surface" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.surface.Surface">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pyrt.surface.</span></span><span class="sig-name descname"><span class="pre">Surface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">albedo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_streams</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_polar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_azimuth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_angles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_fluxes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_mug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/pyrt/surface.html#Surface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrt.surface.Surface" title="Permalink to this definition">¶</a></dt>
 <dd><p>A structure to compute all the surface parameterization.</p>
 <p>Surface accepts parameters that define the surface arrays required by
 DISORT. The methods in Surface will compute those arrays.</p>
@@ -214,41 +217,41 @@ bidirectional reflectivity.</p></li>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
-<dl class="py method">
-<dt id="surface.Surface.albedo">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">albedo</span></code><a class="headerlink" href="#surface.Surface.albedo" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrt.surface.Surface.albedo">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">albedo</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#pyrt.surface.Surface.albedo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input albedo.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">ALBEDO</span></code>.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="surface.Surface.bemst">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">bemst</span></code><a class="headerlink" href="#surface.Surface.bemst" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrt.surface.Surface.bemst">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">bemst</span></span><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#pyrt.surface.Surface.bemst" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the directional emissivity at quadrature angles.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">BEMST</span></code>.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="surface.Surface.emust">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">emust</span></code><a class="headerlink" href="#surface.Surface.emust" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrt.surface.Surface.emust">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">emust</span></span><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#pyrt.surface.Surface.emust" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the directional emissivity at user angles.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">EMUST</span></code>.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="surface.Surface.lambertian">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">lambertian</span></code><a class="headerlink" href="#surface.Surface.lambertian" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrt.surface.Surface.lambertian">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">lambertian</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#pyrt.surface.Surface.lambertian" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get whether the bottom boundary used in the model will be Lambertian.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">LAMBER</span></code>.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="surface.Surface.make_hapke">
-<code class="sig-name descname"><span class="pre">make_hapke</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beam_flux</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/surface.html#Surface.make_hapke"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#surface.Surface.make_hapke" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.surface.Surface.make_hapke">
+<span class="sig-name descname"><span class="pre">make_hapke</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beam_flux</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/pyrt/surface.html#Surface.make_hapke"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrt.surface.Surface.make_hapke" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make a basic Hapke surface.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -269,13 +272,13 @@ bidirectional reflectivity.</p></li>
 </dl>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="observation/Angles.html#observation.Angles" title="observation.Angles"><code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code></a>, <a class="reference internal" href="radiation.html#radiation.IncidentFlux" title="radiation.IncidentFlux"><code class="xref py py-class docutils literal notranslate"><span class="pre">IncidentFlux</span></code></a></p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">IncidentFlux</span></code></p>
 </div>
 </dd></dl>
 
 <dl class="py method">
-<dt id="surface.Surface.make_hapkeHG2">
-<code class="sig-name descname"><span class="pre">make_hapkeHG2</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">asym</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frac</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beam_flux</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/surface.html#Surface.make_hapkeHG2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#surface.Surface.make_hapkeHG2" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.surface.Surface.make_hapkeHG2">
+<span class="sig-name descname"><span class="pre">make_hapkeHG2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">asym</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frac</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beam_flux</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/pyrt/surface.html#Surface.make_hapkeHG2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrt.surface.Surface.make_hapkeHG2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make a Hapke surface with 2 lobed Henyey-Greenstein surface phase
 function.</p>
 <dl class="field-list simple">
@@ -299,13 +302,13 @@ function.</p>
 </dl>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="observation/Angles.html#observation.Angles" title="observation.Angles"><code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code></a>, <a class="reference internal" href="radiation.html#radiation.IncidentFlux" title="radiation.IncidentFlux"><code class="xref py py-class docutils literal notranslate"><span class="pre">IncidentFlux</span></code></a></p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">IncidentFlux</span></code></p>
 </div>
 </dd></dl>
 
 <dl class="py method">
-<dt id="surface.Surface.make_hapkeHG2_roughness">
-<code class="sig-name descname"><span class="pre">make_hapkeHG2_roughness</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">asym</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">roughness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frac</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beam_flux</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/surface.html#Surface.make_hapkeHG2_roughness"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#surface.Surface.make_hapkeHG2_roughness" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.surface.Surface.make_hapkeHG2_roughness">
+<span class="sig-name descname"><span class="pre">make_hapkeHG2_roughness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">asym</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">roughness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frac</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beam_flux</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/pyrt/surface.html#Surface.make_hapkeHG2_roughness"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrt.surface.Surface.make_hapkeHG2_roughness" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make a Hapke surface with 2 lobed Henyey-Greenstein surface phase
 function and surface roughness parameter.</p>
 <dl class="field-list simple">
@@ -330,13 +333,13 @@ function and surface roughness parameter.</p>
 </dl>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="observation/Angles.html#observation.Angles" title="observation.Angles"><code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code></a>, <a class="reference internal" href="radiation.html#radiation.IncidentFlux" title="radiation.IncidentFlux"><code class="xref py py-class docutils literal notranslate"><span class="pre">IncidentFlux</span></code></a></p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">IncidentFlux</span></code></p>
 </div>
 </dd></dl>
 
 <dl class="py method">
-<dt id="surface.Surface.make_lambertian">
-<code class="sig-name descname"><span class="pre">make_lambertian</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/surface.html#Surface.make_lambertian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#surface.Surface.make_lambertian" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.surface.Surface.make_lambertian">
+<span class="sig-name descname"><span class="pre">make_lambertian</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/pyrt/surface.html#Surface.make_lambertian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrt.surface.Surface.make_lambertian" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make the surface a Lambertian surface.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -345,25 +348,25 @@ function and surface roughness parameter.</p>
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt id="surface.Surface.rho_accurate">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">rho_accurate</span></code><a class="headerlink" href="#surface.Surface.rho_accurate" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrt.surface.Surface.rho_accurate">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rho_accurate</span></span><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#pyrt.surface.Surface.rho_accurate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the analytic BRDF results.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">RHO_ACCURATE</span></code>.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="surface.Surface.rhoq">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">rhoq</span></code><a class="headerlink" href="#surface.Surface.rhoq" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrt.surface.Surface.rhoq">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rhoq</span></span><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#pyrt.surface.Surface.rhoq" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the quadrature fourier expanded BRDF.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">RHOQ</span></code>.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="surface.Surface.rhou">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">rhou</span></code><a class="headerlink" href="#surface.Surface.rhou" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrt.surface.Surface.rhou">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">rhou</span></span><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#pyrt.surface.Surface.rhou" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the user defined fourier expanded BRDF.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">RHOU</span></code>.</p>

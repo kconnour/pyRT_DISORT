@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
@@ -84,13 +87,13 @@
               
             
             
-              <p class="caption"><span class="caption-text">About this project</span></p>
+              <p class="caption" role="heading"><span class="caption-text">About this project</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../about-this-project/about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../about-this-project/about-DISORT.html">About DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../about-this-project/release-notes.html">Release notes</a></li>
 </ul>
-<p class="caption"><span class="caption-text">For users</span></p>
+<p class="caption" role="heading"><span class="caption-text">For users</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
@@ -108,7 +111,7 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">For contributors</span></p>
+<p class="caption" role="heading"><span class="caption-text">For contributors</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../for-contributors/contributions.html">Contributions</a></li>
 </ul>
@@ -180,13 +183,13 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-rayleigh">
-<span id="rayleigh"></span><h1>Rayleigh<a class="headerlink" href="#module-rayleigh" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-pyrt.rayleigh">
+<span id="rayleigh"></span><h1>Rayleigh<a class="headerlink" href="#module-pyrt.rayleigh" title="Permalink to this headline">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">rayleigh</span></code> module contains structures for computing Rayleigh
 scattering.</p>
 <dl class="py class">
-<dt id="rayleigh.RayleighCO2">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">rayleigh.</span></code><code class="sig-name descname"><span class="pre">RayleighCO2</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wavelength</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_density</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/rayleigh.html#RayleighCO2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rayleigh.RayleighCO2" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.rayleigh.RayleighCO2">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pyrt.rayleigh.</span></span><span class="sig-name descname"><span class="pre">RayleighCO2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wavelength</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_density</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/pyrt/rayleigh.html#RayleighCO2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrt.rayleigh.RayleighCO2" title="Permalink to this definition">¶</a></dt>
 <dd><p>A structure to compute CO <sub>2</sub> Rayleigh scattering arrays.</p>
 <p>RayleighCO2 creates the optical depth, single scattering albedo, and
 Legendre coefficient decomposition phase function arrays due to Rayleigh
@@ -222,15 +225,15 @@ the same shape.</p>
 <p>The values used here are from <a class="reference external" href="https://doi.org/10.1016/j.jqsrt.2004.07.025">Sneep and Ubachs 2005</a></p>
 <p>Due to a typo in the paper, I changed the coefficient to 10 <sup>3</sup>
 when using equation 13 for computing the index of refraction.</p>
-<dl class="py method">
-<dt id="rayleigh.RayleighCO2.optical_depth">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">optical_depth</span></code><a class="headerlink" href="#rayleigh.RayleighCO2.optical_depth" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrt.rayleigh.RayleighCO2.optical_depth">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">optical_depth</span></span><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#pyrt.rayleigh.RayleighCO2.optical_depth" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the Rayleigh optical depth.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="rayleigh.RayleighCO2.phase_function">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">phase_function</span></code><a class="headerlink" href="#rayleigh.RayleighCO2.phase_function" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrt.rayleigh.RayleighCO2.phase_function">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">phase_function</span></span><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#pyrt.rayleigh.RayleighCO2.phase_function" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the Legendre decomposition of the phase function.</p>
 <p class="rubric">Notes</p>
 <p>The shape of this array is (3, n_layers, (spectral_shape)). The
@@ -238,9 +241,9 @@ when using equation 13 for computing the index of refraction.</p>
 1 and 0.5, respectively.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="rayleigh.RayleighCO2.single_scattering_albedo">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">single_scattering_albedo</span></code><a class="headerlink" href="#rayleigh.RayleighCO2.single_scattering_albedo" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrt.rayleigh.RayleighCO2.single_scattering_albedo">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">single_scattering_albedo</span></span><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#pyrt.rayleigh.RayleighCO2.single_scattering_albedo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the Rayleigh single scattering albedo.</p>
 <p class="rubric">Notes</p>
 <p>The shape of this array is (n_layers, (spectral_shape)). It is

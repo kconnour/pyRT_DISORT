@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/doctools.js"></script>
@@ -84,13 +87,13 @@
               
             
             
-              <p class="caption"><span class="caption-text">About this project</span></p>
+              <p class="caption" role="heading"><span class="caption-text">About this project</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../about-this-project/about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../about-this-project/about-DISORT.html">About DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../about-this-project/release-notes.html">Release notes</a></li>
 </ul>
-<p class="caption"><span class="caption-text">For users</span></p>
+<p class="caption" role="heading"><span class="caption-text">For users</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../tutorials.html">Tutorials</a><ul class="current">
@@ -108,12 +111,11 @@
 <li class="toctree-l3"><a class="reference internal" href="retrieval.html">Retrieval</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../rover_retrieval.html">Rover Retrieval</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../api-reference.html">API reference</a></li>
 </ul>
-<p class="caption"><span class="caption-text">For contributors</span></p>
+<p class="caption" role="heading"><span class="caption-text">For contributors</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../for-contributors/contributions.html">Contributions</a></li>
 </ul>
@@ -191,7 +193,7 @@
 <h1>The surface module<a class="headerlink" href="#the-surface-module" title="Permalink to this headline">¶</a></h1>
 <p>With the number of computational parameters defined, we can now make the
 arrays of the surface reflectance. We only need a handful of values to define
-the shape of these arrays, so let’s do that using <a class="reference internal" href="../../api-reference/surface.html#surface.Surface" title="surface.Surface"><code class="xref py py-class docutils literal notranslate"><span class="pre">Surface</span></code></a>.</p>
+the shape of these arrays, so let’s do that using <code class="xref py py-class docutils literal notranslate"><span class="pre">Surface</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.surface</span> <span class="kn">import</span> <span class="n">Surface</span>
 
 <span class="n">sfc</span> <span class="o">=</span> <span class="n">Surface</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">cp</span><span class="o">.</span><span class="n">n_streams</span><span class="p">,</span> <span class="n">cp</span><span class="o">.</span><span class="n">n_polar</span><span class="p">,</span> <span class="n">cp</span><span class="o">.</span><span class="n">n_azimuth</span><span class="p">,</span> <span class="n">ob</span><span class="o">.</span><span class="n">user_angles</span><span class="p">,</span>
@@ -216,9 +218,9 @@ needs.</p>
 <p>With these defined, we’ve now created all the variables that DISORT needs!</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p><code class="code docutils literal notranslate"><span class="pre">Surface</span></code> also comes with <a class="reference internal" href="../../api-reference/surface.html#surface.Surface.make_hapke" title="surface.Surface.make_hapke"><code class="xref py py-meth docutils literal notranslate"><span class="pre">make_hapke()</span></code></a>,
-<a class="reference internal" href="../../api-reference/surface.html#surface.Surface.make_hapkeHG2" title="surface.Surface.make_hapkeHG2"><code class="xref py py-meth docutils literal notranslate"><span class="pre">make_hapkeHG2()</span></code></a>, and
-<a class="reference internal" href="../../api-reference/surface.html#surface.Surface.make_hapkeHG2_roughness" title="surface.Surface.make_hapkeHG2_roughness"><code class="xref py py-meth docutils literal notranslate"><span class="pre">make_hapkeHG2_roughness()</span></code></a> if you want to use more
+<p><code class="code docutils literal notranslate"><span class="pre">Surface</span></code> also comes with <code class="xref py py-meth docutils literal notranslate"><span class="pre">make_hapke()</span></code>,
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">make_hapkeHG2()</span></code>, and
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">make_hapkeHG2_roughness()</span></code> if you want to use more
 complicated phase functions. The 5 surface arrays are initialized with 0s
 when the class is instantiated. When these methods are called, those arrays
 are overridden.</p>

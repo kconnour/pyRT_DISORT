@@ -3,6 +3,11 @@ classes) useful for computing quantities required by DISORT that are commonly
 found in an observation.
 
 """
+# TODO: In Python3.10, they should disable evaluation of type hints. Currently,
+#  ArrayLike evaluates to Sequence[Sequence[Sequence[...]. After that, I can
+#  remove the __future__ import. See also
+#  https://stackoverflow.com/questions/67473396/shorten-display-format-of-python-type-annotations-in-sphinx
+from __future__ import annotations
 import warnings
 import numpy as np
 from numpy.typing import ArrayLike
@@ -55,8 +60,8 @@ class Angles:
 
     See Also
     --------
-    phase_to_angles: Create instances of this class if the phase angles are
-                     known, but the azimuth angles are unknown.
+    phase_to_angles: Create instances of this class if phase angles are known
+                     but azimuth angles are unknown.
     sky_image: Create instances of this class from a single sky image.
 
     Notes
@@ -81,7 +86,7 @@ class Angles:
     Import the relevant modules
 
     >>> import numpy as np
-    >>> from pyRT_DISORT.observation import Angles
+    >>> from pyrt.observation import Angles
 
     Instantiate this class for a (3, 5) sky image taken along an emission and
     azimuth angle grid, with a single incident beam.
@@ -119,7 +124,7 @@ class Angles:
 
     """
     def __init__(self, incidence: ArrayLike, beam_azimuth: ArrayLike,
-                 emission: ArrayLike, azimuth: ArrayLike) -> None:
+                 emission: ArrayLike, azimuth: ArrayLike):
         self._bundle = \
             _RoverAngleBundle(incidence, beam_azimuth, emission, azimuth)
 
@@ -229,7 +234,7 @@ def make_azimuth(incidence: ArrayLike, emission: ArrayLike,
     Create the azimuth angles from an assortment of angles.
 
     >>> import numpy as np
-    >>> from pyRT_DISORT.observation import make_azimuth
+    >>> from pyrt.observation import make_azimuth
     >>> incidence_angles = np.array([20, 30, 40])
     >>> emission_angles = np.array([30, 40, 50])
     >>> phase_angles = np.array([25, 30, 35])
@@ -251,8 +256,8 @@ def make_azimuth(incidence: ArrayLike, emission: ArrayLike,
 
 def phase_to_angles(incidence: ArrayLike, emission: ArrayLike,
                     phase: ArrayLike) -> Angles:
-    r"""Construct an instance of :class:`Angles` in the case where phase angles
-    are known but azimuth angles are unknown.
+    r"""Construct an instance of Angles in the case where phase angles are
+    known but azimuth angles are unknown.
 
     Parameters
     ----------
@@ -284,7 +289,7 @@ def phase_to_angles(incidence: ArrayLike, emission: ArrayLike,
     For a random assortment of input angles:
 
     >>> import numpy as np
-    >>> from pyRT_DISORT.observation import phase_to_angles
+    >>> from pyrt.observation import phase_to_angles
     >>> incidence = [20, 30, 40]
     >>> emission = [30, 40, 50]
     >>> phase = [25, 30, 35]
@@ -309,9 +314,9 @@ def phase_to_angles(incidence: ArrayLike, emission: ArrayLike,
 
 def sky_image(incidence: float, beam_azimuth: float, emission: ArrayLike,
               azimuth: ArrayLike) -> Angles:
-    """Create an instance of :class:`Angles` from a typical sky image---that is,
-    a single incidence and beam azimuth angle are known, and the observational
-    geometry defines a 1D array of emission and azimuth angles.
+    """Create an instance of Angles from a typical sky image---that is, a single
+    incidence and beam azimuth angle are known, and the observational geometry
+    defines a 1D array of emission and azimuth angles.
 
     Parameters
     ----------
@@ -347,7 +352,7 @@ def sky_image(incidence: float, beam_azimuth: float, emission: ArrayLike,
     beam.
 
     >>> import numpy as np
-    >>> from pyRT_DISORT.observation import sky_image
+    >>> from pyrt.observation import sky_image
     >>> incidence = 30
     >>> beam_azimuth = 40
     >>> emission = np.linspace(30, 60, num=3)
@@ -397,8 +402,8 @@ class Spectral:
     -----
     If you do not plan to use thermal emission, there is probably little benefit
     to making an instance of this class. See
-    :py:class:`~radiation.ThermalEmission` for a discussion on thermal radiation
-    in DISORT.
+    :py:class:`~pyrt.radiation.ThermalEmission` for a discussion on thermal
+    radiation in DISORT.
 
     See Also
     --------
@@ -410,7 +415,7 @@ class Spectral:
     Import the relevant modules
 
     >>> import numpy as np
-    >>> from pyRT_DISORT.observation import Spectral
+    >>> from pyrt.observation import Spectral
 
     Instantiate this class for a simple set of wavelengths.
 
@@ -449,7 +454,7 @@ class Spectral:
 
     """
     def __init__(self, short_wavelength: ArrayLike,
-                 long_wavelength: ArrayLike) -> None:
+                 long_wavelength: ArrayLike):
 
         self._bundle = _WavelengthBundle(short_wavelength, long_wavelength)
 
@@ -479,7 +484,7 @@ class Spectral:
         -----
         Each element along the observation dimension(s) is named :code:`WVNMHI`
         in DISORT. It is only needed by DISORT if
-        :py:attr:`~radiation.ThermalEmission.thermal_emission` is set to
+        :py:attr:`~pyrt.radiation.ThermalEmission.thermal_emission` is set to
         :code:`True`.
 
         """
@@ -494,7 +499,7 @@ class Spectral:
         -----
         Each element along the observation dimension(s) is named :code:`WVNMLO`
         in DISORT. It is only needed by DISORT if
-        :py:attr:`~radiation.ThermalEmission.thermal_emission` is set to
+        :py:attr:`~pyrt.radiation.ThermalEmission.thermal_emission` is set to
         :code:`True`.
 
         """
@@ -502,8 +507,8 @@ class Spectral:
 
 
 def constant_width(center_wavelength: ArrayLike, width: float) -> Spectral:
-    """Create an instance of :class:`Spectral` assuming the wavelengths all have
-    a constant spectral width.
+    """Create an instance of Spectral assuming the wavelengths all have a
+    constant spectral width.
 
     Parameters
     ----------
@@ -517,7 +522,8 @@ def constant_width(center_wavelength: ArrayLike, width: float) -> Spectral:
     TypeError
         Raised if any values in the input arrays are nonnumerical.
     ValueError
-        I'll add this later.
+        Raised if the inputs contain values outside of 0.1 to 50 microns (I
+        assume this is the valid range to do retrievals).
 
     Examples
     --------
@@ -525,7 +531,7 @@ def constant_width(center_wavelength: ArrayLike, width: float) -> Spectral:
     in 1 micron increments, with each channel having a 50 nm spectral width.
 
     >>> import numpy as np
-    >>> from pyRT_DISORT.observation import constant_width
+    >>> from pyrt.observation import constant_width
     >>> center = [1, 2, 3]
     >>> width = 0.05
     >>> constant_width(center, width)
@@ -591,13 +597,13 @@ class _Angles(np.ndarray):
                       f'{obj.low} and {obj.high} degrees.'
             raise ValueError(message)
 
-    def sin(self) -> np.ndarray:
+    def sin(self) -> _Angles:
         """Compute the sine of the input angles.
 
         """
         return np.sin(np.radians(self))
 
-    def cos(self) -> np.ndarray:
+    def cos(self) -> _Angles:
         """Compute the cosine of the input angles.
 
         """

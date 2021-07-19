@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,10 +31,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -85,13 +88,13 @@
               
             
             
-              <p class="caption"><span class="caption-text">About this project</span></p>
+              <p class="caption" role="heading"><span class="caption-text">About this project</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../about-this-project/about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../about-this-project/about-DISORT.html">About DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../about-this-project/release-notes.html">Release notes</a></li>
 </ul>
-<p class="caption"><span class="caption-text">For users</span></p>
+<p class="caption" role="heading"><span class="caption-text">For users</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
@@ -109,7 +112,7 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">For contributors</span></p>
+<p class="caption" role="heading"><span class="caption-text">For contributors</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../for-contributors/contributions.html">Contributions</a></li>
 </ul>
@@ -181,13 +184,13 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-output">
-<span id="output"></span><h1>Output<a class="headerlink" href="#module-output" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-pyrt.output">
+<span id="output"></span><h1>Output<a class="headerlink" href="#module-pyrt.output" title="Permalink to this headline">¶</a></h1>
 <p>The <code class="code docutils literal notranslate"><span class="pre">output</span></code> module contains data structures for controlling what
 DISORT outputs.</p>
 <dl class="py class">
-<dt id="output.OutputArrays">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">output.</span></code><code class="sig-name descname"><span class="pre">OutputArrays</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_polar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_user_levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_azimuth</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/output.html#OutputArrays"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#output.OutputArrays" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.output.OutputArrays">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pyrt.output.</span></span><span class="sig-name descname"><span class="pre">OutputArrays</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_polar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_user_levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_azimuth</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/pyrt/output.html#OutputArrays"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrt.output.OutputArrays" title="Permalink to this definition">¶</a></dt>
 <dd><p>A structure to make the DISORT output arrays.</p>
 <p>OutputArrays creates arrays of 0s that are designed to get populated with
 values as DISORT runs.</p>
@@ -203,42 +206,42 @@ values as DISORT runs.</p>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
-<dl class="py method">
-<dt id="output.OutputArrays.albedo_medium">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">albedo_medium</span></code><a class="headerlink" href="#output.OutputArrays.albedo_medium" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrt.output.OutputArrays.albedo_medium">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">albedo_medium</span></span><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#pyrt.output.OutputArrays.albedo_medium" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the albedo of the medium output array.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">ALBMED</span></code>.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="output.OutputArrays.diffuse_down_flux">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">diffuse_down_flux</span></code><a class="headerlink" href="#output.OutputArrays.diffuse_down_flux" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrt.output.OutputArrays.diffuse_down_flux">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">diffuse_down_flux</span></span><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#pyrt.output.OutputArrays.diffuse_down_flux" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the diffuse downward flux output array, which will be the total
 downward flux minus the direct beam flux.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">RFLDN</span></code>.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="output.OutputArrays.diffuse_up_flux">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">diffuse_up_flux</span></code><a class="headerlink" href="#output.OutputArrays.diffuse_up_flux" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrt.output.OutputArrays.diffuse_up_flux">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">diffuse_up_flux</span></span><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#pyrt.output.OutputArrays.diffuse_up_flux" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the diffuse upward flux output array.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">FLUP</span></code>.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="output.OutputArrays.direct_beam_flux">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">direct_beam_flux</span></code><a class="headerlink" href="#output.OutputArrays.direct_beam_flux" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrt.output.OutputArrays.direct_beam_flux">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">direct_beam_flux</span></span><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#pyrt.output.OutputArrays.direct_beam_flux" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the direct beam flux output array.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">RFLDIR</span></code>.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="output.OutputArrays.flux_divergence">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">flux_divergence</span></code><a class="headerlink" href="#output.OutputArrays.flux_divergence" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrt.output.OutputArrays.flux_divergence">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">flux_divergence</span></span><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#pyrt.output.OutputArrays.flux_divergence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the flux divergence output array, which is will represent
 <span class="math notranslate nohighlight">\(\frac{dF}{d\tau}\)</span> where <span class="math notranslate nohighlight">\(F\)</span> is the flux and <span class="math notranslate nohighlight">\(\tau\)</span>
 is the optical depth. This is an exact result.</p>
@@ -246,25 +249,25 @@ is the optical depth. This is an exact result.</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">DFDT</span></code>.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="output.OutputArrays.intensity">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">intensity</span></code><a class="headerlink" href="#output.OutputArrays.intensity" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrt.output.OutputArrays.intensity">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">intensity</span></span><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#pyrt.output.OutputArrays.intensity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the intensity output array.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">UU</span></code>.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="output.OutputArrays.mean_intensity">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">mean_intensity</span></code><a class="headerlink" href="#output.OutputArrays.mean_intensity" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrt.output.OutputArrays.mean_intensity">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">mean_intensity</span></span><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#pyrt.output.OutputArrays.mean_intensity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the mean intensity output array.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named “<code class="code docutils literal notranslate"><span class="pre">UAVG</span></code>.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="output.OutputArrays.transmissivity_medium">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">transmissivity_medium</span></code><a class="headerlink" href="#output.OutputArrays.transmissivity_medium" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrt.output.OutputArrays.transmissivity_medium">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">transmissivity_medium</span></span><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#pyrt.output.OutputArrays.transmissivity_medium" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the transmissivity of the medium output array.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">TRNMED</span></code>.</p>
@@ -273,8 +276,8 @@ is the optical depth. This is an exact result.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="output.OutputBehavior">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">output.</span></code><code class="sig-name descname"><span class="pre">OutputBehavior</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">incidence_beam_conditions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_fluxes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_angles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_optical_depths</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/output.html#OutputBehavior"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#output.OutputBehavior" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.output.OutputBehavior">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pyrt.output.</span></span><span class="sig-name descname"><span class="pre">OutputBehavior</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">incidence_beam_conditions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_fluxes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_angles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_optical_depths</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/pyrt/output.html#OutputBehavior"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrt.output.OutputBehavior" title="Permalink to this definition">¶</a></dt>
 <dd><p>A structure that holds DISORT output behavior switches.</p>
 <p>OutputBehavior provides some default output behavior for DISORT. All the
 parameters can be overriden to fit user specifications.</p>
@@ -341,35 +344,35 @@ optical depths.</p></li>
 </dl>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="controller.html#controller.ComputationalParameters" title="controller.ComputationalParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">ComputationalParameters</span></code></a>, <a class="reference internal" href="controller.html#controller.ModelBehavior" title="controller.ModelBehavior"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelBehavior</span></code></a>, <a class="reference internal" href="observation/Spectral.html#observation.Spectral" title="observation.Spectral"><code class="xref py py-class docutils literal notranslate"><span class="pre">Spectral</span></code></a></p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">ComputationalParameters</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ModelBehavior</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Spectral</span></code></p>
 </div>
-<dl class="py method">
-<dt id="output.OutputBehavior.incidence_beam_conditions">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">incidence_beam_conditions</span></code><a class="headerlink" href="#output.OutputBehavior.incidence_beam_conditions" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrt.output.OutputBehavior.incidence_beam_conditions">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">incidence_beam_conditions</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#pyrt.output.OutputBehavior.incidence_beam_conditions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get whether the model will only return albedo and transmissivity.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">IBCND</span></code>.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="output.OutputBehavior.only_fluxes">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">only_fluxes</span></code><a class="headerlink" href="#output.OutputBehavior.only_fluxes" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrt.output.OutputBehavior.only_fluxes">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">only_fluxes</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#pyrt.output.OutputBehavior.only_fluxes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get whether DISORT should only return fluxes.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">ONLYFL</span></code>.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="output.OutputBehavior.user_angles">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">user_angles</span></code><a class="headerlink" href="#output.OutputBehavior.user_angles" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrt.output.OutputBehavior.user_angles">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">user_angles</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#pyrt.output.OutputBehavior.user_angles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get whether radiant quantities should be returned at user angles.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">USRANG</span></code>.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="output.OutputBehavior.user_optical_depths">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">user_optical_depths</span></code><a class="headerlink" href="#output.OutputBehavior.user_optical_depths" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrt.output.OutputBehavior.user_optical_depths">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">user_optical_depths</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#pyrt.output.OutputBehavior.user_optical_depths" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get whether radiant quantities should be returned at user optical
 depths.</p>
 <p class="rubric">Notes</p>
@@ -379,8 +382,8 @@ depths.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="output.UserLevel">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">output.</span></code><code class="sig-name descname"><span class="pre">UserLevel</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_user_levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optical_depth_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/output.html#UserLevel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#output.UserLevel" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.output.UserLevel">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pyrt.output.</span></span><span class="sig-name descname"><span class="pre">UserLevel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_user_levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optical_depth_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/pyrt/output.html#UserLevel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrt.output.UserLevel" title="Permalink to this definition">¶</a></dt>
 <dd><p>A structure to create the levels at which radiant quantities are returned</p>
 <p>UserLevel checks that radiant quantities can be returned at user levels.</p>
 <dl class="field-list simple">
@@ -403,9 +406,9 @@ and this object will create an array of 0s for the output.</p></li>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
-<dl class="py method">
-<dt id="output.UserLevel.optical_depth_output">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">optical_depth_output</span></code><a class="headerlink" href="#output.UserLevel.optical_depth_output" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrt.output.UserLevel.optical_depth_output">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">optical_depth_output</span></span><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#pyrt.output.UserLevel.optical_depth_output" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input user optical depth array at user levels.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">UTAU</span></code>.</p>

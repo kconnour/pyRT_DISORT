@@ -1,5 +1,5 @@
 Radiation
 =========
 
-.. automodule:: radiation
+.. automodule:: pyrt.radiation
    :members:

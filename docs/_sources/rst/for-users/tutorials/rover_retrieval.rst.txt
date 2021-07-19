@@ -33,6 +33,9 @@ you adapt them to your own code.
 
 .. toctree::
    :maxdepth: 1
-   :caption: A sample retrieval from orbit
+   :caption: A sample retrieval from the surface
 
    rover_retrieval/observation
+
+.. warning::
+   This is under construction...

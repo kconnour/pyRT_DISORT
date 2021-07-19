@@ -1,6 +1,6 @@
 Rayleigh
 ========
 
-.. automodule:: rayleigh
+.. automodule:: pyrt.rayleigh
    :members:
    :inherited-members:

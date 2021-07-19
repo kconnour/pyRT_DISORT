@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -82,19 +85,19 @@
               
             
             
-              <p class="caption"><span class="caption-text">About this project</span></p>
+              <p class="caption" role="heading"><span class="caption-text">About this project</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../rst/about-this-project/about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../rst/about-this-project/about-DISORT.html">About DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../rst/about-this-project/release-notes.html">Release notes</a></li>
 </ul>
-<p class="caption"><span class="caption-text">For users</span></p>
+<p class="caption" role="heading"><span class="caption-text">For users</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../rst/for-users/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../rst/for-users/tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../rst/for-users/api-reference.html">API reference</a></li>
 </ul>
-<p class="caption"><span class="caption-text">For contributors</span></p>
+<p class="caption" role="heading"><span class="caption-text">For contributors</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../rst/for-contributors/contributions.html">Contributions</a></li>
 </ul>
@@ -168,6 +171,11 @@
 <span class="sd">found in an observation.</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># TODO: In Python3.10, they should disable evaluation of type hints. Currently,</span>
+<span class="c1">#  ArrayLike evaluates to Sequence[Sequence[Sequence[...]. After that, I can</span>
+<span class="c1">#  remove the __future__ import. See also</span>
+<span class="c1">#  https://stackoverflow.com/questions/67473396/shorten-display-format-of-python-type-annotations-in-sphinx</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">numpy.typing</span> <span class="kn">import</span> <span class="n">ArrayLike</span>
@@ -220,8 +228,8 @@
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
-<span class="sd">    phase_to_angles: Create instances of this class if the phase angles are</span>
-<span class="sd">                     known, but the azimuth angles are unknown.</span>
+<span class="sd">    phase_to_angles: Create instances of this class if phase angles are known</span>
+<span class="sd">                     but azimuth angles are unknown.</span>
 <span class="sd">    sky_image: Create instances of this class from a single sky image.</span>
 
 <span class="sd">    Notes</span>
@@ -284,7 +292,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incidence</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">beam_azimuth</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
-                 <span class="n">emission</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">azimuth</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+                 <span class="n">emission</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">azimuth</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_bundle</span> <span class="o">=</span> \
             <span class="n">_RoverAngleBundle</span><span class="p">(</span><span class="n">incidence</span><span class="p">,</span> <span class="n">beam_azimuth</span><span class="p">,</span> <span class="n">emission</span><span class="p">,</span> <span class="n">azimuth</span><span class="p">)</span>
 
@@ -416,8 +424,8 @@
 
 <div class="viewcode-block" id="phase_to_angles"><a class="viewcode-back" href="../rst/for-users/api-reference/observation/phase_to_angles.html#observation.phase_to_angles">[docs]</a><span class="k">def</span> <span class="nf">phase_to_angles</span><span class="p">(</span><span class="n">incidence</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">emission</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
                     <span class="n">phase</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Angles</span><span class="p">:</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Construct an instance of :class:`Angles` in the case where phase angles</span>
-<span class="sd">    are known but azimuth angles are unknown.</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Construct an instance of Angles in the case where phase angles are</span>
+<span class="sd">    known but azimuth angles are unknown.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -474,9 +482,9 @@
 
 <div class="viewcode-block" id="sky_image"><a class="viewcode-back" href="../rst/for-users/api-reference/observation/sky_image.html#observation.sky_image">[docs]</a><span class="k">def</span> <span class="nf">sky_image</span><span class="p">(</span><span class="n">incidence</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">beam_azimuth</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">emission</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
               <span class="n">azimuth</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Angles</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Create an instance of :class:`Angles` from a typical sky image---that is,</span>
-<span class="sd">    a single incidence and beam azimuth angle are known, and the observational</span>
-<span class="sd">    geometry defines a 1D array of emission and azimuth angles.</span>
+    <span class="sd">&quot;&quot;&quot;Create an instance of Angles from a typical sky image---that is, a single</span>
+<span class="sd">    incidence and beam azimuth angle are known, and the observational geometry</span>
+<span class="sd">    defines a 1D array of emission and azimuth angles.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -614,7 +622,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">short_wavelength</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
-                 <span class="n">long_wavelength</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+                 <span class="n">long_wavelength</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">):</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_bundle</span> <span class="o">=</span> <span class="n">_WavelengthBundle</span><span class="p">(</span><span class="n">short_wavelength</span><span class="p">,</span> <span class="n">long_wavelength</span><span class="p">)</span>
 
@@ -667,8 +675,8 @@
 
 
 <div class="viewcode-block" id="constant_width"><a class="viewcode-back" href="../rst/for-users/api-reference/observation/constant_width.html#observation.constant_width">[docs]</a><span class="k">def</span> <span class="nf">constant_width</span><span class="p">(</span><span class="n">center_wavelength</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Spectral</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Create an instance of :class:`Spectral` assuming the wavelengths all have</span>
-<span class="sd">    a constant spectral width.</span>
+    <span class="sd">&quot;&quot;&quot;Create an instance of Spectral assuming the wavelengths all have a</span>
+<span class="sd">    constant spectral width.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -682,7 +690,8 @@
 <span class="sd">    TypeError</span>
 <span class="sd">        Raised if any values in the input arrays are nonnumerical.</span>
 <span class="sd">    ValueError</span>
-<span class="sd">        I&#39;ll add this later.</span>
+<span class="sd">        Raised if the inputs contain values outside of 0.1 to 50 microns (I</span>
+<span class="sd">        assume this is the valid range to do retrievals).</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>

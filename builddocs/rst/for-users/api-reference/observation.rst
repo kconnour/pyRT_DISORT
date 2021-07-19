@@ -1,6 +1,6 @@
 observation
 ===========
-.. automodule:: observation
+.. automodule:: pyrt.observation
 
 .. toctree::
    :maxdepth: 1

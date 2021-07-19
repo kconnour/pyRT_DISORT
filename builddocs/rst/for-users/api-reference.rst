@@ -1,10 +1,10 @@
 API reference
 =============
-Here you can find documentation on the included modules with pyRT_DISORT.
+Here you can find documentation on the modules included with pyRT_DISORT.
 
 .. toctree::
    :maxdepth: 1
-   :caption: pyRT_DISORT's modules:
+   :caption: modules:
 
    api-reference/aerosol
    api-reference/atmosphere

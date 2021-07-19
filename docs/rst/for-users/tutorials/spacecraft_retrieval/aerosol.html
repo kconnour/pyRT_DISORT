@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/doctools.js"></script>
@@ -84,13 +87,13 @@
               
             
             
-              <p class="caption"><span class="caption-text">About this project</span></p>
+              <p class="caption" role="heading"><span class="caption-text">About this project</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../about-this-project/about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../about-this-project/about-DISORT.html">About DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../about-this-project/release-notes.html">Release notes</a></li>
 </ul>
-<p class="caption"><span class="caption-text">For users</span></p>
+<p class="caption" role="heading"><span class="caption-text">For users</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../tutorials.html">Tutorials</a><ul class="current">
@@ -114,12 +117,11 @@
 <li class="toctree-l3"><a class="reference internal" href="retrieval.html">Retrieval</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../rover_retrieval.html">Rover Retrieval</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../api-reference.html">API reference</a></li>
 </ul>
-<p class="caption"><span class="caption-text">For contributors</span></p>
+<p class="caption" role="heading"><span class="caption-text">For contributors</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../for-contributors/contributions.html">Contributions</a></li>
 </ul>
@@ -201,7 +203,7 @@ arrays for dust.</p>
 <h2>Conrath<a class="headerlink" href="#conrath" title="Permalink to this headline">¶</a></h2>
 <p>First, we need to define a vertical volumetric mixing ratio profile for dust.
 A Conrath profile was invented specifically for Martian dust, so let’s use
-<a class="reference internal" href="../../api-reference/aerosol.html#aerosol.Conrath" title="aerosol.Conrath"><code class="xref py py-class docutils literal notranslate"><span class="pre">Conrath</span></code></a> to make the profile. For our retrieval, this
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Conrath</span></code> to make the profile. For our retrieval, this
 profile will be used to define the aerosol weighting within the <em>layers</em>. Let’s
 assume the midpoint altitudes are a good representation of the layer altitudes
 and construct them here.</p>
@@ -223,7 +225,7 @@ property</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This module also comes with <a class="reference internal" href="../../api-reference/aerosol.html#aerosol.Uniform" title="aerosol.Uniform"><code class="xref py py-class docutils literal notranslate"><span class="pre">Uniform</span></code></a> to make constant
+<p>This module also comes with <code class="xref py py-class docutils literal notranslate"><span class="pre">Uniform</span></code> to make constant
 mixing ratio profiles. This may be more applicable to water-ice clouds so we
 won’t use it here, but it’s worth mentioning its existence.</p>
 </div>
@@ -259,7 +261,7 @@ This value will come in handy when creating the optical depth profile.</p>
 <p>Finally, the particle sizes and wavelengths at which the properties are defined
 aren’t necessarily the ones we want to use, so we also need to include a grid
 of particle sizes and wavelengths to regrid the forward scattering properties
-onto. We can do this with <a class="reference internal" href="../../api-reference/aerosol.html#aerosol.ForwardScattering" title="aerosol.ForwardScattering"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForwardScattering</span></code></a>.</p>
+onto. We can do this with <code class="xref py py-class docutils literal notranslate"><span class="pre">ForwardScattering</span></code>.</p>
 <div class="admonition caution">
 <p class="admonition-title">Caution</p>
 <p>The particle size grid should be the same shape as the number of layers in
@@ -300,7 +302,7 @@ depth array.</p>
 <div class="section" id="opticaldepth">
 <h2>OpticalDepth<a class="headerlink" href="#opticaldepth" title="Permalink to this headline">¶</a></h2>
 <p>Now that we have the extinction profile from <code class="code docutils literal notranslate"><span class="pre">fs</span></code>, we can make the array
-of optical depth with <a class="reference internal" href="../../api-reference/aerosol.html#aerosol.OpticalDepth" title="aerosol.OpticalDepth"><code class="xref py py-class docutils literal notranslate"><span class="pre">OpticalDepth</span></code></a>. I’ll plug in everything
+of optical depth with <code class="xref py py-class docutils literal notranslate"><span class="pre">OpticalDepth</span></code>. I’ll plug in everything
 and let it calculate. Essentially, all it needs to know to compute the optical
 depth is the the vertical mixing ratio profile along with the column density in
 each layer. It’ll allocate the optical such that the total optical depth sums
@@ -331,7 +333,7 @@ layers.</p>
 <div class="section" id="tabularlegendrecoefficients">
 <h2>TabularLegendreCoefficients<a class="headerlink" href="#tabularlegendrecoefficients" title="Permalink to this headline">¶</a></h2>
 <p>Now, we just need to make the phase function, which we can do with
-<a class="reference internal" href="../../api-reference/aerosol.html#aerosol.TabularLegendreCoefficients" title="aerosol.TabularLegendreCoefficients"><code class="xref py py-class docutils literal notranslate"><span class="pre">TabularLegendreCoefficients</span></code></a>. This class will essentially work
+<code class="xref py py-class docutils literal notranslate"><span class="pre">TabularLegendreCoefficients</span></code>. This class will essentially work
 the same way that <code class="docutils literal notranslate"><span class="pre">ForwardScattering</span></code> did—it will simply hang on to an
 array of Legendre coefficients, the grid over which they’re defined, and the
 grid to regrid them onto. Let’s go ahead and do that here.</p>
@@ -366,7 +368,7 @@ phase function, but suppose you want to use an analytic phase function like
 Henyey-Greenstein. In this case the Legendre coefficients are determined
 by the asymmetry parameter at particle sizes and wavelengths. You’d want to
 turn the asymmetry parameter into Legendre coefficients (see
-<a class="reference internal" href="../../api-reference/aerosol.html#aerosol.HenyeyGreenstein" title="aerosol.HenyeyGreenstein"><code class="xref py py-class docutils literal notranslate"><span class="pre">HenyeyGreenstein</span></code></a> to do this). After doing this we have an
+<code class="xref py py-class docutils literal notranslate"><span class="pre">HenyeyGreenstein</span></code> to do this). After doing this we have an
 array that’s functionally identical to the empirical coefficients we defined
 above—Legendre coefficients and the particle size and wavelength grid over
 which they’re defined, so you can put the newly created Legendre coefficient
