@@ -56,8 +56,14 @@ html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = []
 
-autoclass_content = 'both'
-autodoc_typehints = 'description'
+autoclass_content = 'both'   # add class + __init__ docstrings
+autodoc_typehints = 'description'  # Only show typehints in the description,
+# not the signature
+
+# This displays "ArrayLike" instead of "numpy.typing.ArrayLike"
+autodoc_type_aliases = {
+    'ArrayLike': 'ArrayLike'
+}
 
 # Mock imports so autodoc can work
 # TODO: remove the utilities when possible

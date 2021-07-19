@@ -4,7 +4,8 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>The eos module &mdash; pyRT_DISORT  documentation</title>
@@ -13,6 +14,8 @@
   
   <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +32,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/doctools.js"></script>
@@ -84,13 +88,13 @@
               
             
             
-              <p class="caption"><span class="caption-text">About this project</span></p>
+              <p class="caption" role="heading"><span class="caption-text">About this project</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../about-this-project/about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../about-this-project/about-DISORT.html">About DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../about-this-project/release-notes.html">Release notes</a></li>
 </ul>
-<p class="caption"><span class="caption-text">For users</span></p>
+<p class="caption" role="heading"><span class="caption-text">For users</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../tutorials.html">Tutorials</a><ul class="current">
@@ -116,7 +120,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../api-reference.html">API reference</a></li>
 </ul>
-<p class="caption"><span class="caption-text">For contributors</span></p>
+<p class="caption" role="heading"><span class="caption-text">For contributors</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../for-contributors/contributions.html">Contributions</a></li>
 </ul>
@@ -190,13 +194,13 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="the-eos-module">
+  <section id="the-eos-module">
 <h1>The eos module<a class="headerlink" href="#the-eos-module" title="Permalink to this headline">¶</a></h1>
 <p>Let’s now turn our attention to creating the atmospheric model. This will be a
 multi-step process that will span several modules, but we can start by just
 defining the boundaries we’d like to use in the model, along with equation of
 state variables.</p>
-<div class="section" id="hydrostatic">
+<section id="hydrostatic">
 <h2>Hydrostatic<a class="headerlink" href="#hydrostatic" title="Permalink to this headline">¶</a></h2>
 <p>Suppose we have a temperature and pressure profile and the altitude where those
 quantities are defined for out pixel. If we think the atmosphere is in hydrostatic
@@ -258,8 +262,8 @@ element shorter than the rest since it’s only defined within each of the
 quantities (like from a GCM) you can skip making this object and directly
 input these values later on.</p>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

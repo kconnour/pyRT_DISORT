@@ -4,7 +4,8 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>constant_width &mdash; pyRT_DISORT  documentation</title>
@@ -13,6 +14,8 @@
   
   <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +32,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/doctools.js"></script>
@@ -84,13 +88,13 @@
               
             
             
-              <p class="caption"><span class="caption-text">About this project</span></p>
+              <p class="caption" role="heading"><span class="caption-text">About this project</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../about-this-project/about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../about-this-project/about-DISORT.html">About DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../about-this-project/release-notes.html">Release notes</a></li>
 </ul>
-<p class="caption"><span class="caption-text">For users</span></p>
+<p class="caption" role="heading"><span class="caption-text">For users</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
@@ -116,7 +120,7 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">For contributors</span></p>
+<p class="caption" role="heading"><span class="caption-text">For contributors</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../for-contributors/contributions.html">Contributions</a></li>
 </ul>
@@ -190,24 +194,25 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="constant-width">
+  <section id="constant-width">
 <h1>constant_width<a class="headerlink" href="#constant-width" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt id="observation.constant_width">
-<code class="sig-prename descclassname"><span class="pre">observation.</span></code><code class="sig-name descname"><span class="pre">constant_width</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">center_wavelength</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/observation.html#constant_width"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#observation.constant_width" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create an instance of <a class="reference internal" href="Spectral.html#observation.Spectral" title="observation.Spectral"><code class="xref py py-class docutils literal notranslate"><span class="pre">Spectral</span></code></a> assuming the wavelengths all have
-a constant spectral width.</p>
+<dt class="sig sig-object py" id="observation.constant_width">
+<span class="sig-prename descclassname"><span class="pre">observation.</span></span><span class="sig-name descname"><span class="pre">constant_width</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">center_wavelength</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/observation.html#constant_width"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#observation.constant_width" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an instance of Spectral assuming the wavelengths all have a
+constant spectral width.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>center_wavelength</strong> (<em>numpy.typing.ArrayLike</em>) – The center wavelength [microns] of each spectral bin.</p></li>
+<li><p><strong>center_wavelength</strong> (<em>ArrayLike</em>) – The center wavelength [microns] of each spectral bin.</p></li>
 <li><p><strong>width</strong> (<em>float</em>) – The width of each spectral bin.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>TypeError</strong> – Raised if any values in the input arrays are nonnumerical.</p></li>
-<li><p><strong>ValueError</strong> – I’ll add this later.</p></li>
+<li><p><strong>ValueError</strong> – Raised if the inputs contain values outside of 0.1 to 50 microns (I
+    assume this is the valid range to do retrievals).</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Return type</dt>
@@ -229,7 +234,7 @@ in 1 micron increments, with each channel having a 50 nm spectral width.</p>
 </div>
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>

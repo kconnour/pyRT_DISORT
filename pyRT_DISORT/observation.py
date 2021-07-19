@@ -3,6 +3,11 @@ classes) useful for computing quantities required by DISORT that are commonly
 found in an observation.
 
 """
+# TODO: In Python3.10, they should disable evaluation of type hints. Currently,
+#  ArrayLike evaluates to Sequence[Sequence[Sequence[...]. After that, I can
+#  remove the __future__ import. See also
+#  https://stackoverflow.com/questions/67473396/shorten-display-format-of-python-type-annotations-in-sphinx
+from __future__ import annotations
 import warnings
 import numpy as np
 from numpy.typing import ArrayLike
@@ -55,8 +60,8 @@ class Angles:
 
     See Also
     --------
-    phase_to_angles: Create instances of this class if the phase angles are
-                     known, but the azimuth angles are unknown.
+    phase_to_angles: Create instances of this class if phase angles are known
+                     but azimuth angles are unknown.
     sky_image: Create instances of this class from a single sky image.
 
     Notes
@@ -119,7 +124,7 @@ class Angles:
 
     """
     def __init__(self, incidence: ArrayLike, beam_azimuth: ArrayLike,
-                 emission: ArrayLike, azimuth: ArrayLike) -> None:
+                 emission: ArrayLike, azimuth: ArrayLike):
         self._bundle = \
             _RoverAngleBundle(incidence, beam_azimuth, emission, azimuth)
 
@@ -251,8 +256,8 @@ def make_azimuth(incidence: ArrayLike, emission: ArrayLike,
 
 def phase_to_angles(incidence: ArrayLike, emission: ArrayLike,
                     phase: ArrayLike) -> Angles:
-    r"""Construct an instance of :class:`Angles` in the case where phase angles
-    are known but azimuth angles are unknown.
+    r"""Construct an instance of Angles in the case where phase angles are
+    known but azimuth angles are unknown.
 
     Parameters
     ----------
@@ -309,9 +314,9 @@ def phase_to_angles(incidence: ArrayLike, emission: ArrayLike,
 
 def sky_image(incidence: float, beam_azimuth: float, emission: ArrayLike,
               azimuth: ArrayLike) -> Angles:
-    """Create an instance of :class:`Angles` from a typical sky image---that is,
-    a single incidence and beam azimuth angle are known, and the observational
-    geometry defines a 1D array of emission and azimuth angles.
+    """Create an instance of Angles from a typical sky image---that is, a single
+    incidence and beam azimuth angle are known, and the observational geometry
+    defines a 1D array of emission and azimuth angles.
 
     Parameters
     ----------
@@ -449,7 +454,7 @@ class Spectral:
 
     """
     def __init__(self, short_wavelength: ArrayLike,
-                 long_wavelength: ArrayLike) -> None:
+                 long_wavelength: ArrayLike):
 
         self._bundle = _WavelengthBundle(short_wavelength, long_wavelength)
 
@@ -502,8 +507,8 @@ class Spectral:
 
 
 def constant_width(center_wavelength: ArrayLike, width: float) -> Spectral:
-    """Create an instance of :class:`Spectral` assuming the wavelengths all have
-    a constant spectral width.
+    """Create an instance of Spectral assuming the wavelengths all have a
+    constant spectral width.
 
     Parameters
     ----------
@@ -517,7 +522,8 @@ def constant_width(center_wavelength: ArrayLike, width: float) -> Spectral:
     TypeError
         Raised if any values in the input arrays are nonnumerical.
     ValueError
-        I'll add this later.
+        Raised if the inputs contain values outside of 0.1 to 50 microns (I
+        assume this is the valid range to do retrievals).
 
     Examples
     --------

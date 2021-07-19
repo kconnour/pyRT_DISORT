@@ -4,7 +4,8 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>The observation module &mdash; pyRT_DISORT  documentation</title>
@@ -13,6 +14,8 @@
   
   <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,10 +32,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     
     <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
 
@@ -85,13 +89,13 @@
               
             
             
-              <p class="caption"><span class="caption-text">About this project</span></p>
+              <p class="caption" role="heading"><span class="caption-text">About this project</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../about-this-project/about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../about-this-project/about-DISORT.html">About DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../about-this-project/release-notes.html">Release notes</a></li>
 </ul>
-<p class="caption"><span class="caption-text">For users</span></p>
+<p class="caption" role="heading"><span class="caption-text">For users</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../tutorials.html">Tutorials</a><ul class="current">
@@ -108,7 +112,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../api-reference.html">API reference</a></li>
 </ul>
-<p class="caption"><span class="caption-text">For contributors</span></p>
+<p class="caption" role="heading"><span class="caption-text">For contributors</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../for-contributors/contributions.html">Contributions</a></li>
 </ul>
@@ -182,7 +186,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="the-observation-module">
+  <section id="the-observation-module">
 <h1>The observation module<a class="headerlink" href="#the-observation-module" title="Permalink to this headline">¶</a></h1>
 <p>Let’s begin by considering some of the quantities found in a typical
 observation—the angles and wavelengths at which some instrument collected
@@ -190,7 +194,7 @@ data. In the “rover” case, I’ll assume we have an rover than takes 2D imag
 such that the data have shape (M, N) and each pixel in the MxN grid
 contains W wavelengths. The MxN array corresponds to emission and azimuthal
 angles.</p>
-<div class="section" id="angles">
+<section id="angles">
 <h2>Angles<a class="headerlink" href="#angles" title="Permalink to this headline">¶</a></h2>
 <p>Suppose that we have an image that has shape (15, 20). In this case there’s
 a single incidence and beam azimuth angle, 15 emission angles, and 20 azimuth
@@ -253,7 +257,7 @@ the variables in this example with the same names that DISORT uses. For
 those unfamiliar with DISORT/FORTRAN, variables in all caps will be the ones
 that we ultimately plug into the DISORT call.</p>
 </div>
-<div class="section" id="spacecraft-angles">
+<section id="spacecraft-angles">
 <h3>Spacecraft Angles<a class="headerlink" href="#spacecraft-angles" title="Permalink to this headline">¶</a></h3>
 <p>Each pixel will presumably have its own unique combination of incidence,
 emission, and phase angles that don’t depend on wavelength. This data would
@@ -289,9 +293,9 @@ emission and azimuth angle. We can choose a single pixel index like below.</p>
 <span class="n">PHI0</span> <span class="o">=</span> <span class="n">phi0</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="spectral">
+</section>
+</section>
+<section id="spectral">
 <h2>Spectral<a class="headerlink" href="#spectral" title="Permalink to this headline">¶</a></h2>
 <p>Let’s assume that the hyperspectral imager takes data at W wavelengths in each
 pixel and that there’s a constant spectral width to each bin. Suppose it took
@@ -329,8 +333,8 @@ a separate call for each wavelength.</p>
 <p>The only other thing you’d need from an observation is the signal your
 instrument recorded. We won’t need that value until much later on, so let’s
 wait until later to input those values.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

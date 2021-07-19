@@ -7,6 +7,8 @@ This version was focused on improving the observation module.
 
 * Change observation.Angles to accept a different call signature, grouping
   the incident beam together instead of phi and phi0 together.
+* Remove the incidence and emission properties from Angles, as it's just a
+  copy of the input to the class.
 * Update documentation page on the observation module to be more like numpy.
   Now, the module has its own "home" page and each public class and function
   has its own page.

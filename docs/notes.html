@@ -4,7 +4,8 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Notes on Sphinx &mdash; pyRT_DISORT  documentation</title>
@@ -13,6 +14,8 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +32,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
@@ -82,19 +86,19 @@
               
             
             
-              <p class="caption"><span class="caption-text">About this project</span></p>
+              <p class="caption" role="heading"><span class="caption-text">About this project</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="rst/about-this-project/about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rst/about-this-project/about-DISORT.html">About DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rst/about-this-project/release-notes.html">Release notes</a></li>
 </ul>
-<p class="caption"><span class="caption-text">For users</span></p>
+<p class="caption" role="heading"><span class="caption-text">For users</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="rst/for-users/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rst/for-users/tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rst/for-users/api-reference.html">API reference</a></li>
 </ul>
-<p class="caption"><span class="caption-text">For contributors</span></p>
+<p class="caption" role="heading"><span class="caption-text">For contributors</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="rst/for-contributors/contributions.html">Contributions</a></li>
 </ul>
@@ -164,7 +168,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="notes-on-sphinx">
+  <section id="notes-on-sphinx">
 <h1>Notes on Sphinx<a class="headerlink" href="#notes-on-sphinx" title="Permalink to this headline">¶</a></h1>
 <p>This is info I could only find after much StackExchange digging… It could
 be a result of me just not knowing things though. If you install Sphinx, it
@@ -173,14 +177,14 @@ that if you installed it with python3.8 and then write code in python3.9,
 Sphinx will be unable (as far as I know…) to make documentation for the new
 code. Plus, it’s difficult for me to ensure I’m using the most recent version
 of Sphinx.</p>
-<div class="section" id="quickstart">
+<section id="quickstart">
 <h2>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h2>
 <p>To get started with a project you’d usually run <code class="code docutils literal notranslate"><span class="pre">sphinx-quickstart</span></code> from
 Terminal. In code form, <code class="code docutils literal notranslate"><span class="pre">sphinx-quickstart</span></code> is equivalent to
 <code class="code docutils literal notranslate"><span class="pre">&lt;python&gt;</span> <span class="pre">-m</span> <span class="pre">sphinx.cmd.quickstart</span></code> where &lt;python&gt; is the absolute path
 to your interpreter.</p>
-</div>
-<div class="section" id="building-docs">
+</section>
+<section id="building-docs">
 <h2>Building docs<a class="headerlink" href="#building-docs" title="Permalink to this headline">¶</a></h2>
 <p>When you’re ready to build docs you’d usually run <code class="code docutils literal notranslate"><span class="pre">make</span> <span class="pre">html</span></code> from
 Terminal. In code form, <code class="code docutils literal notranslate"><span class="pre">make</span> <span class="pre">html</span></code> =
@@ -193,8 +197,8 @@ registered in other files.</p>
 will look like:
 <code class="code docutils literal notranslate"><span class="pre">~/repos/pyRT_DISORT/venv-doc/bin/python</span> <span class="pre">-m</span> <span class="pre">sphinx.cmd.build</span> <span class="pre">-b</span> <span class="pre">html</span>
 <span class="pre">~/repos/pyRT_DISORT/builddocs</span> <span class="pre">~/repos/pyRT_DISORT/docs</span> <span class="pre">-E</span></code></p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

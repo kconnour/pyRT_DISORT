@@ -4,7 +4,8 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Release notes &mdash; pyRT_DISORT  documentation</title>
@@ -13,6 +14,8 @@
   
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +32,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
@@ -84,7 +88,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">About this project</span></p>
+              <p class="caption" role="heading"><span class="caption-text">About this project</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="about-DISORT.html">About DISORT</a></li>
@@ -93,13 +97,13 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">For users</span></p>
+<p class="caption" role="heading"><span class="caption-text">For users</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../for-users/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../for-users/tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../for-users/api-reference.html">API reference</a></li>
 </ul>
-<p class="caption"><span class="caption-text">For contributors</span></p>
+<p class="caption" role="heading"><span class="caption-text">For contributors</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../for-contributors/contributions.html">Contributions</a></li>
 </ul>
@@ -169,14 +173,16 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="release-notes">
+  <section id="release-notes">
 <h1>Release notes<a class="headerlink" href="#release-notes" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="v0-0-2">
+<section id="v0-0-2">
 <h2>v0.0.2<a class="headerlink" href="#v0-0-2" title="Permalink to this headline">¶</a></h2>
 <p>This version was focused on improving the observation module.</p>
 <ul class="simple">
 <li><p>Change observation.Angles to accept a different call signature, grouping
 the incident beam together instead of phi and phi0 together.</p></li>
+<li><p>Remove the incidence and emission properties from Angles, as it’s just a
+copy of the input to the class.</p></li>
 <li><p>Update documentation page on the observation module to be more like numpy.
 Now, the module has its own “home” page and each public class and function
 has its own page.</p></li>
@@ -191,8 +197,8 @@ inputs.</p></li>
 <li><p>Improved descriptions in the examples.</p></li>
 <li><p>Minor speed and memory improvements when using this module.</p></li>
 </ul>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

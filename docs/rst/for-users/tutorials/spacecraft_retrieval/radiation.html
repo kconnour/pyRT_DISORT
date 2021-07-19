@@ -4,7 +4,8 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>The radiation module &mdash; pyRT_DISORT  documentation</title>
@@ -13,6 +14,8 @@
   
   <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +32,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/doctools.js"></script>
@@ -84,13 +88,13 @@
               
             
             
-              <p class="caption"><span class="caption-text">About this project</span></p>
+              <p class="caption" role="heading"><span class="caption-text">About this project</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../about-this-project/about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../about-this-project/about-DISORT.html">About DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../about-this-project/release-notes.html">Release notes</a></li>
 </ul>
-<p class="caption"><span class="caption-text">For users</span></p>
+<p class="caption" role="heading"><span class="caption-text">For users</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../tutorials.html">Tutorials</a><ul class="current">
@@ -117,7 +121,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../api-reference.html">API reference</a></li>
 </ul>
-<p class="caption"><span class="caption-text">For contributors</span></p>
+<p class="caption" role="heading"><span class="caption-text">For contributors</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../for-contributors/contributions.html">Contributions</a></li>
 </ul>
@@ -191,10 +195,10 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="the-radiation-module">
+  <section id="the-radiation-module">
 <h1>The radiation module<a class="headerlink" href="#the-radiation-module" title="Permalink to this headline">¶</a></h1>
 <p>Let’s now specify the flux and thermal quantities used in the model.</p>
-<div class="section" id="incidentflux">
+<section id="incidentflux">
 <h2>IncidentFlux<a class="headerlink" href="#incidentflux" title="Permalink to this headline">¶</a></h2>
 <p>We can define the beam flux and the isotropic flux at the top of the atmosphere
 in the <a class="reference internal" href="../../api-reference/radiation.html#radiation.IncidentFlux" title="radiation.IncidentFlux"><code class="xref py py-class docutils literal notranslate"><span class="pre">IncidentFlux</span></code></a> class. Instances of this class don’t do
@@ -210,8 +214,8 @@ anything but containerize your desired flux, and provide some default values.</p
 <p>By default, <code class="code docutils literal notranslate"><span class="pre">beam_flux</span></code> is pi, and <code class="code docutils literal notranslate"><span class="pre">isotropic_flux</span></code> is 0. At least
 for our Martian simulation, there’s no real need to worry about the isotropic
 flux from space.</p>
-</div>
-<div class="section" id="thermalemission">
+</section>
+<section id="thermalemission">
 <h2>ThermalEmission<a class="headerlink" href="#thermalemission" title="Permalink to this headline">¶</a></h2>
 <p>We can also define whether thermal emission is used in the model with the
 <a class="reference internal" href="../../api-reference/radiation.html#radiation.ThermalEmission" title="radiation.ThermalEmission"><code class="xref py py-class docutils literal notranslate"><span class="pre">ThermalEmission</span></code></a> class. As before, pyRT_DISORT has default
@@ -229,8 +233,8 @@ values to get you up and running, though you can easily override them.</p>
 <p>By default, <code class="code docutils literal notranslate"><span class="pre">thermal_emission</span></code> is set to <code class="code docutils literal notranslate"><span class="pre">False</span></code> and no other
 values are used. But
 you’re free to turn on thermal emission and add values for the boundaries.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

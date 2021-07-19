@@ -4,7 +4,8 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>The output module &mdash; pyRT_DISORT  documentation</title>
@@ -13,6 +14,8 @@
   
   <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +32,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/doctools.js"></script>
@@ -84,13 +88,13 @@
               
             
             
-              <p class="caption"><span class="caption-text">About this project</span></p>
+              <p class="caption" role="heading"><span class="caption-text">About this project</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../about-this-project/about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../about-this-project/about-DISORT.html">About DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../about-this-project/release-notes.html">Release notes</a></li>
 </ul>
-<p class="caption"><span class="caption-text">For users</span></p>
+<p class="caption" role="heading"><span class="caption-text">For users</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../tutorials.html">Tutorials</a><ul class="current">
@@ -118,7 +122,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../api-reference.html">API reference</a></li>
 </ul>
-<p class="caption"><span class="caption-text">For contributors</span></p>
+<p class="caption" role="heading"><span class="caption-text">For contributors</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../for-contributors/contributions.html">Contributions</a></li>
 </ul>
@@ -192,11 +196,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="the-output-module">
+  <section id="the-output-module">
 <h1>The output module<a class="headerlink" href="#the-output-module" title="Permalink to this headline">¶</a></h1>
 <p>We’re nearly done with our simulation. The last thing we need to do before we
 can run DISORT is create some output parameters and arrays.</p>
-<div class="section" id="outputarrays">
+<section id="outputarrays">
 <h2>OutputArrays<a class="headerlink" href="#outputarrays" title="Permalink to this headline">¶</a></h2>
 <p>Let’s start by making the output arrays. These are arrays filled with 0s that
 will be populated with values as DISORT runs. We only need a few parameters to
@@ -216,8 +220,8 @@ the parameters we’ll need. Let’s add them to <a class="reference internal" h
 <span class="n">TRNMED</span> <span class="o">=</span> <span class="n">oa</span><span class="o">.</span><span class="n">transmissivity_medium</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="outputbehavior">
+</section>
+<section id="outputbehavior">
 <h2>OutputBehavior<a class="headerlink" href="#outputbehavior" title="Permalink to this headline">¶</a></h2>
 <p>Let’s now set some switches to define how DISORT will
 run. This is done with <a class="reference internal" href="../../api-reference/output.html#output.OutputBehavior" title="output.OutputBehavior"><code class="xref py py-class docutils literal notranslate"><span class="pre">OutputBehavior</span></code></a>, which sets some default
@@ -231,8 +235,8 @@ values for how DISORT should run, but as usual you’re free to override them.</
 <span class="n">USRTAU</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">user_optical_depths</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="userlevel">
+</section>
+<section id="userlevel">
 <h2>UserLevel<a class="headerlink" href="#userlevel" title="Permalink to this headline">¶</a></h2>
 <p>We need an oddball variable to make the user levels. We can do that here.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.output</span> <span class="kn">import</span> <span class="n">UserLevel</span>
@@ -245,8 +249,8 @@ values for how DISORT should run, but as usual you’re free to override them.</
 <p>This is a variable you need to completely create yourself if your run will
 use it; otherwise pyRT_DISORT will make an array of 0s of the correct shape
 to appease DISORT.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

@@ -4,7 +4,8 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Aerosol &mdash; pyRT_DISORT  documentation</title>
@@ -13,6 +14,8 @@
   
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,10 +32,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -85,13 +89,13 @@
               
             
             
-              <p class="caption"><span class="caption-text">About this project</span></p>
+              <p class="caption" role="heading"><span class="caption-text">About this project</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../about-this-project/about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../about-this-project/about-DISORT.html">About DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../about-this-project/release-notes.html">Release notes</a></li>
 </ul>
-<p class="caption"><span class="caption-text">For users</span></p>
+<p class="caption" role="heading"><span class="caption-text">For users</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
@@ -109,7 +113,7 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">For contributors</span></p>
+<p class="caption" role="heading"><span class="caption-text">For contributors</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../for-contributors/contributions.html">Contributions</a></li>
 </ul>
@@ -181,13 +185,13 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-aerosol">
+  <section id="module-aerosol">
 <span id="aerosol"></span><h1>Aerosol<a class="headerlink" href="#module-aerosol" title="Permalink to this headline">¶</a></h1>
 <p>The <code class="code docutils literal notranslate"><span class="pre">aerosol</span></code> module contains structures to make the aerosol properties
 required by DISORT.</p>
 <dl class="py class">
-<dt id="aerosol.Conrath">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">aerosol.</span></code><code class="sig-name descname"><span class="pre">Conrath</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">altitude</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/aerosol.html#Conrath"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aerosol.Conrath" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="aerosol.Conrath">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">aerosol.</span></span><span class="sig-name descname"><span class="pre">Conrath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">altitude</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/aerosol.html#Conrath"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aerosol.Conrath" title="Permalink to this definition">¶</a></dt>
 <dd><p>A structure to compute a Conrath profile(s).</p>
 <p>Conrath creates Conrath profile(s) on an input grid of altitudes given a
 volumetric mixing ratio and Conrath parameters.</p>
@@ -221,9 +225,9 @@ height.</p>
 <code class="code docutils literal notranslate"><span class="pre">nu</span></code> should be of shape MxN. <code class="code docutils literal notranslate"><span class="pre">altitude</span></code> should have shape
 ZxMxN, where Z is the number of altitudes. Additionally, the units of
 <code class="code docutils literal notranslate"><span class="pre">altitude</span></code> and <code class="code docutils literal notranslate"><span class="pre">scale_height</span></code> should be the same.</p>
-<dl class="py method">
-<dt id="aerosol.Conrath.profile">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">profile</span></code><a class="headerlink" href="#aerosol.Conrath.profile" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="aerosol.Conrath.profile">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">profile</span></span><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#aerosol.Conrath.profile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the Conrath profile(s). This will have the same shape as
 <code class="docutils literal notranslate"><span class="pre">altitude</span></code>.</p>
 </dd></dl>
@@ -231,8 +235,8 @@ ZxMxN, where Z is the number of altitudes. Additionally, the units of
 </dd></dl>
 
 <dl class="py class">
-<dt id="aerosol.ForwardScattering">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">aerosol.</span></code><code class="sig-name descname"><span class="pre">ForwardScattering</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scattering_cross_section</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extinction_cross_section</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_size_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelength_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelength</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_wavelength</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/aerosol.html#ForwardScattering"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aerosol.ForwardScattering" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="aerosol.ForwardScattering">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">aerosol.</span></span><span class="sig-name descname"><span class="pre">ForwardScattering</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scattering_cross_section</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extinction_cross_section</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_size_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelength_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelength</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_wavelength</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/aerosol.html#ForwardScattering"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aerosol.ForwardScattering" title="Permalink to this definition">¶</a></dt>
 <dd><p>A structure to store forward scattering properties.</p>
 <p>ForwardScattering will simply hang on to forward scattering properties and
 provides methods to regrid them into the input particle size profile and
@@ -256,22 +260,22 @@ defined.</p></li>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
-<dl class="py method">
-<dt id="aerosol.ForwardScattering.extinction">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">extinction</span></code><a class="headerlink" href="#aerosol.ForwardScattering.extinction" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="aerosol.ForwardScattering.extinction">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">extinction</span></span><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#aerosol.ForwardScattering.extinction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the extinction coefficient at the reference wavelength on the new
 grid.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="aerosol.ForwardScattering.extinction_cross_section">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">extinction_cross_section</span></code><a class="headerlink" href="#aerosol.ForwardScattering.extinction_cross_section" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="aerosol.ForwardScattering.extinction_cross_section">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">extinction_cross_section</span></span><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#aerosol.ForwardScattering.extinction_cross_section" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the extinction cross section on the new grid.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="aerosol.ForwardScattering.make_linear_properties">
-<code class="sig-name descname"><span class="pre">make_linear_properties</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/aerosol.html#ForwardScattering.make_linear_properties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aerosol.ForwardScattering.make_linear_properties" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="aerosol.ForwardScattering.make_linear_properties">
+<span class="sig-name descname"><span class="pre">make_linear_properties</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/aerosol.html#ForwardScattering.make_linear_properties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aerosol.ForwardScattering.make_linear_properties" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make the forward scattering properties at the input particle sizes
 and wavelengths by linearly interpolating them onto the input grid.</p>
 <div class="admonition warning">
@@ -286,8 +290,8 @@ and wavelengths by linearly interpolating them onto the input grid.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="aerosol.ForwardScattering.make_nn_properties">
-<code class="sig-name descname"><span class="pre">make_nn_properties</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/aerosol.html#ForwardScattering.make_nn_properties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aerosol.ForwardScattering.make_nn_properties" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="aerosol.ForwardScattering.make_nn_properties">
+<span class="sig-name descname"><span class="pre">make_nn_properties</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/aerosol.html#ForwardScattering.make_nn_properties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aerosol.ForwardScattering.make_nn_properties" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make the forward scattering properties at the nearest neighbor
 particle sizes and wavelengths.</p>
 <dl class="field-list simple">
@@ -297,23 +301,23 @@ particle sizes and wavelengths.</p>
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt id="aerosol.ForwardScattering.scattering_cross_section">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">scattering_cross_section</span></code><a class="headerlink" href="#aerosol.ForwardScattering.scattering_cross_section" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="aerosol.ForwardScattering.scattering_cross_section">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">scattering_cross_section</span></span><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#aerosol.ForwardScattering.scattering_cross_section" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the scattering cross section on the new grid.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="aerosol.ForwardScattering.single_scattering_albedo">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">single_scattering_albedo</span></code><a class="headerlink" href="#aerosol.ForwardScattering.single_scattering_albedo" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="aerosol.ForwardScattering.single_scattering_albedo">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">single_scattering_albedo</span></span><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#aerosol.ForwardScattering.single_scattering_albedo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the single scattering albedo on the new grid.</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt id="aerosol.HenyeyGreenstein">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">aerosol.</span></code><code class="sig-name descname"><span class="pre">HenyeyGreenstein</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">asymmetry</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/aerosol.html#HenyeyGreenstein"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aerosol.HenyeyGreenstein" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="aerosol.HenyeyGreenstein">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">aerosol.</span></span><span class="sig-name descname"><span class="pre">HenyeyGreenstein</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">asymmetry</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/aerosol.html#HenyeyGreenstein"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aerosol.HenyeyGreenstein" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hold the HenyeyGreenstein asymmetry parameters.</p>
 <p>HenyeyGreenstein holds the asymmetry parameters and ensures they’re valid.
 It provides a method to convert these to Legendre polynomials.</p>
@@ -333,8 +337,8 @@ It provides a method to convert these to Legendre polynomials.</p>
 <div class="math notranslate nohighlight">
 \[p(\theta) = \frac{1}{4\pi} \frac{1 - g^2}{[1 + g^2 -2g \cos(\theta)]^{3/2}}\]</div>
 <dl class="py method">
-<dt id="aerosol.HenyeyGreenstein.legendre_decomposition">
-<code class="sig-name descname"><span class="pre">legendre_decomposition</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_moments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/aerosol.html#HenyeyGreenstein.legendre_decomposition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aerosol.HenyeyGreenstein.legendre_decomposition" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="aerosol.HenyeyGreenstein.legendre_decomposition">
+<span class="sig-name descname"><span class="pre">legendre_decomposition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_moments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/aerosol.html#HenyeyGreenstein.legendre_decomposition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aerosol.HenyeyGreenstein.legendre_decomposition" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the Legendre decomposition of the asymmetry parameters up to
 a given number of moments.</p>
 <dl class="field-list simple">
@@ -360,8 +364,8 @@ the 0 <sup>th</sup> coefficient is 1.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="aerosol.OpticalDepth">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">aerosol.</span></code><code class="sig-name descname"><span class="pre">OpticalDepth</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mixing_ratio_profile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_density_layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extinction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_integrated_optical_depth</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/aerosol.html#OpticalDepth"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aerosol.OpticalDepth" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="aerosol.OpticalDepth">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">aerosol.</span></span><span class="sig-name descname"><span class="pre">OpticalDepth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mixing_ratio_profile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_density_layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extinction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_integrated_optical_depth</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/aerosol.html#OpticalDepth"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aerosol.OpticalDepth" title="Permalink to this definition">¶</a></dt>
 <dd><p>A structure to compute the optical depth given profiles.</p>
 <p>OpticalDepth accepts a mixing ratio profile and atmospheric column density
 profile to compute the optical depth at each wavelength. It also accepts
@@ -381,17 +385,17 @@ integrated optical depth.</p>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
-<dl class="py method">
-<dt id="aerosol.OpticalDepth.total">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">total</span></code><a class="headerlink" href="#aerosol.OpticalDepth.total" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="aerosol.OpticalDepth.total">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">total</span></span><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#aerosol.OpticalDepth.total" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the total optical depth in each of the layers.</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt id="aerosol.TabularLegendreCoefficients">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">aerosol.</span></code><code class="sig-name descname"><span class="pre">TabularLegendreCoefficients</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coefficients</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_size_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelength_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_size_profile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelengths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_moments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/aerosol.html#TabularLegendreCoefficients"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aerosol.TabularLegendreCoefficients" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="aerosol.TabularLegendreCoefficients">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">aerosol.</span></span><span class="sig-name descname"><span class="pre">TabularLegendreCoefficients</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coefficients</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_size_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelength_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_size_profile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelengths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_moments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/aerosol.html#TabularLegendreCoefficients"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aerosol.TabularLegendreCoefficients" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a grid of Legendre coefficients (particle size, wavelength).</p>
 <p>TabularLegendreCoefficients accepts a 3D array of Legendre polynomial
 coefficients of the phase function that depend on particle size and
@@ -416,8 +420,8 @@ all available coefficients are used.</p></li>
 </dd>
 </dl>
 <dl class="py method">
-<dt id="aerosol.TabularLegendreCoefficients.make_linear_phase_function">
-<code class="sig-name descname"><span class="pre">make_linear_phase_function</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/aerosol.html#TabularLegendreCoefficients.make_linear_phase_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aerosol.TabularLegendreCoefficients.make_linear_phase_function" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="aerosol.TabularLegendreCoefficients.make_linear_phase_function">
+<span class="sig-name descname"><span class="pre">make_linear_phase_function</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/aerosol.html#TabularLegendreCoefficients.make_linear_phase_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aerosol.TabularLegendreCoefficients.make_linear_phase_function" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make the phase function by linearly interpolating between the input
 grid of particle sizes and wavelengths.</p>
 <dl class="field-list simple">
@@ -428,8 +432,8 @@ grid of particle sizes and wavelengths.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="aerosol.TabularLegendreCoefficients.make_nn_phase_function">
-<code class="sig-name descname"><span class="pre">make_nn_phase_function</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/aerosol.html#TabularLegendreCoefficients.make_nn_phase_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aerosol.TabularLegendreCoefficients.make_nn_phase_function" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="aerosol.TabularLegendreCoefficients.make_nn_phase_function">
+<span class="sig-name descname"><span class="pre">make_nn_phase_function</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/aerosol.html#TabularLegendreCoefficients.make_nn_phase_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aerosol.TabularLegendreCoefficients.make_nn_phase_function" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make the phase function at the nearest neighbor particle sizes and
 wavelengths.</p>
 <dl class="field-list simple">
@@ -439,17 +443,17 @@ wavelengths.</p>
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt id="aerosol.TabularLegendreCoefficients.phase_function">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">phase_function</span></code><a class="headerlink" href="#aerosol.TabularLegendreCoefficients.phase_function" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="aerosol.TabularLegendreCoefficients.phase_function">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">phase_function</span></span><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#aerosol.TabularLegendreCoefficients.phase_function" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the Legendre coefficients cast to the proper grid.</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt id="aerosol.Uniform">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">aerosol.</span></code><code class="sig-name descname"><span class="pre">Uniform</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">altitude</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bottom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/aerosol.html#Uniform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aerosol.Uniform" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="aerosol.Uniform">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">aerosol.</span></span><span class="sig-name descname"><span class="pre">Uniform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">altitude</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bottom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/aerosol.html#Uniform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aerosol.Uniform" title="Permalink to this definition">¶</a></dt>
 <dd><p>A structure to create a uniform profile(s).</p>
 <p>Uniform creates uniform volumetric mixing ratio profile(s) on an input
 grid of altitudes given a set of top and bottom altitudes.</p>
@@ -472,16 +476,16 @@ These are assumed to be decreasing to keep with DISORT’s convention.</p></li>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
-<dl class="py method">
-<dt id="aerosol.Uniform.profile">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">profile</span></code><a class="headerlink" href="#aerosol.Uniform.profile" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="aerosol.Uniform.profile">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">profile</span></span><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#aerosol.Uniform.profile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the uniform profile(s). This will have the same shape as
 <code class="docutils literal notranslate"><span class="pre">altitude</span></code>.</p>
 </dd></dl>
 
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>

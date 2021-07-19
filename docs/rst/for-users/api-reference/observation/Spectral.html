@@ -4,7 +4,8 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Spectral &mdash; pyRT_DISORT  documentation</title>
@@ -13,6 +14,8 @@
   
   <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +32,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/doctools.js"></script>
@@ -84,13 +88,13 @@
               
             
             
-              <p class="caption"><span class="caption-text">About this project</span></p>
+              <p class="caption" role="heading"><span class="caption-text">About this project</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../about-this-project/about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../about-this-project/about-DISORT.html">About DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../about-this-project/release-notes.html">Release notes</a></li>
 </ul>
-<p class="caption"><span class="caption-text">For users</span></p>
+<p class="caption" role="heading"><span class="caption-text">For users</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
@@ -116,7 +120,7 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">For contributors</span></p>
+<p class="caption" role="heading"><span class="caption-text">For contributors</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../for-contributors/contributions.html">Contributions</a></li>
 </ul>
@@ -190,11 +194,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="spectral">
+  <section id="spectral">
 <h1>Spectral<a class="headerlink" href="#spectral" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
-<dt id="observation.Spectral">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">observation.</span></code><code class="sig-name descname"><span class="pre">Spectral</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">short_wavelength</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long_wavelength</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/observation.html#Spectral"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#observation.Spectral" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="observation.Spectral">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">observation.</span></span><span class="sig-name descname"><span class="pre">Spectral</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">short_wavelength</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long_wavelength</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/observation.html#Spectral"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#observation.Spectral" title="Permalink to this definition">¶</a></dt>
 <dd><p>A data structure that contains spectral information required by DISORT.</p>
 <p>It accepts the short and long wavelengths from an observation and computes
 their corresponding wavenumbers. It can accommodate arrays of any shape as
@@ -202,8 +206,8 @@ long as they have the same shape.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>short_wavelength</strong> (<em>numpy.typing.ArrayLike</em>) – The short wavelength [microns] of each spectral bin.</p></li>
-<li><p><strong>long_wavelength</strong> (<em>numpy.typing.ArrayLike</em>) – The long wavelength [microns] of each spectral bin.</p></li>
+<li><p><strong>short_wavelength</strong> (<em>ArrayLike</em>) – The short wavelength [microns] of each spectral bin.</p></li>
+<li><p><strong>long_wavelength</strong> (<em>ArrayLike</em>) – The long wavelength [microns] of each spectral bin.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
@@ -215,9 +219,6 @@ long as they have the same shape.</p>
     contain values outside of 0.1 to 50 microns (I assume this is the
     valid range to do retrievals).</p></li>
 </ul>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -273,9 +274,9 @@ as many arrays as possible equally shaped.</p>
 <span class="go">True</span>
 </pre></div>
 </div>
-<dl class="py method">
-<dt id="observation.Spectral.high_wavenumber">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">high_wavenumber</span></code><a class="headerlink" href="#observation.Spectral.high_wavenumber" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="observation.Spectral.high_wavenumber">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">high_wavenumber</span></span><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#observation.Spectral.high_wavenumber" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the high wavenumber [cm <sup>-1</sup>]—the wavenumber
 corresponding to <code class="docutils literal notranslate"><span class="pre">short_wavelength</span></code>.</p>
 <p class="rubric">Notes</p>
@@ -285,9 +286,9 @@ in DISORT. It is only needed by DISORT if
 <code class="code docutils literal notranslate"><span class="pre">True</span></code>.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="observation.Spectral.low_wavenumber">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">low_wavenumber</span></code><a class="headerlink" href="#observation.Spectral.low_wavenumber" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="observation.Spectral.low_wavenumber">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">low_wavenumber</span></span><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#observation.Spectral.low_wavenumber" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the low wavenumber [cm <sup>-1</sup>]—the wavenumber corresponding
 to <code class="docutils literal notranslate"><span class="pre">long_wavelength</span></code>.</p>
 <p class="rubric">Notes</p>
@@ -299,7 +300,7 @@ in DISORT. It is only needed by DISORT if
 
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>
