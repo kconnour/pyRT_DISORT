@@ -1,0 +1,891 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>pyrt.aerosol &mdash; pyRT_DISORT  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> pyRT_DISORT
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">About this project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/about-this-project/about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/about-this-project/about-DISORT.html">About DISORT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/about-this-project/release-notes.html">Release notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For users</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/for-users/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/for-users/tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/for-users/api-reference.html">API reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For contributors</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/for-contributors/contributions.html">Contributions</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pyRT_DISORT</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>pyrt.aerosol</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pyrt.aerosol</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;The :code:`aerosol` module contains structures to make the aerosol properties</span>
+<span class="sd">required by DISORT.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># TODO: add parameter validators if these classes are ok</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">pyRT_DISORT.eos</span> <span class="kn">import</span> <span class="n">_Altitude</span>
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">interp2d</span>
+
+
+<div class="viewcode-block" id="Conrath"><a class="viewcode-back" href="../../rst/for-users/api-reference/aerosol.html#pyrt.aerosol.Conrath">[docs]</a><span class="k">class</span> <span class="nc">Conrath</span><span class="p">:</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;A structure to compute a Conrath profile(s).</span>
+
+<span class="sd">    Conrath creates Conrath profile(s) on an input grid of altitudes given a</span>
+<span class="sd">    volumetric mixing ratio and Conrath parameters.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">altitude</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">q0</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                 <span class="n">scale_height</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">nu</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        altitude</span>
+<span class="sd">            The altitude [km] at which to construct a Conrath profile.</span>
+<span class="sd">        q0</span>
+<span class="sd">            The surface mixing ratio for each of the Conrath profiles.</span>
+<span class="sd">        scale_height</span>
+<span class="sd">            The scale height [km] of each of the Conrath profiles.</span>
+<span class="sd">        nu</span>
+<span class="sd">            The nu parameter of each of the Conrath profiles.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        TypeError</span>
+<span class="sd">            Raised if any of the inputs are not a numpy.ndarray.</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            Raised if many things...</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        The Conrath profile is defined as</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">           q(z) = q_0 * e^{\nu(1 - e^{z/H})}</span>
+
+<span class="sd">        where :math:`q` is a volumetric mixing ratio, :math:`z` is the altitude,</span>
+<span class="sd">        :math:`\nu` is the Conrath nu parameter, and :math:`H` is the scale</span>
+<span class="sd">        height.</span>
+
+<span class="sd">        For an MxN array of pixels, :code:`q0`, :code:`scale_height`, and</span>
+<span class="sd">        :code:`nu` should be of shape MxN. :code:`altitude` should have shape</span>
+<span class="sd">        ZxMxN, where Z is the number of altitudes. Additionally, the units of</span>
+<span class="sd">        :code:`altitude` and :code:`scale_height` should be the same.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__altitude</span> <span class="o">=</span> <span class="n">_Altitude</span><span class="p">(</span><span class="n">altitude</span><span class="p">,</span> <span class="s1">&#39;altitude&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__q0</span> <span class="o">=</span> <span class="n">_ConrathParameter</span><span class="p">(</span><span class="n">q0</span><span class="p">,</span> <span class="s1">&#39;q0&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__H</span> <span class="o">=</span> <span class="n">_ConrathParameter</span><span class="p">(</span><span class="n">scale_height</span><span class="p">,</span> <span class="s1">&#39;scale_height&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__nu</span> <span class="o">=</span> <span class="n">_ConrathParameter</span><span class="p">(</span><span class="n">nu</span><span class="p">,</span> <span class="s1">&#39;nu&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_value_error_if_inputs_have_differing_shapes</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__profile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__make_profile</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__raise_value_error_if_inputs_have_differing_shapes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__altitude</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">__q0</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__H</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">__nu</span><span class="o">.</span><span class="n">shape</span><span class="p">):</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;All inputs must have the same shape along the pixel &#39;</span> \
+                      <span class="s1">&#39;dimension.&#39;</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__make_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="n">altitude_scaling</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__altitude</span><span class="o">.</span><span class="n">val</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">__H</span><span class="o">.</span><span class="n">val</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__q0</span><span class="o">.</span><span class="n">val</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__nu</span><span class="o">.</span><span class="n">val</span> <span class="o">*</span>
+                                      <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">altitude_scaling</span><span class="p">)))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">profile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the Conrath profile(s). This will have the same shape as</span>
+<span class="sd">        ``altitude``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__profile</span></div>
+
+
+<span class="k">class</span> <span class="nc">_ConrathParameter</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                 <span class="n">low</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">high</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__param</span> <span class="o">=</span> <span class="n">parameter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__low</span> <span class="o">=</span> <span class="n">low</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__high</span> <span class="o">=</span> <span class="n">high</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_error_if_param_is_bad</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__raise_error_if_param_is_bad</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_type_error_if_not_ndarray_or_float</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_value_error_if_not_in_range</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__raise_type_error_if_not_ndarray_or_float</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__param</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__name</span><span class="si">}</span><span class="s1"> must be a float or a numpy.ndarray.&#39;</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__raise_value_error_if_not_in_range</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__low</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__param</span><span class="p">)</span> <span class="ow">and</span>
+                <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__param</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__high</span><span class="p">))):</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__name</span><span class="si">}</span><span class="s1"> must be between </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__low</span><span class="si">}</span><span class="s1"> and &#39;</span> \
+                      <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__high</span><span class="si">}</span><span class="s1">.&#39;</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">val</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the value of the input wavelength.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">__param</span><span class="p">]))</span>
+
+
+<div class="viewcode-block" id="Uniform"><a class="viewcode-back" href="../../rst/for-users/api-reference/aerosol.html#pyrt.aerosol.Uniform">[docs]</a><span class="k">class</span> <span class="nc">Uniform</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;A structure to create a uniform profile(s).</span>
+
+<span class="sd">    Uniform creates uniform volumetric mixing ratio profile(s) on an input</span>
+<span class="sd">    grid of altitudes given a set of top and bottom altitudes.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">altitude</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">bottom</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                 <span class="n">top</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        altitude</span>
+<span class="sd">            The altitude *boundaries* at which to construct uniform profile(s).</span>
+<span class="sd">            These are assumed to be decreasing to keep with DISORT&#39;s convention.</span>
+<span class="sd">        bottom</span>
+<span class="sd">            The bottom altitudes of each of the profiles.</span>
+<span class="sd">        top</span>
+<span class="sd">            The top altitudes of each of the profiles.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        TypeError</span>
+<span class="sd">            Raised if any inputs are not a numpy.ndarray.</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            Raised if a number of things...</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__altitude</span> <span class="o">=</span> <span class="n">_Altitude</span><span class="p">(</span><span class="n">altitude</span><span class="p">,</span> <span class="s1">&#39;altitude&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__bottom</span> <span class="o">=</span> <span class="n">_UniformParameter</span><span class="p">(</span><span class="n">bottom</span><span class="p">,</span> <span class="s1">&#39;bottom&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__top</span> <span class="o">=</span> <span class="n">_UniformParameter</span><span class="p">(</span><span class="n">top</span><span class="p">,</span> <span class="s1">&#39;top&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__profile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__make_profile</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__raise_error_if_inputs_are_bad</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_value_error_if_inputs_have_differing_shapes</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_value_error_if_top_is_not_larger</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__raise_value_error_if_inputs_have_differing_shapes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__altitude</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">__top</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__bottom</span><span class="o">.</span><span class="n">shape</span><span class="p">):</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;All inputs must have the same shape along the pixel &#39;</span> \
+                      <span class="s1">&#39;dimension.&#39;</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__raise_value_error_if_top_is_not_larger</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__top</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">__bottom</span><span class="p">):</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;All values in top must be larger than the &#39;</span> \
+                      <span class="s1">&#39;corresponding values in bottom.&#39;</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__make_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="n">alt_dif</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__altitude</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">top_prof</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">__top</span><span class="o">.</span><span class="n">val</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">__altitude</span><span class="o">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span> <span class="o">/</span>
+                           <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">alt_dif</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">bottom_prof</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">__altitude</span><span class="o">.</span><span class="n">val</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">__bottom</span><span class="o">.</span><span class="n">val</span><span class="p">)</span> <span class="o">/</span>
+                              <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">alt_dif</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">top_prof</span> <span class="o">+</span> <span class="n">bottom_prof</span> <span class="o">-</span> <span class="mi">1</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">profile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the uniform profile(s). This will have the same shape as</span>
+<span class="sd">        ``altitude``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__profile</span></div>
+
+
+<span class="c1"># TODO: right now this just copies ConrathParameter. Think of a more general</span>
+<span class="c1">#  name or make the classes different.</span>
+<span class="k">class</span> <span class="nc">_UniformParameter</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__param</span> <span class="o">=</span> <span class="n">parameter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__name</span> <span class="o">=</span> <span class="n">name</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_error_if_param_is_bad</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__raise_error_if_param_is_bad</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_type_error_if_not_ndarray</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__raise_type_error_if_not_ndarray_or_float</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__param</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__name</span><span class="si">}</span><span class="s1"> must be a float or numpy.ndarray.&#39;</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">val</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the value of the input wavelength.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">__param</span><span class="p">]))</span>
+
+
+<span class="k">class</span> <span class="nc">_ForwardScatteringProperty</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;An abstract class to check something is a forward scattering property.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">particle_size</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                 <span class="n">wavelength</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__parameter</span> <span class="o">=</span> <span class="n">parameter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__particle_size</span> <span class="o">=</span> <span class="n">particle_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__wavelength</span> <span class="o">=</span> <span class="n">wavelength</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__name</span> <span class="o">=</span> <span class="n">name</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_error_if_inputs_are_bad</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__raise_error_if_inputs_are_bad</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_type_error_if_parameter_is_not_ndarray</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_value_error_if_shapes_do_not_match</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__raise_type_error_if_parameter_is_not_ndarray</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__parameter</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__name</span><span class="si">}</span><span class="s1"> must be a numpy.ndarray.&#39;</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__raise_value_error_if_shapes_do_not_match</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__parameter</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__name</span><span class="si">}</span><span class="s1"> must be a 2D array.&#39;</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__parameter</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__particle_size</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;parameter does not match particle size shape&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__parameter</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__wavelength</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;parameter does not match wavelength shape.&#39;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">parameter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__parameter</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">particle_size</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__particle_size</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">wavelength</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__wavelength</span>
+
+
+<span class="k">class</span> <span class="nc">_Interpolator</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;A structure to get values over a grid.</span>
+
+<span class="sd">    Interpolator accepts an array of coefficients, along with the 1D particle</span>
+<span class="sd">    size and wavelength grid over which they&#39;re defined. It contains methods</span>
+<span class="sd">    to interpolate onto a new grid.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coefficient</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                 <span class="n">particle_size_grid</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">wavelength_grid</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                 <span class="n">particle_size</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">wavelength</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        coefficient</span>
+<span class="sd">            ND array of coefficients to interpolate over. axis=-1 is assumed</span>
+<span class="sd">            to be the wavelength dimension and axis=-2 is assumed to be the</span>
+<span class="sd">            particle size dimension.</span>
+<span class="sd">        particle_size_grid</span>
+<span class="sd">            1D array of particle sizes over which the above properties are</span>
+<span class="sd">            defined.</span>
+<span class="sd">        wavelength_grid</span>
+<span class="sd">            1D array of wavelengths over which the above properties are defined.</span>
+<span class="sd">        particle_size</span>
+<span class="sd">            1D array of particle sizes to regrid the properties onto.</span>
+<span class="sd">        wavelength</span>
+<span class="sd">            1D array of wavelengths to regrid the properties onto.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__coeff</span> <span class="o">=</span> <span class="n">coefficient</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__pgrid</span> <span class="o">=</span> <span class="n">particle_size_grid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__wgrid</span> <span class="o">=</span> <span class="n">wavelength_grid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__particle_size</span> <span class="o">=</span> <span class="n">particle_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__wavelength</span> <span class="o">=</span> <span class="n">wavelength</span>
+
+    <span class="k">def</span> <span class="nf">nearest_neighbor</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the input coefficients at the input particle sizes and</span>
+<span class="sd">        wavelengths using nearest neighbor interpolation to the input particle</span>
+<span class="sd">        size and wavelength grid.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">size_indices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_nearest_indices</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__pgrid</span><span class="p">,</span>
+                                                  <span class="bp">self</span><span class="o">.</span><span class="n">__particle_size</span><span class="p">)</span>
+        <span class="n">wavelength_indices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_nearest_indices</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__wgrid</span><span class="p">,</span>
+                                                        <span class="bp">self</span><span class="o">.</span><span class="n">__wavelength</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__coeff</span><span class="p">,</span> <span class="n">size_indices</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">2</span><span class="p">),</span>
+                       <span class="n">wavelength_indices</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">linear</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="n">intpf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">__coeff</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">__particle_size</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">__wavelength</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">intpf</span><span class="p">)):</span>
+            <span class="n">pf</span> <span class="o">=</span> <span class="n">interp2d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__pgrid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__wgrid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__coeff</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+            <span class="n">intpf</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">pf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__particle_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__wavelength</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+        <span class="k">return</span> <span class="n">intpf</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__get_nearest_indices</span><span class="p">(</span><span class="n">grid</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="c1"># grid should be 1D; values can be ND</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">subtract</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="n">values</span><span class="p">))</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="ForwardScattering"><a class="viewcode-back" href="../../rst/for-users/api-reference/aerosol.html#pyrt.aerosol.ForwardScattering">[docs]</a><span class="k">class</span> <span class="nc">ForwardScattering</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;A structure to store forward scattering properties.</span>
+
+<span class="sd">    ForwardScattering will simply hang on to forward scattering properties and</span>
+<span class="sd">    provides methods to regrid them into the input particle size profile and</span>
+<span class="sd">    wavelengths.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scattering_cross_section</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                 <span class="n">extinction_cross_section</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                 <span class="n">particle_size_grid</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">wavelength_grid</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                 <span class="n">particle_size</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                 <span class="n">wavelength</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                 <span class="n">reference_wavelength</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        scattering_cross_section</span>
+<span class="sd">            2D array of the scattering cross section (the 0th axis is assumed to</span>
+<span class="sd">            be the particle size axis, while the 1st axis is assumed to be the</span>
+<span class="sd">            wavelength axis).</span>
+<span class="sd">        extinction_cross_section</span>
+<span class="sd">            2D array of the extinction cross section with same dims as above.</span>
+<span class="sd">        particle_size_grid</span>
+<span class="sd">            1D array of particle sizes over which the above properties are</span>
+<span class="sd">            defined.</span>
+<span class="sd">        wavelength_grid</span>
+<span class="sd">            1D array of wavelengths over which the above properties are defined.</span>
+<span class="sd">        particle_size</span>
+<span class="sd">            1D array of particle sizes to regrid the properties onto.</span>
+<span class="sd">        wavelength</span>
+<span class="sd">            1D array of wavelengths to regrid the properties onto.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__c_sca</span> <span class="o">=</span> <span class="n">_ForwardScatteringProperty</span><span class="p">(</span>
+            <span class="n">scattering_cross_section</span><span class="p">,</span> <span class="n">particle_size_grid</span><span class="p">,</span> <span class="n">wavelength_grid</span><span class="p">,</span>
+            <span class="s1">&#39;scattering&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__c_ext</span> <span class="o">=</span> <span class="n">_ForwardScatteringProperty</span><span class="p">(</span>
+            <span class="n">extinction_cross_section</span><span class="p">,</span> <span class="n">particle_size_grid</span><span class="p">,</span> <span class="n">wavelength_grid</span><span class="p">,</span>
+            <span class="s1">&#39;extinction&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__particle_size</span> <span class="o">=</span> <span class="n">particle_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__wavelength</span> <span class="o">=</span> <span class="n">wavelength</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__wave_ref</span> <span class="o">=</span> <span class="n">reference_wavelength</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__gridded_c_scattering</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__gridded_c_extinction</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__gridded_ssa</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__extinction</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+
+<div class="viewcode-block" id="ForwardScattering.make_nn_properties"><a class="viewcode-back" href="../../rst/for-users/api-reference/aerosol.html#pyrt.aerosol.ForwardScattering.make_nn_properties">[docs]</a>    <span class="k">def</span> <span class="nf">make_nn_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Make the forward scattering properties at the nearest neighbor</span>
+<span class="sd">        particle sizes and wavelengths.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__gridded_c_scattering</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__make_gridded_c_scattering</span><span class="p">(</span><span class="s1">&#39;nn&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__gridded_c_extinction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__make_gridded_c_extinction</span><span class="p">(</span><span class="s1">&#39;nn&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__gridded_ssa</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__make_gridded_ssa</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__extinction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__make_extinction_grid</span><span class="p">(</span><span class="s1">&#39;nn&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ForwardScattering.make_linear_properties"><a class="viewcode-back" href="../../rst/for-users/api-reference/aerosol.html#pyrt.aerosol.ForwardScattering.make_linear_properties">[docs]</a>    <span class="k">def</span> <span class="nf">make_linear_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Make the forward scattering properties at the input particle sizes</span>
+<span class="sd">        and wavelengths by linearly interpolating them onto the input grid.</span>
+
+<span class="sd">        .. warning::</span>
+<span class="sd">           Due to a known bug, this does not work!</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__gridded_c_scattering</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__make_gridded_c_scattering</span><span class="p">(</span><span class="s1">&#39;linear&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__gridded_c_extinction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__make_gridded_c_extinction</span><span class="p">(</span><span class="s1">&#39;linear&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__gridded_ssa</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__make_gridded_ssa</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__extinction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__make_extinction_grid</span><span class="p">(</span><span class="s1">&#39;linear&#39;</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__make_gridded_c_scattering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kind</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="n">interp</span> <span class="o">=</span> <span class="n">_Interpolator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__c_sca</span><span class="o">.</span><span class="n">parameter</span><span class="p">,</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">__c_sca</span><span class="o">.</span><span class="n">particle_size</span><span class="p">,</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">__c_sca</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__particle_size</span><span class="p">,</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">__wavelength</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__interpolate_by_kind</span><span class="p">(</span><span class="n">interp</span><span class="p">,</span> <span class="n">kind</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__make_gridded_c_extinction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kind</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="n">interp</span> <span class="o">=</span> <span class="n">_Interpolator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__c_ext</span><span class="o">.</span><span class="n">parameter</span><span class="p">,</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">__c_ext</span><span class="o">.</span><span class="n">particle_size</span><span class="p">,</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">__c_ext</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__particle_size</span><span class="p">,</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">__wavelength</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__interpolate_by_kind</span><span class="p">(</span><span class="n">interp</span><span class="p">,</span> <span class="n">kind</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__make_gridded_ssa</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__gridded_c_scattering</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">__gridded_c_extinction</span>
+
+    <span class="k">def</span> <span class="nf">__make_extinction_grid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kind</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Make a grid of the extinction cross section at a reference wavelength.</span>
+<span class="sd">        This is the extinction cross section at the input wavelengths divided by</span>
+<span class="sd">        the extinction cross section at the reference wavelength.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">interp</span> <span class="o">=</span> <span class="n">_Interpolator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__c_ext</span><span class="o">.</span><span class="n">parameter</span><span class="p">,</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">__c_ext</span><span class="o">.</span><span class="n">particle_size</span><span class="p">,</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">__c_ext</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__particle_size</span><span class="p">,</span>
+                               <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">__wave_ref</span><span class="p">]))</span>
+        <span class="n">extinction_profile</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__interpolate_by_kind</span><span class="p">(</span><span class="n">interp</span><span class="p">,</span> <span class="n">kind</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__gridded_c_extinction</span><span class="o">.</span><span class="n">T</span> <span class="o">/</span> <span class="n">extinction_profile</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__interpolate_by_kind</span><span class="p">(</span><span class="n">interp</span><span class="p">:</span> <span class="n">_Interpolator</span><span class="p">,</span> <span class="n">kind</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="c1"># TODO: in python3.10 do a switch case</span>
+        <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s1">&#39;nn&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">interp</span><span class="o">.</span><span class="n">nearest_neighbor</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">kind</span> <span class="o">==</span> <span class="s1">&#39;linear&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">interp</span><span class="o">.</span><span class="n">linear</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">scattering_cross_section</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the scattering cross section on the new grid.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__gridded_c_scattering</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">extinction_cross_section</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the extinction cross section on the new grid.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__gridded_c_extinction</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">single_scattering_albedo</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the single scattering albedo on the new grid.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__gridded_ssa</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">extinction</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the extinction coefficient at the reference wavelength on the new</span>
+<span class="sd">        grid.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__extinction</span></div>
+
+
+<div class="viewcode-block" id="OpticalDepth"><a class="viewcode-back" href="../../rst/for-users/api-reference/aerosol.html#pyrt.aerosol.OpticalDepth">[docs]</a><span class="k">class</span> <span class="nc">OpticalDepth</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;A structure to compute the optical depth given profiles.</span>
+
+<span class="sd">    OpticalDepth accepts a mixing ratio profile and atmospheric column density</span>
+<span class="sd">    profile to compute the optical depth at each wavelength. It also accepts</span>
+<span class="sd">    an extinction profile to scale the optical depth to a reference wavelength,</span>
+<span class="sd">    and ensures that the sum over the layers is equal to the total column</span>
+<span class="sd">    integrated optical depth.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mixing_ratio_profile</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                 <span class="n">column_density_layers</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                 <span class="n">extinction</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                 <span class="n">column_integrated_optical_depth</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        mixing_ratio_profile</span>
+<span class="sd">            1D array of mixing ratio.</span>
+<span class="sd">        column_density_layers</span>
+<span class="sd">            1D array of the column density in the layers.</span>
+<span class="sd">        extinction</span>
+<span class="sd">            2D array of extinction coefficients.</span>
+<span class="sd">        column_integrated_optical_depth</span>
+<span class="sd">            The total column integrated optical depth.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__q_prof</span> <span class="o">=</span> <span class="n">mixing_ratio_profile</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__colden</span> <span class="o">=</span> <span class="n">column_density_layers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__extinction</span> <span class="o">=</span> <span class="n">extinction</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__OD</span> <span class="o">=</span> <span class="n">column_integrated_optical_depth</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__optical_depth</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__calculate_total_optical_depth</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__calculate_total_optical_depth</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="n">normalization</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__q_prof</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">__colden</span><span class="p">)</span>
+        <span class="n">profile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__q_prof</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">__colden</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">__OD</span> <span class="o">/</span> <span class="n">normalization</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">profile</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">__extinction</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">total</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the total optical depth in each of the layers.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__optical_depth</span></div>
+
+
+<div class="viewcode-block" id="TabularLegendreCoefficients"><a class="viewcode-back" href="../../rst/for-users/api-reference/aerosol.html#pyrt.aerosol.TabularLegendreCoefficients">[docs]</a><span class="k">class</span> <span class="nc">TabularLegendreCoefficients</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Create a grid of Legendre coefficients (particle size, wavelength).</span>
+
+<span class="sd">    TabularLegendreCoefficients accepts a 3D array of Legendre polynomial</span>
+<span class="sd">    coefficients of the phase function that depend on particle size and</span>
+<span class="sd">    wavelength and casts them to an array of the proper shape for use in DISORT</span>
+<span class="sd">    given a vertical particle size gradient.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coefficients</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">particle_size_grid</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                 <span class="n">wavelength_grid</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">particle_size_profile</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                 <span class="n">wavelengths</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">max_moments</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        coefficients</span>
+<span class="sd">            3D array of Legendre coefficients that depend on particle</span>
+<span class="sd">            size and wavelength. It is assumed to have shape [n_moments,</span>
+<span class="sd">            particle_size_grid, wavelength_grid]</span>
+<span class="sd">        particle_size_grid</span>
+<span class="sd">            1D array of particle sizes associated with the coefficients matrix.</span>
+<span class="sd">        wavelength_grid</span>
+<span class="sd">            1D array of wavelengths associated with the coefficients matrix.</span>
+<span class="sd">        wavelengths</span>
+<span class="sd">            ND array of wavelengths where to cast coefficients to.</span>
+<span class="sd">        particle_size_profile</span>
+<span class="sd">            1D array of particle sizes.</span>
+<span class="sd">        max_moments</span>
+<span class="sd">            The maximum number of coefficients to use in the array. If None,</span>
+<span class="sd">            all available coefficients are used.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__coefficients</span> <span class="o">=</span> <span class="n">coefficients</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__particle_grid</span> <span class="o">=</span> <span class="n">particle_size_grid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__wavelength_grid</span> <span class="o">=</span> <span class="n">wavelength_grid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__particle_profile</span> <span class="o">=</span> <span class="n">particle_size_profile</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__wavelengths</span> <span class="o">=</span> <span class="n">wavelengths</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__n_layers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__make_n_layers</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__n_moments</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__make_n_moments</span><span class="p">(</span><span class="n">max_moments</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__phase_function</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+
+    <span class="k">def</span> <span class="nf">__make_n_layers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__particle_grid</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__make_n_moments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_moments</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__coefficients</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">max_moments</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">max_moments</span>
+
+    <span class="k">def</span> <span class="nf">__normalize_coefficients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unnormalized_coefficients</span><span class="p">):</span>
+        <span class="n">coeff</span> <span class="o">=</span> <span class="n">unnormalized_coefficients</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">__n_moments</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">moment_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__n_moments</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__n_moments</span><span class="p">)</span>
+        <span class="n">normalization</span> <span class="o">=</span> <span class="n">moment_indices</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">coeff</span><span class="o">.</span><span class="n">T</span> <span class="o">/</span> <span class="n">normalization</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+
+<div class="viewcode-block" id="TabularLegendreCoefficients.make_nn_phase_function"><a class="viewcode-back" href="../../rst/for-users/api-reference/aerosol.html#pyrt.aerosol.TabularLegendreCoefficients.make_nn_phase_function">[docs]</a>    <span class="k">def</span> <span class="nf">make_nn_phase_function</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Make the phase function at the nearest neighbor particle sizes and</span>
+<span class="sd">        wavelengths.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__make_phase_function</span><span class="p">(</span><span class="s1">&#39;nn&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TabularLegendreCoefficients.make_linear_phase_function"><a class="viewcode-back" href="../../rst/for-users/api-reference/aerosol.html#pyrt.aerosol.TabularLegendreCoefficients.make_linear_phase_function">[docs]</a>    <span class="k">def</span> <span class="nf">make_linear_phase_function</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Make the phase function by linearly interpolating between the input</span>
+<span class="sd">        grid of particle sizes and wavelengths.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__make_phase_function</span><span class="p">(</span><span class="s1">&#39;linear&#39;</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__make_phase_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kind</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">interp</span> <span class="o">=</span> <span class="n">_Interpolator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__coefficients</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__particle_grid</span><span class="p">,</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">__wavelength_grid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__particle_profile</span><span class="p">,</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">__wavelengths</span><span class="p">)</span>
+
+        <span class="c1"># TODO: in python3.10 do a switch case</span>
+        <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s1">&#39;nn&#39;</span><span class="p">:</span>
+            <span class="n">pf</span> <span class="o">=</span> <span class="n">interp</span><span class="o">.</span><span class="n">nearest_neighbor</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">kind</span> <span class="o">==</span> <span class="s1">&#39;linear&#39;</span><span class="p">:</span>
+            <span class="n">pf</span> <span class="o">=</span> <span class="n">interp</span><span class="o">.</span><span class="n">linear</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__phase_function</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__normalize_coefficients</span><span class="p">(</span><span class="n">pf</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">phase_function</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the Legendre coefficients cast to the proper grid.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__phase_function</span></div>
+
+
+<div class="viewcode-block" id="HenyeyGreenstein"><a class="viewcode-back" href="../../rst/for-users/api-reference/aerosol.html#pyrt.aerosol.HenyeyGreenstein">[docs]</a><span class="k">class</span> <span class="nc">HenyeyGreenstein</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Hold the HenyeyGreenstein asymmetry parameters.</span>
+
+<span class="sd">    HenyeyGreenstein holds the asymmetry parameters and ensures they&#39;re valid.</span>
+<span class="sd">    It provides a method to convert these to Legendre polynomials.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">asymmetry</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        asymmetry</span>
+<span class="sd">            The asymmetry parameter.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            Raised if the asymmetry parameter is not between -1 and 1.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        The Henyey-Greenstein phase function is defined as follows</span>
+
+<span class="sd">        .. math::</span>
+<span class="sd">           p(\theta) = \frac{1}{4\pi} \frac{1 - g^2}{[1 + g^2 -2g \cos(\theta)]^{3/2}}</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__g</span> <span class="o">=</span> <span class="n">asymmetry</span>
+        <span class="n">_HGAsymmetryParameter</span><span class="p">(</span><span class="n">asymmetry</span><span class="p">)</span>
+
+<div class="viewcode-block" id="HenyeyGreenstein.legendre_decomposition"><a class="viewcode-back" href="../../rst/for-users/api-reference/aerosol.html#pyrt.aerosol.HenyeyGreenstein.legendre_decomposition">[docs]</a>    <span class="k">def</span> <span class="nf">legendre_decomposition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_moments</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Get the Legendre decomposition of the asymmetry parameters up to</span>
+<span class="sd">        a given number of moments.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        n_moments</span>
+<span class="sd">            The maximum number of moments to get the coefficients for (not</span>
+<span class="sd">            including the 0th moment).</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        The Legendre decomposition is actually quite simple. The phase function</span>
+<span class="sd">        can be decomposed as follows</span>
+
+<span class="sd">        .. math::</span>
+<span class="sd">           p(\mu) = \sum_{n=0}^{\infty} (2n + 1)g^n P_n(\mu)</span>
+
+<span class="sd">        where :math:`n` is the moment number, :math:`g` is the asymmetry</span>
+<span class="sd">        parameter, and :math:`P_n(\mu)` is the :math:`n`:sup:`th` Legendre</span>
+<span class="sd">        polynomial. I&#39;m not a mathematician so if :math:`g=0` I still assume</span>
+<span class="sd">        the 0 :sup:`th` coefficient is 1.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">moments</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_moments</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="n">n_moments</span><span class="p">)</span>
+        <span class="n">coeff</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">moments</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__g</span><span class="p">,</span> <span class="n">moments</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">coeff</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div></div>
+
+
+<span class="k">class</span> <span class="nc">_HGAsymmetryParameter</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">asymmetry</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__g</span> <span class="o">=</span> <span class="n">asymmetry</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_value_error_if_parameter_not_in_valid_range</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__raise_value_error_if_parameter_not_in_valid_range</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__g</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__g</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;asymmetry must be in range [-1, 1].&#39;</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, kconnour.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

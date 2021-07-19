@@ -1,3 +1,3 @@
 make_azimuth
 ============
-.. autofunction:: observation.make_azimuth
+.. autofunction:: pyrt.observation.make_azimuth

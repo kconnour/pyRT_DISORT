@@ -4,8 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>The aerosol module &mdash; pyRT_DISORT  documentation</title>
@@ -118,7 +117,6 @@
 <li class="toctree-l3"><a class="reference internal" href="retrieval.html">Retrieval</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../rover_retrieval.html">Rover Retrieval</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../api-reference.html">API reference</a></li>
@@ -197,15 +195,15 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="the-aerosol-module">
+  <div class="section" id="the-aerosol-module">
 <h1>The aerosol module<a class="headerlink" href="#the-aerosol-module" title="Permalink to this headline">¶</a></h1>
 <p>We just created 3 arrays for Rayleigh scattering; now, we need to make the same
 arrays for dust.</p>
-<section id="conrath">
+<div class="section" id="conrath">
 <h2>Conrath<a class="headerlink" href="#conrath" title="Permalink to this headline">¶</a></h2>
 <p>First, we need to define a vertical volumetric mixing ratio profile for dust.
 A Conrath profile was invented specifically for Martian dust, so let’s use
-<a class="reference internal" href="../../api-reference/aerosol.html#aerosol.Conrath" title="aerosol.Conrath"><code class="xref py py-class docutils literal notranslate"><span class="pre">Conrath</span></code></a> to make the profile. For our retrieval, this
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Conrath</span></code> to make the profile. For our retrieval, this
 profile will be used to define the aerosol weighting within the <em>layers</em>. Let’s
 assume the midpoint altitudes are a good representation of the layer altitudes
 and construct them here.</p>
@@ -227,12 +225,12 @@ property</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This module also comes with <a class="reference internal" href="../../api-reference/aerosol.html#aerosol.Uniform" title="aerosol.Uniform"><code class="xref py py-class docutils literal notranslate"><span class="pre">Uniform</span></code></a> to make constant
+<p>This module also comes with <code class="xref py py-class docutils literal notranslate"><span class="pre">Uniform</span></code> to make constant
 mixing ratio profiles. This may be more applicable to water-ice clouds so we
 won’t use it here, but it’s worth mentioning its existence.</p>
 </div>
-</section>
-<section id="forwardscattering">
+</div>
+<div class="section" id="forwardscattering">
 <h2>ForwardScattering<a class="headerlink" href="#forwardscattering" title="Permalink to this headline">¶</a></h2>
 <p>The last preparation step we need to do is define the aerosol’s forward
 scattering properties. I assume that all forward scattering properties are a
@@ -263,7 +261,7 @@ This value will come in handy when creating the optical depth profile.</p>
 <p>Finally, the particle sizes and wavelengths at which the properties are defined
 aren’t necessarily the ones we want to use, so we also need to include a grid
 of particle sizes and wavelengths to regrid the forward scattering properties
-onto. We can do this with <a class="reference internal" href="../../api-reference/aerosol.html#aerosol.ForwardScattering" title="aerosol.ForwardScattering"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForwardScattering</span></code></a>.</p>
+onto. We can do this with <code class="xref py py-class docutils literal notranslate"><span class="pre">ForwardScattering</span></code>.</p>
 <div class="admonition caution">
 <p class="admonition-title">Caution</p>
 <p>The particle size grid should be the same shape as the number of layers in
@@ -300,11 +298,11 @@ properties. Here, I’ll use nearest neighbor.</p>
 <p>We’ve now defined the single scattering albedo at the nearest neighbor grid
 points. Since we have the extinction (<code class="docutils literal notranslate"><span class="pre">dust_ext</span></code>) we can create the optical
 depth array.</p>
-</section>
-<section id="opticaldepth">
+</div>
+<div class="section" id="opticaldepth">
 <h2>OpticalDepth<a class="headerlink" href="#opticaldepth" title="Permalink to this headline">¶</a></h2>
 <p>Now that we have the extinction profile from <code class="code docutils literal notranslate"><span class="pre">fs</span></code>, we can make the array
-of optical depth with <a class="reference internal" href="../../api-reference/aerosol.html#aerosol.OpticalDepth" title="aerosol.OpticalDepth"><code class="xref py py-class docutils literal notranslate"><span class="pre">OpticalDepth</span></code></a>. I’ll plug in everything
+of optical depth with <code class="xref py py-class docutils literal notranslate"><span class="pre">OpticalDepth</span></code>. I’ll plug in everything
 and let it calculate. Essentially, all it needs to know to compute the optical
 depth is the the vertical mixing ratio profile along with the column density in
 each layer. It’ll allocate the optical such that the total optical depth sums
@@ -331,11 +329,11 @@ just the ratio of the extinction coefficient at the wavelength divided by
 the extinction coefficient at the reference wavelength, summed over all the
 layers.</p>
 </div>
-</section>
-<section id="tabularlegendrecoefficients">
+</div>
+<div class="section" id="tabularlegendrecoefficients">
 <h2>TabularLegendreCoefficients<a class="headerlink" href="#tabularlegendrecoefficients" title="Permalink to this headline">¶</a></h2>
 <p>Now, we just need to make the phase function, which we can do with
-<a class="reference internal" href="../../api-reference/aerosol.html#aerosol.TabularLegendreCoefficients" title="aerosol.TabularLegendreCoefficients"><code class="xref py py-class docutils literal notranslate"><span class="pre">TabularLegendreCoefficients</span></code></a>. This class will essentially work
+<code class="xref py py-class docutils literal notranslate"><span class="pre">TabularLegendreCoefficients</span></code>. This class will essentially work
 the same way that <code class="docutils literal notranslate"><span class="pre">ForwardScattering</span></code> did—it will simply hang on to an
 array of Legendre coefficients, the grid over which they’re defined, and the
 grid to regrid them onto. Let’s go ahead and do that here.</p>
@@ -370,14 +368,14 @@ phase function, but suppose you want to use an analytic phase function like
 Henyey-Greenstein. In this case the Legendre coefficients are determined
 by the asymmetry parameter at particle sizes and wavelengths. You’d want to
 turn the asymmetry parameter into Legendre coefficients (see
-<a class="reference internal" href="../../api-reference/aerosol.html#aerosol.HenyeyGreenstein" title="aerosol.HenyeyGreenstein"><code class="xref py py-class docutils literal notranslate"><span class="pre">HenyeyGreenstein</span></code></a> to do this). After doing this we have an
+<code class="xref py py-class docutils literal notranslate"><span class="pre">HenyeyGreenstein</span></code> to do this). After doing this we have an
 array that’s functionally identical to the empirical coefficients we defined
 above—Legendre coefficients and the particle size and wavelength grid over
 which they’re defined, so you can put the newly created Legendre coefficient
 array into <code class="docutils literal notranslate"><span class="pre">TabularLegendreCoefficients</span></code> and be good to go.</p>
 </div>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>

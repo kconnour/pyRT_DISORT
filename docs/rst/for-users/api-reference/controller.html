@@ -4,8 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Controller &mdash; pyRT_DISORT  documentation</title>
@@ -184,13 +183,13 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="module-controller">
-<span id="controller"></span><h1>Controller<a class="headerlink" href="#module-controller" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-pyrt.controller">
+<span id="controller"></span><h1>Controller<a class="headerlink" href="#module-pyrt.controller" title="Permalink to this headline">¶</a></h1>
 <p>The <code class="code docutils literal notranslate"><span class="pre">controller</span></code> module holds miscellaneous classes responsible for
 creating variables that control how DISORT runs.</p>
 <dl class="py class">
-<dt class="sig sig-object py" id="controller.ComputationalParameters">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">controller.</span></span><span class="sig-name descname"><span class="pre">ComputationalParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_moments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_streams</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_azimuth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_polar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_user_levels</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/controller.html#ComputationalParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.ComputationalParameters" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.controller.ComputationalParameters">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pyrt.controller.</span></span><span class="sig-name descname"><span class="pre">ComputationalParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_moments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_streams</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_azimuth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_polar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_user_levels</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/pyrt/controller.html#ComputationalParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrt.controller.ComputationalParameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>A data structure for holding the size of computational parameters.</p>
 <p>ComputationalParameters holds the number of model layers, streams, moments,
 and angles. It also performs basic checks that these values are plausible.
@@ -230,8 +229,8 @@ n_moments.</p>
 </dl>
 </div>
 <dl class="py property">
-<dt class="sig sig-object py" id="controller.ComputationalParameters.n_azimuth">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">n_azimuth</span></span><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><a class="headerlink" href="#controller.ComputationalParameters.n_azimuth" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.controller.ComputationalParameters.n_azimuth">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">n_azimuth</span></span><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><a class="headerlink" href="#pyrt.controller.ComputationalParameters.n_azimuth" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input number of azimuthal angles.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">MAXPHI</span></code> (though in the
@@ -239,8 +238,8 @@ n_moments.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="controller.ComputationalParameters.n_layers">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">n_layers</span></span><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><a class="headerlink" href="#controller.ComputationalParameters.n_layers" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.controller.ComputationalParameters.n_layers">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">n_layers</span></span><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><a class="headerlink" href="#pyrt.controller.ComputationalParameters.n_layers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input number of layers.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">MAXCLY</span></code> (though in the
@@ -249,8 +248,8 @@ n_moments.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="controller.ComputationalParameters.n_moments">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">n_moments</span></span><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><a class="headerlink" href="#controller.ComputationalParameters.n_moments" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.controller.ComputationalParameters.n_moments">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">n_moments</span></span><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><a class="headerlink" href="#pyrt.controller.ComputationalParameters.n_moments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input number of moments.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">MAXMOM</span></code> (though in the
@@ -258,18 +257,18 @@ n_moments.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="controller.ComputationalParameters.n_polar">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">n_polar</span></span><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><a class="headerlink" href="#controller.ComputationalParameters.n_polar" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.controller.ComputationalParameters.n_polar">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">n_polar</span></span><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><a class="headerlink" href="#pyrt.controller.ComputationalParameters.n_polar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input number of user_specified polar angles.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">MAXUMU</span></code> (though in the
 <code class="code docutils literal notranslate"><span class="pre">disort</span></code> package, this variable is optional). Only used by DISORT
-if <a class="reference internal" href="output.html#output.OutputBehavior.user_angles" title="output.OutputBehavior.user_angles"><code class="xref py py-attr docutils literal notranslate"><span class="pre">user_angles</span></code></a> is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+if <code class="xref py py-attr docutils literal notranslate"><span class="pre">user_angles</span></code> is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="controller.ComputationalParameters.n_streams">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">n_streams</span></span><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><a class="headerlink" href="#controller.ComputationalParameters.n_streams" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.controller.ComputationalParameters.n_streams">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">n_streams</span></span><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><a class="headerlink" href="#pyrt.controller.ComputationalParameters.n_streams" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input number of streams.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">MAXCMU</span></code> (though in the
@@ -278,23 +277,23 @@ streams used the more accurate DISORT’s computations will be.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="controller.ComputationalParameters.n_user_levels">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">n_user_levels</span></span><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><a class="headerlink" href="#controller.ComputationalParameters.n_user_levels" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.controller.ComputationalParameters.n_user_levels">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">n_user_levels</span></span><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><a class="headerlink" href="#pyrt.controller.ComputationalParameters.n_user_levels" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input number of user levels.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">MAXULV</span></code> (though in the
 <code class="code docutils literal notranslate"><span class="pre">disort</span></code> package, this variable is optional).</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="output.html#output.UserLevel" title="output.UserLevel"><code class="xref py py-class docutils literal notranslate"><span class="pre">UserLevel</span></code></a></p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">UserLevel</span></code></p>
 </div>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="controller.ModelBehavior">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">controller.</span></span><span class="sig-name descname"><span class="pre">ModelBehavior</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">accuracy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_m_plus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_pseudo_sphere</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_variables</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6371.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/controller.html#ModelBehavior"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#controller.ModelBehavior" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.controller.ModelBehavior">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pyrt.controller.</span></span><span class="sig-name descname"><span class="pre">ModelBehavior</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">accuracy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_m_plus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_pseudo_sphere</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_variables</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6371.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/pyrt/controller.html#ModelBehavior"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrt.controller.ModelBehavior" title="Permalink to this definition">¶</a></dt>
 <dd><p>A data structure for holding the DISORT control variables.</p>
 <p>ModelBehavior holds the control flags that dictate DISORT’s behavior. It
 also performs basic checks that the input control options are plausible.</p>
@@ -326,7 +325,7 @@ booleans control whether each of the following is printed:</p>
 <li><p>Intensities at user levels and angles</p></li>
 <li><p>Planar transmissivity and planar albedo as a function of solar
 zenith angle (only used if
-<a class="reference internal" href="output.html#output.OutputBehavior.incidence_beam_conditions" title="output.OutputBehavior.incidence_beam_conditions"><code class="xref py py-attr docutils literal notranslate"><span class="pre">incidence_beam_conditions</span></code></a> is
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">incidence_beam_conditions</span></code> is
 set to <code class="docutils literal notranslate"><span class="pre">True</span></code>)</p></li>
 <li><p>PMOM for each layer (but only if 1. == True and only for layers
 with scattering)</p></li>
@@ -359,48 +358,48 @@ on this</p></li>
 </dl>
 </div>
 <dl class="py property">
-<dt class="sig sig-object py" id="controller.ModelBehavior.accuracy">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">accuracy</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#controller.ModelBehavior.accuracy" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.controller.ModelBehavior.accuracy">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">accuracy</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#pyrt.controller.ModelBehavior.accuracy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input accuracy.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">ACCUR</span></code>.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="controller.ModelBehavior.delta_m_plus">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">delta_m_plus</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#controller.ModelBehavior.delta_m_plus" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.controller.ModelBehavior.delta_m_plus">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">delta_m_plus</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#pyrt.controller.ModelBehavior.delta_m_plus" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get whether to use delta-M+ scaling.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">DELTAMPLUS</span></code>.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="controller.ModelBehavior.do_pseudo_sphere">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">do_pseudo_sphere</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#controller.ModelBehavior.do_pseudo_sphere" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.controller.ModelBehavior.do_pseudo_sphere">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">do_pseudo_sphere</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#pyrt.controller.ModelBehavior.do_pseudo_sphere" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get whether to perform a pseudo-spherical correction.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">DO_PSEUDO_SPHERE</span></code>.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="controller.ModelBehavior.header">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">header</span></span><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><a class="headerlink" href="#controller.ModelBehavior.header" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.controller.ModelBehavior.header">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">header</span></span><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><a class="headerlink" href="#pyrt.controller.ModelBehavior.header" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the characters that will appear in the DISORT banner.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">HEADER</span></code>.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="controller.ModelBehavior.print_variables">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">print_variables</span></span><em class="property"><span class="pre">:</span> <span class="pre">list</span></em><a class="headerlink" href="#controller.ModelBehavior.print_variables" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.controller.ModelBehavior.print_variables">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">print_variables</span></span><em class="property"><span class="pre">:</span> <span class="pre">list</span></em><a class="headerlink" href="#pyrt.controller.ModelBehavior.print_variables" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the variables to print.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">PRNT</span></code>.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="controller.ModelBehavior.radius">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">radius</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#controller.ModelBehavior.radius" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.controller.ModelBehavior.radius">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">radius</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#pyrt.controller.ModelBehavior.radius" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the planetary radius.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">EARTH_RADIUS</span></code>.</p>
@@ -408,7 +407,7 @@ on this</p></li>
 
 </dd></dl>
 
-</section>
+</div>
 
 
            </div>

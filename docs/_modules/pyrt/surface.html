@@ -1,0 +1,545 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>pyrt.surface &mdash; pyRT_DISORT  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> pyRT_DISORT
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">About this project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/about-this-project/about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/about-this-project/about-DISORT.html">About DISORT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/about-this-project/release-notes.html">Release notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For users</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/for-users/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/for-users/tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/for-users/api-reference.html">API reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For contributors</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/for-contributors/contributions.html">Contributions</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pyRT_DISORT</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>pyrt.surface</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pyrt.surface</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;The :code:`surface` module contains structures for creating arrays related to</span>
+<span class="sd">DISORT&#39;s surface treatment.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">disort</span> <span class="kn">import</span> <span class="n">disobrdf</span>
+
+
+<span class="c1"># TODO: the surface isn&#39;t designed to be interacted with. Instead, wrap functions</span>
+<span class="c1">#  around the methods so the user doesn&#39;t have to remember to call methods</span>
+
+<span class="c1"># TODO: I still don&#39;t really know what bemst, emust, rhoq, rhou, or rho_accurate</span>
+<span class="c1">#  are... get better names.</span>
+<div class="viewcode-block" id="Surface"><a class="viewcode-back" href="../../rst/for-users/api-reference/surface.html#pyrt.surface.Surface">[docs]</a><span class="k">class</span> <span class="nc">Surface</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;A structure to compute all the surface parameterization.</span>
+
+<span class="sd">    Surface accepts parameters that define the surface arrays required by</span>
+<span class="sd">    DISORT. The methods in Surface will compute those arrays.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">albedo</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">n_streams</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">n_polar</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                 <span class="n">n_azimuth</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">user_angles</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">only_fluxes</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+                 <span class="n">n_mug</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">200</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        albedo</span>
+<span class="sd">            The surface albedo. Only used by DISORT if the bottom boundary is</span>
+<span class="sd">            Lambertian.</span>
+<span class="sd">        n_streams</span>
+<span class="sd">            The number of streams.</span>
+<span class="sd">        n_polar</span>
+<span class="sd">            The number of polar angles.</span>
+<span class="sd">        n_azimuth</span>
+<span class="sd">            The number of azimuth angles.</span>
+<span class="sd">        n_mug</span>
+<span class="sd">            The number of angle cosine quadrature points for integrating the</span>
+<span class="sd">            bidirectional reflectivity.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        TypeError</span>
+<span class="sd">            Raised if a number of things...</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            Raised if albedo is not between 0 and 1.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__albedo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__make_albedo</span><span class="p">(</span><span class="n">albedo</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__n_streams</span> <span class="o">=</span> <span class="n">n_streams</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__n_polar</span> <span class="o">=</span> <span class="n">n_polar</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__n_azimuth</span> <span class="o">=</span> <span class="n">n_azimuth</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__user_angles</span> <span class="o">=</span> <span class="n">user_angles</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__only_fluxes</span> <span class="o">=</span> <span class="n">only_fluxes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__lambertian</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__n_mug</span> <span class="o">=</span> <span class="n">n_mug</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__bemst</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__make_empty_bemst</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__emust</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__make_empty_emust</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__rho_accurate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__make_empty_rho_accurate</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__rhoq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__make_empty_rhoq</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__rhou</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__make_empty_rhou</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__make_albedo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">albedo</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="n">albedo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__cast_to_float</span><span class="p">(</span><span class="n">albedo</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_value_error_if_albedo_is_unphysical</span><span class="p">(</span><span class="n">albedo</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">albedo</span>
+
+    <span class="k">def</span> <span class="nf">__make_empty_bemst</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">__n_streams</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__make_empty_emust</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__n_polar</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__make_empty_rho_accurate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">__n_polar</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__n_azimuth</span><span class="p">))</span>
+
+    <span class="c1"># TODO: the first dimension seems messed up to me...</span>
+    <span class="k">def</span> <span class="nf">__make_empty_rhoq</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">int</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">__n_streams</span><span class="p">),</span>
+                         <span class="nb">int</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">__n_streams</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+                         <span class="bp">self</span><span class="o">.</span><span class="n">__n_streams</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__make_empty_rhou</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">__n_streams</span><span class="p">,</span>
+                         <span class="nb">int</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">__n_streams</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+                         <span class="bp">self</span><span class="o">.</span><span class="n">__n_streams</span><span class="p">))</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__cast_to_float</span><span class="p">(</span><span class="n">albedo</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">albedo</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">te</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;albedo cannot be cast into a float.&#39;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">te</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">ve</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;albedo cannot be cast into a float.&#39;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">ve</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__raise_value_error_if_albedo_is_unphysical</span><span class="p">(</span><span class="n">albedo</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">albedo</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;albedo must be between 0 and 1.&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__make_output_arrays</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mu</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mu0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">phi</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                            <span class="n">phi0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">beam_flux</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                            <span class="n">albedo</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                            <span class="n">phase_function_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">brdf_arg</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                            <span class="n">n_mug</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__call_disobrdf</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">mu0</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">phi0</span><span class="p">,</span> <span class="n">beam_flux</span><span class="p">,</span> <span class="n">albedo</span><span class="p">,</span>
+                                        <span class="n">phase_function_number</span><span class="p">,</span> <span class="n">brdf_arg</span><span class="p">,</span> <span class="n">n_mug</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">ve</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;problem&#39;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">ve</span>
+
+    <span class="k">def</span> <span class="nf">__call_disobrdf</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">mu</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mu0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">phi</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">phi0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+            <span class="n">beam_flux</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">albedo</span><span class="p">,</span> <span class="n">phase_function_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+            <span class="n">brdf_arg</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">n_mug</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">disobrdf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__user_angles</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">beam_flux</span><span class="p">,</span> <span class="n">mu0</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">albedo</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">__only_fluxes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rhoq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rhou</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__emust</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">__bemst</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">phi0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rho_accurate</span><span class="p">,</span>
+                        <span class="n">phase_function_number</span><span class="p">,</span> <span class="n">brdf_arg</span><span class="p">,</span> <span class="n">n_mug</span><span class="p">,</span>
+                        <span class="n">nstr</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__n_streams</span><span class="p">,</span> <span class="n">numu</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__n_polar</span><span class="p">,</span>
+                        <span class="n">nphi</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__n_azimuth</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Surface.make_lambertian"><a class="viewcode-back" href="../../rst/for-users/api-reference/surface.html#pyrt.surface.Surface.make_lambertian">[docs]</a>    <span class="k">def</span> <span class="nf">make_lambertian</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Make the surface a Lambertian surface.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__lambertian</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="Surface.make_hapke"><a class="viewcode-back" href="../../rst/for-users/api-reference/surface.html#pyrt.surface.Surface.make_hapke">[docs]</a>    <span class="k">def</span> <span class="nf">make_hapke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">h</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">w</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mu</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mu0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                   <span class="n">phi</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">phi0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">beam_flux</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Make a basic Hapke surface.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        b0</span>
+<span class="sd">            The strength of the opposition surge.</span>
+<span class="sd">        h</span>
+<span class="sd">            The width of the opposition surge.</span>
+<span class="sd">        w</span>
+<span class="sd">            The surface single scattering albedo.</span>
+<span class="sd">        mu</span>
+<span class="sd">            The cosine of emission.</span>
+<span class="sd">        mu0</span>
+<span class="sd">            The cosine of incidence.</span>
+<span class="sd">        phi</span>
+<span class="sd">            The azimuth angle.</span>
+<span class="sd">        phi0</span>
+<span class="sd">            Phi0</span>
+<span class="sd">        beam_flux</span>
+<span class="sd">            The incident beam flux.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        :class:`~observation.Angles`, :class:`~radiation.IncidentFlux`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__lambertian</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">brdf_arg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">b0</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+
+        <span class="n">outputs</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">__make_output_arrays</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">mu0</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">phi0</span><span class="p">,</span> <span class="n">beam_flux</span><span class="p">,</span>
+                                      <span class="bp">self</span><span class="o">.</span><span class="n">__albedo</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">brdf_arg</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__n_mug</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__rhoq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rhou</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__emust</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__bemst</span><span class="p">,</span> \
+        <span class="bp">self</span><span class="o">.</span><span class="n">__rho_accurate</span> <span class="o">=</span> <span class="n">outputs</span></div>
+
+<div class="viewcode-block" id="Surface.make_hapkeHG2"><a class="viewcode-back" href="../../rst/for-users/api-reference/surface.html#pyrt.surface.Surface.make_hapkeHG2">[docs]</a>    <span class="k">def</span> <span class="nf">make_hapkeHG2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">h</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">w</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">asym</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                   <span class="n">frac</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mu</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mu0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                   <span class="n">phi</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">phi0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">beam_flux</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Make a Hapke surface with 2 lobed Henyey-Greenstein surface phase</span>
+<span class="sd">        function.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        b0</span>
+<span class="sd">            The strength of the opposition surge.</span>
+<span class="sd">        h</span>
+<span class="sd">            The width of the opposition surge.</span>
+<span class="sd">        w</span>
+<span class="sd">            The surface single scattering albedo.</span>
+<span class="sd">        asym</span>
+<span class="sd">            The asymmetry parameter.</span>
+<span class="sd">        frac</span>
+<span class="sd">            The forward scattering fraction.</span>
+<span class="sd">        mu</span>
+<span class="sd">            The cosine of emission.</span>
+<span class="sd">        mu0</span>
+<span class="sd">            The cosine of incidence.</span>
+<span class="sd">        phi</span>
+<span class="sd">            The azimuth angle.</span>
+<span class="sd">        phi0</span>
+<span class="sd">            Phi0</span>
+<span class="sd">        beam_flux</span>
+<span class="sd">            The incident beam flux.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        :class:`~observation.Angles`, :class:`~radiation.IncidentFlux`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__lambertian</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">brdf_arg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">b0</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">asym</span><span class="p">,</span> <span class="n">frac</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+
+        <span class="n">outputs</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">__make_output_arrays</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">mu0</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">phi0</span><span class="p">,</span> <span class="n">beam_flux</span><span class="p">,</span>
+                                      <span class="bp">self</span><span class="o">.</span><span class="n">__albedo</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">brdf_arg</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__n_mug</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__rhoq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rhou</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__emust</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__bemst</span><span class="p">,</span> \
+        <span class="bp">self</span><span class="o">.</span><span class="n">__rho_accurate</span> <span class="o">=</span> <span class="n">outputs</span></div>
+
+<div class="viewcode-block" id="Surface.make_hapkeHG2_roughness"><a class="viewcode-back" href="../../rst/for-users/api-reference/surface.html#pyrt.surface.Surface.make_hapkeHG2_roughness">[docs]</a>    <span class="k">def</span> <span class="nf">make_hapkeHG2_roughness</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">h</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">w</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                                <span class="n">asym</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">roughness</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                   <span class="n">frac</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mu</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mu0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                   <span class="n">phi</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">phi0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">beam_flux</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Make a Hapke surface with 2 lobed Henyey-Greenstein surface phase</span>
+<span class="sd">        function and surface roughness parameter.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        b0</span>
+<span class="sd">            The strength of the opposition surge.</span>
+<span class="sd">        h</span>
+<span class="sd">            The width of the opposition surge.</span>
+<span class="sd">        w</span>
+<span class="sd">            The surface single scattering albedo.</span>
+<span class="sd">        asym</span>
+<span class="sd">            The asymmetry parameter.</span>
+<span class="sd">        frac</span>
+<span class="sd">            The forward scattering fraction.</span>
+<span class="sd">        roughness</span>
+<span class="sd">            The roughness parameter.</span>
+<span class="sd">        mu</span>
+<span class="sd">            The cosine of emission.</span>
+<span class="sd">        mu0</span>
+<span class="sd">            The cosine of incidence.</span>
+<span class="sd">        phi</span>
+<span class="sd">            The azimuth angle.</span>
+<span class="sd">        phi0</span>
+<span class="sd">            Phi0</span>
+<span class="sd">        beam_flux</span>
+<span class="sd">            The incident beam flux.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        :class:`~observation.Angles`, :class:`~radiation.IncidentFlux`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__lambertian</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">brdf_arg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">b0</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">asym</span><span class="p">,</span> <span class="n">frac</span><span class="p">,</span> <span class="n">roughness</span><span class="p">])</span>
+
+        <span class="n">outputs</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">__make_output_arrays</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">mu0</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">phi0</span><span class="p">,</span> <span class="n">beam_flux</span><span class="p">,</span>
+                                      <span class="bp">self</span><span class="o">.</span><span class="n">__albedo</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">brdf_arg</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__n_mug</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__rhoq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rhou</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__emust</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__bemst</span><span class="p">,</span> \
+        <span class="bp">self</span><span class="o">.</span><span class="n">__rho_accurate</span> <span class="o">=</span> <span class="n">outputs</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">albedo</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the input albedo.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        In DISORT, this variable is named :code:`ALBEDO`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__albedo</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">lambertian</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get whether the bottom boundary used in the model will be Lambertian.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        In DISORT, this variable is named :code:`LAMBER`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__lambertian</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">bemst</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the directional emissivity at quadrature angles.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        In DISORT, this variable is named :code:`BEMST`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__bemst</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">emust</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the directional emissivity at user angles.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        In DISORT, this variable is named :code:`EMUST`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__emust</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">rho_accurate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the analytic BRDF results.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        In DISORT, this variable is named :code:`RHO_ACCURATE`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rho_accurate</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">rhoq</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the quadrature fourier expanded BRDF.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        In DISORT, this variable is named :code:`RHOQ`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rhoq</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">rhou</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the user defined fourier expanded BRDF.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        In DISORT, this variable is named :code:`RHOU`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rhou</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, kconnour.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

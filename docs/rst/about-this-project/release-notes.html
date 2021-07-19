@@ -4,8 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Release notes &mdash; pyRT_DISORT  documentation</title>
@@ -93,6 +92,7 @@
 <li class="toctree-l1"><a class="reference internal" href="about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="about-DISORT.html">About DISORT</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Release notes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#v0-0-3">v0.0.3</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#v0-0-2">v0.0.2</a></li>
 </ul>
 </li>
@@ -173,9 +173,25 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="release-notes">
+  <div class="section" id="release-notes">
 <h1>Release notes<a class="headerlink" href="#release-notes" title="Permalink to this headline">¶</a></h1>
-<section id="v0-0-2">
+<div class="section" id="v0-0-3">
+<h2>v0.0.3<a class="headerlink" href="#v0-0-3" title="Permalink to this headline">¶</a></h2>
+<p>This update was focused on documentation tweaks and ease of use.</p>
+<ul class="simple">
+<li><p>Change the package name from pyRT_DISORT to pyrt. This should make it less
+cumbersome to import the package. This had a secondary effect of being
+Sphinx-compatible with autodoc. See <a class="reference external" href="https://github.com/sphinx-doc/sphinx/issues/9479">this issue</a> for details.</p></li>
+<li><p>All documentation now correctly display the package structure in the call
+signatures.</p></li>
+<li><p>Update the examples to reflect this new renaming scheme.</p></li>
+<li><p>Update the rover angles example. Most of that example will overlap with the
+spacecraft example so it wasn’t a well conceived idea.</p></li>
+<li><p>Update the grammar used in the spacecraft retrieval to sound less like a
+closet hillbilly.</p></li>
+</ul>
+</div>
+<div class="section" id="v0-0-2">
 <h2>v0.0.2<a class="headerlink" href="#v0-0-2" title="Permalink to this headline">¶</a></h2>
 <p>This version was focused on improving the observation module.</p>
 <ul class="simple">
@@ -183,6 +199,9 @@
 the incident beam together instead of phi and phi0 together.</p></li>
 <li><p>Remove the incidence and emission properties from Angles, as it’s just a
 copy of the input to the class.</p></li>
+<li><p>Remove the short and long wavelength properties from Spectral, for the same
+reasons described above.</p></li>
+<li><p>Import all functions / classes in the global namespace for ease of use.</p></li>
 <li><p>Update documentation page on the observation module to be more like numpy.
 Now, the module has its own “home” page and each public class and function
 has its own page.</p></li>
@@ -197,8 +216,8 @@ inputs.</p></li>
 <li><p>Improved descriptions in the examples.</p></li>
 <li><p>Minor speed and memory improvements when using this module.</p></li>
 </ul>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>

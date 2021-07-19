@@ -4,8 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>The rayleigh module &mdash; pyRT_DISORT  documentation</title>
@@ -115,7 +114,6 @@
 <li class="toctree-l3"><a class="reference internal" href="retrieval.html">Retrieval</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../rover_retrieval.html">Rover Retrieval</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../api-reference.html">API reference</a></li>
@@ -194,7 +192,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="the-rayleigh-module">
+  <div class="section" id="the-rayleigh-module">
 <h1>The rayleigh module<a class="headerlink" href="#the-rayleigh-module" title="Permalink to this headline">¶</a></h1>
 <p>Now that we know the boundaries of our model, let’s start building it. What
 we’ll do is essentially create atmospheric arrays for Rayleigh scattering, then
@@ -207,10 +205,10 @@ arrays.</p>
 <li><p>The Legendre decomposition of the phase function in each layer
 (known as <code class="code docutils literal notranslate"><span class="pre">PMOM</span></code>).</p></li>
 </ol>
-<section id="rayleighco2">
+<div class="section" id="rayleighco2">
 <h2>RayleighCO2<a class="headerlink" href="#rayleighco2" title="Permalink to this headline">¶</a></h2>
 <p>Mars has a CO <sub>2</sub> atmosphere, so let’s instantiate a
-<a class="reference internal" href="../../api-reference/rayleigh.html#rayleigh.RayleighCO2" title="rayleigh.RayleighCO2"><code class="xref py py-class docutils literal notranslate"><span class="pre">RayleighCO2</span></code></a> object. This will create the aforementioned
+<code class="xref py py-class docutils literal notranslate"><span class="pre">RayleighCO2</span></code> object. This will create the aforementioned
 arrays. We just need to provide it the wavelengths
 at which to make the optical depths, and the column density in each of the
 layers. Let’s do that here.</p>
@@ -242,8 +240,8 @@ the input wavelengths, you can execute the line</p>
 <p>to see the column integrated optical depth. For this example it gives
 <code class="docutils literal notranslate"><span class="pre">[1.62444356e-04</span> <span class="pre">1.00391950e-05</span> <span class="pre">1.97891739e-06</span> <span class="pre">6.25591479e-07</span> <span class="pre">2.56207684e-07]</span></code></p>
 </div>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>

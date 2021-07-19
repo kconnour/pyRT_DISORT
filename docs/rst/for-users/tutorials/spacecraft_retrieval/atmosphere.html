@@ -4,8 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>The atmosphere module &mdash; pyRT_DISORT  documentation</title>
@@ -115,7 +114,6 @@
 <li class="toctree-l3"><a class="reference internal" href="retrieval.html">Retrieval</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../rover_retrieval.html">Rover Retrieval</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../api-reference.html">API reference</a></li>
@@ -194,14 +192,14 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="the-atmosphere-module">
+  <div class="section" id="the-atmosphere-module">
 <h1>The atmosphere module<a class="headerlink" href="#the-atmosphere-module" title="Permalink to this headline">¶</a></h1>
 <p>We’ve done the hard work of creating all the atmospheric arrays for the
 individual constituents. Now we just need to put everything together.</p>
-<section id="atmosphere">
+<div class="section" id="atmosphere">
 <h2>Atmosphere<a class="headerlink" href="#atmosphere" title="Permalink to this headline">¶</a></h2>
 <p>We can construct the arrays of the optical depth, single scattering
-albedo, and phase function with <a class="reference internal" href="../../api-reference/atmosphere.html#atmosphere.Atmosphere" title="atmosphere.Atmosphere"><code class="xref py py-class docutils literal notranslate"><span class="pre">Atmosphere</span></code></a>. It requires
+albedo, and phase function with <code class="xref py py-class docutils literal notranslate"><span class="pre">Atmosphere</span></code>. It requires
 tuples of each of the 3 arrays for each atmospheric
 constituent. I’ll go ahead and make these tuples for Rayleigh scattering and
 dust</p>
@@ -223,8 +221,8 @@ composite arrays.</p>
 <p>That’s all there is to it. We now have our atmospheric arrays. The remaning
 modules are generally small and simply help to construct some of the switches
 required by DISORT.</p>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>

@@ -1,5 +1,5 @@
 Controller
 ==========
 
-.. automodule:: controller
+.. automodule:: pyrt.controller
    :members:

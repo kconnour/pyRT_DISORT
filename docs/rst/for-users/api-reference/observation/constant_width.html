@@ -4,8 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>constant_width &mdash; pyRT_DISORT  documentation</title>
@@ -194,11 +193,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="constant-width">
+  <div class="section" id="constant-width">
 <h1>constant_width<a class="headerlink" href="#constant-width" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="observation.constant_width">
-<span class="sig-prename descclassname"><span class="pre">observation.</span></span><span class="sig-name descname"><span class="pre">constant_width</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">center_wavelength</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/observation.html#constant_width"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#observation.constant_width" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.observation.constant_width">
+<span class="sig-prename descclassname"><span class="pre">pyrt.observation.</span></span><span class="sig-name descname"><span class="pre">constant_width</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">center_wavelength</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pyrt/observation.html#constant_width"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrt.observation.constant_width" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create an instance of Spectral assuming the wavelengths all have a
 constant spectral width.</p>
 <dl class="field-list simple">
@@ -216,14 +215,14 @@ constant spectral width.</p>
 </ul>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="Spectral.html#observation.Spectral" title="observation.Spectral">observation.Spectral</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="Spectral.html#pyrt.observation.Spectral" title="pyrt.observation.Spectral">pyrt.observation.Spectral</a></p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
 <p>Create an instance of Spectral for an observation taken at 1 to 3 microns
 in 1 micron increments, with each channel having a 50 nm spectral width.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyRT_DISORT.observation</span> <span class="kn">import</span> <span class="n">constant_width</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyrt.observation</span> <span class="kn">import</span> <span class="n">constant_width</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">center</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">width</span> <span class="o">=</span> <span class="mf">0.05</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">constant_width</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
@@ -234,7 +233,7 @@ in 1 micron increments, with each channel having a 50 nm spectral width.</p>
 </div>
 </dd></dl>
 
-</section>
+</div>
 
 
            </div>

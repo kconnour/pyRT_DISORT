@@ -86,7 +86,7 @@ class Angles:
     Import the relevant modules
 
     >>> import numpy as np
-    >>> from pyRT_DISORT.observation import Angles
+    >>> from pyrt.observation import Angles
 
     Instantiate this class for a (3, 5) sky image taken along an emission and
     azimuth angle grid, with a single incident beam.
@@ -234,7 +234,7 @@ def make_azimuth(incidence: ArrayLike, emission: ArrayLike,
     Create the azimuth angles from an assortment of angles.
 
     >>> import numpy as np
-    >>> from pyRT_DISORT.observation import make_azimuth
+    >>> from pyrt.observation import make_azimuth
     >>> incidence_angles = np.array([20, 30, 40])
     >>> emission_angles = np.array([30, 40, 50])
     >>> phase_angles = np.array([25, 30, 35])
@@ -289,7 +289,7 @@ def phase_to_angles(incidence: ArrayLike, emission: ArrayLike,
     For a random assortment of input angles:
 
     >>> import numpy as np
-    >>> from pyRT_DISORT.observation import phase_to_angles
+    >>> from pyrt.observation import phase_to_angles
     >>> incidence = [20, 30, 40]
     >>> emission = [30, 40, 50]
     >>> phase = [25, 30, 35]
@@ -352,7 +352,7 @@ def sky_image(incidence: float, beam_azimuth: float, emission: ArrayLike,
     beam.
 
     >>> import numpy as np
-    >>> from pyRT_DISORT.observation import sky_image
+    >>> from pyrt.observation import sky_image
     >>> incidence = 30
     >>> beam_azimuth = 40
     >>> emission = np.linspace(30, 60, num=3)
@@ -402,8 +402,8 @@ class Spectral:
     -----
     If you do not plan to use thermal emission, there is probably little benefit
     to making an instance of this class. See
-    :py:class:`~radiation.ThermalEmission` for a discussion on thermal radiation
-    in DISORT.
+    :py:class:`~pyrt.radiation.ThermalEmission` for a discussion on thermal
+    radiation in DISORT.
 
     See Also
     --------
@@ -415,7 +415,7 @@ class Spectral:
     Import the relevant modules
 
     >>> import numpy as np
-    >>> from pyRT_DISORT.observation import Spectral
+    >>> from pyrt.observation import Spectral
 
     Instantiate this class for a simple set of wavelengths.
 
@@ -484,7 +484,7 @@ class Spectral:
         -----
         Each element along the observation dimension(s) is named :code:`WVNMHI`
         in DISORT. It is only needed by DISORT if
-        :py:attr:`~radiation.ThermalEmission.thermal_emission` is set to
+        :py:attr:`~pyrt.radiation.ThermalEmission.thermal_emission` is set to
         :code:`True`.
 
         """
@@ -499,7 +499,7 @@ class Spectral:
         -----
         Each element along the observation dimension(s) is named :code:`WVNMLO`
         in DISORT. It is only needed by DISORT if
-        :py:attr:`~radiation.ThermalEmission.thermal_emission` is set to
+        :py:attr:`~pyrt.radiation.ThermalEmission.thermal_emission` is set to
         :code:`True`.
 
         """
@@ -531,7 +531,7 @@ def constant_width(center_wavelength: ArrayLike, width: float) -> Spectral:
     in 1 micron increments, with each channel having a 50 nm spectral width.
 
     >>> import numpy as np
-    >>> from pyRT_DISORT.observation import constant_width
+    >>> from pyrt.observation import constant_width
     >>> center = [1, 2, 3]
     >>> width = 0.05
     >>> constant_width(center, width)
@@ -597,13 +597,13 @@ class _Angles(np.ndarray):
                       f'{obj.low} and {obj.high} degrees.'
             raise ValueError(message)
 
-    def sin(self) -> np.ndarray:
+    def sin(self) -> _Angles:
         """Compute the sine of the input angles.
 
         """
         return np.sin(np.radians(self))
 
-    def cos(self) -> np.ndarray:
+    def cos(self) -> _Angles:
         """Compute the cosine of the input angles.
 
         """

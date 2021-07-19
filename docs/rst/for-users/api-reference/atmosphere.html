@@ -4,8 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Atmosphere &mdash; pyRT_DISORT  documentation</title>
@@ -185,13 +184,13 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="module-atmosphere">
-<span id="atmosphere"></span><h1>Atmosphere<a class="headerlink" href="#module-atmosphere" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-pyrt.atmosphere">
+<span id="atmosphere"></span><h1>Atmosphere<a class="headerlink" href="#module-pyrt.atmosphere" title="Permalink to this headline">¶</a></h1>
 <p>The <code class="code docutils literal notranslate"><span class="pre">atmosphere</span></code> module contains structures to make the total
 atmospheric properties required by DISORT.</p>
 <dl class="py class">
-<dt class="sig sig-object py" id="atmosphere.Atmosphere">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">atmosphere.</span></span><span class="sig-name descname"><span class="pre">Atmosphere</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/atmosphere.html#Atmosphere"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#atmosphere.Atmosphere" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.atmosphere.Atmosphere">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pyrt.atmosphere.</span></span><span class="sig-name descname"><span class="pre">Atmosphere</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/pyrt/atmosphere.html#Atmosphere"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrt.atmosphere.Atmosphere" title="Permalink to this definition">¶</a></dt>
 <dd><p>A structure to compute the total atmospheric properties.</p>
 <p>Atmosphere accepts a collection of atmospheric properties for each
 constituent in the model. It then computes the total atmospheric arrays
@@ -206,8 +205,8 @@ for each constituent to add to the atmospheric model.</p>
 </dd>
 </dl>
 <dl class="py property">
-<dt class="sig sig-object py" id="atmosphere.Atmosphere.legendre_moments">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">legendre_moments</span></span><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#atmosphere.Atmosphere.legendre_moments" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.atmosphere.Atmosphere.legendre_moments">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">legendre_moments</span></span><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#pyrt.atmosphere.Atmosphere.legendre_moments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the total Legendre coefficient array of the atmosphere. This is
 computed via</p>
 <div class="math notranslate nohighlight">
@@ -222,8 +221,8 @@ in the other properties.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="atmosphere.Atmosphere.optical_depth">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">optical_depth</span></span><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#atmosphere.Atmosphere.optical_depth" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.atmosphere.Atmosphere.optical_depth">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">optical_depth</span></span><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#pyrt.atmosphere.Atmosphere.optical_depth" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the total optical depth of the atmosphere. This is computed via</p>
 <div class="math notranslate nohighlight">
 \[\tau = \Sigma \tau_i\]</div>
@@ -236,8 +235,8 @@ of each of the atmospheric species.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="atmosphere.Atmosphere.single_scattering_albedo">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">single_scattering_albedo</span></span><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#atmosphere.Atmosphere.single_scattering_albedo" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.atmosphere.Atmosphere.single_scattering_albedo">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">single_scattering_albedo</span></span><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#pyrt.atmosphere.Atmosphere.single_scattering_albedo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the single scattering albedo of the atmosphere. This is computed
 via</p>
 <div class="math notranslate nohighlight">
@@ -252,7 +251,7 @@ individual species, and <span class="math notranslate nohighlight">\(\tau\)</spa
 
 </dd></dl>
 
-</section>
+</div>
 
 
            </div>

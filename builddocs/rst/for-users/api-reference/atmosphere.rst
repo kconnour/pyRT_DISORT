@@ -1,5 +1,5 @@
 Atmosphere
 ==========
 
-.. automodule:: atmosphere
+.. automodule:: pyrt.atmosphere
    :members:

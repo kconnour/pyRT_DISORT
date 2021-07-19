@@ -1,6 +1,5 @@
-######################
 The observation module
-######################
+======================
 Let's begin by considering some of the quantities found in a typical
 observation---the angles and wavelengths at which some instrument collected
 data. In the "rover" case, I'll assume we have an rover than takes 2D images
@@ -8,11 +7,10 @@ such that the data have shape (M, N) and each pixel in the MxN grid
 contains W wavelengths. The MxN array corresponds to emission and azimuthal
 angles.
 
-******
 Angles
-******
+------
 Suppose that we have an image that has shape (15, 20). In this case there's
-a single incidence and beam azimuth angle, 15 emission angles, and 20 azimuth
+a single incidence beam, 15 emission angles, and 20 azimuth
 angles. Let's create a set of these angles.
 
 .. code-block:: python
@@ -24,22 +22,20 @@ angles. Let's create a set of these angles.
    emission = np.linspace(130, 160, num=15)
    azimuth = np.linspace(30, 40, num=20)
 
-Our goal is to create an instance of :class:`~observation.Angles` to hold on to
+Our goal is to create an instance of :class:`~pyrt.observation.Angles` to hold on to
 all the angular values DISORT wants. This class turns incidence and emission
 angles into :math:`\mu_0` and :math:`\mu` and also holds on to azimuthal
 angles. We could directly instantiate this class, but pyRT_DISORT comes with a
-helper function (:func:`~observation.sky_image`) that makes the inputs to and
-returns an instance of :class:`~observation.Angles`. Let's do this below and
+helper function (:func:`~pyrt.observation.sky_image`) that makes the inputs to and
+returns an instance of Angles. Let's do this below and
 look at the object's properties.
 
 .. code-block:: python
 
-   from pyRT_DISORT.observation import sky_image
+   from pyrt.observation import sky_image
 
    angles = sky_image(incidence, emission, azimuth, beam_azimuth)
 
-   incidence = angles.incidence
-   emission = angles.emission
    mu = angles.mu
    mu0 = angles.mu0
    phi = angles.phi
@@ -50,8 +46,9 @@ look at the object's properties.
 
 In this case, the shapes of both :code:`mu0` and :code:`phi0` are (1,), which
 is to say they're vectors with a single element in them. :code:`mu` has shape
-(1, 15) and :code:`phi` has shape (1, 20). We can then choose appropriate
-values by choosing a pixel index, like the following:
+(1, 15) and :code:`phi` has shape (1, 20), meaning there are 15 and 20 angles,
+respectively, that correspond to the single incident beam. We can then choose
+appropriate values by choosing a pixel index, like the following:
 
 .. code-block:: python
 
@@ -64,68 +61,15 @@ DISORT expects the input of :code:`UMU0` and :code:`PHI0` to be floats which we
 obtained by choosing the pixel's index. It expects :code:`UMU` and :code:`PHI`
 to both be 1D arrays which we got the same way.
 
-It may seem weird that there's a dimension of 1 in this example, but consider
-the case where the camera takes a movie---which is to say, a collection of
-multiple images. If it took 50 images in rapid succession, you can input arrays
-of shape (50,) for the incidence and beam azimuth angles, and arrays of shape
-(50, 15) for the emission angles, and (50, 20) for the azimuth angles. You must
-choose a pixel index but this class can do all computations at once, offering
-potentially significant computational time savings.
-
 .. note::
    For those of that have experience working with DISORT directly, I'll name
    the variables in this example with the same names that DISORT uses. For
    those unfamiliar with DISORT/FORTRAN, variables in all caps will be the ones
    that we ultimately plug into the DISORT call.
 
-
-
-Spacecraft Angles
------------------
-Each pixel will presumably have its own unique combination of incidence,
-emission, and phase angles that don't depend on wavelength. This data would
-normally be found in a data product, but we need some values to play with
-for the time being. We can go ahead and create some angles (for the simplicity
-of the example let's
-assume that the incidence, emission, and phase angles are all the same).
-
-.. code-block:: python
-
-   dummy_angles = np.outer(np.linspace(5, 10, num=15), np.linspace(5, 8, num=20))
-
-Like the rover example, we can call a helper function that'll turn phase angles
-into azimuthal angles and return an instance of :code:`Angles`.
-
-.. code-block:: python
-
-   from pyRT_DISORT.observation import angles_from_phase
-
-   angles = angles_from_phase(dummy_angles, dummy_angles, dummy_angles)
-
-   incidence = angles.incidence
-   emission = angles.emission
-   phase = angles.phase
-   mu = angles.mu
-   mu0 = angles.mu0
-   phi = angles.phi
-   phi0 = angles.phi0
-
-In this case, the shapes of both :code:`mu0` and :code:`phi0` are (15, 20)---
-the same shape as the input angles---whereas :code:`mu` and :code:`phi` both
-have shapes (15, 20, 1). That's to say, each incidence angle has only 1 set
-emission and azimuth angle. We can choose a single pixel index like below.
-
-.. code-block:: python
-
-   UMU = mu[0, 0, :]
-   UMU0 = mu0[0, 0]
-   PHI = phi[0, 0, :]
-   PHI0 = phi0[0, 0]
-
-********
 Spectral
-********
-Let's assume that the hyperspectral imager takes data at W wavelengths in each
+--------
+Let's assume that the rover's camera takes data at W wavelengths in each
 pixel and that there's a constant spectral width to each bin. Suppose it took
 data at 5 wavelengths, and each spectral pixel had a width of 100 nm. Let's go
 ahead and define some wavelengths here so we have some values to work with.
@@ -139,23 +83,21 @@ ahead and define some wavelengths here so we have some values to work with.
 .. attention::
    The wavelengths must be in microns.
 
-Our goal is to create an instance of :class:`~observation.Spectral` to hold on
+Our goal is to create an instance of :class:`~pyrt.observation.Spectral` to hold on
 to all the spectral values DISORT wants. This class will hold on to the input
 wavelengths and compute the wavenumbers at the edges of each spectral bin.
 We could instantiate this class directly, but let's use a helper function that
-comes with pyRT_DISORT (:func:`~observation.constant_width`) do the work for us
+comes with pyRT_DISORT (:func:`~pyrt.observation.constant_width`) do the work for us
 and then look at the object's properties.
 
 .. code-block:: python
 
-   from pyRT_DISORT.observation import constant_width
+   from pyrt.observation import constant_width
 
    spectral = constant_width(pixel_wavelengths, width)
 
-   short_wavelength = spectral.short_wavelength
-   long_wavelength = spectral.long_wavelength
    WVNMHI = spectral.high_wavenumber
-   WVNMHI = spectral.low_wavenumber
+   WVNMLO = spectral.low_wavenumber
 
 These spectral quantities have shape (5,)---the same as the input wavelengths.
 For now, I'll keep the spectral dimension but be aware that we'll cut off the

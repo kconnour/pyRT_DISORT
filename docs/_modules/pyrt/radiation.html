@@ -1,0 +1,438 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>pyrt.radiation &mdash; pyRT_DISORT  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> pyRT_DISORT
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">About this project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/about-this-project/about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/about-this-project/about-DISORT.html">About DISORT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/about-this-project/release-notes.html">Release notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For users</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/for-users/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/for-users/tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/for-users/api-reference.html">API reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For contributors</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/for-contributors/contributions.html">Contributions</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pyRT_DISORT</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>pyrt.radiation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pyrt.radiation</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;The :code:`radiation` module contains data structures for holding the</span>
+<span class="sd">radiation variables used in DISORT.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<div class="viewcode-block" id="IncidentFlux"><a class="viewcode-back" href="../../rst/for-users/api-reference/radiation.html#pyrt.radiation.IncidentFlux">[docs]</a><span class="k">class</span> <span class="nc">IncidentFlux</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;A data structure for holding the incident fluxes.</span>
+
+<span class="sd">    IncidentFlux creates scalars for the incident beam and isotropic fluxes and</span>
+<span class="sd">    performs checks that the input fluxes are valid inputs to DISORT.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">beam_flux</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span>
+                 <span class="n">isotropic_flux</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        beam_flux</span>
+<span class="sd">            The intensity of the incident beam at the top boundary.</span>
+<span class="sd">            Ensure this variable and :code:`isotropic_flux` have the same units.</span>
+<span class="sd">            Note that this is an infinitely wide beam.</span>
+<span class="sd">        isotropic_flux</span>
+<span class="sd">            The intensity of the incident beam at the top boundary. Ensure this</span>
+<span class="sd">            variable and :code:`beam_flux` have the same units.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        TypeError</span>
+<span class="sd">            Raised if either input flux cannot be cast into a float.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        If :py:attr:`~ThermalEmission.thermal_emission` is set to :code:`True`,</span>
+<span class="sd">        this is assumed to have the same units as :code:`PLKAVG` (which defaults</span>
+<span class="sd">        to [:math:`\frac{\text{W}}{\text{m}^2}`]) and the corresponding</span>
+<span class="sd">        incident flux is umu0 * beam_flux and pi * isotropic_flux. If</span>
+<span class="sd">        :py:attr:`~ThermalEmission.thermal_emission` is set to :code:`False`,</span>
+<span class="sd">        :code:`beam_flux` and :code:`isotropic_flux` have arbitrary units, and</span>
+<span class="sd">        the output fluxes and</span>
+<span class="sd">        intensities are assumed to have the same units as these variables.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__beam_flux</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__cast_to_float</span><span class="p">(</span><span class="n">beam_flux</span><span class="p">,</span> <span class="s1">&#39;beam_flux&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__isotropic_flux</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">__cast_to_float</span><span class="p">(</span><span class="n">isotropic_flux</span><span class="p">,</span> <span class="s1">&#39;isotropic_flux&#39;</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__cast_to_float</span><span class="p">(</span><span class="n">flux</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">flux</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">ve</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> could not be cast to a float.&#39;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">ve</span>
+        <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">te</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> could not be cast to a float.&#39;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">te</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">beam_flux</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the input flux of the incident beam at the top boundary.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        In DISORT, this variable is named :code:`FBEAM`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__beam_flux</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">isotropic_flux</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the input flux of isotropic sources at the top boundary.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        In DISORT, this variable is named :code:`FISOT`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__isotropic_flux</span></div>
+
+
+<div class="viewcode-block" id="ThermalEmission"><a class="viewcode-back" href="../../rst/for-users/api-reference/radiation.html#pyrt.radiation.ThermalEmission">[docs]</a><span class="k">class</span> <span class="nc">ThermalEmission</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;A data structure for holding thermal emission variables.</span>
+
+<span class="sd">    ThermalEmission creates variables needs to include thermal emission in</span>
+<span class="sd">    DISORT.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thermal_emission</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                 <span class="n">bottom_temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">top_temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+                 <span class="n">top_emissivity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        thermal_emission</span>
+<span class="sd">            Denote whether to use thermal emission. If :code:`True`, DISORT will</span>
+<span class="sd">            include thermal emission and will need the following variables:</span>
+
+<span class="sd">                - :code:`bottom_temperature`</span>
+<span class="sd">                - :code:`top_temperature`</span>
+<span class="sd">                - :code:`top_emissivity`</span>
+<span class="sd">                - :code:`low_wavenumber` (aka :code:`WVNMLO`)</span>
+<span class="sd">                - :code:`high_wavenumber` (aka :code:`WVNMHI`)</span>
+<span class="sd">                - :code:`temperature` (aka :code:`TEMPER`)</span>
+
+<span class="sd">            If :code:`False`, DISORT will save computation time by ignoring all</span>
+<span class="sd">            thermal emission and all of the aforementioned variables.</span>
+<span class="sd">        bottom_temperature</span>
+<span class="sd">            The temperature of the bottom boundary [K].</span>
+<span class="sd">        top_temperature</span>
+<span class="sd">            The temperature of the top boundary [K].</span>
+<span class="sd">        top_emissivity</span>
+<span class="sd">            The emissivity of the top boundary.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        TypeError</span>
+<span class="sd">            Raised if bottom_temperature, top_temperature, or top_emissivity</span>
+<span class="sd">            cannot be cast to a float.</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            Raised if bottom_temperature or top_temperature is negative, or if</span>
+<span class="sd">            top_emissivity is not between 0 and 1.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        :class:`~observation.Spectral`, :class:`~eos.Hydrostatic`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__thermal_emission</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__make_thermal_emission</span><span class="p">(</span><span class="n">thermal_emission</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__bottom_temperature</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">__make_temperature</span><span class="p">(</span><span class="n">bottom_temperature</span><span class="p">,</span> <span class="s1">&#39;bottom_temperature&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__top_temperature</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">__make_temperature</span><span class="p">(</span><span class="n">top_temperature</span><span class="p">,</span> <span class="s1">&#39;top_temperature&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__top_emissivity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__make_emissivity</span><span class="p">(</span><span class="n">top_emissivity</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__make_thermal_emission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thermal_emission</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__cast_variable_to_bool</span><span class="p">(</span>
+            <span class="n">thermal_emission</span><span class="p">,</span> <span class="s1">&#39;thermal_emission&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__make_temperature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="n">temperature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__cast_variable_to_float</span><span class="p">(</span><span class="n">temperature</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_value_error_if_temperature_is_unphysical</span><span class="p">(</span><span class="n">temperature</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">temperature</span>
+
+    <span class="k">def</span> <span class="nf">__make_emissivity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">top_emissivity</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="n">top_emissivity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__cast_variable_to_float</span><span class="p">(</span>
+            <span class="n">top_emissivity</span><span class="p">,</span> <span class="s1">&#39;top_emissivity&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_value_error_if_emissivity_not_in_range</span><span class="p">(</span><span class="n">top_emissivity</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">top_emissivity</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__cast_variable_to_bool</span><span class="p">(</span><span class="n">variable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">variable</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">te</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> cannot be cast into a boolean.&#39;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">te</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__cast_variable_to_float</span><span class="p">(</span><span class="n">variable</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">variable</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">te</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> cannot be cast into a float.&#39;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">te</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">ve</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> cannot be cast into a float.&#39;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">ve</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__raise_value_error_if_temperature_is_unphysical</span><span class="p">(</span>
+            <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">temperature</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">isinf</span><span class="p">(</span><span class="n">temperature</span><span class="p">)</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">temperature</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> must be non-negative and finite.&#39;</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__raise_value_error_if_emissivity_not_in_range</span><span class="p">(</span>
+            <span class="n">top_emissivity</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">top_emissivity</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;top_emissivity must be between 0 and 1.&#39;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">thermal_emission</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get whether thermal emission will be used in the model.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        In DISORT, this variable is named :code:`PLANK`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__thermal_emission</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">bottom_temperature</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the input temperature at the bottom boundary [K].</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        In DISORT, this variable is named :code:`BTEMP`. It is only used by</span>
+<span class="sd">        DISORT if :code:`thermal_emission` is set to :code:`True`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__bottom_temperature</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">top_temperature</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the input temperature at the top boundary [K].</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        In DISORT, this variable is named :code:`TTEMP`. It is only used by</span>
+<span class="sd">        DISORT if :code:`thermal_emission` is set to :code:`True`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__top_temperature</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">top_emissivity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the input emissivity at the top boundary.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        In DISORT, this variable is named :code:`TEMIS`. It is only used by</span>
+<span class="sd">        DISORT if :code:`thermal_emission` is set to :code:`True`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__top_emissivity</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, kconnour.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

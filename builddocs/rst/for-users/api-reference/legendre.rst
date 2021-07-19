@@ -1,5 +1,5 @@
 Legendre
 ========
 
-.. automodule:: legendre
+.. automodule:: pyrt.legendre
    :members:

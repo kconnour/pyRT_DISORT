@@ -1,5 +1,5 @@
 Equation of State
 =================
 
-.. automodule:: eos
+.. automodule:: pyrt.eos
    :members:

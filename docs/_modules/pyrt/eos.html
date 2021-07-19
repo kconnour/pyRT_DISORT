@@ -1,0 +1,689 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>pyrt.eos &mdash; pyRT_DISORT  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> pyRT_DISORT
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">About this project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/about-this-project/about-pyRT_DISORT.html">About pyRT_DISORT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/about-this-project/about-DISORT.html">About DISORT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/about-this-project/release-notes.html">Release notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For users</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/for-users/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/for-users/tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/for-users/api-reference.html">API reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">For contributors</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/for-contributors/contributions.html">Contributions</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pyRT_DISORT</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>pyrt.eos</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pyrt.eos</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;The :code:`eos` module contains data structures to compute and hold equation</span>
+<span class="sd">of state variables used throughout pyRT_DISORT.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.constants</span> <span class="kn">import</span> <span class="n">Boltzmann</span>
+<span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">quadrature</span> <span class="k">as</span> <span class="n">quad</span>
+
+
+<span class="c1"># TODO: the RTD theme puts the equation number *above* the equation, which is</span>
+<span class="c1">#  awful. There&#39;s nothing I can really do to change this but wait until they fix</span>
+<span class="c1">#  it (and a pull request is in the works...). This is just a reminder.</span>
+<span class="c1"># TODO: Fix the Raises docstring formatting</span>
+<div class="viewcode-block" id="Hydrostatic"><a class="viewcode-back" href="../../rst/for-users/api-reference/eos.html#pyrt.eos.Hydrostatic">[docs]</a><span class="k">class</span> <span class="nc">Hydrostatic</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;A data structure that computes a hydrostatic equation of state.</span>
+
+<span class="sd">    Hydrostatic accepts equation of state variables and regrids them to a</span>
+<span class="sd">    user-specified altitude grid using linear interpolation. Then, it computes</span>
+<span class="sd">    number density and scale height at the new boundaries, and the</span>
+<span class="sd">    column density within the new boundaries, assuming the atmosphere is in</span>
+<span class="sd">    hydrostatic equilibrium.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">altitude_grid</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pressure_grid</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                 <span class="n">temperature_grid</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">altitude_boundaries</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                 <span class="n">particle_mass</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">gravity</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        altitude_grid</span>
+<span class="sd">            The altitude grid [km] over which the equation of state variables</span>
+<span class="sd">            are defined. See the note below for additional conditions.</span>
+<span class="sd">        pressure_grid</span>
+<span class="sd">            The pressure [Pa] at all values in ``altitude_grid``.</span>
+<span class="sd">        temperature_grid</span>
+<span class="sd">            The temperature [K] at all values in ``altitude_grid``.</span>
+<span class="sd">        altitude_boundaries</span>
+<span class="sd">            The desired boundary altitude [km]. See the note below for</span>
+<span class="sd">            additional conditions.</span>
+<span class="sd">        particle_mass</span>
+<span class="sd">            The average mass [kg] of atmospheric particles.</span>
+<span class="sd">        gravity</span>
+<span class="sd">            The gravitational acceleration</span>
+<span class="sd">            [:math:`\frac{\text{kg m}}{\text{s}^2}`] of the atmosphere.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        TypeError</span>
+<span class="sd">            Raised if ``altitude_grid``, ``pressure_grid``,</span>
+<span class="sd">            ``temperature_grid``, or ``altitude_boundaries`` are not all</span>
+<span class="sd">            numpy.ndarrays; or if ``particle_mass`` or ``gravity`` are not</span>
+<span class="sd">            floats.</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            Raised if:</span>
+<span class="sd">               * ``altitude_grid``, ``pressure_grid``, or</span>
+<span class="sd">                  ``temperature_grid`` do not have the same shapes</span>
+<span class="sd">               * ``altitude_grid`` or ``altitude_boundaries`` have</span>
+<span class="sd">                 incompatible pixel dimensions</span>
+<span class="sd">               * ``altitude_grid`` or ``altitude_boundaries`` are not</span>
+<span class="sd">                 monotonically decreasing along the 0 :sup:`th` axis;</span>
+<span class="sd">               * ``pressure_grid``, or ``temperature_grid`` contain</span>
+<span class="sd">                 non-positive, finite values</span>
+<span class="sd">               * ``altitude_boundaries`` does not contain at least 2</span>
+<span class="sd">                 boundaries</span>
+<span class="sd">               * ``particle_mass`` or ``gravity`` are not positive, finite</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This class assumes the atmosphere follows the equation</span>
+
+<span class="sd">        .. math::</span>
+<span class="sd">           :label: hydrostatic_equation</span>
+
+<span class="sd">           P = n k_B T</span>
+
+<span class="sd">        where :math:`P` is the pressure, :math:`n` is the number density,</span>
+<span class="sd">        :math:`k_B` is Boltzmann&#39;s constant, and :math:`T` is the temperature.</span>
+
+<span class="sd">        The inputs can be ND arrays, as long as they have compatible shapes. In</span>
+<span class="sd">        this scenario, :code:`altitude_grid`, :code:`pressure_grid`, and</span>
+<span class="sd">        :code:`temperature_grid` must be of shape Mx(pixels) whereas</span>
+<span class="sd">        :code:`altitude_boundaries` must be of shape Nx(pixels), as long as</span>
+<span class="sd">        N &gt; 1 to ensure that the model has at least 1 layer.</span>
+
+<span class="sd">        To keep with DISORT&#39;s convention, :code:`altitude_grid` and</span>
+<span class="sd">        :code:`altitude_boundaries` must be monotonically decreasing. If these</span>
+<span class="sd">        are ND arrays, this condition only applies to the 0 :sup:`th` axis.</span>
+
+<span class="sd">        Also, scipy&#39;s Gaussian quadrature routine becomes less accurate the</span>
+<span class="sd">        smaller the atmosphere&#39;s scale height is. I&#39;m working to reduce the</span>
+<span class="sd">        errors. In the meantime the column density is fairly close to analytical</span>
+<span class="sd">        results but should be improved.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__altitude_grid</span> <span class="o">=</span> <span class="n">_Altitude</span><span class="p">(</span><span class="n">altitude_grid</span><span class="p">,</span> <span class="s1">&#39;altitude_grid&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__pressure_grid</span> <span class="o">=</span> <span class="n">_EoSVar</span><span class="p">(</span><span class="n">pressure_grid</span><span class="p">,</span> <span class="s1">&#39;pressure_grid&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__temperature_grid</span> <span class="o">=</span> <span class="n">_EoSVar</span><span class="p">(</span><span class="n">temperature_grid</span><span class="p">,</span> <span class="s1">&#39;temperature_grid&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__mass</span> <span class="o">=</span> <span class="n">_ScaleHeightVar</span><span class="p">(</span><span class="n">particle_mass</span><span class="p">,</span> <span class="s1">&#39;particle_mass&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__gravity</span> <span class="o">=</span> <span class="n">_ScaleHeightVar</span><span class="p">(</span><span class="n">gravity</span><span class="p">,</span> <span class="s1">&#39;gravity&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__altitude</span> <span class="o">=</span> <span class="n">_Altitude</span><span class="p">(</span><span class="n">altitude_boundaries</span><span class="p">,</span> <span class="s1">&#39;altitude_boundaries&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_error_if_inputs_are_bad</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__n_layers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__extract_n_layers</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__pressure</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">__interpolate_to_boundary_alts</span><span class="p">(</span><span class="n">pressure_grid</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__temperature</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">__interpolate_to_boundary_alts</span><span class="p">(</span><span class="n">temperature_grid</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__number_density</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">__compute_number_density</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__pressure</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__temperature</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__column_density</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">__compute_column_density</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__scale_height</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">__compute_scale_height</span><span class="p">(</span><span class="n">particle_mass</span><span class="p">,</span> <span class="n">gravity</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__raise_error_if_inputs_are_bad</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_value_error_if_eos_vars_are_not_all_same_shape</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_value_error_if_altitudes_do_not_match_pixel_dim</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_value_error_if_model_has_too_few_boundaries</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__raise_value_error_if_eos_vars_are_not_all_same_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__altitude_grid</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">__pressure_grid</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> \
+               <span class="bp">self</span><span class="o">.</span><span class="n">__temperature_grid</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;altitude_grid, pressure_grid, and temperature_grid &#39;</span> \
+                      <span class="s1">&#39;must have the same shapes.&#39;</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__raise_value_error_if_altitudes_do_not_match_pixel_dim</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__altitude_grid</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__altitude</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;altitude_grid and altitude_boundaries can have &#39;</span> \
+                      <span class="s1">&#39;different shapes along the 0th axis but must have&#39;</span> \
+                      <span class="s1">&#39;the same shape along all subsequent axes.&#39;</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__raise_value_error_if_model_has_too_few_boundaries</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__altitude</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;altitude_boundaries must contain at least 2 boundaries.&#39;</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__extract_n_layers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__altitude</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+
+    <span class="c1"># TODO: Ideally I&#39;d like to vectorize this</span>
+    <span class="k">def</span> <span class="nf">__interpolate_to_boundary_alts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grid</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="n">flattened_altitude_grid</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">__flatten_along_pixel_dimension</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__altitude_grid</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+        <span class="n">flattened_boundaries</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">__flatten_along_pixel_dimension</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__altitude</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+        <span class="n">flattened_quantity_grid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__flatten_along_pixel_dimension</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span>
+        <span class="n">interpolated_quantity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">flattened_boundaries</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">pixel</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">flattened_boundaries</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="n">interpolated_quantity</span><span class="p">[:,</span> <span class="n">pixel</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">flattened_boundaries</span><span class="p">[:,</span> <span class="n">pixel</span><span class="p">],</span>
+                          <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">flattened_altitude_grid</span><span class="p">[:,</span> <span class="n">pixel</span><span class="p">]),</span>
+                          <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">flattened_quantity_grid</span><span class="p">[:,</span> <span class="n">pixel</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">interpolated_quantity</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__altitude</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__flatten_along_pixel_dimension</span><span class="p">(</span><span class="n">grid</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">grid</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">int</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="n">grid</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__compute_number_density</span><span class="p">(</span><span class="n">pressure</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                                 <span class="n">temperature</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">pressure</span> <span class="o">/</span> <span class="n">temperature</span> <span class="o">/</span> <span class="n">Boltzmann</span>
+
+    <span class="c1"># TODO: Ideally I&#39;d like to vectorize this</span>
+    <span class="c1"># TODO: Mike said to do this in log(z) space. Is this still necessary?</span>
+    <span class="c1"># TODO: (Related) This introduces some errors. I reckon using log(z) space</span>
+    <span class="c1">#  will fix them.</span>
+    <span class="k">def</span> <span class="nf">__compute_column_density</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="n">flattened_boundaries</span> <span class="o">=</span> \
+            <span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__flatten_along_pixel_dimension</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__altitude</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+                      <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
+        <span class="n">flattened_pressure</span> <span class="o">=</span> \
+            <span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__flatten_along_pixel_dimension</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__pressure</span><span class="p">))</span>
+        <span class="n">flattened_temperature</span> <span class="o">=</span> \
+            <span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__flatten_along_pixel_dimension</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__temperature</span><span class="p">))</span>
+        <span class="n">column_density</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">__n_layers</span><span class="p">,</span>
+                                   <span class="n">flattened_boundaries</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="k">for</span> <span class="n">pixel</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">flattened_boundaries</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="n">colden</span> <span class="o">=</span> <span class="p">[</span><span class="n">quad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__make_number_density_at_altitude</span><span class="p">,</span>
+                           <span class="n">flattened_boundaries</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">pixel</span><span class="p">],</span>
+                           <span class="n">flattened_boundaries</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">pixel</span><span class="p">],</span>
+                           <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">flattened_boundaries</span><span class="p">[:,</span> <span class="n">pixel</span><span class="p">],</span>
+                                 <span class="n">flattened_pressure</span><span class="p">[:,</span> <span class="n">pixel</span><span class="p">],</span>
+                                 <span class="n">flattened_temperature</span><span class="p">[:,</span> <span class="n">pixel</span><span class="p">]))[</span><span class="mi">0</span><span class="p">]</span>
+                      <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__n_layers</span><span class="p">)]</span>
+            <span class="n">column_density</span><span class="p">[:,</span> <span class="n">pixel</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">colden</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__altitude</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">column_density</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">column_density</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">column_density</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],)</span> <span class="o">+</span>
+                                          <span class="bp">self</span><span class="o">.</span><span class="n">__altitude</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+    <span class="k">def</span> <span class="nf">__make_number_density_at_altitude</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">alt_grid</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pressure</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+            <span class="n">temperature</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">alt_grid</span><span class="p">,</span> <span class="n">pressure</span><span class="p">)</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">alt_grid</span><span class="p">,</span> <span class="n">temperature</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__compute_number_density</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__compute_scale_height</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">particle_mass</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                               <span class="n">gravity</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Boltzmann</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">__temperature</span> <span class="o">/</span> <span class="p">(</span><span class="n">particle_mass</span> <span class="o">*</span> <span class="n">gravity</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">n_layers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the number of layers in the model.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This value is inferred from the 0 :sup:`th` axis of</span>
+<span class="sd">        ``altitude_boundaries``.</span>
+
+<span class="sd">        In DISORT, this variable is named ``MAXCLY`` (though in the ``disort``</span>
+<span class="sd">        package, this variable is optional).</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__n_layers</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">altitude</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the input boundary altitude [km].</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__altitude</span><span class="o">.</span><span class="n">val</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">pressure</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the pressure [Pa] at the boundary altitude.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This variable is obtained by linearly interpolating the input pressure</span>
+<span class="sd">        onto ``altitude_boundaries``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__pressure</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">temperature</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the temperature [K] at the boundary altitude.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This variable is obtained by linearly interpolating the input</span>
+<span class="sd">        temperature onto ``altitude_boundaries``.</span>
+
+<span class="sd">        In DISORT, this variable is named ``TEMPER``. It is only needed by</span>
+<span class="sd">        DISORT if :py:attr:`~radiation.ThermalEmission.thermal_emission` is set</span>
+<span class="sd">        to ``True``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__temperature</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">number_density</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Get the number density [:math:`\frac{\text{particles}}{\text{m}^3}`]</span>
+<span class="sd">        at the boundary altitude.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This variable is obtained by getting the pressure and temperature at the</span>
+<span class="sd">        boundary altitude, then solving :eq:`hydrostatic_equation`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__number_density</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">column_density</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Get the column density [:math:`\frac{\text{particles}}{\text{m}^2}`]</span>
+<span class="sd">        of the boundary *layers*.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This is obtained by getting the number density at the boundary altitude,</span>
+<span class="sd">        then integrating (using Gaussian quadrature) between the boundary</span>
+<span class="sd">        altitude such that</span>
+
+<span class="sd">        .. math::</span>
+<span class="sd">           N = \int n(z) dz</span>
+
+<span class="sd">        is satisfied, where :math:`N` is the column density and :math:`n(z)` is</span>
+<span class="sd">        the number density.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__column_density</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">scale_height</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Get the scale height [km] at the boundary altitude.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        For a hydrostatic atmosphere, the scale height is defined as</span>
+
+<span class="sd">        .. math::</span>
+<span class="sd">           H = \frac{k_B T}{mg}</span>
+
+<span class="sd">        where :math:`H` is the scale height, :math:`k_B` is Boltzmann&#39;s</span>
+<span class="sd">        constant, :math:`T` is the temperature, :math:`m` is the average mass</span>
+<span class="sd">        of an atmospheric particle, and :math:`g` is the planetary gravity.</span>
+
+<span class="sd">        In DISORT, this variable is named ``H_LYR``. Despite the name, this</span>
+<span class="sd">        variable should have length of ``n_layers + 1``. It is only used if</span>
+<span class="sd">        :py:attr:`~controller.ModelBehavior.do_pseudo_sphere` is set to</span>
+<span class="sd">        ``True``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__scale_height</span></div>
+
+
+<span class="k">class</span> <span class="nc">_Altitude</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Perform checks that a given altitude is plausible.</span>
+
+<span class="sd">    _Altitude accepts altitudes and ensures they&#39;re monotonically decreasing.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">altitude</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        altitude</span>
+<span class="sd">            Array of altitude.</span>
+<span class="sd">        name</span>
+<span class="sd">            Name of the altitude array.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        TypeError</span>
+<span class="sd">            Raised if `altitude`` is not a numpy.ndarray</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            Raised if ``altitude`` is not monotonically decreasing along</span>
+<span class="sd">            the 0th axis.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__altitude</span> <span class="o">=</span> <span class="n">altitude</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__name</span> <span class="o">=</span> <span class="n">name</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_error_if_input_is_bad</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__raise_error_if_input_is_bad</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_type_error_if_not_ndarray</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_value_error_if_not_monotonically_decreasing</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__raise_type_error_if_not_ndarray</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__altitude</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__name</span><span class="si">}</span><span class="s1"> must be a numpy.ndarray.&#39;</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__raise_value_error_if_not_monotonically_decreasing</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__altitude</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__name</span><span class="si">}</span><span class="s1"> must be monotonically decreasing along &#39;</span> \
+                      <span class="sa">f</span><span class="s1">&#39;the 0th axis.&#39;</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">val</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__altitude</span>
+
+
+<span class="k">class</span> <span class="nc">_EoSVar</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Perform checks that a given equation of state variable is plausible.</span>
+
+<span class="sd">    _EoSVar accepts equation of state variables to ensure they&#39;re physically</span>
+<span class="sd">    allowable.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variable</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        variable</span>
+<span class="sd">            Array of an equation of state variable.</span>
+<span class="sd">        name</span>
+<span class="sd">            The name of the variable.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        TypeError</span>
+<span class="sd">            Raised if ``variable`` is not a numpy.ndarray.</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            Raised if ``variable`` contains negative values.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__var</span> <span class="o">=</span> <span class="n">variable</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__name</span> <span class="o">=</span> <span class="n">name</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_error_if_input_is_bad</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__raise_error_if_input_is_bad</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_type_error_if_not_ndarray</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_value_error_if_contains_negative_values</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__raise_type_error_if_not_ndarray</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__var</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__name</span><span class="si">}</span><span class="s1"> must be a numpy.ndarray.&#39;</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__raise_value_error_if_contains_negative_values</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__var</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isinf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__var</span><span class="p">)):</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__name</span><span class="si">}</span><span class="s1"> must only contain positive finite values.&#39;</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">val</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the input variable.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__var</span>
+
+
+<span class="k">class</span> <span class="nc">_ScaleHeightVar</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Perform checks that a given scale height variable is plausible.</span>
+
+<span class="sd">    _ScaleHeightVar accepts scale height variables to ensure they&#39;re physically</span>
+<span class="sd">    allowable.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variable</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        variable</span>
+<span class="sd">            Array of an equation of state variable.</span>
+<span class="sd">        name</span>
+<span class="sd">            The name of the variable.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        TypeError</span>
+<span class="sd">            Raised if ``variable`` is not a float.</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            Raised if ``variable`` contains negative values.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__var</span> <span class="o">=</span> <span class="n">variable</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__name</span> <span class="o">=</span> <span class="n">name</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_error_if_input_is_bad</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__raise_error_if_input_is_bad</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_type_error_if_not_float</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__raise_value_error_if_contains_negative_values</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__raise_type_error_if_not_float</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__var</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__name</span><span class="si">}</span><span class="s1"> must be a float.&#39;</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__raise_value_error_if_contains_negative_values</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__var</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isinf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__var</span><span class="p">)):</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__name</span><span class="si">}</span><span class="s1"> must only contain positive finite values.&#39;</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">val</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the input variable.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__var</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, kconnour.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

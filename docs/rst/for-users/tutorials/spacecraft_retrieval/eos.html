@@ -4,8 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>The eos module &mdash; pyRT_DISORT  documentation</title>
@@ -115,7 +114,6 @@
 <li class="toctree-l3"><a class="reference internal" href="retrieval.html">Retrieval</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../rover_retrieval.html">Rover Retrieval</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../api-reference.html">API reference</a></li>
@@ -194,17 +192,17 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="the-eos-module">
+  <div class="section" id="the-eos-module">
 <h1>The eos module<a class="headerlink" href="#the-eos-module" title="Permalink to this headline">¶</a></h1>
 <p>Let’s now turn our attention to creating the atmospheric model. This will be a
 multi-step process that will span several modules, but we can start by just
 defining the boundaries we’d like to use in the model, along with equation of
 state variables.</p>
-<section id="hydrostatic">
+<div class="section" id="hydrostatic">
 <h2>Hydrostatic<a class="headerlink" href="#hydrostatic" title="Permalink to this headline">¶</a></h2>
 <p>Suppose we have a temperature and pressure profile and the altitude where those
 quantities are defined for out pixel. If we think the atmosphere is in hydrostatic
-equilibrium, we can use <a class="reference internal" href="../../api-reference/eos.html#eos.Hydrostatic" title="eos.Hydrostatic"><code class="xref py py-class docutils literal notranslate"><span class="pre">Hydrostatic</span></code></a> to compute the number
+equilibrium, we can use <code class="xref py py-class docutils literal notranslate"><span class="pre">Hydrostatic</span></code> to compute the number
 density, column density, and scale height—just about all the equation of
 state quantities we’d care about when doing a retrieval.</p>
 <p>Let’s start by making some profiles and defining some properties of the
@@ -262,8 +260,8 @@ element shorter than the rest since it’s only defined within each of the
 quantities (like from a GCM) you can skip making this object and directly
 input these values later on.</p>
 </div>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>

@@ -4,8 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Radiation &mdash; pyRT_DISORT  documentation</title>
@@ -185,13 +184,13 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="module-radiation">
-<span id="radiation"></span><h1>Radiation<a class="headerlink" href="#module-radiation" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-pyrt.radiation">
+<span id="radiation"></span><h1>Radiation<a class="headerlink" href="#module-pyrt.radiation" title="Permalink to this headline">¶</a></h1>
 <p>The <code class="code docutils literal notranslate"><span class="pre">radiation</span></code> module contains data structures for holding the
 radiation variables used in DISORT.</p>
 <dl class="py class">
-<dt class="sig sig-object py" id="radiation.IncidentFlux">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">radiation.</span></span><span class="sig-name descname"><span class="pre">IncidentFlux</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">beam_flux</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">numpy.pi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isotropic_flux</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/radiation.html#IncidentFlux"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiation.IncidentFlux" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.radiation.IncidentFlux">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pyrt.radiation.</span></span><span class="sig-name descname"><span class="pre">IncidentFlux</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">beam_flux</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">numpy.pi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isotropic_flux</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/pyrt/radiation.html#IncidentFlux"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrt.radiation.IncidentFlux" title="Permalink to this definition">¶</a></dt>
 <dd><p>A data structure for holding the incident fluxes.</p>
 <p>IncidentFlux creates scalars for the incident beam and isotropic fluxes and
 performs checks that the input fluxes are valid inputs to DISORT.</p>
@@ -213,25 +212,25 @@ variable and <code class="code docutils literal notranslate"><span class="pre">b
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>If <a class="reference internal" href="#radiation.ThermalEmission.thermal_emission" title="radiation.ThermalEmission.thermal_emission"><code class="xref py py-attr docutils literal notranslate"><span class="pre">thermal_emission</span></code></a> is set to <code class="code docutils literal notranslate"><span class="pre">True</span></code>,
+<p>If <a class="reference internal" href="#pyrt.radiation.ThermalEmission.thermal_emission" title="pyrt.radiation.ThermalEmission.thermal_emission"><code class="xref py py-attr docutils literal notranslate"><span class="pre">thermal_emission</span></code></a> is set to <code class="code docutils literal notranslate"><span class="pre">True</span></code>,
 this is assumed to have the same units as <code class="code docutils literal notranslate"><span class="pre">PLKAVG</span></code> (which defaults
 to [<span class="math notranslate nohighlight">\(\frac{\text{W}}{\text{m}^2}\)</span>]) and the corresponding
 incident flux is umu0 * beam_flux and pi * isotropic_flux. If
-<a class="reference internal" href="#radiation.ThermalEmission.thermal_emission" title="radiation.ThermalEmission.thermal_emission"><code class="xref py py-attr docutils literal notranslate"><span class="pre">thermal_emission</span></code></a> is set to <code class="code docutils literal notranslate"><span class="pre">False</span></code>,
+<a class="reference internal" href="#pyrt.radiation.ThermalEmission.thermal_emission" title="pyrt.radiation.ThermalEmission.thermal_emission"><code class="xref py py-attr docutils literal notranslate"><span class="pre">thermal_emission</span></code></a> is set to <code class="code docutils literal notranslate"><span class="pre">False</span></code>,
 <code class="code docutils literal notranslate"><span class="pre">beam_flux</span></code> and <code class="code docutils literal notranslate"><span class="pre">isotropic_flux</span></code> have arbitrary units, and
 the output fluxes and
 intensities are assumed to have the same units as these variables.</p>
 <dl class="py property">
-<dt class="sig sig-object py" id="radiation.IncidentFlux.beam_flux">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">beam_flux</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#radiation.IncidentFlux.beam_flux" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.radiation.IncidentFlux.beam_flux">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">beam_flux</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#pyrt.radiation.IncidentFlux.beam_flux" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input flux of the incident beam at the top boundary.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">FBEAM</span></code>.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="radiation.IncidentFlux.isotropic_flux">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">isotropic_flux</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#radiation.IncidentFlux.isotropic_flux" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.radiation.IncidentFlux.isotropic_flux">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">isotropic_flux</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#pyrt.radiation.IncidentFlux.isotropic_flux" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input flux of isotropic sources at the top boundary.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">FISOT</span></code>.</p>
@@ -240,8 +239,8 @@ intensities are assumed to have the same units as these variables.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="radiation.ThermalEmission">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">radiation.</span></span><span class="sig-name descname"><span class="pre">ThermalEmission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thermal_emission</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bottom_temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_emissivity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/radiation.html#ThermalEmission"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#radiation.ThermalEmission" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.radiation.ThermalEmission">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pyrt.radiation.</span></span><span class="sig-name descname"><span class="pre">ThermalEmission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thermal_emission</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bottom_temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_emissivity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/pyrt/radiation.html#ThermalEmission"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrt.radiation.ThermalEmission" title="Permalink to this definition">¶</a></dt>
 <dd><p>A data structure for holding thermal emission variables.</p>
 <p>ThermalEmission creates variables needs to include thermal emission in
 DISORT.</p>
@@ -282,11 +281,11 @@ thermal emission and all of the aforementioned variables.</p>
 </dl>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="observation/Spectral.html#observation.Spectral" title="observation.Spectral"><code class="xref py py-class docutils literal notranslate"><span class="pre">Spectral</span></code></a>, <a class="reference internal" href="eos.html#eos.Hydrostatic" title="eos.Hydrostatic"><code class="xref py py-class docutils literal notranslate"><span class="pre">Hydrostatic</span></code></a></p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">Spectral</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Hydrostatic</span></code></p>
 </div>
 <dl class="py property">
-<dt class="sig sig-object py" id="radiation.ThermalEmission.bottom_temperature">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">bottom_temperature</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#radiation.ThermalEmission.bottom_temperature" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.radiation.ThermalEmission.bottom_temperature">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">bottom_temperature</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#pyrt.radiation.ThermalEmission.bottom_temperature" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input temperature at the bottom boundary [K].</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">BTEMP</span></code>. It is only used by
@@ -294,16 +293,16 @@ DISORT if <code class="code docutils literal notranslate"><span class="pre">ther
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="radiation.ThermalEmission.thermal_emission">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">thermal_emission</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#radiation.ThermalEmission.thermal_emission" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.radiation.ThermalEmission.thermal_emission">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">thermal_emission</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#pyrt.radiation.ThermalEmission.thermal_emission" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get whether thermal emission will be used in the model.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">PLANK</span></code>.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="radiation.ThermalEmission.top_emissivity">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">top_emissivity</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#radiation.ThermalEmission.top_emissivity" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.radiation.ThermalEmission.top_emissivity">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">top_emissivity</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#pyrt.radiation.ThermalEmission.top_emissivity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input emissivity at the top boundary.</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">TEMIS</span></code>. It is only used by
@@ -311,8 +310,8 @@ DISORT if <code class="code docutils literal notranslate"><span class="pre">ther
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="radiation.ThermalEmission.top_temperature">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">top_temperature</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#radiation.ThermalEmission.top_temperature" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.radiation.ThermalEmission.top_temperature">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">top_temperature</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#pyrt.radiation.ThermalEmission.top_temperature" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the input temperature at the top boundary [K].</p>
 <p class="rubric">Notes</p>
 <p>In DISORT, this variable is named <code class="code docutils literal notranslate"><span class="pre">TTEMP</span></code>. It is only used by
@@ -321,7 +320,7 @@ DISORT if <code class="code docutils literal notranslate"><span class="pre">ther
 
 </dd></dl>
 
-</section>
+</div>
 
 
            </div>

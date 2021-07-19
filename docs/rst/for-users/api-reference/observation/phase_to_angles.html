@@ -4,8 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>phase_to_angles &mdash; pyRT_DISORT  documentation</title>
@@ -194,11 +193,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="phase-to-angles">
+  <div class="section" id="phase-to-angles">
 <h1>phase_to_angles<a class="headerlink" href="#phase-to-angles" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="observation.phase_to_angles">
-<span class="sig-prename descclassname"><span class="pre">observation.</span></span><span class="sig-name descname"><span class="pre">phase_to_angles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">incidence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emission</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/observation.html#phase_to_angles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#observation.phase_to_angles" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.observation.phase_to_angles">
+<span class="sig-prename descclassname"><span class="pre">pyrt.observation.</span></span><span class="sig-name descname"><span class="pre">phase_to_angles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">incidence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emission</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pyrt/observation.html#phase_to_angles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrt.observation.phase_to_angles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct an instance of Angles in the case where phase angles are
 known but azimuth angles are unknown.</p>
 <dl class="field-list simple">
@@ -220,7 +219,7 @@ and 180.</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="Angles.html#observation.Angles" title="observation.Angles">observation.Angles</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="Angles.html#pyrt.observation.Angles" title="pyrt.observation.Angles">pyrt.observation.Angles</a></p>
 </dd>
 </dl>
 <div class="admonition warning">
@@ -233,7 +232,7 @@ and 180.</p></li>
 <p class="rubric">Examples</p>
 <p>For a random assortment of input angles:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyRT_DISORT.observation</span> <span class="kn">import</span> <span class="n">phase_to_angles</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyrt.observation</span> <span class="kn">import</span> <span class="n">phase_to_angles</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">incidence</span> <span class="o">=</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">emission</span> <span class="o">=</span> <span class="p">[</span><span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">phase</span> <span class="o">=</span> <span class="p">[</span><span class="mi">25</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">35</span><span class="p">]</span>
@@ -251,7 +250,7 @@ and 180.</p></li>
 </div>
 </dd></dl>
 
-</section>
+</div>
 
 
            </div>

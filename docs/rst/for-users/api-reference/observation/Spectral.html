@@ -4,8 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Spectral &mdash; pyRT_DISORT  documentation</title>
@@ -194,11 +193,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="spectral">
+  <div class="section" id="spectral">
 <h1>Spectral<a class="headerlink" href="#spectral" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="observation.Spectral">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">observation.</span></span><span class="sig-name descname"><span class="pre">Spectral</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">short_wavelength</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long_wavelength</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/observation.html#Spectral"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#observation.Spectral" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.observation.Spectral">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pyrt.observation.</span></span><span class="sig-name descname"><span class="pre">Spectral</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">short_wavelength</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long_wavelength</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pyrt/observation.html#Spectral"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrt.observation.Spectral" title="Permalink to this definition">¶</a></dt>
 <dd><p>A data structure that contains spectral information required by DISORT.</p>
 <p>It accepts the short and long wavelengths from an observation and computes
 their corresponding wavenumbers. It can accommodate arrays of any shape as
@@ -224,19 +223,19 @@ long as they have the same shape.</p>
 <p class="rubric">Notes</p>
 <p>If you do not plan to use thermal emission, there is probably little benefit
 to making an instance of this class. See
-<a class="reference internal" href="../radiation.html#radiation.ThermalEmission" title="radiation.ThermalEmission"><code class="xref py py-class docutils literal notranslate"><span class="pre">ThermalEmission</span></code></a> for a discussion on thermal radiation
-in DISORT.</p>
+<a class="reference internal" href="../radiation.html#pyrt.radiation.ThermalEmission" title="pyrt.radiation.ThermalEmission"><code class="xref py py-class docutils literal notranslate"><span class="pre">ThermalEmission</span></code></a> for a discussion on thermal
+radiation in DISORT.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <dl class="simple">
-<dt><a class="reference internal" href="constant_width.html#observation.constant_width" title="observation.constant_width"><code class="xref py py-obj docutils literal notranslate"><span class="pre">constant_width</span></code></a></dt><dd><p>Create instances of this class if the wavelengths are equally spaced.</p>
+<dt><a class="reference internal" href="constant_width.html#pyrt.observation.constant_width" title="pyrt.observation.constant_width"><code class="xref py py-obj docutils literal notranslate"><span class="pre">constant_width</span></code></a></dt><dd><p>Create instances of this class if the wavelengths are equally spaced.</p>
 </dd>
 </dl>
 </div>
 <p class="rubric">Examples</p>
 <p>Import the relevant modules</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyRT_DISORT.observation</span> <span class="kn">import</span> <span class="n">Spectral</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyrt.observation</span> <span class="kn">import</span> <span class="n">Spectral</span>
 </pre></div>
 </div>
 <p>Instantiate this class for a simple set of wavelengths.</p>
@@ -275,32 +274,32 @@ as many arrays as possible equally shaped.</p>
 </pre></div>
 </div>
 <dl class="py property">
-<dt class="sig sig-object py" id="observation.Spectral.high_wavenumber">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">high_wavenumber</span></span><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#observation.Spectral.high_wavenumber" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.observation.Spectral.high_wavenumber">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">high_wavenumber</span></span><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#pyrt.observation.Spectral.high_wavenumber" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the high wavenumber [cm <sup>-1</sup>]—the wavenumber
 corresponding to <code class="docutils literal notranslate"><span class="pre">short_wavelength</span></code>.</p>
 <p class="rubric">Notes</p>
 <p>Each element along the observation dimension(s) is named <code class="code docutils literal notranslate"><span class="pre">WVNMHI</span></code>
 in DISORT. It is only needed by DISORT if
-<a class="reference internal" href="../radiation.html#radiation.ThermalEmission.thermal_emission" title="radiation.ThermalEmission.thermal_emission"><code class="xref py py-attr docutils literal notranslate"><span class="pre">thermal_emission</span></code></a> is set to
+<a class="reference internal" href="../radiation.html#pyrt.radiation.ThermalEmission.thermal_emission" title="pyrt.radiation.ThermalEmission.thermal_emission"><code class="xref py py-attr docutils literal notranslate"><span class="pre">thermal_emission</span></code></a> is set to
 <code class="code docutils literal notranslate"><span class="pre">True</span></code>.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="observation.Spectral.low_wavenumber">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">low_wavenumber</span></span><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#observation.Spectral.low_wavenumber" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pyrt.observation.Spectral.low_wavenumber">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">low_wavenumber</span></span><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#pyrt.observation.Spectral.low_wavenumber" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the low wavenumber [cm <sup>-1</sup>]—the wavenumber corresponding
 to <code class="docutils literal notranslate"><span class="pre">long_wavelength</span></code>.</p>
 <p class="rubric">Notes</p>
 <p>Each element along the observation dimension(s) is named <code class="code docutils literal notranslate"><span class="pre">WVNMLO</span></code>
 in DISORT. It is only needed by DISORT if
-<a class="reference internal" href="../radiation.html#radiation.ThermalEmission.thermal_emission" title="radiation.ThermalEmission.thermal_emission"><code class="xref py py-attr docutils literal notranslate"><span class="pre">thermal_emission</span></code></a> is set to
+<a class="reference internal" href="../radiation.html#pyrt.radiation.ThermalEmission.thermal_emission" title="pyrt.radiation.ThermalEmission.thermal_emission"><code class="xref py py-attr docutils literal notranslate"><span class="pre">thermal_emission</span></code></a> is set to
 <code class="code docutils literal notranslate"><span class="pre">True</span></code>.</p>
 </dd></dl>
 
 </dd></dl>
 
-</section>
+</div>
 
 
            </div>

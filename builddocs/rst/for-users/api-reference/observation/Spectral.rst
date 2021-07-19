@@ -1,4 +1,4 @@
 Spectral
 ========
-.. autoclass:: observation.Spectral
+.. autoclass:: pyrt.observation.Spectral
    :members:

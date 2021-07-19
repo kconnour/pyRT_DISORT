@@ -4,8 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>The output module &mdash; pyRT_DISORT  documentation</title>
@@ -117,7 +116,6 @@
 <li class="toctree-l3"><a class="reference internal" href="retrieval.html">Retrieval</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../rover_retrieval.html">Rover Retrieval</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../api-reference.html">API reference</a></li>
@@ -196,16 +194,16 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="the-output-module">
+  <div class="section" id="the-output-module">
 <h1>The output module<a class="headerlink" href="#the-output-module" title="Permalink to this headline">¶</a></h1>
 <p>We’re nearly done with our simulation. The last thing we need to do before we
 can run DISORT is create some output parameters and arrays.</p>
-<section id="outputarrays">
+<div class="section" id="outputarrays">
 <h2>OutputArrays<a class="headerlink" href="#outputarrays" title="Permalink to this headline">¶</a></h2>
 <p>Let’s start by making the output arrays. These are arrays filled with 0s that
 will be populated with values as DISORT runs. We only need a few parameters to
 define the shape of these arrays, and we’ve already made
-the parameters we’ll need. Let’s add them to <a class="reference internal" href="../../api-reference/output.html#output.OutputArrays" title="output.OutputArrays"><code class="xref py py-class docutils literal notranslate"><span class="pre">OutputArrays</span></code></a>.</p>
+the parameters we’ll need. Let’s add them to <code class="xref py py-class docutils literal notranslate"><span class="pre">OutputArrays</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.output</span> <span class="kn">import</span> <span class="n">OutputArrays</span>
 
 <span class="n">oa</span> <span class="o">=</span> <span class="n">OutputArrays</span><span class="p">(</span><span class="n">cp</span><span class="o">.</span><span class="n">n_polar</span><span class="p">,</span> <span class="n">cp</span><span class="o">.</span><span class="n">n_user_levels</span><span class="p">,</span> <span class="n">cp</span><span class="o">.</span><span class="n">n_azimuth</span><span class="p">)</span>
@@ -220,11 +218,11 @@ the parameters we’ll need. Let’s add them to <a class="reference internal" h
 <span class="n">TRNMED</span> <span class="o">=</span> <span class="n">oa</span><span class="o">.</span><span class="n">transmissivity_medium</span>
 </pre></div>
 </div>
-</section>
-<section id="outputbehavior">
+</div>
+<div class="section" id="outputbehavior">
 <h2>OutputBehavior<a class="headerlink" href="#outputbehavior" title="Permalink to this headline">¶</a></h2>
 <p>Let’s now set some switches to define how DISORT will
-run. This is done with <a class="reference internal" href="../../api-reference/output.html#output.OutputBehavior" title="output.OutputBehavior"><code class="xref py py-class docutils literal notranslate"><span class="pre">OutputBehavior</span></code></a>, which sets some default
+run. This is done with <code class="xref py py-class docutils literal notranslate"><span class="pre">OutputBehavior</span></code>, which sets some default
 values for how DISORT should run, but as usual you’re free to override them.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.output</span> <span class="kn">import</span> <span class="n">OutputBehavior</span>
 
@@ -235,8 +233,8 @@ values for how DISORT should run, but as usual you’re free to override them.</
 <span class="n">USRTAU</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">user_optical_depths</span>
 </pre></div>
 </div>
-</section>
-<section id="userlevel">
+</div>
+<div class="section" id="userlevel">
 <h2>UserLevel<a class="headerlink" href="#userlevel" title="Permalink to this headline">¶</a></h2>
 <p>We need an oddball variable to make the user levels. We can do that here.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.output</span> <span class="kn">import</span> <span class="n">UserLevel</span>
@@ -249,8 +247,8 @@ values for how DISORT should run, but as usual you’re free to override them.</
 <p>This is a variable you need to completely create yourself if your run will
 use it; otherwise pyRT_DISORT will make an array of 0s of the correct shape
 to appease DISORT.</p>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>

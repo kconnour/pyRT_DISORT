@@ -1,11 +1,10 @@
-#########
 Tutorials
-#########
-This page contains some explanatory guides for combining the tools found in
-pyRT_DISORT in a useful way.
+=========
+This page contains some explanatory guides for how to perform tasks with
+pyRT_DISORT.
 
 .. toctree::
    :maxdepth: 1
+   :caption: Retrievals from scratch
 
    tutorials/spacecraft_retrieval.rst
-   tutorials/rover_retrieval.rst

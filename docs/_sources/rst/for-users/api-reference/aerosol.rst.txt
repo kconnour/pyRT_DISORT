@@ -1,5 +1,5 @@
 Aerosol
 =======
 
-.. automodule:: aerosol
+.. automodule:: pyrt.aerosol
    :members:

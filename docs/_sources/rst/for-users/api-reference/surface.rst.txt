@@ -1,5 +1,5 @@
 Surface
 =======
 
-.. automodule:: surface
+.. automodule:: pyrt.surface
    :members:

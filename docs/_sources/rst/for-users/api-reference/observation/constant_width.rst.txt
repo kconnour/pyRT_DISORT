@@ -1,3 +1,3 @@
 constant_width
 ==============
-.. autofunction:: observation.constant_width
+.. autofunction:: pyrt.observation.constant_width

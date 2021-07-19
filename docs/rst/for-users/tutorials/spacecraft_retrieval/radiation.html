@@ -4,8 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>The radiation module &mdash; pyRT_DISORT  documentation</title>
@@ -116,7 +115,6 @@
 <li class="toctree-l3"><a class="reference internal" href="retrieval.html">Retrieval</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../rover_retrieval.html">Rover Retrieval</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../api-reference.html">API reference</a></li>
@@ -195,13 +193,13 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="the-radiation-module">
+  <div class="section" id="the-radiation-module">
 <h1>The radiation module<a class="headerlink" href="#the-radiation-module" title="Permalink to this headline">¶</a></h1>
 <p>Let’s now specify the flux and thermal quantities used in the model.</p>
-<section id="incidentflux">
+<div class="section" id="incidentflux">
 <h2>IncidentFlux<a class="headerlink" href="#incidentflux" title="Permalink to this headline">¶</a></h2>
 <p>We can define the beam flux and the isotropic flux at the top of the atmosphere
-in the <a class="reference internal" href="../../api-reference/radiation.html#radiation.IncidentFlux" title="radiation.IncidentFlux"><code class="xref py py-class docutils literal notranslate"><span class="pre">IncidentFlux</span></code></a> class. Instances of this class don’t do
+in the <code class="xref py py-class docutils literal notranslate"><span class="pre">IncidentFlux</span></code> class. Instances of this class don’t do
 anything but containerize your desired flux, and provide some default values.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.radiation</span> <span class="kn">import</span> <span class="n">IncidentFlux</span>
 
@@ -214,11 +212,11 @@ anything but containerize your desired flux, and provide some default values.</p
 <p>By default, <code class="code docutils literal notranslate"><span class="pre">beam_flux</span></code> is pi, and <code class="code docutils literal notranslate"><span class="pre">isotropic_flux</span></code> is 0. At least
 for our Martian simulation, there’s no real need to worry about the isotropic
 flux from space.</p>
-</section>
-<section id="thermalemission">
+</div>
+<div class="section" id="thermalemission">
 <h2>ThermalEmission<a class="headerlink" href="#thermalemission" title="Permalink to this headline">¶</a></h2>
 <p>We can also define whether thermal emission is used in the model with the
-<a class="reference internal" href="../../api-reference/radiation.html#radiation.ThermalEmission" title="radiation.ThermalEmission"><code class="xref py py-class docutils literal notranslate"><span class="pre">ThermalEmission</span></code></a> class. As before, pyRT_DISORT has default
+<code class="xref py py-class docutils literal notranslate"><span class="pre">ThermalEmission</span></code> class. As before, pyRT_DISORT has default
 values to get you up and running, though you can easily override them.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyRT_DISORT.radiation</span> <span class="kn">import</span> <span class="n">ThermalEmission</span>
 
@@ -233,8 +231,8 @@ values to get you up and running, though you can easily override them.</p>
 <p>By default, <code class="code docutils literal notranslate"><span class="pre">thermal_emission</span></code> is set to <code class="code docutils literal notranslate"><span class="pre">False</span></code> and no other
 values are used. But
 you’re free to turn on thermal emission and add values for the boundaries.</p>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>

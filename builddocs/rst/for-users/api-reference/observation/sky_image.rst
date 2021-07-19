@@ -1,3 +1,3 @@
 sky_image
 =========
-.. autofunction:: observation.sky_image
+.. autofunction:: pyrt.observation.sky_image
