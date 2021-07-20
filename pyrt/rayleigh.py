@@ -2,8 +2,8 @@
 scattering.
 """
 import numpy as np
-from pyRT_DISORT.eos import _EoSVar
-from pyRT_DISORT.observation import _Wavelength
+from pyrt.eos import _EoSVar
+from pyrt.observation import _Wavelength
 
 
 class _Rayleigh:
@@ -145,7 +145,7 @@ class RayleighCO2(_Rayleigh):
 
         """
         self.__wavelength = _Wavelength(wavelength, 'wavelength')
-        self.__wavenumber = self.__wavelength.wavelength_to_wavenumber()
+        self.__wavenumber = self.__wavelength.to_wavenumber()
         self.__column_density = _EoSVar(column_density, 'cd')
 
         self.__raise_error_if_inputs_have_incompatible_shapes()

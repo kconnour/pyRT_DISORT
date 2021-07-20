@@ -1,6 +1,6 @@
 # observation module
 import numpy as np
-from pyRT_DISORT.observation import phase_to_angles, Spectral
+from pyrt.observation import phase_to_angles, Spectral
 
 dummy_angles = np.outer(np.linspace(5, 10, num=15), np.linspace(5, 8, num=20))
 
@@ -22,8 +22,6 @@ width = 0.05
 
 spectral = Spectral(pixel_wavelengths - width, pixel_wavelengths + width)
 
-short_wavelength = spectral.short_wavelength
-long_wavelength = spectral.long_wavelength
 WVNMHI = spectral.high_wavenumber
 WVNMLO = spectral.low_wavenumber
 
@@ -41,7 +39,7 @@ gravity = 3.7
 
 z_grid = np.linspace(100, 0, num=15)
 
-from pyRT_DISORT.eos import Hydrostatic
+from pyrt.eos import Hydrostatic
 
 hydro = Hydrostatic(altitude_grid, pressure_profile, temperature_profile,
                     z_grid, mass, gravity)
@@ -55,7 +53,7 @@ n_layers = hydro.n_layers
 H_LYR = hydro.scale_height
 
 # rayleigh module
-from pyRT_DISORT.rayleigh import RayleighCO2
+from pyrt.rayleigh import RayleighCO2
 
 rco2 = RayleighCO2(pixel_wavelengths, hydro.column_density)
 
@@ -66,7 +64,7 @@ rayleigh_pf = rco2.phase_function
 print(np.sum(rayleigh_od, axis=0))
 
 # aerosol module
-from pyRT_DISORT.aerosol import Conrath
+from pyrt.aerosol import Conrath
 
 z_midpoint = ((z_grid[:-1] + z_grid[1:]) / 2)
 q0 = 1
@@ -87,7 +85,7 @@ psizes = hdul['particle_sizes'].data
 particle_size_grad = np.linspace(1.5, 1.5, num=len(z_grid)-1)
 wave_ref = 9.3
 
-from pyRT_DISORT.aerosol import ForwardScattering
+from pyrt.aerosol import ForwardScattering
 
 fs = ForwardScattering(csca, cext, psizes, wavs, particle_size_grad, pixel_wavelengths, wave_ref)
 fs.make_nn_properties()
@@ -97,12 +95,12 @@ nn_sca_cs = fs.scattering_cross_section
 dust_ssa = fs.single_scattering_albedo
 dust_ext = fs.extinction
 
-from pyRT_DISORT.aerosol import OpticalDepth
+from pyrt.aerosol import OpticalDepth
 
 od = OpticalDepth(dust_profile, hydro.column_density, fs.extinction, 0.234)
 dust_od = od.total
 
-from pyRT_DISORT.aerosol import TabularLegendreCoefficients
+from pyrt.aerosol import TabularLegendreCoefficients
 
 dust_phsfn_file = fits.open('/home/kyle/repos/pyRT_DISORT/tests/aux/dust_phase_function.fits')
 coeff = dust_phsfn_file['primary'].data
@@ -118,7 +116,7 @@ dust_pf = pf.phase_function
 rayleigh_info = (rayleigh_od, rayleigh_ssa, rayleigh_pf)
 dust_info = (dust_od, dust_ssa, dust_pf)
 
-from pyRT_DISORT.atmosphere import Atmosphere
+from pyrt.atmosphere import Atmosphere
 
 model = Atmosphere(rayleigh_info, dust_info)
 
@@ -127,7 +125,7 @@ SSALB = model.single_scattering_albedo
 PMOM = model.legendre_moments
 
 # The controller module
-from pyRT_DISORT.controller import ComputationalParameters, ModelBehavior
+from pyrt.controller import ComputationalParameters, ModelBehavior
 
 cp = ComputationalParameters(hydro.n_layers, model.legendre_moments.shape[0],
                              16, 1, 1, 80)
@@ -149,7 +147,7 @@ PRNT = mb.print_variables
 EARTH_RADIUS = mb.radius
 
 # the radiation module
-from pyRT_DISORT.radiation import IncidentFlux, ThermalEmission
+from pyrt.radiation import IncidentFlux, ThermalEmission
 
 flux = IncidentFlux()
 FBEAM = flux.beam_flux
@@ -162,7 +160,7 @@ TTEMP = te.top_temperature
 TEMIS = te.top_emissivity
 
 # the output module
-from pyRT_DISORT.output import OutputArrays, OutputBehavior, UserLevel
+from pyrt.output import OutputArrays, OutputBehavior, UserLevel
 
 oa = OutputArrays(cp.n_polar, cp.n_user_levels, cp.n_azimuth)
 ALBMED = oa.albedo_medium
@@ -184,7 +182,7 @@ ulv = UserLevel(cp.n_user_levels)
 UTAU = ulv.optical_depth_output
 
 # The surface module
-from pyRT_DISORT.surface import Surface
+from pyrt.surface import Surface
 
 sfc = Surface(0.1, cp.n_streams, cp.n_polar, cp.n_azimuth, ob.user_angles,
                   ob.only_fluxes)

@@ -1,8 +1,42 @@
 import numpy as np
 import pytest
-from pyRT_DISORT.observation import Angles, Spectral
+from pyrt.observation import Angles, Spectral
 
 
+class TestAngles:
+    class TestInit:
+        @pytest.fixture
+        def int_angle(self):
+            yield 20
+
+        @pytest.fixture
+        def list_angles(self):
+            yield [20]
+
+        @pytest.fixture
+        def tuple_angles(self):
+            yield (20,)
+
+        @pytest.fixture
+        def ndarray_angles(self):
+            yield np.linspace(10, 30)
+
+        def test_int_input_raises_no_errors(self, int_angle):
+            Angles(int_angle, int_angle, int_angle, int_angle)
+
+    class TestMu0:
+        pass
+
+    class TestMu:
+        pass
+
+    class TestPhi0:
+        pass
+
+    class TestPhi:
+        pass
+
+'''
 class TestAngles:
     @pytest.fixture
     def dummy_angles(self) -> np.ndarray:
@@ -452,4 +486,4 @@ class TestLowWavenumber(TestSpectral):
 
     def test_low_wavenumber_is_same_shape_as_long_wavelength(
             self, spectral: pytest.fixture) -> None:
-        assert spectral.low_wavenumber.shape == spectral.long_wavelength.shape
+        assert spectral.low_wavenumber.shape == spectral.long_wavelength.shape'''

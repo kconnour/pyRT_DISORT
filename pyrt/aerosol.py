@@ -3,7 +3,7 @@ required by DISORT.
 """
 # TODO: add parameter validators if these classes are ok
 import numpy as np
-from pyRT_DISORT.eos import _Altitude
+from pyrt.eos import _Altitude
 from scipy.interpolate import interp2d
 
 
