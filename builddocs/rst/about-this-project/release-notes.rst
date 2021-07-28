@@ -6,6 +6,10 @@ Release notes
    get the functionality back. See
    https://stackoverflow.com/questions/67542699/readthedocs-sphinx-not-rendering-bullet-list-from-rst-file
 
+v0.0.4
+------
+* Add a CITATION.cff file so we can be cited.
+
 v0.0.3
 ------
 This update was focused on documentation tweaks and ease of use.
