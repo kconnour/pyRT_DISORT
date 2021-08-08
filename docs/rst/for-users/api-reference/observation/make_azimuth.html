@@ -204,9 +204,9 @@ angles.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>incidence</strong> (<em>ArrayLike</em>) – Incidence (solar zenith) angles [degrees]. All values must be between 0
-and 180.</p></li>
+and 90.</p></li>
 <li><p><strong>emission</strong> (<em>ArrayLike</em>) – Emission (emergence) angles [degrees]. All values must be between 0 and
-90.</p></li>
+180.</p></li>
 <li><p><strong>phase</strong> (<em>ArrayLike</em>) – Phase angles [degrees]. All values must be between 0 and 180.</p></li>
 </ul>
 </dd>
@@ -222,13 +222,6 @@ and 180.</p></li>
 <dd class="field-odd"><p>numpy.ndarray</p>
 </dd>
 </dl>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<dl class="simple">
-<dt>UserWarning</dt><dd><p>Issued if any values in <code class="code docutils literal notranslate"><span class="pre">incidence</span></code> are greater than 90 degrees.</p>
-</dd>
-</dl>
-</div>
 <p class="rubric">Examples</p>
 <p>Create the azimuth angles from an assortment of angles.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>

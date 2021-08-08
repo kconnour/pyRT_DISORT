@@ -9,6 +9,8 @@ Release notes
 v0.0.4
 ------
 * Add a CITATION.cff file so we can be cited.
+* Change the emission angles so they accept angles from 0 to 180 degrees,
+  instead of 0 to 90 degrees. Update the documentation on this.
 
 v0.0.3
 ------

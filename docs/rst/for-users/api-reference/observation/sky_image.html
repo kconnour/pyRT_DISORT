@@ -205,7 +205,7 @@ defines a 1D array of emission and azimuth angles.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>incidence</strong> (<em>float</em>) – Incidence (solar zenith) angle [degrees]. Value must be between 0 and
-180.</p></li>
+90.</p></li>
 <li><p><strong>beam_azimuth</strong> (<em>float</em>) – Azimuth angle of the incident beam [degrees]. Value must be between 0
 and 360.</p></li>
 <li><p><strong>emission</strong> (<em>ArrayLike</em>) – Emission (emergence) angle [degrees]. All values must be between 0 and
@@ -225,13 +225,6 @@ and 360.</p></li>
 <dd class="field-odd"><p><a class="reference internal" href="Angles.html#pyrt.observation.Angles" title="pyrt.observation.Angles">pyrt.observation.Angles</a></p>
 </dd>
 </dl>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<dl class="simple">
-<dt>UserWarning</dt><dd><p>Issued if any values in <code class="code docutils literal notranslate"><span class="pre">incidence</span></code> are greater than 90 degrees.</p>
-</dd>
-</dl>
-</div>
 <p class="rubric">Examples</p>
 <p>Create an instance of Angles for a (3, 5) sky image with a single incident
 beam.</p>

@@ -7,8 +7,8 @@ found in an observation.
 #  ArrayLike evaluates to Sequence[Sequence[Sequence[...]. After that, I can
 #  remove the __future__ import. See also
 #  https://stackoverflow.com/questions/67473396/shorten-display-format-of-python-type-annotations-in-sphinx
+# TODO: warn if emission > 90 if orbiter?
 from __future__ import annotations
-import warnings
 import numpy as np
 from numpy.typing import ArrayLike
 
@@ -34,7 +34,7 @@ class Angles:
     ----------
     incidence
         Incidence (solar zenith) angles [degrees]. All values must be between 0
-        and 180.
+        and 90.
     beam_azimuth
         Azimuth angles of the incident beam [degrees]. All values must be
         between 0 and 360.
@@ -52,11 +52,6 @@ class Angles:
         Raised if any values of the input arrays are outside their
         mathematically valid range, or if the inputs do not have the same beam
         measurement shape.
-
-    Warnings
-    --------
-    UserWarning
-        Issued if any values in :code:`incidence` are greater than 90 degrees.
 
     See Also
     --------
@@ -208,10 +203,10 @@ def make_azimuth(incidence: ArrayLike, emission: ArrayLike,
     ----------
     incidence
         Incidence (solar zenith) angles [degrees]. All values must be between 0
-        and 180.
+        and 90.
     emission
         Emission (emergence) angles [degrees]. All values must be between 0 and
-        90.
+        180.
     phase
         Phase angles [degrees]. All values must be between 0 and 180.
 
@@ -223,11 +218,6 @@ def make_azimuth(incidence: ArrayLike, emission: ArrayLike,
         Raised if any values of the input arrays are outside their
         mathematically valid range or if the input arrays do not have the same
         shapes.
-
-    Warnings
-    --------
-    UserWarning
-        Issued if any values in :code:`incidence` are greater than 90 degrees.
 
     Examples
     --------
@@ -263,10 +253,10 @@ def phase_to_angles(incidence: ArrayLike, emission: ArrayLike,
     ----------
     incidence
         Incidence (solar zenith) angles [degrees]. All values must be between 0
-        and 180.
+        and 90.
     emission
         Emission (emergence) angles [degrees]. All values must be between 0 and
-        90.
+        180.
     phase
         Phase angles [degrees]. All values must be between 0 and 180.
 
@@ -278,11 +268,6 @@ def phase_to_angles(incidence: ArrayLike, emission: ArrayLike,
         Raised if any values of the input arrays are outside their
         mathematically valid range or if the input arrays do not have the same
         shapes.
-
-    Warnings
-    --------
-    UserWarning
-        Issued if any values in :code:`incidence` are greater than 90 degrees.
 
     Examples
     --------
@@ -322,7 +307,7 @@ def sky_image(incidence: float, beam_azimuth: float, emission: ArrayLike,
     ----------
     incidence
         Incidence (solar zenith) angle [degrees]. Value must be between 0 and
-        180.
+        90.
     beam_azimuth
         Azimuth angle of the incident beam [degrees]. Value must be between 0
         and 360.
@@ -340,11 +325,6 @@ def sky_image(incidence: float, beam_azimuth: float, emission: ArrayLike,
         Raised if any values of the input arrays are outside their
         mathematically valid range, or if the inputs do not have the same beam
         measurement shape.
-
-    Warnings
-    --------
-    UserWarning
-        Issued if any values in :code:`incidence` are greater than 90 degrees.
 
     Examples
     --------
@@ -622,32 +602,19 @@ class _IncidenceAngles(_Angles):
     Parameters
     ----------
     array
-        Any array of incidence angles. Must be between 0 and 180 degrees.
+        Any array of incidence angles [degrees]. Must be between 0 and 90.
 
     Raises
     ------
     TypeError
         Raised if any values in the input array are nonnumerical.
     ValueError
-        Raised if any values in the input array are not between 0 and 180
-        degrees.
-
-    Warnings
-    --------
-    UserWarning
-        Raised if any values in the input array are greater than 90 degrees.
+        Raised if any values in the input array are not between 0 and 90.
 
     """
     def __new__(cls, array: ArrayLike):
-        obj = super().__new__(cls, array, 'incidence', 0, 180)
-        cls.__warn_if_incidence_angle_is_greater_than_90(obj)
+        obj = super().__new__(cls, array, 'incidence', 0, 90)
         return obj
-
-    @staticmethod
-    def __warn_if_incidence_angle_is_greater_than_90(obj: np.ndarray) -> None:
-        if np.any(obj > 90):
-            message = 'Some values in incidence are greater than 90 degrees.'
-            warnings.warn(message)
 
 
 class _EmissionAngles(_Angles):
@@ -656,19 +623,18 @@ class _EmissionAngles(_Angles):
     Parameters
     ----------
     array
-        Any array of emission angles. Must be between 0 and 90 degrees.
+        Any array of emission angles [degrees]. Must be between 0 and 180.
 
     Raises
     ------
     TypeError
         Raised if any values in the input array are nonnumerical.
     ValueError
-        Raised if any values in the input array are not between 0 and 90
-        degrees.
+        Raised if any values in the input array are not between 0 and 180.
 
     """
     def __new__(cls, array: ArrayLike):
-        obj = super().__new__(cls, array, 'emission', 0, 90)
+        obj = super().__new__(cls, array, 'emission', 0, 180)
         return obj
 
 
@@ -678,15 +644,14 @@ class _PhaseAngles(_Angles):
     Parameters
     ----------
     array
-        Any array of phase angles. Must be between 0 and 180 degrees.
+        Any array of phase angles [degrees]. Must be between 0 and 180.
 
     Raises
     ------
     TypeError
         Raised if any values in the input array are nonnumerical.
     ValueError
-        Raised if any values in the input array are not between 0 and 180
-        degrees.
+        Raised if any values in the input array are not between 0 and 180.
 
     """
     def __new__(cls, array: ArrayLike):
@@ -700,15 +665,14 @@ class _AzimuthAngles(_Angles):
     Parameters
     ----------
     array
-        Any array of angles. Must be between 0 and 360 degrees.
+        Any array of angles [degrees]. Must be between 0 and 360.
 
     Raises
     ------
     TypeError
         Raised if any values in the input array are nonnumerical.
     ValueError
-        Raised if any values in the input array are not between 0 and 360
-        degrees.
+        Raised if any values in the input array are not between 0 and 360.
 
     """
     def __new__(cls, array: ArrayLike):
@@ -724,12 +688,12 @@ class _OrbiterAngleBundle:
     ----------
     incidence
         Incidence (solar zenith) angles [degrees]. All values must be between 0
-        and 180 degrees.
+        and 90.
     emission
         Emission (emergence) angles [degrees]. All values must be between 0 and
-        180 degrees.
+        180.
     phase
-        Phase angles [degrees]. All values must be between 0 and 180 degrees.
+        Phase angles [degrees]. All values must be between 0 and 180.
 
     Raises
     ------
@@ -739,11 +703,6 @@ class _OrbiterAngleBundle:
         Raised if any values of the input arrays are outside their
         mathematically valid range, or if the input arrays do not have the same
         shapes.
-
-    Warnings
-    --------
-    UserWarning
-        Raised if any values in :code:`incidence` are greater than 90 degrees.
 
     """
     def __init__(self, incidence: ArrayLike, emission: ArrayLike,
@@ -771,15 +730,15 @@ class _RoverAngleBundle:
     ----------
     incidence
         Incidence (solar zenith) angles [degrees]. All values must be between 0
-        and 180 degrees.
+        and 90.
     emission
         Emission (emergence) angles [degrees]. All values must be between 0 and
-        180 degrees.
+        180.
     azimuth
-        Azimuth angles [degrees]. All values must be between 0 and 360 degrees.
+        Azimuth angles [degrees]. All values must be between 0 and 360.
     beam_azimuth
         Azimuth angles of the incident beam [degrees]. All values must be
-        between 0 and 360 degrees.
+        between 0 and 360.
 
     Raises
     ------
@@ -789,11 +748,6 @@ class _RoverAngleBundle:
         Raised if any values of the input arrays are outside their
         mathematically valid range, or if the inputs do not have the same
         observation shape.
-
-    Warnings
-    --------
-    UserWarning
-        Raised if any values in :code:`incidence` are greater than 90 degrees.
 
     """
     def __init__(self, incidence: ArrayLike, beam_azimuth: ArrayLike,

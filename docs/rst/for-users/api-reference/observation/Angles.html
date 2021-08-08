@@ -216,7 +216,7 @@ See the notes section for discussion of multiple cases.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>incidence</strong> (<em>ArrayLike</em>) – Incidence (solar zenith) angles [degrees]. All values must be between 0
-and 180.</p></li>
+and 90.</p></li>
 <li><p><strong>beam_azimuth</strong> (<em>ArrayLike</em>) – Azimuth angles of the incident beam [degrees]. All values must be
 between 0 and 360.</p></li>
 <li><p><strong>emission</strong> (<em>ArrayLike</em>) – Emission (emergence) angles [degrees]. All values must be between 0 and
@@ -233,13 +233,6 @@ between 0 and 360.</p></li>
 </ul>
 </dd>
 </dl>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<dl class="simple">
-<dt>UserWarning</dt><dd><p>Issued if any values in <code class="code docutils literal notranslate"><span class="pre">incidence</span></code> are greater than 90 degrees.</p>
-</dd>
-</dl>
-</div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <dl class="simple">

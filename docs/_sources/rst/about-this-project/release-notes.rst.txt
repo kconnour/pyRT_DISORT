@@ -6,6 +6,12 @@ Release notes
    get the functionality back. See
    https://stackoverflow.com/questions/67542699/readthedocs-sphinx-not-rendering-bullet-list-from-rst-file
 
+v0.0.4
+------
+* Add a CITATION.cff file so we can be cited.
+* Change the emission angles so they accept angles from 0 to 180 degrees,
+  instead of 0 to 90 degrees. Update the documentation on this.
+
 v0.0.3
 ------
 This update was focused on documentation tweaks and ease of use.
