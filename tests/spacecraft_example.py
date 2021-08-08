@@ -254,9 +254,10 @@ def retrieve_od(guess):
                              method='Nelder-Mead').x
 
 
-import time
+if __name__ == '__main__':
+    import time
 
-t0 = time.time()
-print(retrieve_od(1))
-t1 = time.time()
-print(f'The retrieval took {(t1 - t0):.3f} seconds.')
+    t0 = time.time()
+    print(retrieve_od(1))
+    t1 = time.time()
+    print(f'The retrieval took {(t1 - t0):.3f} seconds.')

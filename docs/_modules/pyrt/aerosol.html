@@ -171,7 +171,7 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="c1"># TODO: add parameter validators if these classes are ok</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">pyRT_DISORT.eos</span> <span class="kn">import</span> <span class="n">_Altitude</span>
+<span class="kn">from</span> <span class="nn">pyrt.eos</span> <span class="kn">import</span> <span class="n">_Altitude</span>
 <span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">interp2d</span>
 
 
@@ -505,6 +505,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scattering_cross_section</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                  <span class="n">extinction_cross_section</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                 <span class="n">asymmetry_parameter</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                  <span class="n">particle_size_grid</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">wavelength_grid</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                  <span class="n">particle_size</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                  <span class="n">wavelength</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -518,6 +519,9 @@
 <span class="sd">            wavelength axis).</span>
 <span class="sd">        extinction_cross_section</span>
 <span class="sd">            2D array of the extinction cross section with same dims as above.</span>
+<span class="sd">        asymmetry_parameter</span>
+<span class="sd">            2D array of the Henyey-Greenstein asymmetry parameter with the same</span>
+<span class="sd">            dims as above.</span>
 <span class="sd">        particle_size_grid</span>
 <span class="sd">            1D array of particle sizes over which the above properties are</span>
 <span class="sd">            defined.</span>
@@ -535,6 +539,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">__c_ext</span> <span class="o">=</span> <span class="n">_ForwardScatteringProperty</span><span class="p">(</span>
             <span class="n">extinction_cross_section</span><span class="p">,</span> <span class="n">particle_size_grid</span><span class="p">,</span> <span class="n">wavelength_grid</span><span class="p">,</span>
             <span class="s1">&#39;extinction&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__asymmetry_parameter</span> <span class="o">=</span> <span class="n">asymmetry_parameter</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__particle_size</span> <span class="o">=</span> <span class="n">particle_size</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__wavelength</span> <span class="o">=</span> <span class="n">wavelength</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__wave_ref</span> <span class="o">=</span> <span class="n">reference_wavelength</span>
@@ -634,7 +639,14 @@
 <span class="sd">        grid.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__extinction</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__extinction</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">asymmetry_parameter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the asymmetry parameter on the new grid.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__asymmetry_parameter</span></div>
 
 
 <div class="viewcode-block" id="OpticalDepth"><a class="viewcode-back" href="../../rst/for-users/api-reference/aerosol.html#pyrt.aerosol.OpticalDepth">[docs]</a><span class="k">class</span> <span class="nc">OpticalDepth</span><span class="p">:</span>

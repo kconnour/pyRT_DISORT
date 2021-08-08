@@ -235,7 +235,7 @@ ZxMxN, where Z is the number of altitudes. Additionally, the units of
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pyrt.aerosol.ForwardScattering">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pyrt.aerosol.</span></span><span class="sig-name descname"><span class="pre">ForwardScattering</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scattering_cross_section</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extinction_cross_section</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_size_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelength_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelength</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_wavelength</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/pyrt/aerosol.html#ForwardScattering"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrt.aerosol.ForwardScattering" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pyrt.aerosol.</span></span><span class="sig-name descname"><span class="pre">ForwardScattering</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scattering_cross_section</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extinction_cross_section</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">asymmetry_parameter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_size_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelength_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelength</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_wavelength</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/pyrt/aerosol.html#ForwardScattering"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrt.aerosol.ForwardScattering" title="Permalink to this definition">¶</a></dt>
 <dd><p>A structure to store forward scattering properties.</p>
 <p>ForwardScattering will simply hang on to forward scattering properties and
 provides methods to regrid them into the input particle size profile and
@@ -247,6 +247,8 @@ wavelengths.</p>
 be the particle size axis, while the 1st axis is assumed to be the
 wavelength axis).</p></li>
 <li><p><strong>extinction_cross_section</strong> (<em>numpy.ndarray</em>) – 2D array of the extinction cross section with same dims as above.</p></li>
+<li><p><strong>asymmetry_parameter</strong> (<em>numpy.ndarray</em>) – 2D array of the Henyey-Greenstein asymmetry parameter with the same
+dims as above.</p></li>
 <li><p><strong>particle_size_grid</strong> (<em>numpy.ndarray</em>) – 1D array of particle sizes over which the above properties are
 defined.</p></li>
 <li><p><strong>wavelength_grid</strong> (<em>numpy.ndarray</em>) – 1D array of wavelengths over which the above properties are defined.</p></li>
@@ -259,6 +261,12 @@ defined.</p></li>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="pyrt.aerosol.ForwardScattering.asymmetry_parameter">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">asymmetry_parameter</span></span><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#pyrt.aerosol.ForwardScattering.asymmetry_parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the asymmetry parameter on the new grid.</p>
+</dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="pyrt.aerosol.ForwardScattering.extinction">
 <em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">extinction</span></span><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#pyrt.aerosol.ForwardScattering.extinction" title="Permalink to this definition">¶</a></dt>
