@@ -175,8 +175,8 @@
 <span class="c1">#  ArrayLike evaluates to Sequence[Sequence[Sequence[...]. After that, I can</span>
 <span class="c1">#  remove the __future__ import. See also</span>
 <span class="c1">#  https://stackoverflow.com/questions/67473396/shorten-display-format-of-python-type-annotations-in-sphinx</span>
+<span class="c1"># TODO: warn if emission &gt; 90 if orbiter?</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">numpy.typing</span> <span class="kn">import</span> <span class="n">ArrayLike</span>
 
@@ -202,7 +202,7 @@
 <span class="sd">    ----------</span>
 <span class="sd">    incidence</span>
 <span class="sd">        Incidence (solar zenith) angles [degrees]. All values must be between 0</span>
-<span class="sd">        and 180.</span>
+<span class="sd">        and 90.</span>
 <span class="sd">    beam_azimuth</span>
 <span class="sd">        Azimuth angles of the incident beam [degrees]. All values must be</span>
 <span class="sd">        between 0 and 360.</span>
@@ -220,11 +220,6 @@
 <span class="sd">        Raised if any values of the input arrays are outside their</span>
 <span class="sd">        mathematically valid range, or if the inputs do not have the same beam</span>
 <span class="sd">        measurement shape.</span>
-
-<span class="sd">    Warnings</span>
-<span class="sd">    --------</span>
-<span class="sd">    UserWarning</span>
-<span class="sd">        Issued if any values in :code:`incidence` are greater than 90 degrees.</span>
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
@@ -376,10 +371,10 @@
 <span class="sd">    ----------</span>
 <span class="sd">    incidence</span>
 <span class="sd">        Incidence (solar zenith) angles [degrees]. All values must be between 0</span>
-<span class="sd">        and 180.</span>
+<span class="sd">        and 90.</span>
 <span class="sd">    emission</span>
 <span class="sd">        Emission (emergence) angles [degrees]. All values must be between 0 and</span>
-<span class="sd">        90.</span>
+<span class="sd">        180.</span>
 <span class="sd">    phase</span>
 <span class="sd">        Phase angles [degrees]. All values must be between 0 and 180.</span>
 
@@ -391,11 +386,6 @@
 <span class="sd">        Raised if any values of the input arrays are outside their</span>
 <span class="sd">        mathematically valid range or if the input arrays do not have the same</span>
 <span class="sd">        shapes.</span>
-
-<span class="sd">    Warnings</span>
-<span class="sd">    --------</span>
-<span class="sd">    UserWarning</span>
-<span class="sd">        Issued if any values in :code:`incidence` are greater than 90 degrees.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -431,10 +421,10 @@
 <span class="sd">    ----------</span>
 <span class="sd">    incidence</span>
 <span class="sd">        Incidence (solar zenith) angles [degrees]. All values must be between 0</span>
-<span class="sd">        and 180.</span>
+<span class="sd">        and 90.</span>
 <span class="sd">    emission</span>
 <span class="sd">        Emission (emergence) angles [degrees]. All values must be between 0 and</span>
-<span class="sd">        90.</span>
+<span class="sd">        180.</span>
 <span class="sd">    phase</span>
 <span class="sd">        Phase angles [degrees]. All values must be between 0 and 180.</span>
 
@@ -446,11 +436,6 @@
 <span class="sd">        Raised if any values of the input arrays are outside their</span>
 <span class="sd">        mathematically valid range or if the input arrays do not have the same</span>
 <span class="sd">        shapes.</span>
-
-<span class="sd">    Warnings</span>
-<span class="sd">    --------</span>
-<span class="sd">    UserWarning</span>
-<span class="sd">        Issued if any values in :code:`incidence` are greater than 90 degrees.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -490,7 +475,7 @@
 <span class="sd">    ----------</span>
 <span class="sd">    incidence</span>
 <span class="sd">        Incidence (solar zenith) angle [degrees]. Value must be between 0 and</span>
-<span class="sd">        180.</span>
+<span class="sd">        90.</span>
 <span class="sd">    beam_azimuth</span>
 <span class="sd">        Azimuth angle of the incident beam [degrees]. Value must be between 0</span>
 <span class="sd">        and 360.</span>
@@ -508,11 +493,6 @@
 <span class="sd">        Raised if any values of the input arrays are outside their</span>
 <span class="sd">        mathematically valid range, or if the inputs do not have the same beam</span>
 <span class="sd">        measurement shape.</span>
-
-<span class="sd">    Warnings</span>
-<span class="sd">    --------</span>
-<span class="sd">    UserWarning</span>
-<span class="sd">        Issued if any values in :code:`incidence` are greater than 90 degrees.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -790,32 +770,19 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    array</span>
-<span class="sd">        Any array of incidence angles. Must be between 0 and 180 degrees.</span>
+<span class="sd">        Any array of incidence angles [degrees]. Must be between 0 and 90.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    TypeError</span>
 <span class="sd">        Raised if any values in the input array are nonnumerical.</span>
 <span class="sd">    ValueError</span>
-<span class="sd">        Raised if any values in the input array are not between 0 and 180</span>
-<span class="sd">        degrees.</span>
-
-<span class="sd">    Warnings</span>
-<span class="sd">    --------</span>
-<span class="sd">    UserWarning</span>
-<span class="sd">        Raised if any values in the input array are greater than 90 degrees.</span>
+<span class="sd">        Raised if any values in the input array are not between 0 and 90.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">array</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">):</span>
-        <span class="n">obj</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="s1">&#39;incidence&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">180</span><span class="p">)</span>
-        <span class="bp">cls</span><span class="o">.</span><span class="n">__warn_if_incidence_angle_is_greater_than_90</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="s1">&#39;incidence&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">90</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">obj</span>
-
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">__warn_if_incidence_angle_is_greater_than_90</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">obj</span> <span class="o">&gt;</span> <span class="mi">90</span><span class="p">):</span>
-            <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Some values in incidence are greater than 90 degrees.&#39;</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">_EmissionAngles</span><span class="p">(</span><span class="n">_Angles</span><span class="p">):</span>
@@ -824,19 +791,18 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    array</span>
-<span class="sd">        Any array of emission angles. Must be between 0 and 90 degrees.</span>
+<span class="sd">        Any array of emission angles [degrees]. Must be between 0 and 180.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    TypeError</span>
 <span class="sd">        Raised if any values in the input array are nonnumerical.</span>
 <span class="sd">    ValueError</span>
-<span class="sd">        Raised if any values in the input array are not between 0 and 90</span>
-<span class="sd">        degrees.</span>
+<span class="sd">        Raised if any values in the input array are not between 0 and 180.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">array</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">):</span>
-        <span class="n">obj</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="s1">&#39;emission&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">90</span><span class="p">)</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="s1">&#39;emission&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">180</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">obj</span>
 
 
@@ -846,15 +812,14 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    array</span>
-<span class="sd">        Any array of phase angles. Must be between 0 and 180 degrees.</span>
+<span class="sd">        Any array of phase angles [degrees]. Must be between 0 and 180.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    TypeError</span>
 <span class="sd">        Raised if any values in the input array are nonnumerical.</span>
 <span class="sd">    ValueError</span>
-<span class="sd">        Raised if any values in the input array are not between 0 and 180</span>
-<span class="sd">        degrees.</span>
+<span class="sd">        Raised if any values in the input array are not between 0 and 180.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">array</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">):</span>
@@ -868,15 +833,14 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    array</span>
-<span class="sd">        Any array of angles. Must be between 0 and 360 degrees.</span>
+<span class="sd">        Any array of angles [degrees]. Must be between 0 and 360.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    TypeError</span>
 <span class="sd">        Raised if any values in the input array are nonnumerical.</span>
 <span class="sd">    ValueError</span>
-<span class="sd">        Raised if any values in the input array are not between 0 and 360</span>
-<span class="sd">        degrees.</span>
+<span class="sd">        Raised if any values in the input array are not between 0 and 360.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">array</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">):</span>
@@ -892,12 +856,12 @@
 <span class="sd">    ----------</span>
 <span class="sd">    incidence</span>
 <span class="sd">        Incidence (solar zenith) angles [degrees]. All values must be between 0</span>
-<span class="sd">        and 180 degrees.</span>
+<span class="sd">        and 90.</span>
 <span class="sd">    emission</span>
 <span class="sd">        Emission (emergence) angles [degrees]. All values must be between 0 and</span>
-<span class="sd">        180 degrees.</span>
+<span class="sd">        180.</span>
 <span class="sd">    phase</span>
-<span class="sd">        Phase angles [degrees]. All values must be between 0 and 180 degrees.</span>
+<span class="sd">        Phase angles [degrees]. All values must be between 0 and 180.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
@@ -907,11 +871,6 @@
 <span class="sd">        Raised if any values of the input arrays are outside their</span>
 <span class="sd">        mathematically valid range, or if the input arrays do not have the same</span>
 <span class="sd">        shapes.</span>
-
-<span class="sd">    Warnings</span>
-<span class="sd">    --------</span>
-<span class="sd">    UserWarning</span>
-<span class="sd">        Raised if any values in :code:`incidence` are greater than 90 degrees.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incidence</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">emission</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
@@ -939,15 +898,15 @@
 <span class="sd">    ----------</span>
 <span class="sd">    incidence</span>
 <span class="sd">        Incidence (solar zenith) angles [degrees]. All values must be between 0</span>
-<span class="sd">        and 180 degrees.</span>
+<span class="sd">        and 90.</span>
 <span class="sd">    emission</span>
 <span class="sd">        Emission (emergence) angles [degrees]. All values must be between 0 and</span>
-<span class="sd">        180 degrees.</span>
+<span class="sd">        180.</span>
 <span class="sd">    azimuth</span>
-<span class="sd">        Azimuth angles [degrees]. All values must be between 0 and 360 degrees.</span>
+<span class="sd">        Azimuth angles [degrees]. All values must be between 0 and 360.</span>
 <span class="sd">    beam_azimuth</span>
 <span class="sd">        Azimuth angles of the incident beam [degrees]. All values must be</span>
-<span class="sd">        between 0 and 360 degrees.</span>
+<span class="sd">        between 0 and 360.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
@@ -957,11 +916,6 @@
 <span class="sd">        Raised if any values of the input arrays are outside their</span>
 <span class="sd">        mathematically valid range, or if the inputs do not have the same</span>
 <span class="sd">        observation shape.</span>
-
-<span class="sd">    Warnings</span>
-<span class="sd">    --------</span>
-<span class="sd">    UserWarning</span>
-<span class="sd">        Raised if any values in :code:`incidence` are greater than 90 degrees.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incidence</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">beam_azimuth</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>

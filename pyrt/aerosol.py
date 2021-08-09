@@ -340,7 +340,8 @@ class ForwardScattering:
                  particle_size_grid: np.ndarray, wavelength_grid: np.ndarray,
                  particle_size: np.ndarray,
                  wavelength: np.ndarray,
-                 reference_wavelength: float) -> None:
+                 reference_wavelength: float,
+                 asymmetry_parameter: np.ndarray = None) -> None:
         """
         Parameters
         ----------
@@ -359,7 +360,10 @@ class ForwardScattering:
             1D array of particle sizes to regrid the properties onto.
         wavelength
             1D array of wavelengths to regrid the properties onto.
-
+        asymmetry_parameter
+            2D array of the Henyey-Greenstein asymmetry parameter with the same
+            dims as the scattering and extinction cross sections. This is
+            optional.
         """
         self.__c_sca = _ForwardScatteringProperty(
             scattering_cross_section, particle_size_grid, wavelength_grid,
@@ -367,6 +371,7 @@ class ForwardScattering:
         self.__c_ext = _ForwardScatteringProperty(
             extinction_cross_section, particle_size_grid, wavelength_grid,
             'extinction')
+        self.__asymmetry_parameter = asymmetry_parameter
         self.__particle_size = particle_size
         self.__wavelength = wavelength
         self.__wave_ref = reference_wavelength
@@ -467,6 +472,13 @@ class ForwardScattering:
 
         """
         return self.__extinction
+
+    @property
+    def asymmetry_parameter(self) -> np.ndarray:
+        """Get the asymmetry parameter on the new grid.
+
+        """
+        return self.__asymmetry_parameter
 
 
 class OpticalDepth:
