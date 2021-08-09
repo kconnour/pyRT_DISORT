@@ -4,6 +4,7 @@
 # list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 import sphinx_rtd_theme
+import matplotlib
 
 # -- Path setup --------------------------------------------------------------
 
@@ -31,7 +32,9 @@ author = 'kconnour'
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
-    'sphinx.ext.viewcode'
+    'sphinx.ext.viewcode',
+    'matplotlib.sphinxext.mathmpl',
+    'matplotlib.sphinxext.plot_directive'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
