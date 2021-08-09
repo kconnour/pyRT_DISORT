@@ -3,8 +3,6 @@
 # This file only contains a selection of the most common options. For a full
 # list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
-#import pydata_sphinx_theme
-#import matplotlib
 
 # -- Path setup --------------------------------------------------------------
 
@@ -70,7 +68,3 @@ autodoc_typehints = 'description'  # Only show typehints in the description,
 autodoc_type_aliases = {
     'ArrayLike': 'ArrayLike'
 }
-
-# Mock imports so autodoc can work
-# TODO: remove the utilities when possible
-autodoc_mock_imports = ['pyRT_DISORT', 'numpy', 'scipy', 'disort']

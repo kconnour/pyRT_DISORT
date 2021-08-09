@@ -8,9 +8,21 @@ Release notes
 
 v0.0.4
 ------
+This update continues documentation tweaks and incorporates bug fixes from
+Mike that will make rover retrievals possible.
+
 * Add a CITATION.cff file so we can be cited.
 * Change the emission angles so they accept angles from 0 to 180 degrees,
   instead of 0 to 90 degrees. Update the documentation on this.
+* Change incidence angles to only be from 0 to 90 degrees. Remove warning for
+  angles >90 degrees. Update the documentation on this.
+* Add the Henyey Greenstein asymmetry parameter to the forward scattering
+  properties.
+* Add a "docs" option to the installation script for help when making
+  documentation.
+* Add matplotlib extensions to conf.py to allow for future uses of pyplots.
+* Update the documentation to use the pydata theme, instead of Read the Docs
+  theme. This new theme is much cleaner.
 
 v0.0.3
 ------
