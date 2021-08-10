@@ -1,0 +1,64 @@
+name: Bug report
+description: Egads, you found a bug and want it eradicated.
+labels: bug
+
+body:
+  - type: textarea
+    attributes:
+      label: Bug description
+      description: >-
+        Please describe the bug in a succinct manner.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Minimal working example
+      description: >-
+        Please provide some code to recreate the bug.
+      value: |
+        ```
+        import pyrt
+        <some code that demonstrates the bug>
+        ```
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Expected behavior
+      description: >-
+        Please describe what you expect the above code to do if it is not
+        obvious.
+
+  - type: textarea
+    attributes:
+      label: Screenshots
+      description: >-
+        They say a picture is worth 1024 words. Feel free to add one if it would
+        help describe the issue.
+    validations:
+      required: false
+
+  - type: input
+    attributes:
+      label: Operating system
+      description: >-
+        Please provide what OS you used [e.g. macOS Catalina 10.15.7].
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: Python version
+      description: >-
+        Please provide the complete Python version used [e.g. Python 3.9.5].
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Further information
+      description: >-
+        Please describe anything else about the problem here that you have not
+        described above.

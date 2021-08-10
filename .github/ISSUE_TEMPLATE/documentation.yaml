@@ -1,0 +1,13 @@
+name: Documentation
+description: You know words. You have the best words.
+labels: documentation
+
+body:
+  - type: textarea
+    attributes:
+      label: Documentation
+      description: >-
+        Please describe the issue with the current documentation and what it
+        should be changed to.
+    validations:
+      required: true

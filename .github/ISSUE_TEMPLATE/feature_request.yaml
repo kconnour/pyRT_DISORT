@@ -1,0 +1,13 @@
+name: Feature request
+description: You have a brillant idea that you want to see added to pyRT_DISORT.
+labels: feature
+
+body:
+  - type: textarea
+    attributes:
+      label: Feature request
+      description: >-
+        Please describe the feature you'd like to see added to pyRT_DISORT.
+        This may include papers, algorithms, code, etc.
+    validations:
+      required: true
