@@ -1,6 +1,6 @@
 name: Feature request
 description: You have a brillant idea that you want to see added to pyRT_DISORT.
-labels: feature
+labels: enhancement
 
 body:
   - type: textarea
