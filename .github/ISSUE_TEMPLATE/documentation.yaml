@@ -11,3 +11,11 @@ body:
         should be changed to.
     validations:
       required: true
+
+  - type: input
+    attributes:
+      label: Priority
+      description: >-
+        How pressing is this issue?
+    validations:
+      required: true
