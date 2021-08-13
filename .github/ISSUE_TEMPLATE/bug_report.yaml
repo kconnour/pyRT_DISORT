@@ -56,6 +56,14 @@ body:
     validations:
       required: true
 
+  - type: input
+    attributes:
+      label: Priority
+      description: >-
+        How pressing is this issue?
+    validations:
+      required: true
+
   - type: textarea
     attributes:
       label: Further information
