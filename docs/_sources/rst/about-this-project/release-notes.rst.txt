@@ -9,7 +9,7 @@ Release notes
 v0.0.4
 ------
 This update continues documentation tweaks and incorporates bug fixes from
-Mike that will make rover retrievals possible. 
+Mike that will make rover retrievals possible.
 
 * Add a CITATION.cff file so we can be cited.
 * Change the emission angles so they accept angles from 0 to 180 degrees,
