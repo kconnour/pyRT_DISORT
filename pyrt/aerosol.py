@@ -200,7 +200,7 @@ class _UniformParameter:
         self.__raise_error_if_param_is_bad()
 
     def __raise_error_if_param_is_bad(self) -> None:
-        self.__raise_type_error_if_not_ndarray()
+        self.__raise_type_error_if_not_ndarray_or_float()
 
     def __raise_type_error_if_not_ndarray_or_float(self) -> None:
         if not isinstance(self.__param, (float, np.ndarray)):
