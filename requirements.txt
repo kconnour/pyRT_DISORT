@@ -1,5 +1,5 @@
 astropy==4.2.1
-numpy==1.20.2
+numpy==1.22.0
 pandas==1.2.4
 pyerfa==1.7.2
 python-dateutil==2.8.1
