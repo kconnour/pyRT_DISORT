@@ -1,43 +1,27 @@
-import glob
-import os
+from pathlib import Path
 import setuptools
+import sys
+
 from numpy import f2py
 
 
-# TODO: see if there's a way to check if the .so file is up to date. If so,
-#  don't bother reinstalling it. Otherwise, do install it.
-class SetupDISORT:
-    def __init__(self) -> None:
-        self.__project_path = self.__get_project_path()
-        self.__install_disort()
-        # TODO: I want to move the so file into the package, but if I do I
-        #  can't figure out how to import disort. If I do this, I need to
-        #  remove the ../ part in setup.cfg
-        #self.__move_so_file_into_package()
-        setuptools.setup()
+# Currently, Python calls setup.py 2 times! I don't really know why but the first time is to generate egg info.
+#  Only execute the disort compilation code once to avoid unnecessary work and generating redundant .so files
+if sys.argv[1] == 'egg_info':
+    # Define project variables
+    project_path = Path(__file__).resolve().parent
+    disort_directory = project_path.joinpath('disort4.0.99')
+    module_name = 'disort'
+    fortran_source_filenames = ['BDREF.f', 'DISOBRDF.f', 'ERRPACK.f', 'LAPACK.f', 'LINPAK.f', 'RDI1MACH.f']
 
-    @staticmethod
-    def __get_project_path() -> str:
-        return os.path.dirname(os.path.realpath(__file__))
+    # Compile disort into one file
+    fortran_paths = [disort_directory.joinpath(f) for f in fortran_source_filenames]
+    with open(disort_directory.joinpath('DISORT.f')) as disort_module:
+        f2py.compile(disort_module.read(), modulename=module_name, extra_args=fortran_paths)
 
-    def __install_disort(self) -> None:
-        folder_name = 'disort4.0.99'
-        module_name = 'disort'
+    # Rename disort
+    binary_file = list(project_path.glob('*.so'))[0]
+    binary_file.rename(project_path / 'disort.so')
 
-        disort_source_dir = os.path.join(self.__project_path, folder_name)
-        mods = ['BDREF.f', 'DISOBRDF.f', 'ERRPACK.f', 'LAPACK.f',
-                'LINPAK.f', 'RDI1MACH.f']
-        paths = [os.path.join(disort_source_dir, m) for m in mods]
-        # I'm disgusted to say I'm adding a comment. I want to compile DISORT.f
-        #  as a module, and I can do that by adding the other modules it needs
-        #  in extra_args (this wasn't clear in f2py documentation).
-        with open(os.path.join(disort_source_dir, 'DISORT.f')) as mod:
-            f2py.compile(mod.read(), modulename=module_name, extra_args=paths)
-
-    def __move_so_file_into_package(self) -> None:
-        libname = glob.glob(os.path.join(self.__project_path, '*.so'))[0]
-        os.rename(libname, os.path.join(self.__project_path, 'pyRT_DISORT',
-                                        os.path.basename(libname)))
-
-
-SetupDISORT()
+# Install the project
+setuptools.setup()
