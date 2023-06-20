@@ -1,8 +1,5 @@
 # Editor backup files
 .idea/
 __pycache__/
-build/
 venv/
-*.egg-info
-*.so
 .pytest_cache
