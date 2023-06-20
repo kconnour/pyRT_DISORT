@@ -1,3 +1,7 @@
+.. image:: https://github.com/kconnour/pyRT_DISORT/workflows/CI/badge.svg?branch=main
+     :target: https://github.com/kconnour/pyRT_DISORT/actions?workflow=CI
+     :alt: CI Status
+
 ## pyRT_DISORT
 pyRT_DISORT is a package for computing the arrays needed by DISORT. It 
 provides:

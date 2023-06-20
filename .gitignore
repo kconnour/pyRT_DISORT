@@ -1,12 +1,8 @@
 # Editor backup files
 .idea/
 __pycache__/
-build
-venv
-venv-doc
-venv-foo
-venv-test
-pyRT_DISORT.egg-info
+build/
+venv/
+*.egg-info
 *.so
 .pytest_cache
-.DS_Store

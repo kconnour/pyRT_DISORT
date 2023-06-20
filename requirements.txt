@@ -1,8 +1,0 @@
-astropy==4.2.1
-numpy==1.20.2
-pandas==1.2.4
-pyerfa==1.7.2
-python-dateutil==2.8.1
-pytz==2021.1
-scipy==1.6.2
-six==1.15.0
