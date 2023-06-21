@@ -1,8 +1,9 @@
 from pyrt.angles import azimuth
 
 
-def test_azimuth():
-    def test_function_gives_expected_results():
+class TestAzimuth:
+    def test_function_gives_expected_results(self):
         assert azimuth(0, 0, 0) == 0
 
-    test_function_gives_expected_results()
+    def test_analytical_case(self):
+        assert azimuth(30, 30, 60) == 0
