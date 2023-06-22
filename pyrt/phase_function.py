@@ -75,6 +75,76 @@ def decompose(phase_function: ArrayLike,
         raise ValueError(message) from lae
 
 
+def fit_asymmetry_parameter(phase_function: ArrayLike,
+                            scattering_angles: ArrayLike) \
+        -> np.ndarray:
+    r"""Fit asymmetry parameters to an array of phase functions.
+
+    Parameters
+    ----------
+    phase_function: ArrayLike
+        N-dimensional array of phase functions. Axis 0 is assumed to be the
+        scattering angle axis.
+    scattering_angles: ArrayLike
+        1-dimensional array of the scattering angles [degrees]. This array must
+        have the same shape as axis 0 of ``phase_function``.
+
+    Returns
+    -------
+    np.ndarray
+        N-dimensional array of asymmetry parameters with a shape of
+        ``phase_function.shape[1:]``.
+
+    Notes
+    -----
+    The asymmetry parameter is defined as
+
+    .. math::
+       g \equiv \frac{1}{4 \pi} \int_{4\pi} p(\theta)\cos(\theta) d\Omega
+
+    where :math:`g` is the asymmetry parameter, :math:`p` is the phase
+    function, :math:`\theta` is the scattering angle, and :math:`\Omega` is
+    the solid angle. This is essentially the expectation value of the phase
+    function.
+
+    Examples
+    --------
+    Make a phase function from a known asymmetry parameter, then see how well
+    this function recovers the asymmetry parameter.
+
+    >>> import numpy as np
+    >>> import pyrt
+    >>> g = 0.8
+    >>> sa = np.linspace(0, 180, num=181)
+    >>> pf = pyrt.construct_hg(g, sa) * 4 * np.pi
+    >>> fit_g = pyrt.fit_asymmetry_parameter(pf, sa)
+    >>> round(fit_g, 5)
+    0.83473
+
+    It's not completely terrible but not particularly inspiring. The error is
+    due to the coarse resolution. Increasing the number of points in the
+    phase function can reduce the error.
+
+    >>> sa = np.linspace(0, 180, num=18100)
+    >>> pf = pyrt.construct_hg(g, sa) * 4 * np.pi
+    >>> fit_g = pyrt.fit_asymmetry_parameter(pf, sa)
+    >>> round(fit_g, 5)
+    0.80034
+
+    """
+    pf = np.asarray(phase_function)
+    sa = np.asarray(scattering_angles)
+
+    cos_sa = np.array(np.cos(np.radians(sa)))
+    mid_sa = cos_sa[:-1] + np.diff(cos_sa)
+    mid_pf = np.interp(np.flip(mid_sa), np.flip(cos_sa), pf)
+
+    expectation_pf = mid_pf.T * mid_sa
+    # Divide by 2 because g = 1/(4*pi) * integral but the azimuth angle
+    # integral = 2*pi so the factor becomes 1/2
+    return np.sum((expectation_pf * np.abs(np.diff(cos_sa))).T / 2, axis=0)
+
+
 def construct_hg(
         asymmetry_parameter: ArrayLike,
         scattering_angles: ArrayLike) \

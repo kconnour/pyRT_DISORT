@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from pyrt.phase_function import construct_hg, decompose_hg, decompose
+from pyrt.phase_function import construct_hg, decompose_hg, decompose, fit_asymmetry_parameter
 
 
 class TestConstructHG:
@@ -42,3 +42,17 @@ class TestDecompose:
         lc = decompose(pf, ang, 129)
 
         assert np.amax(np.abs(lc - coeff)) < 1e-10
+
+
+class TestFitAsymmetryParamter:
+    def test_function_reproduces_hg_phase_function(self):
+        g = 0.8
+        sa = np.linspace(0, 180, num=18001)
+        pf = construct_hg(g, sa) * 4 * np.pi
+
+        fit_g = fit_asymmetry_parameter(pf, sa)
+
+        assert 0 < abs(g - fit_g) < 0.01
+
+
+
