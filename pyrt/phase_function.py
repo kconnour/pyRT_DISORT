@@ -145,6 +145,37 @@ def fit_asymmetry_parameter(phase_function: ArrayLike,
     return np.sum((expectation_pf * np.abs(np.diff(cos_sa))).T / 2, axis=0)
 
 
+def set_negative_coefficients_to_0(coefficients: ArrayLike) \
+        -> np.ndarray:
+    """Set an array of Legendre coefficients to 0 after the first coefficient
+    is negative.
+
+    .. warning:
+       There is a glitch where this zeroes everything if no coefficient is
+       negative
+
+    Parameters
+    ----------
+    coefficients: ArrayLike
+        N-dimensional array of Legendre coefficients. Axis 0 is assumed to be
+        the phase function decomposition dimension.
+
+    Returns
+    -------
+    np.ndarray
+        N-dimensional array of the zeroed coefficients with a shape of
+        ``coefficients.shape``.
+
+    """
+    coeff = np.copy(np.asarray(coefficients))
+    if not np.any(coeff < 0):
+        return coeff
+
+    idx = np.argmax(coeff < 0)
+    coeff[idx:] = 0
+    return coeff
+
+
 def construct_hg(
         asymmetry_parameter: ArrayLike,
         scattering_angles: ArrayLike) \

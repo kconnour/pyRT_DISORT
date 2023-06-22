@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from pyrt.phase_function import construct_hg, decompose_hg, decompose, fit_asymmetry_parameter
+from pyrt.phase_function import construct_hg, decompose_hg, decompose, fit_asymmetry_parameter, set_negative_coefficients_to_0
 
 
 class TestConstructHG:
@@ -55,4 +55,18 @@ class TestFitAsymmetryParamter:
         assert 0 < abs(g - fit_g) < 0.01
 
 
+class TestSetNegativeCoefficientsTo0:
+    def test_function_does_nothing_if_no_negative_coefficients(self):
+        coeff = np.linspace(1, 50)
 
+        new_coeff = set_negative_coefficients_to_0(coeff)
+
+        assert np.array_equal(new_coeff, coeff)
+
+    def test_function_produces_expected_result(self):
+        coeff = np.linspace(10, -10, num=50)
+
+        new_coeff = set_negative_coefficients_to_0(coeff)
+
+        assert np.array_equal(new_coeff[:25], coeff[:25])
+        assert np.all(new_coeff[25:] == 0)
