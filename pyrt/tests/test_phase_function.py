@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from pyrt.phase_function import construct_hg, decompose_hg
+from pyrt.phase_function import construct_hg, decompose_hg, decompose
 
 
 class TestConstructHG:
@@ -31,3 +31,14 @@ class TestDecomposeHG:
         legendre = decompose_hg(0.5, 200)
 
         assert legendre[0] == 1
+
+
+class TestDecompose:
+    def test_function_matches_hg_result(self):
+        ang = np.linspace(0, 180, num=181)
+        pf = construct_hg(0.5, ang) * 4 * np.pi  # normalize it
+        coeff = decompose_hg(0.5, 129)
+
+        lc = decompose(pf, ang, 129)
+
+        assert np.amax(np.abs(lc - coeff)) < 1e-10

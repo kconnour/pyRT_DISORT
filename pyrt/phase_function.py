@@ -4,6 +4,77 @@ import numpy as np
 from numpy.typing import ArrayLike
 
 
+def decompose(phase_function: ArrayLike,
+              scattering_angles: ArrayLike,
+              n_moments: int) -> np.ndarray:
+    """Decompose a phase function into Legendre coefficients.
+
+    Parameters
+    ----------
+    phase_function: ArrayLike
+        1-dimensional array of phase functions.
+    scattering_angles: ArrayLike
+        1-dimensional array of the scattering angles [degrees]. This array must
+        have the same shape as ``phase_function``.
+    n_moments: int
+        The number of moments to decompose the phase function into. This
+        value must be smaller than the number of points in the phase
+        function.
+
+    Returns
+    -------
+    np.ndarray
+        1-dimensional array of Legendre coefficients of the decomposed phase
+        function with a shape of ``(moments,)``.
+
+    """
+    def _make_legendre_polynomials(scat_angles, n_mom) -> np.ndarray:
+        """Make an array of Legendre polynomials at the scattering angles.
+
+        Notes
+        -----
+        This returns a 2D array. The 0th index is the i+1 polynomial and the
+        1st index is the angle. So index [2, 6] will be the 3rd Legendre
+        polynomial (L3) evaluated at the 6th angle
+
+        """
+        ones = np.ones((n_mom, scat_angles.shape[0]))
+
+        # This creates an MxN array with 1s on the diagonal and 0s elsewhere
+        diag_mask = np.triu(ones) + np.tril(ones) - 1
+
+        # Evaluate the polynomials at the input angles. I don't know why
+        return np.polynomial.legendre.legval(
+            np.cos(scat_angles), diag_mask)[1:n_mom, :]
+
+    def _make_normal_matrix(phase_func, legendre_poly: np.ndarray) -> np.ndarray:
+        return np.sum(
+            legendre_poly[:, None, :] * legendre_poly[None, :, :] / phase_func ** 2,
+            axis=-1)
+
+    def _make_normal_vector(phase_func, legendre_poly: np.ndarray) -> np.ndarray:
+        return np.sum(legendre_poly / phase_func, axis=-1)
+
+    pf = np.asarray(phase_function)
+    sa = np.asarray(scattering_angles)
+    sa = np.radians(sa)
+    try:
+        # Subtract 1 since I'm forcing c0 = 1 in the equation
+        # P(x) = c0 + c1*L1(x) + ... for DISORT
+        pf -= 1
+        lpoly = _make_legendre_polynomials(sa, n_moments)
+        normal_matrix = _make_normal_matrix(pf, lpoly)
+        normal_vector = _make_normal_vector(pf, lpoly)
+        cholesky = np.linalg.cholesky(normal_matrix)
+        first_solution = np.linalg.solve(cholesky, normal_vector)
+        second_solution = np.linalg.solve(cholesky.T, first_solution)
+        coeff = np.concatenate((np.array([1]), second_solution))
+        return coeff
+    except np.linalg.LinAlgError as lae:
+        message = 'The inputs did not make a positive definite matrix.'
+        raise ValueError(message) from lae
+
+
 def construct_hg(
         asymmetry_parameter: ArrayLike,
         scattering_angles: ArrayLike) \
