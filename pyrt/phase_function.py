@@ -145,26 +145,19 @@ def fit_asymmetry_parameter(phase_function: ArrayLike,
     return np.sum((expectation_pf * np.abs(np.diff(cos_sa))).T / 2, axis=0)
 
 
-def set_negative_coefficients_to_0(coefficients: ArrayLike) \
-        -> np.ndarray:
-    """Set an array of Legendre coefficients to 0 after the first coefficient
-    is negative.
-
-    .. warning:
-       There is a glitch where this zeroes everything if no coefficient is
-       negative
+def set_negative_coefficients_to_0(coefficients: ArrayLike) -> np.ndarray:
+    """Set all Legendre coefficients to 0 after the first negative coefficient.
 
     Parameters
     ----------
     coefficients: ArrayLike
-        N-dimensional array of Legendre coefficients. Axis 0 is assumed to be
-        the phase function decomposition dimension.
+        1-dimensional array of Legendre coefficients.
 
     Returns
     -------
     np.ndarray
-        N-dimensional array of the zeroed coefficients with a shape of
-        ``coefficients.shape``.
+        1-dimensional array zeroed coefficients. If no coefficients are
+        negative, this is identical to the input array.
 
     """
     coeff = np.copy(np.asarray(coefficients))
@@ -176,25 +169,22 @@ def set_negative_coefficients_to_0(coefficients: ArrayLike) \
     return coeff
 
 
-def construct_hg(
-        asymmetry_parameter: ArrayLike,
-        scattering_angles: ArrayLike) \
-        -> np.ndarray:
-    r"""Construct Henyey-Greenstein phase functions from asymmetry parameters.
+def construct_henyey_greenstein(asymmetry_parameter: float,
+                                scattering_angles: ArrayLike) -> np.ndarray:
+    r"""Construct a Henyey-Greenstein phase function.
 
     Parameters
     ----------
-    asymmetry_parameter: ArrayLike
-        N-dimensional array of asymmetry paramters. All values must be between
-        -1 and 1.
+    asymmetry_parameter: float
+        The Henyey-Greenstein asymmetry parameter. Must be between -1 and 1.
     scattering_angles: ArrayLike
         1-dimensional array of scattering angles [degrees].
 
     Returns
     -------
     np.ndarray
-        N-dimensional arrray of phase functions with a shape of
-        ``scattering_angles.shape + asymmetry_parameter.shape``.
+        1-dimensiona phase function corresponding to each value in
+        ``scattering_angles``.
 
     Notes
     -----
@@ -220,52 +210,43 @@ def construct_hg(
 
     Examples
     --------
-    Construct phase functions having 181 scattering angles from an array of
-    asymmetry parameters.
+    Construct a Henyey-Greenstein phase function.
 
     >>> import numpy as np
     >>> import pyrt
-    >>> sa = np.linspace(0, 180, num=181)
+    >>> scattering_angles = np.arange(181)
     >>> g = 0.5
-    >>> hg_pf = pyrt.construct_hg(g, sa)
+    >>> hg_pf = pyrt.construct_henyey_greenstein(g, scattering_angles)
     >>> hg_pf.shape
     (181,)
-
-    This function also works with an array of asymmetry parameters.
-
-    >>> g = [-1, -0.5, 0, 0.5, 1]
-    >>> pyrt.construct_hg(g, sa).shape
-    (181, 5)
 
     """
     scattering_angles = np.asarray(scattering_angles)
     asymmetry_parameter = np.asarray(asymmetry_parameter)
-    cos_sa = np.cos(np.radians(scattering_angles))
-    denominator = (1 + asymmetry_parameter ** 2 - 2 *
-                   np.multiply.outer(cos_sa, asymmetry_parameter)) ** (3 / 2)
     with warnings.catch_warnings():
         warnings.filterwarnings('ignore', category=RuntimeWarning)
+        denominator = (1 + asymmetry_parameter ** 2 -
+                       2 * asymmetry_parameter *
+                       np.cos(np.radians(scattering_angles))) ** (3 / 2)
         return 1 / (4 * np.pi) * (1 - asymmetry_parameter ** 2) / denominator
 
 
-def decompose_hg(asymmetry_parameter: ArrayLike,
-                 n_moments: int) \
-        -> np.ndarray:
-    r"""Decompose Henyey-Greenstein phase functions into Legendre coefficients.
+def henyey_greenstein_legendre_coefficients(
+        asymmetry_parameter: float, n_coefficients: int) -> np.ndarray:
+    r"""Get the Legendre coefficients of a Henyey-Greenstein phase function.
 
     Parameters
     ----------
-    asymmetry_parameter: ArrayLike
-        N-dimensional array of asymmetry parameters. All values must be between
-        -1 and 1.
-    n_moments: int
-        The number of moments to decompose the phase function into.
+    asymmetry_parameter: float
+        The Henyey-Greenstein asymmetry parameter. Must be between -1 and 1.
+    n_coefficients: int
+        The number of coefficients to keep.
 
     Returns
     -------
     np.ndarray
-        N-dimensional arrray of Legendre coefficients. This array has a shape
-        of ``(n_moments,) + asymmetry_parameter.shape``.
+        1-dimensional arrray of Legendre coefficients up to the specificed
+        number of coefficients.
 
     Notes
     -----
@@ -281,12 +262,13 @@ def decompose_hg(asymmetry_parameter: ArrayLike,
 
     Examples
     --------
-    Decompose an asymmetry parameter into 129 moments.
+    Get the first 129 coefficients of the Henyey-Greenstein phase function for
+    a given asymmetry parameter.
 
     >>> import numpy as np
     >>> import pyrt
     >>> g = 0.5
-    >>> coeff = pyrt.decompose_hg(g, 129)
+    >>> coeff = pyrt.decompose_henyey_greenstein(g, 129)
     >>> coeff.shape
     (129,)
 
@@ -294,13 +276,21 @@ def decompose_hg(asymmetry_parameter: ArrayLike,
     this result compares to the analytic decomposition performed above.
 
     >>> ang = np.linspace(0, 180, num=181)
-    >>> pf = pyrt.construct_hg(g, ang) * 4 * np.pi  # normalize it
+    >>> pf = pyrt.construct_henyey_greenstein(g, ang) * 4 * np.pi  # normalize it
     >>> lc = pyrt.decompose(pf, ang, 129)
     >>> round(np.amax(np.abs(lc - coeff)), 12)
     3e-12
 
     """
     asymmetry_parameter = np.asarray(asymmetry_parameter)
-    moments = np.linspace(0, n_moments-1, num=n_moments)
-    coeff = (2 * moments + 1) * np.power.outer(asymmetry_parameter, moments)
-    return np.array(np.moveaxis(coeff, -1, 0))
+    coeff = np.arange(n_coefficients)
+    return (2 * coeff + 1) * asymmetry_parameter ** coeff
+
+
+if __name__ == '__main__':
+    g = 0.5
+    n_coeff = 200
+
+    legendre = henyey_greenstein_legendre_coefficients(g, n_coeff)
+
+    print(legendre)
