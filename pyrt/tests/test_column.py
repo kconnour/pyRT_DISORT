@@ -4,7 +4,7 @@ from pyrt import Column
 
 
 class TestColumn:
-    def test_optical_depth_input_is_unchanged(self):
+    def test_optical_depth_property_is_unchanged_from_input(self):
         od = np.linspace(0.1, 1, num=15)
         ssa = np.ones((15,))
         pmom = np.ones((2, 15))
@@ -13,7 +13,7 @@ class TestColumn:
 
         assert np.array_equal(col.optical_depth, od)
 
-    def test_single_scattering_albedo_input_is_unchanged(self):
+    def test_single_scattering_albedo_property_is_unchanged_from_input(self):
         od = np.linspace(0.1, 1, num=15)
         ssa = np.linspace(0.1, 0.9, num=15)
         pmom = np.ones((2, 15))
@@ -22,7 +22,7 @@ class TestColumn:
 
         assert np.array_equal(col.single_scattering_albedo, ssa)
 
-    def test_legendre_coefficient_input_is_normalized(self):
+    def test_legendre_coefficient_property_is_normalized_from_input(self):
         od = np.linspace(0.1, 1, num=15)
         ssa = np.linspace(0.1, 0.9, num=15)
         pmom = np.ones((128, 15))
