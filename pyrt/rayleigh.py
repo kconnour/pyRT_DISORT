@@ -1,14 +1,15 @@
+"""This module provides functions for working with Rayleigh scattering.
+"""
 import numpy as np
+from numpy.typing import ArrayLike
+
 from pyrt.spectral import wavenumber
 from pyrt.column import Column
 
 
-def make_rayleigh_legendre_coefficients(n_layers: int, n_wavelengths: int) -> np.ndarray:
+def rayleigh_legendre(n_layers: int, n_wavelengths: int) -> np.ndarray:
     r"""Make the generic Legendre decomposition of the Rayleigh scattering
     phase function.
-
-    The Rayleigh scattering phase function is independent of the layer and
-    wavelength, and it can be decomposed into 3 moments.
 
     Parameters
     ----------
@@ -22,13 +23,6 @@ def make_rayleigh_legendre_coefficients(n_layers: int, n_wavelengths: int) -> np
     np.ndarray
         3-dimensional array of the Legendre decomposition of the phase
         function with a shape of ``(3, n_layers, n_wavelengths)``.
-
-    Raises
-    ------
-    TypeError
-        Raised if the inputs are not ints.
-    ValueError
-        Raised if the inputs cannot be cast into an int.
 
     Notes
     -----
@@ -52,44 +46,27 @@ def make_rayleigh_legendre_coefficients(n_layers: int, n_wavelengths: int) -> np
     (3, 15, 5)
 
     """
-    try:
-        pf = np.zeros((3, n_layers, n_wavelengths))
-        pf[0, :] = 1
-        pf[2, :] = 0.5
-        return pf
-    except TypeError as te:
-        message = 'The inputs must be ints.'
-        raise TypeError(message) from te
-    except ValueError as ve:
-        message = 'The inputs cannot be cast to ints.'
-        raise ValueError(message) from ve
+    rayleigh_phase_function = np.zeros((3, n_layers, n_wavelengths))
+    rayleigh_phase_function[0] = 1
+    rayleigh_phase_function[2] = 0.5
+    return rayleigh_phase_function
 
 
-def rayleigh_co2(
-        column_density: np.ndarray,
-        wavelength: np.ndarray) -> Column:
+def rayleigh_co2(column_density: ArrayLike, wavelength: ArrayLike) -> Column:
     r"""Compute the Rayleigh CO :sub:`2` Column.
 
     Parameters
     ----------
-    column_density: np.ndarray
+    column_density: ArrayLike
         1-dimensional array of the column density in each layer.
-    wavelength: np.ndarray
+    wavelength: ArrayLike
         1-dimensional array of the wavelengths [microns] to compute the optical
         depth at.
 
     Returns
     -------
-    A Rayleigh column.
-
-    Raises
-    ------
-    TypeError:
-        Raised if the column density is not a np.ndarray or if the wavelengths
-        cannot be cast to an ndarray.
-    ValueError:
-        Raised if the wavelengths contain any values outside the range
-        [0.1, 50] (I assume this is the valid range to do radiative transfer).
+    Column
+        A Rayleigh column.
 
     Notes
     -----
@@ -121,44 +98,37 @@ def rayleigh_co2(
     array([0.78456184, 0.03590366, 0.00672394, 0.00208873, 0.00084833])
 
     """
-
-    def _molecular_cross_section(wavenumber: np.ndarray):
+    def _molecular_cross_section(wave_number: np.ndarray):
         number_density = 25.47 * 10 ** 18  # laboratory molecules / cm**3
-        king_factor = 1.1364 + 25.3 * 10 ** -12 * wavenumber ** 2
-        index_of_refraction = _co2_index_of_refraction(wavenumber)
+        king_factor = 1.1364 + 25.3 * 10 ** -12 * wave_number ** 2
+        index_of_refraction = _co2_index_of_refraction(wave_number)
         return _co2_cross_section(
-            number_density, wavenumber, king_factor, index_of_refraction) \
-               * 10 ** -4
+            number_density, wave_number, king_factor, index_of_refraction) * \
+            10 ** -4
 
-    def _co2_index_of_refraction(wavenumber: np.ndarray) -> np.ndarray:
+    def _co2_index_of_refraction(wave_number: np.ndarray) -> np.ndarray:
         n = 1 + 1.1427 * 10 ** 3 * (
-                5799.25 / (128908.9 ** 2 - wavenumber ** 2) +
-                120.05 / (89223.8 ** 2 - wavenumber ** 2) +
-                5.3334 / (75037.5 ** 2 - wavenumber ** 2) +
-                4.3244 / (67837.7 ** 2 - wavenumber ** 2) +
-                0.00001218145 / (2418.136 ** 2 - wavenumber ** 2))
+                5799.25 / (128908.9 ** 2 - wave_number ** 2) +
+                120.05 / (89223.8 ** 2 - wave_number ** 2) +
+                5.3334 / (75037.5 ** 2 - wave_number ** 2) +
+                4.3244 / (67837.7 ** 2 - wave_number ** 2) +
+                0.00001218145 / (2418.136 ** 2 - wave_number ** 2))
         return n
 
-    def _co2_cross_section(
-            number_density: float,
-            wavenumber: np.ndarray,
-            king_factor: np.ndarray,
-            index_of_refraction: np.ndarray) \
-            -> np.ndarray:
-        coefficient = 24 * np.pi ** 3 * wavenumber ** 4 / number_density ** 2
+    def _co2_cross_section(number_density: float, wave_number: np.ndarray,
+                           king_factor: np.ndarray,
+                           index_of_refraction: np.ndarray) -> np.ndarray:
+        coefficient = 24 * np.pi ** 3 * wave_number ** 4 / number_density ** 2
         middle_term = ((index_of_refraction ** 2 - 1) /
                        (index_of_refraction ** 2 + 2)) ** 2
         return coefficient * middle_term * king_factor  # cm**2 / molecule
 
     wavenum = wavenumber(wavelength)
-    try:
-        colden = column_density[:, None]
-    except TypeError as te:
-        message = 'The column density must be a np.ndarray.'
-        raise TypeError(message) from te
+    column_density = np.asarray(column_density)[:, None]
     mol_cs = _molecular_cross_section(wavenum)[:, None]
-    scattering_od = np.multiply(colden[:, None, :], mol_cs[None, :])
+    scattering_od = np.multiply(column_density[:, None, :], mol_cs[None, :])
     scattering_od = np.squeeze(scattering_od)
     rayleigh_ssa = np.ones(scattering_od.shape)
 
-    return Column(scattering_od, rayleigh_ssa, make_rayleigh_legendre_coefficients(scattering_od.shape[0], wavelength.shape[0]))
+    return Column(scattering_od, rayleigh_ssa,
+                  rayleigh_legendre(scattering_od.shape[0], wavenum.shape[0]))
