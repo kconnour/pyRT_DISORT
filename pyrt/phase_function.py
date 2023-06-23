@@ -4,18 +4,18 @@ import numpy as np
 from numpy.typing import ArrayLike
 
 
-def decompose(phase_function: ArrayLike,
-              scattering_angles: ArrayLike,
+def decompose(phase_function: ArrayLike, scattering_angles: ArrayLike,
               n_moments: int) -> np.ndarray:
     """Decompose a phase function into Legendre coefficients.
 
     Parameters
     ----------
     phase_function: ArrayLike
-        1-dimensional array of phase functions.
+        1-dimensional array of the phase function to decompose.
     scattering_angles: ArrayLike
         1-dimensional array of the scattering angles [degrees]. This array must
-        have the same shape as ``phase_function``.
+        have the same shape as ``phase_function`` and the angles should be
+        monotonically increasing.
     n_moments: int
         The number of moments to decompose the phase function into. This
         value must be smaller than the number of points in the phase
@@ -26,6 +26,24 @@ def decompose(phase_function: ArrayLike,
     np.ndarray
         1-dimensional array of Legendre coefficients of the decomposed phase
         function with a shape of ``(moments,)``.
+
+    Examples
+    --------
+    Construct a Henyey-Greenstein phase function and decompose it into 129
+    moments.
+
+    >>> import numpy as np
+    >>> import pyrt
+    >>> scattering_angles = np.arange(181)
+    >>> pf = pyrt.construct_henyey_greenstein(0.5, scattering_angles) * 4 * np.pi
+    >>> coeff = pyrt.decompose(pf, scattering_angles, 129)
+
+    Compare the result of this general decomposition to the result of the
+    formula for the Henyey-Greenstein decomposition.
+
+    >>> coeff0 = pyrt.henyey_greenstein_legendre_coefficients(0.5, 129)
+    >>> np.amax(np.abs(coeff - coeff0))
+    2.560646052839508e-12
 
     """
     def _make_legendre_polynomials(scat_angles, n_mom) -> np.ndarray:
@@ -76,22 +94,20 @@ def decompose(phase_function: ArrayLike,
 
 
 def fit_asymmetry_parameter(phase_function: ArrayLike,
-                            scattering_angles: ArrayLike) \
-        -> np.ndarray:
-    r"""Fit asymmetry parameters to an array of phase functions.
+                            scattering_angles: ArrayLike) -> float:
+    r"""Fit an asymmetry parameter to a phase function.
 
     Parameters
     ----------
     phase_function: ArrayLike
-        N-dimensional array of phase functions. Axis 0 is assumed to be the
-        scattering angle axis.
+        1-dimensional phase function.
     scattering_angles: ArrayLike
-        1-dimensional array of the scattering angles [degrees]. This array must
-        have the same shape as axis 0 of ``phase_function``.
+        1-dimensional scattering angles [degrees] corresponding to each value
+        in ``phase_function``.
 
     Returns
     -------
-    np.ndarray
+    float
         N-dimensional array of asymmetry parameters with a shape of
         ``phase_function.shape[1:]``.
 
@@ -116,7 +132,7 @@ def fit_asymmetry_parameter(phase_function: ArrayLike,
     >>> import pyrt
     >>> g = 0.8
     >>> sa = np.linspace(0, 180, num=181)
-    >>> pf = pyrt.construct_hg(g, sa) * 4 * np.pi
+    >>> pf = pyrt.construct_henyey_greenstein(g, sa) * 4 * np.pi  # 4 pi is a normalization factor
     >>> fit_g = pyrt.fit_asymmetry_parameter(pf, sa)
     >>> round(fit_g, 5)
     0.83473
@@ -126,7 +142,7 @@ def fit_asymmetry_parameter(phase_function: ArrayLike,
     phase function can reduce the error.
 
     >>> sa = np.linspace(0, 180, num=18100)
-    >>> pf = pyrt.construct_hg(g, sa) * 4 * np.pi
+    >>> pf = pyrt.construct_henyey_greenstein(g, sa) * 4 * np.pi
     >>> fit_g = pyrt.fit_asymmetry_parameter(pf, sa)
     >>> round(fit_g, 5)
     0.80034
@@ -141,7 +157,7 @@ def fit_asymmetry_parameter(phase_function: ArrayLike,
 
     expectation_pf = mid_pf.T * mid_sa
     # Divide by 2 because g = 1/(4*pi) * integral but the azimuth angle
-    # integral = 2*pi so the factor becomes 1/2
+    #  integral = 2*pi so the factor becomes 1/2
     return np.sum((expectation_pf * np.abs(np.diff(cos_sa))).T / 2, axis=0)
 
 
@@ -268,7 +284,7 @@ def henyey_greenstein_legendre_coefficients(
     >>> import numpy as np
     >>> import pyrt
     >>> g = 0.5
-    >>> coeff = pyrt.decompose_henyey_greenstein(g, 129)
+    >>> coeff = pyrt.henyey_greenstein_legendre_coefficients(g, 129)
     >>> coeff.shape
     (129,)
 
@@ -285,12 +301,3 @@ def henyey_greenstein_legendre_coefficients(
     asymmetry_parameter = np.asarray(asymmetry_parameter)
     coeff = np.arange(n_coefficients)
     return (2 * coeff + 1) * asymmetry_parameter ** coeff
-
-
-if __name__ == '__main__':
-    g = 0.5
-    n_coeff = 200
-
-    legendre = henyey_greenstein_legendre_coefficients(g, n_coeff)
-
-    print(legendre)

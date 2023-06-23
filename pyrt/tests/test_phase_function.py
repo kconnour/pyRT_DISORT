@@ -5,11 +5,11 @@ from pyrt.phase_function import decompose, fit_asymmetry_parameter, \
     henyey_greenstein_legendre_coefficients
 
 
-'''class TestDecompose:
+class TestDecompose:
     def test_function_matches_hg_result(self):
         ang = np.linspace(0, 180, num=181)
-        pf = construct_hg(0.5, ang) * 4 * np.pi  # normalize it
-        coeff = decompose_hg(0.5, 129)
+        pf = construct_henyey_greenstein(0.5, ang) * 4 * np.pi  # normalize it
+        coeff = henyey_greenstein_legendre_coefficients(0.5, 129)
 
         lc = decompose(pf, ang, 129)
 
@@ -20,11 +20,11 @@ class TestFitAsymmetryParamter:
     def test_function_reproduces_hg_phase_function(self):
         g = 0.8
         sa = np.linspace(0, 180, num=18001)
-        pf = construct_hg(g, sa) * 4 * np.pi
+        pf = construct_henyey_greenstein(g, sa) * 4 * np.pi
 
         fit_g = fit_asymmetry_parameter(pf, sa)
 
-        assert 0 < abs(g - fit_g) < 0.01'''
+        assert 0 < abs(g - fit_g) < 0.01
 
 
 class TestSetNegativeCoefficientsTo0:
