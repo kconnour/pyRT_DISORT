@@ -1,30 +1,30 @@
+"""This module provides functions for converting between spectral scales.
+"""
 import numpy as np
 from numpy.typing import ArrayLike
 
 
-def wavenumber(wavelength: ArrayLike) -> np.ndarray:
-    r"""Convert wavelengths [microns] to wavenumber
-    [:math:`\frac{1}{\text{cm}}`].
+def wavenumber(wavelengths: ArrayLike) -> np.ndarray:
+    r"""Convert wavelengths to wavenumbers.
 
     Parameters
     ----------
-    wavelength: ArrayLike
-        N-dimensional array of wavelengths.
+    wavelengths: ArrayLike
+        N-dimensional array of wavelengths [microns].
 
     Returns
     -------
     np.ndarray
-        N-dimensional array of wavenumbers.
+        N-dimensional array of wavenumbers [:math:`\frac{1}{\text{cm}}`].
 
     Examples
     --------
-    Convert wavelengths to wavenumbers.
+    Convert a wavelength to a wavenumber
 
     >>> import numpy as np
     >>> import pyrt
-    >>> wavs = [1, 2, 3]
-    >>> pyrt.wavenumber(wavs)
-    array([10000.        ,  5000.        ,  3333.33333333])
+    >>> pyrt.wavenumber(3)
+    array(3333.33333333)
 
     This function can handle arrays of any shape.
 
@@ -33,4 +33,4 @@ def wavenumber(wavelength: ArrayLike) -> np.ndarray:
     (10, 20, 30)
 
     """
-    return 10 ** 4 / np.asarray(wavelength)
+    return np.array(10 ** 4 / np.asarray(wavelengths))
