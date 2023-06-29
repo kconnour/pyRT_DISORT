@@ -18,7 +18,7 @@ sys.path.insert(0, os.path.abspath('../'))
 # -- Project information -----------------------------------------------------
 
 project = 'pyRT_DISORT'
-copyright = '2021, kconnour'
+copyright = '2023, kconnour'
 author = 'kconnour'
 
 
@@ -31,7 +31,6 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
     'sphinx.ext.viewcode',
-    'matplotlib.sphinxext.mathmpl',
     'matplotlib.sphinxext.plot_directive'
 ]
 

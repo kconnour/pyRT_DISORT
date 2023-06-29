@@ -29,5 +29,5 @@ registered in other files.
 
 Suppose pyRT_DISORT is in the repos directory in your home folder. The command
 will look like:
-:code:`~/repos/pyRT_DISORT/venv-doc/bin/python -m sphinx.cmd.build -b html
-~/repos/pyRT_DISORT/builddocs ~/repos/pyRT_DISORT/docs -E`
+:code:`~/repos/pyRT_DISORT/venv/bin/python -m sphinx.cmd.build -b html
+~/repos/pyRT_DISORT/docs_source ~/repos/pyRT_DISORT/docs -E`
