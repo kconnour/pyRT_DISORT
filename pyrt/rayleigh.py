@@ -32,8 +32,8 @@ def rayleigh_legendre(n_layers: int, n_wavelengths: int) -> np.ndarray:
     .. math::
        P(\theta) = \frac{3}{4} (1 + \cos^2(\theta)).
 
-    Since :math:`P_0(x) = 1` and :math:`P_2(x) = \frac{3x^2 - 1}{2},
-    :math:`P(\mu) = P_0(\mu) + 0.5 P_2(\mu).
+    Since :math:`P_0(x) = 1` and :math:`P_2(x) = \frac{3x^2 - 1}{2}`,
+    :math:`P(\mu) = P_0(\mu) + 0.5 P_2(\mu)`.
 
     Examples
     --------

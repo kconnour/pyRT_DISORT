@@ -9,8 +9,8 @@ to compute several of the inputs required by DISORT.
    :caption: For users
 
    rst/for-users/installation
-   rst/for-users/tutorials
    rst/for-users/api-reference
+   rst/for-users/tutorials
 
 .. toctree::
    :maxdepth: 1

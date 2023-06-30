@@ -59,7 +59,7 @@ index. If we want to get one of the pixel corners, we can do so as shown below.
 DISORT expects the input of :code:`UMU0` and :code:`PHI0` to be floats, which
 we obtained by choosing the pixel's indices. It expects :code:`UMU` and
 :code:`PHI` to both be 1D arrays (here, both are length 1 since, again, each
-pixel ha only 1 set of emission and azimuth angles) which we got the same way.
+pixel has only 1 set of emission and azimuth angles) which we got the same way.
 
 We just computed all the angular quantities required by DISORT in all pixels of
 the observation at once, which has the potential to offer some significant

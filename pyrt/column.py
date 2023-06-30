@@ -11,13 +11,13 @@ class Column:
     Parameters
     ----------
     optical_depth: ArrayLike
-        N-dimensional array of optical depths.
+        1-dimensional array of optical depths.
     single_scattering_albedo: ArrayLike
-        N-dimensional array of single-scattering albedos. Must be the same
+        1-dimensional array of single-scattering albedos. Must be the same
         shape as `optical_depth`.
     legendre_coefficients: ArrayLike
-        N-dimensional array of Legendre coefficients. Axis 0 can have any
-        length but the remaining axes must have the same shape as
+        2-dimensional array of Legendre coefficients. Axis 0 can have any
+        length but axis 1 must have the same shape as
         `optical_depth`. These get divided by 2k + 1 to keep with DISORT's
         convention.
 

@@ -1,6 +1,12 @@
 Release notes
 =============
 
+v1.0.0
+------
+Initial release! This update transitions pyRT_DISORT into a must lighter package
+that integrates with numpy/scipy, instead of wrapping that functionality into
+a framework.
+
 ..
    Warning: docutils 0.17 breaks bulleted lists! I had to downgrade to 0.16 to
    get the functionality back. See

@@ -74,3 +74,23 @@ def column_density(pressure: ArrayLike, temperature: ArrayLike,
          for i in range(len(altitude) - 1)]
 
     return np.array(n) * 1000
+
+
+def scale_height(temperature: ArrayLike, mass: ArrayLike, gravity: float) -> np.ndarray:
+    """Compute the scale height of each model layer.
+
+    Parameters
+    ----------
+    temperature: ArrayLike
+        The 1-dimensional temperature [K] of the grid.
+    mass: ArrayLike
+        The 1-dimensional particle mass [kg] of the grid.
+    gravity: float
+        The gravitational constant.
+
+    Returns
+    -------
+    The scale height in each model layer.
+
+    """
+    return Boltzmann * temperature / (mass * gravity)
