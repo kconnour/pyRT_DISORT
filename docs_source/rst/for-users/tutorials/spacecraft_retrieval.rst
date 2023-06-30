@@ -205,7 +205,7 @@ We then need to define the particle size gradient for each model layer.
 
 .. code-block:: python
 
-   particle_size_gradient = np.linspace(1, 1.5, num=len(z_midpoint))
+   particle_size_gradient = np.linspace(1, 1.5, num=len(altitude_midpoint))
 
 From this, we can now compute the dust's optical depth. Let's suppose
 (presumably because someone else told us so) that the
@@ -283,4 +283,166 @@ an input.
 
 .. code-block:: python
 
-   model = rayleigh_co2 + dust_column
+   MAXCLY = len(altitude_midpoint)
+   MAXMOM = PMOM.shape[0]
+   MAXCMU = 16      # AKA the number of streams
+   MAXPHI = 1
+   MAXUMU = 1
+   MAXULV = len(altitude_midpoint) + 1
+
+The geometry of this situation dictates that the number of azimuth and polar
+angles are both 1. The number of Legendre coefficients from the T-matrix
+computations set the number of moments. The vertical grid set the number of
+computational layers and user levels. The number of streams can be changed.
+
+Model behavior
+--------------
+We can also set how we want the model to behave. These are some example values
+but you can change these to your liking
+
+.. code-block:: python
+
+   ACCUR = 0.0
+   DELTAMPLUS = True
+   DO_PSEUDO_SPHERE = False
+   HEADER = ''
+   PRNT = None
+   EARTH_RADIUS = 6371
+
+Radiation
+---------
+Let's now specify the flux and thermal quantities used in the model.
+
+Incident flux
+*************
+We can define the beam flux and the isotropic flux at the top of the atmosphere.
+
+.. code-block:: python
+
+   FBEAM = np.pi
+   FISOT = 0
+
+At least for our Martian simulation, there's no real need to worry about the
+isotropic flux from space.
+
+Thermal emission
+****************
+We can also define whether thermal emission is used in the model. For this
+example, we'll ignore thermal emission but this code snippet shows how you
+may define some variables. If no thermal emission is used, the other variables
+can be any floats.
+
+.. code-block:: python
+
+   PLANK = False
+   BTEMP = temperature_profile[-1]
+   TTEMP = temperature_profile[0]
+   TEMIS = 1
+
+Output
+------
+
+Arrays
+******
+Next, we'll create some output arrays. DISORT evidently needs these empty arrays
+to be initialized and it'll fill them as it runs.
+
+.. code-block:: python
+
+   ALBMED = pyrt.empty_albedo_medium(MAXUMU)
+   FLUP = pyrt.empty_diffuse_up_flux(MAXULV)
+   RFLDN = pyrt.empty_diffuse_down_flux(MAXULV)
+   RFLDIR = pyrt.empty_direct_beam_flux(MAXULV)
+   DFDT = pyrt.empty_flux_divergence(MAXULV)
+   UU = pyrt.empty_intensity(MAXUMU, MAXULV, MAXPHI)
+   UAVG = pyrt.empty_mean_intensity(MAXULV)
+   TRNMED = pyrt.empty_transmissivity_medium(MAXUMU)
+
+Behavior
+********
+We have yet more switches to tell DISORT how to run.
+
+.. code-block:: python
+
+   IBCND = False
+   ONLYFL = False
+   USRANG = True
+   USRTAU = False
+
+Surface
+-------
+With the number of computational parameters defined, we can now make the
+arrays of the surface reflectance. We only need a handful of values to define
+the shape of these arrays, so let's do that using :class:`~surface.Surface`.
+
+.. code-block:: python
+
+   from pyRT_DISORT.surface import Surface
+
+   sfc = Surface(0.1, cp.n_streams, cp.n_polar, cp.n_azimuth, ob.user_angles,
+                 ob.only_fluxes)
+
+:code:`sfc` doesn't know what *kind* of surface it is. We can then set the type
+of surface using the methods in :code:`Surface`. For simplicity, let's use a
+Lambertian surface here. Once that's set, this class computes all the arrays it
+needs.
+
+.. code-block:: python
+
+   sfc.make_lambertian()
+
+   ALBEDO = sfc.albedo
+   LAMBER = sfc.lambertian
+   RHOU = sfc.rhou
+   RHOQ = sfc.rhoq
+   BEMST = sfc.bemst
+   EMUST = sfc.emust
+   RHO_ACCURATE = sfc.rho_accurate
+
+With these defined, we've now created all the variables that DISORT needs!
+
+.. tip::
+   :code:`Surface` also comes with :py:meth:`~surface.Surface.make_hapke`,
+   :py:meth:`~surface.Surface.make_hapkeHG2`, and
+   :py:meth:`~surface.Surface.make_hapkeHG2_roughness` if you want to use more
+   complicated phase functions. The 5 surface arrays are initialized with 0s
+   when the class is instantiated. When these methods are called, those arrays
+   are overridden.
+
+   For a brief example, suppose you want to use a Hapke surface (without the
+   surface HG phase function) and you know the Hapke parameters. You can do
+   that with the following code:
+
+   .. code-block:: python
+
+      b0 = 1
+      h = 0.5
+      w = 0.5
+
+      sfc.make_hapke(b0, h, w, UMU, UMU0, PHI, PHI0, FBEAM)
+
+   and then all the arrays will be populated with values from a Hapke surface.
+
+.. warning::
+   Making the surface phase functions were the one place where I modified the
+   DISORT source code. The shape of :code:`RHOU` seems wrong and inconsistent
+   throughout the DISORT documentation. When I make it what I think it should
+   be, my code then runs without error. However, it seems an error like this
+   would've gone unnoticed, so be aware of this!
+
+Oddball
+-------
+This one doesn't fit in with the others in my mind. If we want the radiant
+quantities to be returned at user-specified boundaries, we need to tell DISORT
+what those boundaries are. If we don't specify these, it'll return them at the
+layers of our model, which is perfectly fine in this case.
+
+.. code-block:: python
+
+   UTAU = np.zeros((MAXULV,))
+
+Running the model
+-----------------
+
+Retrieval
+---------
