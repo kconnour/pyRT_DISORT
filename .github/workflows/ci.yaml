@@ -1,3 +1,8 @@
+# Upon a push to main, this workflow will:
+# -- install pyRT_DISORT
+# -- run all tests
+# -- run a linter
+
 name: CI
 
 on:
@@ -9,14 +14,16 @@ on:
   workflow_dispatch:
 
 jobs:
-  test-install-ubuntu-20-04:
-    name: "Test installation on Ubuntu 20.04"
-    runs-on: ubuntu-20.04
+  test-mars_time:
+    name: "Test pyRT_DISORT on ${{ matrix.os }} using Python ${{ matrix.python-version }}"
 
     strategy:
       fail-fast: false
       matrix:
-        python-version: [ 3.9 ]
+        os: [ubuntu-20.04, ubuntu-22.04, macos-11, macos-12, macos-13]
+        python-version: ["3.10", "3.11"]
+
+    runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v2
@@ -26,22 +33,15 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install pyDISORT
+      - name: Install pyRT_DISORT and testing utilities
         run: |
-          python -m pip install .
-      - name: Test the installation
+          python -m pip install --upgrade pip
+          python -m pip install .[dev]
+
+      - name: Test with pytest
         run: |
-          python
-          import disort
-          disort.disort.__doc__
-  #test-install-ubuntu-18-04:
-  #  name: "Test installation on Ubuntu 18.04"
-  #  runs-on: ubuntu-18.04
+          python -m pytest pyrt
 
-  #test-fortran-big-sur-11:
-  #  name: "Test installation on macOS Big Sur 11"
-  #  runs-on: macos-10.15
-
-  #test-fortran-catalina-10-15:
-  #  name: "Test installation on macOS Catalina 10.15"
-  #  runs-on: macos-10.15
+      - name: Lint with pylint
+        run: |
+          python -m pylint --exit-zero pyrt
