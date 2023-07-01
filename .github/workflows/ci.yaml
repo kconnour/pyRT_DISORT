@@ -43,9 +43,7 @@ jobs:
 
       - name: Ensure DISORT is importable
         run: |
-          python
-          import disort
-          disort.disort.__doc__
+          python ci_test.py
 
       - name: Test with pytest
         run: |
