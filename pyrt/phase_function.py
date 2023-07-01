@@ -42,10 +42,14 @@ def decompose(phase_function: ArrayLike, scattering_angles: ArrayLike,
     formula for the Henyey-Greenstein decomposition.
 
     >>> coeff0 = pyrt.henyey_greenstein_legendre_coefficients(0.5, 129)
-    >>> round(np.amax(np.abs(coeff - coeff0)), 12)
-    3e-12
+    >>> np.amax(np.abs(coeff - coeff0)) < 1e-10
+    True
 
     """
+    # Why does the last test check a boolean and not a number? When I do CI,
+    #  I find that it's OS dependent regarding what answer that test spits out
+    #  and therefore, my tests pass or fail depending on what the exact OS is.
+    #  So, I made it a bool so all OSs can agree the number is small.
     def _make_legendre_polynomials(scat_angles, n_mom) -> np.ndarray:
         """Make an array of Legendre polynomials at the scattering angles.
 
