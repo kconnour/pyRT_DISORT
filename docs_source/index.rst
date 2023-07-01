@@ -10,7 +10,7 @@ to compute several of the inputs required by DISORT.
 
    rst/for-users/installation
    rst/for-users/api-reference
-   rst/for-users/tutorials
+   rst/for-users/guides
 
 .. toctree::
    :maxdepth: 1

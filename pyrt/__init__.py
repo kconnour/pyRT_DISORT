@@ -7,4 +7,5 @@ from .output import *
 from .phase_function import *
 from .rayleigh import *
 from .spectral import *
+from .surface import *
 from .vertical_profile import *

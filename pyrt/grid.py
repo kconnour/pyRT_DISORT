@@ -1,9 +1,8 @@
 import numpy as np
-from numpy.typing import ArrayLike
 
 
 def regrid(array: np.ndarray, particle_size_grid: np.ndarray, wavelength_grid,
-        particle_sizes: np.ndarray, wavelengths: np.ndarray) -> np.ndarray:
+           particle_sizes: np.ndarray, wavelengths: np.ndarray) -> np.ndarray:
     """Regrid the input array onto a new particle size and wavelength grid
     using nearest-neighbor interpolation.
 
@@ -29,11 +28,8 @@ def regrid(array: np.ndarray, particle_size_grid: np.ndarray, wavelength_grid,
 
     reff_indices = _get_nearest_indices(particle_size_grid, particle_sizes)
     wav_indices = _get_nearest_indices(wavelength_grid, wavelengths)
-    return np.take(np.take(array, reff_indices, axis=-2),
-                   wav_indices, axis=-1)
+    return np.take(np.take(array, reff_indices, axis=-2), wav_indices, axis=-1)
 
 
-def _get_nearest_indices(grid: np.ndarray, values: np.ndarray) \
-        -> np.ndarray:
-    # grid should be 1D; values can be ND
+def _get_nearest_indices(grid: np.ndarray, values: np.ndarray) -> np.ndarray:
     return np.abs(np.subtract.outer(grid, values)).argmin(0)

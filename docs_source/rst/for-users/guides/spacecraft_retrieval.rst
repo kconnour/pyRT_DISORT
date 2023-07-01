@@ -4,16 +4,21 @@ This tutorial will walk you through how to simulate reflectance spectra of an
 atmosphere containing Martian dust as observed from an orbiter. Then, we'll use
 these simulations to perform a retrieval.
 
-.. note::
-   Variables defined in all caps will be the ones that we ultimately plug into
-   the DISORT call, and they adhere to the same naming convention that DISORT
-   uses (for the benefit of those who have worked with DISORT before).
-
-For all of this, I assume this package is imported
+For all of this, I assume pyRT_DISORT is imported
 
 .. code-block:: python
 
    import pyrt
+   import disort
+
+.. note::
+   All code used in this example is collected in a script located at
+   ~/pyRT_DISORT/docs_source/rst/for-users/guides/spacecraft_retrieval.py
+
+.. note::
+   Variables defined in all caps will be the ones that we ultimately plug into
+   the DISORT call, and they adhere to the same naming convention that DISORT
+   uses (for the benefit of those who have worked with DISORT before).
 
 Angles
 ------
@@ -54,6 +59,17 @@ we can obtain by choosing the pixel's indices. It expects :code:`UMU` and
 :code:`PHI` to both be 1D arrays (here, both are length 1 since, again, each
 pixel has only 1 set of emission and azimuth angles) which we got the same way.
 
+.. code-block:: python
+
+   UMU = UMU[0, 0]
+   UMU0 = UMU0[0, 0]
+   PHI = PHI[0, 0]
+   PHI0 = PHI0[0, 0]
+
+.. note::
+   In the case where DISORT wants a 1D array, you can give it a scalar value
+   and f2py will convert it to an array when DISORT is called.
+
 Wavelengths
 -----------
 Let's now turn our attention to the spectral information provided by the
@@ -61,7 +77,7 @@ instrument. I'll define some wavelengths so we have some values to work with.
 
 .. code-block:: python
 
-   pixel_wavelengths = np.array([1, 2, 3, 4, 5])
+   pixel_wavelengths = np.array([1, 2, 3, 4, 5]) / 5
    spectral_width = 0.05
 
 .. attention::
@@ -92,7 +108,7 @@ the altitudes where these are defined.
 
    altitude_grid = np.linspace(100, 0, num=15)
    pressure_profile = 500 * np.exp(-altitude_grid / 10)
-   temperature_profile = np.linspace(150, 250, num=51)
+   temperature_profile = np.linspace(150, 250, num=15)
    mass = 7.3 * 10**-26
    gravity = 3.7
 
@@ -151,7 +167,7 @@ composite arrays.
       np.sum(rayleigh_co2.optical_depth, axis=0)
 
    to see the column integrated optical depth. For this example it gives
-   ``[1.62444356e-04 1.00391950e-05 1.97891739e-06 6.25591479e-07 2.56207684e-07]``
+   ``[1.62009710e-04 1.00123336e-05 1.97362248e-06 6.23917610e-07 2.55522160e-07]``
 
 Aerosols
 --------
@@ -217,11 +233,9 @@ wavelength.
 
 .. code-block:: python
 
-   particle_size_gradient = np.linspace(1, 1.5, num=len(z_midpoint))
-
    ext = pyrt.extinction_ratio(extinction_cross_section, particle_size_grid, wavelength_grid, 9.3)
    ext = pyrt.regrid(ext, particle_size_grid, wavelength_grid, particle_size_gradient, pixel_wavelengths)
-   dust_optical_depth = optical_depth(dust_profile, column_density, ext, 1)
+   dust_optical_depth = pyrt.optical_depth(dust_profile, column_density, ext, 1)
 
 The variable ``dust_optical_depth`` has a shape of (14, 5), meaning it's the
 optical depth of each model layer, computed at all model wavelengths.
@@ -372,14 +386,11 @@ We have yet more switches to tell DISORT how to run.
 Surface
 -------
 With the number of computational parameters defined, we can now make the
-arrays of the surface reflectance. We only need a handful of values to define
-the shape of these arrays, so let's do that using :class:`~surface.Surface`.
+arrays of the surface reflectance.
 
 .. code-block:: python
 
-   from pyRT_DISORT.surface import Surface
-
-   sfc = Surface(0.1, cp.n_streams, cp.n_polar, cp.n_azimuth, ob.user_angles,
+   sfc = pyrt.Surface(0.1, cp.n_streams, cp.n_polar, cp.n_azimuth, ob.user_angles,
                  ob.only_fluxes)
 
 :code:`sfc` doesn't know what *kind* of surface it is. We can then set the type
@@ -443,6 +454,124 @@ layers of our model, which is perfectly fine in this case.
 
 Running the model
 -----------------
+We have all the variables we need to simulate some reflectance curves. Recall
+that we've been making properties (where applicable) at all 5 wavelengths at
+once. Unfortunately DISORT can't natively handle this, so we need to loop over
+wavelength. I'll import the necessary module and create an array that'll be
+filled as DISORT runs.
+
+.. code-block:: python
+
+   test_run = np.zeros(pixel_wavelengths.shape)
+
+Once we carefully put all ~50 variables in the correct order and remember to
+only select parts of the arrays we need (slicing off the wavelength dimension),
+we can do simulations.
+
+.. code-block:: python
+
+   for ind in range(pixel_wavelengths.size):
+       rfldir, rfldn, flup, dfdt, uavg, uu, albmed, trnmed = \
+           disort.disort(USRANG, USRTAU, IBCND, ONLYFL, PRNT, PLANK, LAMBER,
+                         DELTAMPLUS, DO_PSEUDO_SPHERE, DTAUC[:, ind], SSALB[:, ind],
+                         PMOM[:, :, ind], TEMPER, WVNMLO, WVNMHI,
+                         UTAU, UMU0, PHI0, UMU, PHI, FBEAM, FISOT,
+                         ALBEDO, BTEMP, TTEMP, TEMIS, EARTH_RADIUS, H_LYR, RHOQ, RHOU,
+                         RHO_ACCURATE, BEMST, EMUST, ACCUR, HEADER, RFLDIR,
+                         RFLDN, FLUP, DFDT, UAVG, UU, ALBMED, TRNMED)
+
+       test_run[ind] = uu[0, 0, 0]
+
+   print(test_run)
+
+This prints :code:`[0.11399675 0.06681997 0.06493594 0.06464735 0.06458137]`.
 
 Retrieval
 ---------
+We were able to make simulations in the previous section, but now let's suppose
+we want to retrieve the dust optical depth (instead of treating it as a fixed
+quantity). All that we really need to do is run simulations with a bunch of
+different optical depths and see which one matches an observation the best
+... though the implementation details aren't quite so crude. To demonstrate how
+to do this, let's suppose the result of our simulation above where the dust
+optical depth was 1 was a measured quantity and let's also pretend we have no
+idea what the dust optical depth is.
+
+The simulated spectrum acts as our measured I/F.
+
+.. code-block:: python
+
+   rfl = np.array([0.11399675, 0.06681997, 0.06493594, 0.06464735, 0.06458137])
+
+If we want to retrieve a scalar optical depth over this spectral range
+we want a function that accepts a test optical depth and finds the optical
+depth that best fits this spectrum. The following function does that
+
+.. code-block:: python
+
+   def simulate_spectra(test_optical_depth):
+       dust_optical_depth = pyrt.optical_depth(dust_profile, column_density, ext, test_optical_depth)
+       dust_column = pyrt.Column(dust_optical_depth, dust_single_scattering_albedo, dust_legendre)
+       model = rayleigh_co2 + dust_column
+
+       od_holder = np.zeros(n_wavelengths)
+       for wav_index in range(n_wavelengths):
+           rfldir, rfldn, flup, dfdt, uavg, uu, albmed, trnmed = \
+                disort.disort(USRANG, USRTAU, IBCND, ONLYFL, PRNT, PLANK, LAMBER,
+                         DELTAMPLUS, DO_PSEUDO_SPHERE, DTAUC[:, wav_index], SSALB[:, wav_index],
+                         PMOM[:, :, wav_index], TEMPER, WVNMLO, WVNMHI,
+                         UTAU, UMU0, PHI0, UMU, PHI, FBEAM, FISOT,
+                         ALBEDO, BTEMP, TTEMP, TEMIS, EARTH_RADIUS, H_LYR, RHOQ, RHOU,
+                         RHO_ACCURATE, BEMST, EMUST, ACCUR, HEADER, RFLDIR,
+                         RFLDN, FLUP, DFDT, UAVG, UU, ALBMED, TRNMED)
+
+           od_holder[wav_index] = uu[0, 0, 0]
+       return np.sum((od_holder - rfl)**2)
+
+If I only want to retrieve the dust optical depth, nothing in this guide before the place where
+I define the optical depth is affected; that is, the equation of state,
+input angles, input wavelengths, etc. don't need modification. In fact, only
+the atmospheric model cares about the different optical depths.
+I create an empty array that will hold the values
+as DISORT is run at each of the wavelengths (just like before) and populate
+it along the way, but I only return the square of the distance from the target
+spectrum. This essentially tells us how close the input optical depth is to the
+target. If we minimize the output of this function, we found the best fit dust
+optical depth.
+
+Fortunately, scipy has some minimization routines for just this sort of thing.
+I'll use their Nelder-Mead algorithm (a slower but robust algorithm) but feel
+free to use another one if you've got more familiarity with them. All we need
+to do is provide it a function to minimize (which we just defined) along with
+an initial guess. This particular algorithm also has some bounds so I can tell
+it not to try negative optical depths.
+
+.. code-block:: python
+
+   from scipy import optimize
+
+
+   def retrieve_od(guess):
+       return optimize.minimize(simulate_spectra, np.array([guess]),
+                                method='Nelder-Mead', bounds=(0, 2)).x
+
+Now let's do a retrieval where we guess that the optical depth is 1.5 and see
+how it performs, along with how long it takes to run.
+
+.. code-block:: python
+
+   import time
+
+   t0 = time.time()
+   print(retrieve_od(1.5))
+   t1 = time.time()
+   print(f'The retrieval took {(t1 - t0):.3f} seconds.')
+
+On my computer this outputs
+
+.. code-block:: python
+
+   [0.99997559]
+   The retrieval took 0.351 seconds.
+
+Seems decent to me.
