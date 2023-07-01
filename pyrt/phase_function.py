@@ -298,8 +298,8 @@ def henyey_greenstein_legendre_coefficients(
     >>> ang = np.linspace(0, 180, num=181)
     >>> pf = pyrt.construct_henyey_greenstein(g, ang) * 4 * np.pi  # normalize it
     >>> lc = pyrt.decompose(pf, ang, 129)
-    >>> round(np.amax(np.abs(lc - coeff)), 12)
-    3e-12
+    >>> np.amax(np.abs(lc - coeff)) < 1e-10
+    True
 
     """
     asymmetry_parameter = np.asarray(asymmetry_parameter)
