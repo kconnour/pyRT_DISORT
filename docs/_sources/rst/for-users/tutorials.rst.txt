@@ -5,6 +5,6 @@ pyRT_DISORT.
 
 .. toctree::
    :maxdepth: 1
-   :caption: Retrievals from scratch
+   :caption: Retrievals
 
    tutorials/spacecraft_retrieval.rst

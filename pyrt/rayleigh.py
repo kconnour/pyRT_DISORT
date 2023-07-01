@@ -1,200 +1,134 @@
-"""The ``rayleigh`` module contains structures for computing Rayleigh
-scattering.
+"""This module provides functions for working with Rayleigh scattering.
 """
 import numpy as np
-from pyrt.eos import _EoSVar
-from pyrt.observation import _Wavelength
+from numpy.typing import ArrayLike
+
+from pyrt.spectral import wavenumber
+from pyrt.column import Column
 
 
-class _Rayleigh:
-    """An abstract base class for Rayleigh scattering.
+def rayleigh_legendre(n_layers: int, n_wavelengths: int) -> np.ndarray:
+    r"""Make the generic Legendre decomposition of the Rayleigh scattering
+    phase function.
 
-    _Rayleigh creates the single scattering albedo and Legendre coefficient
-    phase function array given the number of layers and the spectral shape. This
-    is an abstract base class from which all other Rayleigh classes are derived.
+    Parameters
+    ----------
+    n_layers: int
+        The number of layers to make the phase function for.
+    n_wavelengths: int
+        The number of wavelengths to make
 
-    """
+    Returns
+    -------
+    np.ndarray
+        3-dimensional array of the Legendre decomposition of the phase
+        function with a shape of ``(3, n_layers, n_wavelengths)``.
 
-    def __init__(self, n_layers: int, spectral_shape: tuple) -> None:
-        """
-        Parameters
-        ----------
-        n_layers
-            The number of layers to use in the model.
-        spectral_shape
-            The pixel shape to construct a phase function.
+    Notes
+    -----
+    Moment 0 is always 1 and moment 2 is always 0.5. The Rayleigh scattering
+    phase function is given by
 
-        Raises
-        ------
-        TypeError
-            Raised if :code:`n_layers` is not an int, or if
-            :code:`spectral_shape` is not a tuple.
-        ValueError
-            Raised if the values in :code:`spectral_shape` are not ints.
+    .. math::
+       P(\theta) = \frac{3}{4} (1 + \cos^2(\theta)).
 
-        """
-        self.__n_layers = n_layers
-        self.__spectral_shape = spectral_shape
+    Since :math:`P_0(x) = 1` and :math:`P_2(x) = \frac{3x^2 - 1}{2}`,
+    :math:`P(\mu) = P_0(\mu) + 0.5 P_2(\mu)`.
 
-        self.__raise_error_if_inputs_are_bad()
+    Examples
+    --------
+    Make the Rayleigh scattering phase function for a model with 15 layers
+    and 5 wavelengths.
 
-        self.__single_scattering_albedo = self.__make_single_scattering_albedo()
-        self.__phase_function = self.__construct_phase_function()
-
-    def __raise_error_if_inputs_are_bad(self) -> None:
-        self.__raise_type_error_if_n_layers_is_not_int()
-        self.__raise_type_error_if_spectral_shape_is_not_tuple()
-        self.__raise_value_error_if_spectral_shape_contains_non_ints()
-
-    def __raise_type_error_if_n_layers_is_not_int(self) -> None:
-        if not isinstance(self.__n_layers, int):
-            message = 'n_layers must be an int.'
-            raise TypeError(message)
-
-    def __raise_type_error_if_spectral_shape_is_not_tuple(self) -> None:
-        if not isinstance(self.__spectral_shape, tuple):
-            message = 'spectral_shape must be a tuple.'
-            raise TypeError(message)
-
-    def __raise_value_error_if_spectral_shape_contains_non_ints(self) -> None:
-        for val in self.__spectral_shape:
-            if not isinstance(val, int):
-                message = 'At least one value in spectral_shape is not an int.'
-                raise ValueError(message)
-
-    def __make_single_scattering_albedo(self) -> np.ndarray:
-        return np.ones((self.__n_layers,) + self.__spectral_shape)
-
-    def __construct_phase_function(self) -> np.ndarray:
-        pf = np.zeros((3, self.__n_layers) + self.__spectral_shape)
-        pf[0, :] = 1
-        pf[2, :] = 0.5
-        return pf
-
-    @property
-    def single_scattering_albedo(self) -> np.ndarray:
-        r"""Get the Rayleigh single scattering albedo.
-
-        Notes
-        -----
-        The shape of this array is (n_layers, (spectral_shape)). It is
-        filled with all 1s.
-
-        """
-        return self.__single_scattering_albedo
-
-    @property
-    def phase_function(self) -> np.ndarray:
-        r"""Get the Legendre decomposition of the phase function.
-
-        Notes
-        -----
-        The shape of this array is (3, n_layers, (spectral_shape)). The
-        0 :sup:`th` and 2 :sup:`nd` coefficient along the 0 :sup:`th` axis are
-        1 and 0.5, respectively.
-
-        """
-        return self.__phase_function
-
-
-class RayleighCO2(_Rayleigh):
-    r"""A structure to compute CO :sub:`2` Rayleigh scattering arrays.
-
-    RayleighCO2 creates the optical depth, single scattering albedo, and
-    Legendre coefficient decomposition phase function arrays due to Rayleigh
-    scattering by CO :sub:`2` in each of the layers.
+    >>> import pyrt
+    >>> rayleigh_pf = pyrt.rayleigh_legendre(15, 5)
+    >>> rayleigh_pf.shape
+    (3, 15, 5)
 
     """
+    rayleigh_phase_function = np.zeros((3, n_layers, n_wavelengths))
+    rayleigh_phase_function[0] = 1
+    rayleigh_phase_function[2] = 0.5
+    return rayleigh_phase_function
 
-    def __init__(self, wavelength: np.ndarray,
-                 column_density: np.ndarray) -> None:
-        """
-        Parameters
-        ----------
-        wavelength
-            Wavelength at which Rayleigh scattering will be computed.
-        column_density
-            Column density in the model layers.
 
-        Raises
-        ------
-        TypeError
-            Raised if :code:`wavelength` or :code:`column_density` is not a
-            numpy.ndarray.
-        ValueError
-            Raised if any values in :code:`wavelength` or :code:`column_density`
-            are unphysical, or if they have incompatible shapes. See the note
-            below for more details.
+def rayleigh_co2(column_density: ArrayLike, wavelength: ArrayLike) -> Column:
+    r"""Compute the Rayleigh CO :sub:`2` Column.
 
-        Notes
-        -----
-        In the general case of a hyperspectral imager with MxN pixels and W
-        wavelengths, ``wavelength`` can have shape WxMxN. In this case,
-        ``column_density`` should have shape ZxMxN, where Z is the number
-        of model layers. The 0 :sup:`th` dimension can have different shapes
-        between the arrays but the subsequent dimensions (if any) should have
-        the same shape.
+    Parameters
+    ----------
+    column_density: ArrayLike
+        1-dimensional array of the column density in each layer.
+    wavelength: ArrayLike
+        1-dimensional array of the wavelengths [microns] to compute the optical
+        depth at.
 
-        References
-        ----------
-        The values used here are from `Sneep and Ubachs 2005
-        <https://doi.org/10.1016/j.jqsrt.2004.07.025>`_
+    Returns
+    -------
+    Column
+        A Rayleigh column.
 
-        Due to a typo in the paper, I changed the coefficient to 10 :sup:`3`
-        when using equation 13 for computing the index of refraction.
+    Notes
+    -----
+    This algorithm computes the optical depth in each layer i by using
 
-        """
-        self.__wavelength = _Wavelength(wavelength, 'wavelength')
-        self.__wavenumber = self.__wavelength.to_wavenumber()
-        self.__column_density = _EoSVar(column_density, 'cd')
+    .. math:
+       \tau_i = N_i * \sigma_i.
 
-        self.__raise_error_if_inputs_have_incompatible_shapes()
+    The molecular cross-section is given by laboratory measurements from
+    `Sneep and Ubachs, 2005 <https://doi.org/10.1016/j.jqsrt.2004.07.025>`_.
 
-        super().__init__(column_density.shape[0], wavelength.shape)
+    Examples
+    --------
+    Compute the Rayleigh scattering optical depth from (very simplified)
+    column densities and wavelengths.
 
-        self.__scattering_od = \
-            self.__calculate_scattering_optical_depths(column_density)
+    >>> import numpy as np
+    >>> import pyrt
+    >>> column_density = np.linspace(10**26, 10**27, num=15)
+    >>> wavs = np.linspace(0.2, 1, num=5)
+    >>> rayleigh_column = pyrt.rayleigh_co2(column_density, wavs)
+    >>> rayleigh_column.optical_depth.shape
+    (15, 5)
 
-    def __raise_error_if_inputs_have_incompatible_shapes(self) -> None:
-        if self.__wavelength.shape[1:] != \
-                self.__column_density.val.shape[1:]:
-            message = 'wavelength and column_density must have the same ' \
-                      'shape along all dimensions except the 0th.'
-            raise ValueError(message)
+    Simply sum over the layers to get the column integrated optical depth due
+    to Rayleigh scattering.
 
-    def __calculate_scattering_optical_depths(
-            self, column_density: np.ndarray) -> np.ndarray:
-        column_density = column_density[:, None]
-        mcs = self.__molecular_cross_section()[:, None]
-        scattering_od = np.multiply(column_density[:, None, :], mcs[None, :])
-        return np.squeeze(scattering_od)
+    >>> np.sum(rayleigh_column.optical_depth, axis=0)
+    array([0.78456184, 0.03590366, 0.00672394, 0.00208873, 0.00084833])
 
-    def __molecular_cross_section(self):
+    """
+    def _molecular_cross_section(wave_number: np.ndarray):
         number_density = 25.47 * 10 ** 18  # laboratory molecules / cm**3
-        king_factor = 1.1364 + 25.3 * 10 ** -12 * self.__wavenumber ** 2
-        index_of_refraction = self.__index_of_refraction()
-        return self.__cross_section(
-            number_density, king_factor, index_of_refraction) * 10 ** -4
+        king_factor = 1.1364 + 25.3 * 10 ** -12 * wave_number ** 2
+        index_of_refraction = _co2_index_of_refraction(wave_number)
+        return _co2_cross_section(
+            number_density, wave_number, king_factor, index_of_refraction) * \
+            10 ** -4
 
-    def __index_of_refraction(self) -> np.ndarray:
+    def _co2_index_of_refraction(wave_number: np.ndarray) -> np.ndarray:
         n = 1 + 1.1427 * 10 ** 3 * (
-                    5799.25 / (128908.9 ** 2 - self.__wavenumber ** 2) +
-                    120.05 / (89223.8 ** 2 - self.__wavenumber ** 2) +
-                    5.3334 / (75037.5 ** 2 - self.__wavenumber ** 2) +
-                    4.3244 / (67837.7 ** 2 - self.__wavenumber ** 2) +
-                    0.00001218145 / (2418.136 ** 2 - self.__wavenumber ** 2))
+                5799.25 / (128908.9 ** 2 - wave_number ** 2) +
+                120.05 / (89223.8 ** 2 - wave_number ** 2) +
+                5.3334 / (75037.5 ** 2 - wave_number ** 2) +
+                4.3244 / (67837.7 ** 2 - wave_number ** 2) +
+                0.00001218145 / (2418.136 ** 2 - wave_number ** 2))
         return n
 
-    def __cross_section(self, number_density: float, king_factor: np.ndarray,
-                        index_of_refraction: np.ndarray) -> np.ndarray:
-        coefficient = 24 * np.pi**3 * self.__wavenumber**4 / number_density**2
+    def _co2_cross_section(number_density: float, wave_number: np.ndarray,
+                           king_factor: np.ndarray,
+                           index_of_refraction: np.ndarray) -> np.ndarray:
+        coefficient = 24 * np.pi ** 3 * wave_number ** 4 / number_density ** 2
         middle_term = ((index_of_refraction ** 2 - 1) /
                        (index_of_refraction ** 2 + 2)) ** 2
-        return coefficient * middle_term * king_factor   # cm**2 / molecule
+        return coefficient * middle_term * king_factor  # cm**2 / molecule
 
-    @property
-    def optical_depth(self) -> np.ndarray:
-        """Get the Rayleigh optical depth.
+    wavenum = wavenumber(wavelength)
+    column_density = np.asarray(column_density)[:, None]
+    mol_cs = _molecular_cross_section(wavenum)[:, None]
+    scattering_od = np.multiply(column_density[:, None, :], mol_cs[None, :])
+    scattering_od = np.squeeze(scattering_od)
+    rayleigh_ssa = np.ones(scattering_od.shape)
 
-        """
-        return self.__scattering_od
+    return Column(scattering_od, rayleigh_ssa,
+                  rayleigh_legendre(scattering_od.shape[0], wavenum.shape[0]))

@@ -1,0 +1,660 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Variables &#8212; pyRT_DISORT  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'rst/for-users/guides/variables';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Spacecraft Retrieval" href="spacecraft_retrieval.html" />
+    <link rel="prev" title="Guides" href="../guides.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+    <span class="fa-solid fa-bars"></span>
+  </label>
+  
+  <div class="navbar-header-items__start">
+    
+      <div class="navbar-item">
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">pyRT_DISORT  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item"><nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../installation.html">
+                        Installation
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../api-reference.html">
+                        API Reference
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="../guides.html">
+                        Guides
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../about-this-project/about-pyRT_DISORT.html">
+                        About pyRT_DISORT
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../about-this-project/about-DISORT.html">
+                        About DISORT
+                      </a>
+                    </li>
+                
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../about-this-project/release-notes.html">
+                        Release notes
+                      </a>
+                    </li>
+                
+                </div>
+            </div>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+        </div>
+      
+      
+        <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/kconnour/pyRT_DISORT" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+    </div>
+  
+
+  
+    <label class="sidebar-toggle secondary-toggle" for="__secondary">
+      <span class="fa-solid fa-outdent"></span>
+    </label>
+  
+</div>
+
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          <div class="navbar-item"><nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../installation.html">
+                        Installation
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../api-reference.html">
+                        API Reference
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="../guides.html">
+                        Guides
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../about-this-project/about-pyRT_DISORT.html">
+                        About pyRT_DISORT
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../about-this-project/about-DISORT.html">
+                        About DISORT
+                      </a>
+                    </li>
+                
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../about-this-project/release-notes.html">
+                        Release notes
+                      </a>
+                    </li>
+                
+                </div>
+            </div>
+            
+  </ul>
+</nav></div>
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/kconnour/pyRT_DISORT" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item"><nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Variables</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Variables</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Retrievals</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="spacecraft_retrieval.html">Spacecraft Retrieval</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumbs">
+  <ul class="bd-breadcrumbs" role="navigation" aria-label="Breadcrumb">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../guides.html" class="nav-link">Guides</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">Variables</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="variables">
+<h1>Variables<a class="headerlink" href="#variables" title="Permalink to this heading">#</a></h1>
+<p>This page describes what I think the variables used by DISORT mean, and a bit
+about how I think they’re used. I emphasize <em>think</em> because DISORT comes with
+documentation for v2 but no documentation afterwards. Some variables have no
+documentation, and others may have changed during later releases.</p>
+<section id="required-variables">
+<h2>Required variables<a class="headerlink" href="#required-variables" title="Permalink to this heading">#</a></h2>
+<p>Several of these descriptions are copied directly from the documentation;
+some are descriptions I made up given what I can deduce.</p>
+<ul class="simple">
+<li><p>USRANG: USeR ANGles. Denote whether radiant quantities should be returned at user angles.
+If <code class="code docutils literal notranslate"><span class="pre">False</span></code>, radiant quantities are to be returned at computational
+polar angles. Also, <code class="code docutils literal notranslate"><span class="pre">UMU</span></code> will return the cosines of the computational
+polar angles and n_polar will return
+their number ( = n_streams). <code class="code docutils literal notranslate"><span class="pre">UMU</span></code> must
+be large enough to contain n_streams elements. If <code class="code docutils literal notranslate"><span class="pre">True</span></code>,
+radiant quantities are to be returned at user-specified polar
+angles, as follows: NUMU No. of polar angles (zero is a legal value
+only when ‘only_fluxes’ == True ) UMU(IU) IU=1 to NUMU, cosines of
+output polar angles in increasing order—starting with negative
+(downward) values (if any) and on through positive (upward)
+values; <strong>MUST NOT HAVE ANY ZERO VALUES</strong>.</p></li>
+<li><p>USRTAU: USeR TAU. Denote whether radiant quantities should be returned at user-specified
+optical depths.</p></li>
+<li><p>IBCND: Incidence Beam CoNDitions. Denote what functions of the incidence beam
+angle should be included. If True, return the albedo and transmissivity of the
+entire medium as a function of incidence beam angle. In this case, the following
+inputs are the only ones considered by DISORT: MAXCLY, DTAUC, SSALB, PMOM,
+NSTR, USRANG, MAXUMU, UMU, ALBEDO, PRNT, HEADER… at least according to the
+documentation. I would think all the surface phase function arrays would also
+be included.</p></li>
+<li><p>ONLYFL: ONLY FLuxes. Determine if only the fluxes should be returned by the
+model. If True, DISORT will return fluxes, flux divergence, and mean intensities; if false,
+return all those quantities and intensities. Additionally, if Ture, the number of polar angles
+can be 0, the number of azimuth angles can be 0, PHI is not used, and all values
+of UU wil lbe set to 0.</p></li>
+<li><p>PRNT: PRiNT variables. This is an array of 5 boolean values that controls
+what DISORT prints as it runs.
+1. Input variables (except <code class="docutils literal notranslate"><span class="pre">PMOM</span></code>)
+2. Fluxes
+3. Intensities at user levels and angles
+4. Planar transmissivity and planar albedo as a function of solar zenith angle (only used if IBCND is true)
+5. PMOM for each layer (but only if flag #1 == True and only for layers with scattering)</p></li>
+<li><p>PLANK: True if thermal emission should be included; False otherwise. If True,
+DISORT needs these variables: BTEMP, TTEMP, TEMIS, WVNMLO, WVNMHI, TEMPER.</p></li>
+<li><p>LAMBER: True if the surface is a Lambert surface, False otherwise. I think
+if True, it ignores all the other surface phase function arrays.</p></li>
+<li><p>DELTAMPLUS: Denote whether to use the delta-M+ method of Lin et al. (2018).</p></li>
+<li><p>DO_PSEUDO_SPHERE: Denote whether to use a pseudo-spherical correction.</p></li>
+<li><p>DTAUC:</p></li>
+<li><p>SSALB:</p></li>
+<li><p>PMOM:</p></li>
+<li><p>TEMPER: TEMPERature of the atmosphere. I think it’s only used if PLANK == True</p></li>
+<li><p>WVNMLO: WaVeNuMber LOw. The low wavenumber. I think it’s only used if PLANK == True</p></li>
+<li><p>WVNMHI: WaVeNuMber HIgh. The high wavenumber. I think it’s only used if PLANK == True</p></li>
+<li><p>UTAU:</p></li>
+<li><p>UMU0:</p></li>
+<li><p>PHI0:</p></li>
+<li><p>UMU:</p></li>
+<li><p>PHI:</p></li>
+<li><p>FBEAM: Flux of the BEAM. This is the beam flux at the top boundary.</p></li>
+<li><p>FISOT: Flux ISOTropic. This is the isotropic flux at the top boundary.</p></li>
+<li><p>ALBEDO: This is the Lambert albedo of the surface.</p></li>
+<li><p>BTEMP: Bottom TEMPerature of the atmosphere. I think it’s only used if PLANK == True</p></li>
+<li><p>TTEMP: Top TEMPerature of the atmosphere. I think it’s only used if PLANK == True</p></li>
+<li><p>TEMIS: Top EMISsivity of the atmosphere. I think it’s only used if PLANK == True</p></li>
+<li><p>EARTH_RADIUS: The planetary radius. I don’t know why they specified Earth.
+This is presumably only used if DO_PSEUDO_SPHERE == True, but there is no
+documentation on this variable.</p></li>
+<li><p>H_LYR: The scale height of each layer. This is presumably only used if
+DO_PSEUDO_SPHERE == True, but there is no documentation on this variable.</p></li>
+<li><p>RHOQ: Some sort of phase function array.</p></li>
+<li><p>RHOU: Some sort of phase function array.</p></li>
+<li><p>RHO_ACCURATE: Some sort of phase function array.</p></li>
+<li><p>BEMST: Some sort of phase function array.</p></li>
+<li><p>EMUST: Some sort of phase function array.</p></li>
+<li><p>ACCUR: ACCURacy. The convergence criterion for azimuthal (Fourier cosine) series.
+Will stop when the following occurs twice: largest term being added
+is less than ACCUR times total series sum (twice because
+there are cases where terms are anomalously small but azimuthal
+series has not converged). Should be between 0 and 0.01 to avoid
+risk of serious non-convergence. Has no effect on problems lacking a
+beam source, since azimuthal series has only one term in that case.</p></li>
+<li><p>HEADER: Use a 127- (or less) character header for prints, embedded in the
+DISORT banner. Input headers greater than 127 characters will be
+truncated. Setting <code class="code docutils literal notranslate"><span class="pre">HEADER=''</span></code> will eliminate both the banner and the
+header, and this is the only way to do so (<code class="code docutils literal notranslate"><span class="pre">HEADER</span></code> is not
+controlled by any of the <code class="code docutils literal notranslate"><span class="pre">PRNT</span></code> flags); <code class="code docutils literal notranslate"><span class="pre">header</span></code> can be used
+to mark the progress of a calculation in which DISORT is called many
+times, while leaving all other printing turned off.</p></li>
+<li><p>RFLDIR: FLux DIRect. This is an output array.</p></li>
+<li><p>RFLDN: diffuse FLux DowNward. This is an output array which is the total downward
+flux minus the direct beam flux.</p></li>
+<li><p>FLUP: diffuse FLux UPward. This is an output array.</p></li>
+<li><p>DFDT: flux divergence. This is an output array.</p></li>
+<li><p>UAVG: AVeraGe intensity. This is an output array.</p></li>
+<li><p>UU: intensity. This is an output array.</p></li>
+<li><p>ALBMED: ALBedo of the MEDium. This is an output array.</p></li>
+<li><p>TRNMED: TRaNsmissivity of the MEDium. This is an output array.</p></li>
+</ul>
+</section>
+<section id="optional-variables">
+<h2>Optional variables<a class="headerlink" href="#optional-variables" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>MAXCLY: MAXimum Computational LaYers. This is the number of layers to use in
+the model.</p></li>
+<li><p>MAXMOM: MAXimum MOMents. This the number of Legendre coefficients - 1,
+presumably because the 0th moment is 1.</p></li>
+<li><p>MAXCMU: MAXimum Computationl MUs. This is the number of computational polar
+angles (aka, the number of “streams”) to use in the model. This number should
+be even.</p></li>
+<li><p>MAXUMU: MAXimum User MUs. This is the number of polar angles where DISORT
+should return radiant quantities.</p></li>
+<li><p>MAXPHI: MAXimum PHI. This is the number of azimuthal angles where DISORT
+should return radiant quantities.</p></li>
+<li><p>MAXULV: MAXimum User LeVels. This is the number of user levels to use in the
+model, and is only used if you want radiant quantities returned at user
+levels.</p></li>
+</ul>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../guides.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Guides</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="spacecraft_retrieval.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Spacecraft Retrieval</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#required-variables">Required variables</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-variables">Optional variables</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div class="tocsection sourcelink">
+    <a href="../../../_sources/rst/for-users/guides/variables.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+  <p class="copyright">
+    
+      © Copyright 2023, kconnour.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.1.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item"><p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.13.3.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

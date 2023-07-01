@@ -12,6 +12,6 @@ authors:
     given-names: Michael
     orcid: "https://orcid.org/0000-0002-1127-8329"
 title: "pyRT_DISORT: A pre-processing front-end to help make DISORT simulations easier in Python"
-version: "0.0.4"
+version: "1.0.0"
 license: "BSD-3-Clause"
 repository-code: "https://github.com/kconnour/pyRT_DISORT"

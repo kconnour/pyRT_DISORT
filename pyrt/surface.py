@@ -5,11 +5,6 @@ import numpy as np
 from disort import disobrdf
 
 
-# TODO: the surface isn't designed to be interacted with. Instead, wrap functions
-#  around the methods so the user doesn't have to remember to call methods
-
-# TODO: I still don't really know what bemst, emust, rhoq, rhou, or rho_accurate
-#  are... get better names.
 class Surface:
     """A structure to compute all the surface parameterization.
 
@@ -193,9 +188,6 @@ class Surface:
         beam_flux
             The incident beam flux.
 
-        See Also
-        --------
-        :class:`~observation.Angles`, :class:`~radiation.IncidentFlux`
 
         """
         self.__lambertian = False
