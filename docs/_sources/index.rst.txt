@@ -1,7 +1,16 @@
-Welcome to pyRT_DISORT's documentation
-======================================
-Hey kid, wanna do radiative transfer in Python? Of course you do, that's why
-you're here... and lucky for you pyRT_DISORT is here to help you out.
+pyRT_DISORT
+===========
+pyRT_DISORT is a package for working with DISORT in Python. I compiles the
+latest version of DISORT upon installation and provides some tools for helping
+to compute several of the inputs required by DISORT.
+
+.. toctree::
+   :maxdepth: 1
+   :caption: For users
+
+   rst/for-users/installation
+   rst/for-users/api-reference
+   rst/for-users/guides
 
 .. toctree::
    :maxdepth: 1
@@ -11,19 +20,6 @@ you're here... and lucky for you pyRT_DISORT is here to help you out.
    rst/about-this-project/about-DISORT
    rst/about-this-project/release-notes
 
-.. toctree::
-   :maxdepth: 1
-   :caption: For users
-
-   rst/for-users/installation
-   rst/for-users/tutorials
-   rst/for-users/api-reference
-
-.. toctree::
-   :maxdepth: 1
-   :caption: For contributors
-
-   rst/for-contributors/contributions
 
 Indices and tables
 ==================

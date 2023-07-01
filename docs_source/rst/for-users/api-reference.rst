@@ -27,6 +27,17 @@ These describe utilities for working with equation of state variables.
 
    column_density
 
+Forward scattering
+------------------
+These describe utilities for working with forward scattering properties.
+
+.. autosummary::
+   :toctree: generated/
+
+   extinction_ratio
+   optical_depth
+   regrid
+
 Phase function
 --------------
 These describe utilities for working with phase functions.
@@ -50,6 +61,15 @@ These describe utilities for working with Rayleigh scattering.
    rayleigh_legendre
    rayleigh_co2
 
+Vertical profiles
+-----------------
+These describe utilties for working with vertical profiles.
+
+.. autosummary::
+   :toctree: generated/
+
+   conrath
+
 Angles
 ------
 These describe utilities for working with angles.
@@ -67,3 +87,19 @@ These describe utilities for working with wavelengths.
    :toctree: generated/
 
    wavenumber
+
+Output arrays
+-------------
+These describe utilities for constructing output arrays.
+
+.. autosummary::
+   :toctree: generated/
+
+   empty_albedo_medium
+   empty_diffuse_up_flux
+   empty_diffuse_down_flux
+   empty_direct_beam_flux
+   empty_flux_divergence
+   empty_intensity
+   empty_mean_intensity
+   empty_transmissivity_medium
