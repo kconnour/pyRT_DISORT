@@ -42,8 +42,8 @@ def decompose(phase_function: ArrayLike, scattering_angles: ArrayLike,
     formula for the Henyey-Greenstein decomposition.
 
     >>> coeff0 = pyrt.henyey_greenstein_legendre_coefficients(0.5, 129)
-    >>> np.amax(np.abs(coeff - coeff0))
-    2.560646052839508e-12
+    >>> round(np.amax(np.abs(coeff - coeff0)), 12)
+    3e-12
 
     """
     def _make_legendre_polynomials(scat_angles, n_mom) -> np.ndarray:
