@@ -73,7 +73,7 @@ def column_density(pressure: ArrayLike, temperature: ArrayLike,
     n = [quad(hydrostatic_profile, altitude[i], altitude[i + 1])[0]
          for i in range(len(altitude) - 1)]
 
-    return np.array(n) * 1000
+    return np.flip(np.array(n) * 1000)
 
 
 def scale_height(temperature: ArrayLike, mass: ArrayLike, gravity: float) -> np.ndarray:
