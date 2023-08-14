@@ -100,16 +100,11 @@ ONLYFL = False
 USRANG = True
 USRTAU = False
 
-sfc = pyrt.Surface(0.1, MAXCMU, MAXUMU, MAXPHI, USRANG, ONLYFL)
-sfc.make_lambertian()
+ALBEDO = 0  # this seems to only matter if the surface is Lambertian
+LAMBER = False
 
-ALBEDO = sfc.albedo
-LAMBER = sfc.lambertian
-RHOU = sfc.rhou
-RHOQ = sfc.rhoq
-BEMST = sfc.bemst
-EMUST = sfc.emust
-RHO_ACCURATE = sfc.rho_accurate
+RHOQ, RHOU, EMUST, BEMST, RHO_ACCURATE = \
+    pyrt.make_hapke_surface(USRANG, ONLYFL, MAXUMU, MAXPHI, MAXCMU, UMU, UMU0, PHI, PHI0, FBEAM, 200, 1, 0.06, 0.7)
 
 UTAU = np.zeros((MAXULV,))
 
@@ -129,9 +124,6 @@ for ind in range(pixel_wavelengths.size):
 
 print(test_run)
 
-rfl = np.array([0.11399675, 0.06681997, 0.06493594, 0.06464735, 0.06458137])
-
-
 def simulate_spectra(test_optical_depth):
     dust_optical_depth = pyrt.optical_depth(dust_profile, column_density, ext, test_optical_depth)
     dust_column = pyrt.Column(dust_optical_depth, dust_single_scattering_albedo, dust_legendre)
@@ -150,7 +142,7 @@ def simulate_spectra(test_optical_depth):
                           RFLDN, FLUP, DFDT, UAVG, UU, ALBMED, TRNMED)
 
         od_holder[wav_index] = uu[0, 0, 0]
-    return np.sum((od_holder - rfl) ** 2)
+    return np.sum((od_holder - test_run) ** 2)
 
 
 from scipy import optimize

@@ -135,8 +135,8 @@
                 
 
                     <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../rst/for-users/tutorials.html">
-                        Tutorials
+                      <a class="nav-link nav-internal" href="../../rst/for-users/guides.html">
+                        Guides
                       </a>
                     </li>
                 
@@ -273,8 +273,8 @@ document.write(`
                 
 
                     <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../rst/for-users/tutorials.html">
-                        Tutorials
+                      <a class="nav-link nav-internal" href="../../rst/for-users/guides.html">
+                        Guides
                       </a>
                     </li>
                 
@@ -475,7 +475,7 @@ document.write(`
     <span class="n">n</span> <span class="o">=</span> <span class="p">[</span><span class="n">quad</span><span class="p">(</span><span class="n">hydrostatic_profile</span><span class="p">,</span> <span class="n">altitude</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">altitude</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
          <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">altitude</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span>
 
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span></div>
 
 
 <span class="k">def</span> <span class="nf">scale_height</span><span class="p">(</span><span class="n">temperature</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">mass</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">gravity</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>

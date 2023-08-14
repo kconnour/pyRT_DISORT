@@ -399,6 +399,11 @@ document.write(`
 <li class="toctree-l1"><a class="reference internal" href="pyrt.empty_mean_intensity.html">pyrt.empty_mean_intensity</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pyrt.empty_transmissivity_medium.html">pyrt.empty_transmissivity_medium</a></li>
 </ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="pyrt.make_hapke_surface.html">pyrt.make_hapke_surface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyrt.make_hapkeHG2_surface.html">pyrt.make_hapkeHG2_surface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyrt.make_hapkeHG2roughness_surface.html">pyrt.make_hapkeHG2roughness_surface</a></li>
+</ul>
 </div>
 </nav></div>
     </div>
@@ -521,9 +526,9 @@ atmosphere.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>optical_depth</strong> (<em>_SupportsArray</em><em>[</em><em>dtype</em><em>[</em><em>Any</em><em>]</em><em>] </em><em>| </em><em>_NestedSequence</em><em>[</em><em>_SupportsArray</em><em>[</em><em>dtype</em><em>[</em><em>Any</em><em>]</em><em>]</em><em>] </em><em>| </em><em>bool</em><em> | </em><em>int</em><em> | </em><em>float</em><em> | </em><em>complex</em><em> | </em><em>str</em><em> | </em><em>bytes</em><em> | </em><em>_NestedSequence</em><em>[</em><em>bool</em><em> | </em><em>int</em><em> | </em><em>float</em><em> | </em><em>complex</em><em> | </em><em>str</em><em> | </em><em>bytes</em><em>]</em>) – </p></li>
-<li><p><strong>single_scattering_albedo</strong> (<em>_SupportsArray</em><em>[</em><em>dtype</em><em>[</em><em>Any</em><em>]</em><em>] </em><em>| </em><em>_NestedSequence</em><em>[</em><em>_SupportsArray</em><em>[</em><em>dtype</em><em>[</em><em>Any</em><em>]</em><em>]</em><em>] </em><em>| </em><em>bool</em><em> | </em><em>int</em><em> | </em><em>float</em><em> | </em><em>complex</em><em> | </em><em>str</em><em> | </em><em>bytes</em><em> | </em><em>_NestedSequence</em><em>[</em><em>bool</em><em> | </em><em>int</em><em> | </em><em>float</em><em> | </em><em>complex</em><em> | </em><em>str</em><em> | </em><em>bytes</em><em>]</em>) – </p></li>
-<li><p><strong>legendre_coefficients</strong> (<em>_SupportsArray</em><em>[</em><em>dtype</em><em>[</em><em>Any</em><em>]</em><em>] </em><em>| </em><em>_NestedSequence</em><em>[</em><em>_SupportsArray</em><em>[</em><em>dtype</em><em>[</em><em>Any</em><em>]</em><em>]</em><em>] </em><em>| </em><em>bool</em><em> | </em><em>int</em><em> | </em><em>float</em><em> | </em><em>complex</em><em> | </em><em>str</em><em> | </em><em>bytes</em><em> | </em><em>_NestedSequence</em><em>[</em><em>bool</em><em> | </em><em>int</em><em> | </em><em>float</em><em> | </em><em>complex</em><em> | </em><em>str</em><em> | </em><em>bytes</em><em>]</em>) – </p></li>
+<li><p><strong>optical_depth</strong> (<em>_SupportsArray</em><em>[</em><em>dtype</em><em>] </em><em>| </em><em>_NestedSequence</em><em>[</em><em>_SupportsArray</em><em>[</em><em>dtype</em><em>]</em><em>] </em><em>| </em><em>bool</em><em> | </em><em>int</em><em> | </em><em>float</em><em> | </em><em>complex</em><em> | </em><em>str</em><em> | </em><em>bytes</em><em> | </em><em>_NestedSequence</em><em>[</em><em>bool</em><em> | </em><em>int</em><em> | </em><em>float</em><em> | </em><em>complex</em><em> | </em><em>str</em><em> | </em><em>bytes</em><em>]</em>) – </p></li>
+<li><p><strong>single_scattering_albedo</strong> (<em>_SupportsArray</em><em>[</em><em>dtype</em><em>] </em><em>| </em><em>_NestedSequence</em><em>[</em><em>_SupportsArray</em><em>[</em><em>dtype</em><em>]</em><em>] </em><em>| </em><em>bool</em><em> | </em><em>int</em><em> | </em><em>float</em><em> | </em><em>complex</em><em> | </em><em>str</em><em> | </em><em>bytes</em><em> | </em><em>_NestedSequence</em><em>[</em><em>bool</em><em> | </em><em>int</em><em> | </em><em>float</em><em> | </em><em>complex</em><em> | </em><em>str</em><em> | </em><em>bytes</em><em>]</em>) – </p></li>
+<li><p><strong>legendre_coefficients</strong> (<em>_SupportsArray</em><em>[</em><em>dtype</em><em>] </em><em>| </em><em>_NestedSequence</em><em>[</em><em>_SupportsArray</em><em>[</em><em>dtype</em><em>]</em><em>] </em><em>| </em><em>bool</em><em> | </em><em>int</em><em> | </em><em>float</em><em> | </em><em>complex</em><em> | </em><em>str</em><em> | </em><em>bytes</em><em> | </em><em>_NestedSequence</em><em>[</em><em>bool</em><em> | </em><em>int</em><em> | </em><em>float</em><em> | </em><em>complex</em><em> | </em><em>str</em><em> | </em><em>bytes</em><em>]</em>) – </p></li>
 </ul>
 </dd>
 </dl>

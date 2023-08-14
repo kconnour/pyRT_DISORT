@@ -103,3 +103,14 @@ These describe utilities for constructing output arrays.
    empty_intensity
    empty_mean_intensity
    empty_transmissivity_medium
+
+Surface arrays
+--------------
+These describe utilities for constructing arrays of the surface.
+
+.. autosummary::
+   :toctree: generated/
+
+   make_hapke_surface
+   make_hapkeHG2_surface
+   make_hapkeHG2roughness_surface

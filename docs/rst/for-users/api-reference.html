@@ -399,6 +399,11 @@ document.write(`
 <li class="toctree-l1"><a class="reference internal" href="generated/pyrt.empty_mean_intensity.html">pyrt.empty_mean_intensity</a></li>
 <li class="toctree-l1"><a class="reference internal" href="generated/pyrt.empty_transmissivity_medium.html">pyrt.empty_transmissivity_medium</a></li>
 </ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="generated/pyrt.make_hapke_surface.html">pyrt.make_hapke_surface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/pyrt.make_hapkeHG2_surface.html">pyrt.make_hapkeHG2_surface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/pyrt.make_hapkeHG2roughness_surface.html">pyrt.make_hapkeHG2roughness_surface</a></li>
+</ul>
 </div>
 </nav></div>
     </div>
@@ -601,6 +606,23 @@ model.</p>
 </tbody>
 </table>
 </section>
+<section id="surface-arrays">
+<h2>Surface arrays<a class="headerlink" href="#surface-arrays" title="Permalink to this heading">#</a></h2>
+<p>These describe utilities for constructing arrays of the surface.</p>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pyrt.make_hapke_surface.html#pyrt.make_hapke_surface" title="pyrt.make_hapke_surface"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_hapke_surface</span></code></a>(user_angles, only_fluxes, ...)</p></td>
+<td><p>Make a basic Hapke surface.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/pyrt.make_hapkeHG2_surface.html#pyrt.make_hapkeHG2_surface" title="pyrt.make_hapkeHG2_surface"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_hapkeHG2_surface</span></code></a>(user_angles, ...)</p></td>
+<td><p>Make a 2-lobed Henyey-Greenstein Hapke surface.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/pyrt.make_hapkeHG2roughness_surface.html#pyrt.make_hapkeHG2roughness_surface" title="pyrt.make_hapkeHG2roughness_surface"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_hapkeHG2roughness_surface</span></code></a>(user_angles, ...)</p></td>
+<td><p>Make a 2-lobed Henyey-Greenstein Hapke surface with roughness parameter.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
 </section>
 
 
@@ -659,6 +681,7 @@ model.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#angles">Angles</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wavelengths">Wavelengths</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#output-arrays">Output arrays</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#surface-arrays">Surface arrays</a></li>
 </ul>
   </nav></div>
 

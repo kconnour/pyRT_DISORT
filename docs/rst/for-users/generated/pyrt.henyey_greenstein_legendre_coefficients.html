@@ -400,6 +400,11 @@ document.write(`
 <li class="toctree-l1"><a class="reference internal" href="pyrt.empty_mean_intensity.html">pyrt.empty_mean_intensity</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pyrt.empty_transmissivity_medium.html">pyrt.empty_transmissivity_medium</a></li>
 </ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="pyrt.make_hapke_surface.html">pyrt.make_hapke_surface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyrt.make_hapkeHG2_surface.html">pyrt.make_hapkeHG2_surface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyrt.make_hapkeHG2roughness_surface.html">pyrt.make_hapkeHG2roughness_surface</a></li>
+</ul>
 </div>
 </nav></div>
     </div>
@@ -501,8 +506,8 @@ this result compares to the analytic decomposition performed above.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ang</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">181</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">pf</span> <span class="o">=</span> <span class="n">pyrt</span><span class="o">.</span><span class="n">construct_henyey_greenstein</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">ang</span><span class="p">)</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>  <span class="c1"># normalize it</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">lc</span> <span class="o">=</span> <span class="n">pyrt</span><span class="o">.</span><span class="n">decompose</span><span class="p">(</span><span class="n">pf</span><span class="p">,</span> <span class="n">ang</span><span class="p">,</span> <span class="mi">129</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">lc</span> <span class="o">-</span> <span class="n">coeff</span><span class="p">)),</span> <span class="mi">12</span><span class="p">)</span>
-<span class="go">3e-12</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">lc</span> <span class="o">-</span> <span class="n">coeff</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
+<span class="go">True</span>
 </pre></div>
 </div>
 </dd></dl>
