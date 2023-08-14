@@ -51,13 +51,13 @@ def column_density(pressure: ArrayLike, temperature: ArrayLike,
 
     Get the column-integrated column density.
     >>> total_colden = np.sum(colden)
-    >>> total_colden
-    2.415575739216228e+27
+    >>> f'{total_colden:.2e}'
+    '2.42e+27'
 
     Compute the analytical result of this scenario.
     >>> analytical_result = 600 * 10000 * (1 - np.exp(-80/10)) / 180 / Boltzmann
-    >>> analytical_result
-    2.4135135900389294e+27
+    >>> f'{analytical_result:.2e}'
+    '2.41e+27'
     """
     pressure = np.flip(np.asarray(pressure))
     temperature = np.flip(np.asarray(temperature))
@@ -73,7 +73,7 @@ def column_density(pressure: ArrayLike, temperature: ArrayLike,
     n = [quad(hydrostatic_profile, altitude[i], altitude[i + 1])[0]
          for i in range(len(altitude) - 1)]
 
-    return np.array(n) * 1000
+    return np.flip(np.array(n) * 1000)
 
 
 def scale_height(temperature: ArrayLike, mass: ArrayLike, gravity: float) -> np.ndarray:

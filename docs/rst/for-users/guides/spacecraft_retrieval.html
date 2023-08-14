@@ -768,54 +768,19 @@ to be initialized and it’ll fill them as it runs.</p>
 <section id="surface">
 <h2>Surface<a class="headerlink" href="#surface" title="Permalink to this heading">#</a></h2>
 <p>With the number of computational parameters defined, we can now make the
-arrays of the surface reflectance.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sfc</span> <span class="o">=</span> <span class="n">pyrt</span><span class="o">.</span><span class="n">Surface</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">cp</span><span class="o">.</span><span class="n">n_streams</span><span class="p">,</span> <span class="n">cp</span><span class="o">.</span><span class="n">n_polar</span><span class="p">,</span> <span class="n">cp</span><span class="o">.</span><span class="n">n_azimuth</span><span class="p">,</span> <span class="n">ob</span><span class="o">.</span><span class="n">user_angles</span><span class="p">,</span>
-              <span class="n">ob</span><span class="o">.</span><span class="n">only_fluxes</span><span class="p">)</span>
-</pre></div>
-</div>
-<p><code class="code docutils literal notranslate"><span class="pre">sfc</span></code> doesn’t know what <em>kind</em> of surface it is. We can then set the type
-of surface using the methods in <code class="code docutils literal notranslate"><span class="pre">Surface</span></code>. For simplicity, let’s use a
-Lambertian surface here. Once that’s set, this class computes all the arrays it
-needs.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sfc</span><span class="o">.</span><span class="n">make_lambertian</span><span class="p">()</span>
+arrays of the surface reflectance. Let’s say we want to use a Hapke surface with
+known values for its parameterization. We can use the variables we’ve previously
+defined and these known parameters to compute the surface phase function arrays.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ALBEDO</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># this seems to only matter if the surface is Lambertian</span>
+<span class="n">LAMBER</span> <span class="o">=</span> <span class="kc">False</span>
 
-<span class="n">ALBEDO</span> <span class="o">=</span> <span class="n">sfc</span><span class="o">.</span><span class="n">albedo</span>
-<span class="n">LAMBER</span> <span class="o">=</span> <span class="n">sfc</span><span class="o">.</span><span class="n">lambertian</span>
-<span class="n">RHOU</span> <span class="o">=</span> <span class="n">sfc</span><span class="o">.</span><span class="n">rhou</span>
-<span class="n">RHOQ</span> <span class="o">=</span> <span class="n">sfc</span><span class="o">.</span><span class="n">rhoq</span>
-<span class="n">BEMST</span> <span class="o">=</span> <span class="n">sfc</span><span class="o">.</span><span class="n">bemst</span>
-<span class="n">EMUST</span> <span class="o">=</span> <span class="n">sfc</span><span class="o">.</span><span class="n">emust</span>
-<span class="n">RHO_ACCURATE</span> <span class="o">=</span> <span class="n">sfc</span><span class="o">.</span><span class="n">rho_accurate</span>
-</pre></div>
-</div>
-<p>With these defined, we’ve now created all the variables that DISORT needs!</p>
-<div class="admonition tip">
-<p class="admonition-title">Tip</p>
-<p><code class="code docutils literal notranslate"><span class="pre">Surface</span></code> also comes with <code class="xref py py-meth docutils literal notranslate"><span class="pre">make_hapke()</span></code>,
-<code class="xref py py-meth docutils literal notranslate"><span class="pre">make_hapkeHG2()</span></code>, and
-<code class="xref py py-meth docutils literal notranslate"><span class="pre">make_hapkeHG2_roughness()</span></code> if you want to use more
-complicated phase functions. The 5 surface arrays are initialized with 0s
-when the class is instantiated. When these methods are called, those arrays
-are overridden.</p>
-<p>For a brief example, suppose you want to use a Hapke surface (without the
-surface HG phase function) and you know the Hapke parameters. You can do
-that with the following code:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">b0</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="n">h</span> <span class="o">=</span> <span class="mf">0.5</span>
-<span class="n">w</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">b0</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">h</span> <span class="o">=</span> <span class="mf">0.06</span>
+<span class="n">w</span> <span class="o">=</span> <span class="mf">0.7</span>
 
-<span class="n">sfc</span><span class="o">.</span><span class="n">make_hapke</span><span class="p">(</span><span class="n">b0</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">UMU</span><span class="p">,</span> <span class="n">UMU0</span><span class="p">,</span> <span class="n">PHI</span><span class="p">,</span> <span class="n">PHI0</span><span class="p">,</span> <span class="n">FBEAM</span><span class="p">)</span>
+<span class="n">RHOQ</span><span class="p">,</span> <span class="n">RHOU</span><span class="p">,</span> <span class="n">EMUST</span><span class="p">,</span> <span class="n">BEMST</span><span class="p">,</span> <span class="n">RHO_ACCURATE</span> <span class="o">=</span> <span class="n">pyrt</span><span class="o">.</span><span class="n">make_hapke_surface</span><span class="p">(</span><span class="n">USRANG</span><span class="p">,</span>
+<span class="n">ONLYFL</span><span class="p">,</span> <span class="n">MAXUMU</span><span class="p">,</span> <span class="n">MAXPHI</span><span class="p">,</span> <span class="n">MAXCMU</span><span class="p">,</span> <span class="n">UMU</span><span class="p">,</span> <span class="n">UMU0</span><span class="p">,</span> <span class="n">PHI</span><span class="p">,</span> <span class="n">PHI0</span><span class="p">,</span> <span class="n">FBEAM</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="n">b0</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
 </pre></div>
-</div>
-<p>and then all the arrays will be populated with values from a Hapke surface.</p>
-</div>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>Making the surface phase functions were the one place where I modified the
-DISORT source code. The shape of <code class="code docutils literal notranslate"><span class="pre">RHOU</span></code> seems wrong and inconsistent
-throughout the DISORT documentation. When I make it what I think it should
-be, my code then runs without error. However, it seems an error like this
-would’ve gone unnoticed, so be aware of this!</p>
 </div>
 </section>
 <section id="oddball">

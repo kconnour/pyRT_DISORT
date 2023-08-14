@@ -2,6 +2,10 @@ c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 c $Rev: 55 $ $Date: 2014-12-31 12:16:59 -0500 (Wed, 31 Dec 2014) $
 c FORTRAN 77
 c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+c history:
+c 2023/08/10 (mjw):  fixed issues in  BRDF_HAPKE_HG2_ROUGHNESS (now matches version 2 routine)
+
+
       REAL FUNCTION BDREF(MU, MUP, DPHI,
      &                     BRDF_TYPE, BRDF_ARG)
 
@@ -65,8 +69,8 @@ c     .. Local Scalars ..
       REAL      B0, H0, HH, W
       REAL      PWS, REFRAC_INDEX, BDREF_F
       REAL      PI
-      REAL      RHO0, KAPPA, G  
-      REAL      K_ISO, K_VOL, K_GEO, ALPHA0 
+      REAL      RHO0, KAPPA, G
+      REAL      K_ISO, K_VOL, K_GEO, ALPHA0
       LOGICAL   DO_SHADOW
 c     Additions for pyRT_DISORT
       REAL      ASYM, FRAC, ROUGHNESS
@@ -115,7 +119,7 @@ c        PRINT *, "Calling oceabrdf"
         ENDIF
 
         CALL OCEABRDF2(DO_SHADOW,
-     &                 REFRAC_INDEX, PWS, 
+     &                 REFRAC_INDEX, PWS,
      &                 MUP, MU, DPHI,
      &                 BDREF_F)
 
@@ -137,7 +141,7 @@ c     ** 3. RPV BRDF
 
 c     ** 4. Ross-Li BRDF
       ELSEIF(IREF .EQ. 4) THEN
-        
+
         K_ISO  = BRDF_ARG(1)   !0.200
         K_VOL  = BRDF_ARG(2)   !0.020
         K_GEO  = BRDF_ARG(3)   !0.300
@@ -153,7 +157,7 @@ c     ** 4. Ross-Li BRDF
         IF(BDREF .LT. 0.00) THEN
           BDREF = 0.00
         ENDIF
-        
+
 c     ** 5. Hapke + HG2 BRDF
       ELSEIF ( IREF.EQ.5 ) THEN
 
@@ -271,7 +275,7 @@ c +--------------------------------------------------------------------
       COS_ALPHA = MU_I*MU_R - SIN_I*SIN_R
      & *COS(DPHI)
 
-      G_SQ = TAN_I*TAN_I + TAN_R*TAN_R 
+      G_SQ = TAN_I*TAN_I + TAN_R*TAN_R
      &    + 2.*TAN_I*TAN_R*COS(DPHI)
 
 c     ** hot spot
@@ -283,7 +287,7 @@ c     ** HG phase function
 
 
 c     ** BRDF semiempirical function
-      BRDF = RHO0 
+      BRDF = RHO0
      &      * (MU_I*MU_R*(MU_I+MU_R))**(KAPPA-1.)
      &      * F
      &      * (1. + ((1.-H0)/(1.+G)))
@@ -327,7 +331,7 @@ c +--------------------------------------------------------------------
       REAL ALPHA
       REAL SIN_I, SIN_R, TAN_I, TAN_R
       REAL SIN_I1, SIN_R1, COS_I1, COS_R1, TAN_I1, TAN_R1
-      REAL G_SQ, COS_T, T       
+      REAL G_SQ, COS_T, T
       REAL C, ALPHA0
 c +--------------------------------------------------------------------
 
@@ -370,26 +374,26 @@ c     ** Compute KERNEL LSR
       COS_ALPHA1 = COS_I1*COS_R1 - SIN_I1*SIN_R1
      &            *COS(DPHI)
 
-      G_SQ = TAN_I1*TAN_I1 + TAN_R1*TAN_R1 
+      G_SQ = TAN_I1*TAN_I1 + TAN_R1*TAN_R1
      &      + 2.*TAN_I1*TAN_R1*COS(DPHI)
 
 c      M = 1./COS_I1 + 1./COS_R1
 
       COS_T = RATIO_HB *(COS_I1*COS_R1)/(COS_I1+COS_R1)
      &       *SQRT(G_SQ + (TAN_I1*TAN_R1*SIN(DPHI))**2)
-  
+
       IF(COS_T .LE. 1. .AND. COS_T .GE. -1.) THEN
         T = ACOS(COS_T)
       ELSE
         T = 0.
       ENDIF
 
-      F_GEO = (COS_I1+COS_R1)/(PI*COS_I1*COS_R1)*(T-SIN(T)*COS(T)-PI)   
+      F_GEO = (COS_I1+COS_R1)/(PI*COS_I1*COS_R1)*(T-SIN(T)*COS(T)-PI)
      &       + (1.+ COS_ALPHA1)/(2.*COS_I1*COS_R1)
 
 c     Compute BRDF
 
-c      PRINT *, RATIO_HB, D_SQ, 
+c      PRINT *, RATIO_HB, D_SQ,
 c     &    TAN_I1*TAN_R1*SIN(DPHI),
 c     &    M, COS_T
 
@@ -401,7 +405,7 @@ c - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 c +--------------------------------------------------------------------
       SUBROUTINE OCEABRDF2
-     &       ( DO_SHADOW, 
+     &       ( DO_SHADOW,
      &         REFRAC_INDEX, WS,
      &         MU_I, MU_R, DPHI,
      &         BRDF)
@@ -412,15 +416,15 @@ c   Input:
 c
 c   mu_i:         absolute cosine of incident polar angle (positive)
 c   mu_r:         absolute cosine of reflected polar angle (positive)
-c   dphi:         relative azimuth (radians) 
-c   do_shadow:    BRDF parameter, open/close shadow effect 
+c   dphi:         relative azimuth (radians)
+c   do_shadow:    BRDF parameter, open/close shadow effect
 c   refrac_index: BRDF parameter, refractive index of boundary media (water)
 c   ws:           BRDF parameter, wind speed (m/s)
 c
 c   Output:
 c
 c   brdf:         1D Gaussian Rough Ocean BRDF
-c          
+c
 c +--------------------------------------------------------------------
       LOGICAL  DO_SHADOW
       REAL     REFRAC_INDEX, WS
@@ -438,7 +442,7 @@ c     ** Cox Munk slope distribution
       SIN_R = SQRT(1. - MU_R*MU_R)
 
       COS_THETA = -MU_I*MU_R + SIN_I*SIN_R*COS(DPHI)
-      MU_N_SQ   = (MU_I + MU_R)*(MU_I + MU_R)/(2.*(1.-COS_THETA))   
+      MU_N_SQ   = (MU_I + MU_R)*(MU_I + MU_R)/(2.*(1.-COS_THETA))
 
       SIGMA_SQ  = 0.003 + 0.00512*WS
 
@@ -449,8 +453,8 @@ c     ** Fresnel reflectance
       N_I = 1.0
       N_T = REFRAC_INDEX
 
-      SIN_LI = SQRT( 1.-0.5*(1.-COS_THETA) ) 
-      COS_LI = SQRT( 0.5*(1.-COS_THETA) ) 
+      SIN_LI = SQRT( 1.-0.5*(1.-COS_THETA) )
+      COS_LI = SQRT( 0.5*(1.-COS_THETA) )
       SIN_LT = N_I*SIN_LI/N_T
       COS_LT = SQRT(1. - SIN_LT*SIN_LT)
 
@@ -463,9 +467,9 @@ c     ** Rough surface BRDF
       BRDF = (P*R)/(4.*MU_I*MU_R*MU_N_SQ*MU_N_SQ)
 
 c     Shadowing effect (see Tsang, Kong, Shin, Theory of Microwave Remote
-c     Sensing, Wiley-Interscience, 1985) 
+c     Sensing, Wiley-Interscience, 1985)
       IF(DO_SHADOW) THEN
-        SHADOW = 1./( SHADOW_ETA(MU_I, SIGMA_SQ, PI) 
+        SHADOW = 1./( SHADOW_ETA(MU_I, SIGMA_SQ, PI)
      &          + SHADOW_ETA(MU_R, SIGMA_SQ, PI) + 1. )
         BRDF = BRDF*SHADOW
       ENDIF
@@ -481,7 +485,7 @@ c            called by OCEABRDF2
 c   Input:
 c
 c   COS_THETA     absolute cosine of incident/reflected polar angle (positive)
-c   SIGMA_SQ      slope variance 
+c   SIGMA_SQ      slope variance
 c   PI            3.141592653... constant
 c
 c   Output:
@@ -531,25 +535,26 @@ c +--------------------------------------------------------------------
       GAMMA = SQRT( 1. - W )
       H0   = ( 1. + 2.*MUP ) / ( 1. + 2.*MUP * GAMMA )
       H    = ( 1. + 2.*MU ) / ( 1. + 2.*MU * GAMMA )
-      
 
-      FORWARD = (1. - ASYM**2.) / (1. + 2. * ASYM * COS(ALPHA) + 
+
+      FORWARD = (1. - ASYM**2.) / (1. + 2. * ASYM * COS(ALPHA) +
      &           ASYM**2.)**1.5
-      BACKWARD = (1. - ASYM**2.) / (1. - 2. * ASYM * COS(ALPHA) + 
+      BACKWARD = (1. - ASYM**2.) / (1. - 2. * ASYM * COS(ALPHA) +
      &           ASYM**2.)**1.5
-      
+
       P = FRAC * FORWARD + (1-FRAC)*BACKWARD
-      
+
 c     ** Version 3: add factor PI
       BRDF = W / (4.*PI) / (MU+MUP) * ( (1.+B)* P + H0 * H - 1.0 )
-      
+
 c      BRDF = W / 4. / (MU+MUP) * ( (1.+B)* P + H0 * H - 1.0 )
 
       END
 c - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-c Just copy Mike's code/logic here
-c +--------------------------------------------------------------------
+c 2023/08/10    (mjw): cleaned up port from disort_multi, adding PSI as call to some
+c                            calls, adding in calls to more accurate functions
+c+--------------------------------------------------------------------
       SUBROUTINE BRDF_HAPKE_HG2_ROUGHNESS ( MUP, MU, DPHI,
      &                        B0, HH, W, ASYM, FRAC, ROUGHNESS, PI,
      &                        BRDF )
@@ -562,40 +567,46 @@ c +--------------------------------------------------------------------
       REAL B0, HH, W, PI
       REAL BRDF, P, B
       REAL ASYM, FRAC, ROUGHNESS
-      REAL CALPHA, ALPHA, FORWARD, BACKWARD, i, e, hapke_emue
-      REAL H_function
-      REAL hapke_imue, imue, emue, H_imue, H_emue, S, S_function
+      REAL CALPHA, ALPHA, PSI, rough, FORWARD, BACKWARD, i, e, hapke_emue
+      REAL B_function, H_function, phf_hg2, S_function
+      REAL hapke_imue, hapke_emue, imue, emue, H_imue, H_emue, S, S_function
       LOGICAL flag
 
       CALPHA = MU * MUP - (1.-MU**2)**.5 * (1.-MUP**2)**.5
      &         * COS( DPHI )
+      ALPHA = ACOS( CALPHA )
 
-      ALPHA = ACOS( CALPHA )      
-      
-      FORWARD = (1. - ASYM**2.) / (1. + 2. * ASYM * COS(ALPHA) + 
-     &           ASYM**2.)**1.5
-      BACKWARD = (1. - ASYM**2.) / (1. - 2. * ASYM * COS(ALPHA) + 
-     &           ASYM**2.)**1.5
-      P = FRAC * FORWARD + (1-FRAC)*BACKWARD
-      B     = B0 * HH / ( HH + TAN( ALPHA/2.) )    
-      
+
+      PSI = PI - abs(DPHI)
+      rough = ROUGHNESS * PI / 180.
       flag = .false.
+
+c     Invoke reciprocity... (from Frank Seelos)
+c     r(i,e,g) * cos(e) = r(e,i,g) * cos(i)   Hapke (1993) Eqn. 10.8
+c     DISORT will request BDREF calculation with cos(i)=0, but not with cos(e)=0.
+c     Take advantage of reciprocity to avoid an ugly singularity.
       i = ACOS(MU)
       e = ACOS(MUP)
-      imue = Hapke_imue(i, e, ALPHA, ROUGHNESS)
-      emue = Hapke_emue(i, e, ALPHA, ROUGHNESS)
+      imue = Hapke_imue(i, e, PSI, rough)
+      emue = Hapke_emue(i, e, PSI, rough)
       H_imue = H_function(imue, w, flag)
       H_emue = H_function(emue, w, flag)
-      S = S_function(i, e, ALPHA, ROUGHNESS)
+      P = phf_hg2(ALPHA, ASYM, FRAC)
+      if ( ALPHA .lt. (PI/2.) ) then
+         B    = B0 * B_function(ALPHA, HH, flag)
+      else
+         B = 0.
+      endif
+      S = S_function(i, e, PSI, rough)
 
+c factor MU from reciprosity --  r(i,e,g)  = r(e,i,g) * cos(i) / cos(e)
       BRDF = W / (4.*PI * MU) * (imue / (imue + emue)) *
      &         ((1.0 + B) * p + H_imue * H_emue - 1.0) * S
-      
-      END
+            END
 c - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 c subroutines written by Frank Seelos, ported from f90 to f77 by M.
-c Wolff (that fiend!)
+c Wolff
 c
 c history:
 c 2005/07/27 (mjw):  changed "END FUNCTION" syntax to just "END"
@@ -604,7 +615,7 @@ c
 
       REAL FUNCTION H_function(x, w, H_approx)
 
-cFUNCTION: 
+cFUNCTION:
 c	H_function
 c
 cCALLED BY:
@@ -615,12 +626,12 @@ c	Hapke_gamma
 c	Hapke_r0 (conditionally)
 c
 cINPUT PARAMETERS:
-c	x : the cosine of either the incidence or emission angle depending on the calling 
+c	x : the cosine of either the incidence or emission angle depending on the calling
 c		circumstance
 c	w : single scattering albedo
 c
 cPURPOSE:
-c	H_function is an approximation to Chandreskehar H-function which is fundamental to the 
+c	H_function is an approximation to Chandreskehar H-function which is fundamental to the
 c	calculation of the bidirectional reflectance of a semiinfinite medium of isotropic scatterers.
 c
 cREFERENCE:
@@ -635,14 +646,14 @@ c	Hapke (1993); Eqn. 8.55; p. 212
       REAL x, w
       REAL gamma, r0
 
-      gamma = Hapke_gamma(w)	
+      gamma = Hapke_gamma(w)
 
 
       if (H_approx .EQV. .FALSE.) then
          H_function = (1.0 + 2.0 * x) / (1.0 + 2.0 * x * gamma)
       else
          r0 = Hapke_r0(gamma)
-         H_function  = 1.0 / (1.0 - (1.0 - gamma) * x * 
+         H_function  = 1.0 / (1.0 - (1.0 - gamma) * x *
      &     (r0 + (1.0 - 0.5 * r0 - r0 * x) * alog((1.0 + x) / x)))
 
       end if
@@ -657,7 +668,7 @@ c---------------------------------------------------------------------------c
 
       REAL FUNCTION B_function(g, h, B_approx)
 
-cFUNCTION: 
+cFUNCTION:
 c	B_function
 c
 cCALLED BY:
@@ -684,7 +695,7 @@ c	Hapke (1993); Eqn. 8.81; p. 224
 
       REAL  Hapke_y, ERF
       REAL  y
-	
+
 
 
       REAL  g, h
@@ -694,7 +705,7 @@ c	Hapke (1993); Eqn. 8.81; p. 224
 
 c	write (*,*), 'B_approx_flag: ', B_approx_flag
 
-      if (B_approx .EQV. .FALSE.) then 
+      if (B_approx .EQV. .FALSE.) then
          B_function = 1.0 / (1.0 + 1.0 / h * tan(g / 2.0))
       else
          y = Hapke_y(g, h)
@@ -703,7 +714,7 @@ c	write (*,*), 'B_approx_flag: ', B_approx_flag
      &        exp(-3.0 / y) - 1.0
       endif
 
-      
+
       RETURN
       END
 
@@ -714,7 +725,7 @@ c---------------------------------------------------------------------------c
 
       REAL FUNCTION S_function(i, e, psi, theta_bar)
 
-cFUNCTION: 
+cFUNCTION:
 c	S_function
 c
 cCALLED BY:
@@ -734,7 +745,7 @@ c	psi : difference in azimuth angle between incident and emergent rays
 c	theta_bar : macroscopic roughness parameter (mean slope angle)
 c
 cPURPOSE:
-c	The shadowing function (S_function) calculates the effect of macroscopic 
+c	The shadowing function (S_function) calculates the effect of macroscopic
 c	roughness on the bidirectional reflectance function
 c
 cREFERENCE:
@@ -746,24 +757,24 @@ c	Hapke (1993); Eqn. 12.50 & 12.54; p. 345
       REAL Hapke_mue0, Hapke_imue, Hapke_emue, Hapke_chi, Hapke_fpsi
       REAL  i, e, psi, theta_bar
       REAL imu, emu, imue0, emue0, imue, emue, S
-      
+
       imu = cos(i)
       emu = cos(e)
-      
+
       imue0 = Hapke_mue0(i, theta_bar)
       emue0 = Hapke_mue0(e, theta_bar)
-      
+
       imue = Hapke_imue(i, e, psi, theta_bar)
       emue = Hapke_emue(i, e, psi, theta_bar)
-      
-      if (i .le. e) then 
-         S = (emue / emue0) * (imu / imue0) * 
-     &        (Hapke_chi(theta_bar) / (1.0 - Hapke_fpsi(psi) + 
+
+      if (i .le. e) then
+         S = (emue / emue0) * (imu / imue0) *
+     &        (Hapke_chi(theta_bar) / (1.0 - Hapke_fpsi(psi) +
      &        Hapke_fpsi(psi) * Hapke_chi(theta_bar) * (imu / imue0)))
 
       else
-         S = (emue / emue0) * (imu / imue0) * 
-     &        (Hapke_chi(theta_bar) / (1.0 - Hapke_fpsi(psi) + 
+         S = (emue / emue0) * (imu / imue0) *
+     &        (Hapke_chi(theta_bar) / (1.0 - Hapke_fpsi(psi) +
      &        Hapke_fpsi(psi) * Hapke_chi(theta_bar) * (emu / emue0)))
 
       endif
@@ -781,7 +792,7 @@ c---------------------------------------------------------------------------c
 
       REAL FUNCTION Hapke_imue(i, e, psi, theta_bar)
 
-cFUNCTION: 
+cFUNCTION:
 c	Hapke_imue
 c
 cCALLED BY:
@@ -815,24 +826,24 @@ c	Hapke (1993); Eqn. 12.46 & 12.52; p. 344 & 345
       pi = 2.0 * asin(1.0)
 
 
-      if (i .le. e) then 
+      if (i .le. e) then
 
 c		write (*,*), 'IMUE'
 c		write (*,*), i, e, psi, theta_bar
 c		write (*,*), Hapke_chi(theta_bar)
 c		write (*,*), Hapke_E1(e, theta_bar), Hapke_E1(i, theta_bar)
-c		write (*,*), Hapke_E2(e, theta_bar), Hapke_E2(i, theta_bar) 
+c		write (*,*), Hapke_E2(e, theta_bar), Hapke_E2(i, theta_bar)
 c		write (*,*)
 
 
-         imue = Hapke_chi(theta_bar) * (cos(i) + sin(i) * 
-     &        tan(theta_bar) *	((cos(psi) * Hapke_E2(e, theta_bar) 
+         imue = Hapke_chi(theta_bar) * (cos(i) + sin(i) *
+     &        tan(theta_bar) *	((cos(psi) * Hapke_E2(e, theta_bar)
      &        + (sin(psi/2.0))**2.0 * Hapke_E2(i, theta_bar)) /
-     &        (2.0 - Hapke_E1(e, theta_bar) - (psi/pi) * 
+     &        (2.0 - Hapke_E1(e, theta_bar) - (psi/pi) *
      &        Hapke_E1(i, theta_bar))))
       else
 
-         imue = Hapke_chi(theta_bar) * (cos(i) + sin(i) * 
+         imue = Hapke_chi(theta_bar) * (cos(i) + sin(i) *
      &        tan(theta_bar) * ((Hapke_E2(i, theta_bar) -
      &        (sin(psi/2.0))**2.0 * Hapke_E2(e, theta_bar)) /
      &        (2.0 - Hapke_E1(i, theta_bar) - (psi/pi) *
@@ -853,7 +864,7 @@ c---------------------------------------------------------------------------c
 
       REAL FUNCTION Hapke_emue(i, e, psi, theta_bar)
 
-cFUNCTION: 
+cFUNCTION:
 c	Hapke_emue
 c
 cCALLED BY:
@@ -886,7 +897,7 @@ c	Hapke (1993); Eqn. 12.47 & 12.53; p. 344 & 345
 
       pi = 2.0 * asin(1.0)
 
-      if (i .le. e) then 
+      if (i .le. e) then
          emue = Hapke_chi(theta_bar) * (cos(e) + sin(e) *
      &        tan(theta_bar) * ((Hapke_E2(e, theta_bar) -
      &        (sin(psi/2.0))**2.0 * Hapke_E2(i, theta_bar)) /
@@ -913,7 +924,7 @@ c---------------------------------------------------------------------------c
 
       REAL FUNCTION Hapke_mue0(theta, theta_bar)
 
-cFUNCTION: 
+cFUNCTION:
 c	Hapke_mue0
 c
 cCALLED BY:
@@ -938,7 +949,7 @@ c	Hapke (1993); Eqn. 12.48 & 12.49; p. 344
       IMPLICIT NONE
       REAL Hapke_chi, Hapke_E1, Hapke_E2
       REAL  theta, theta_bar
-	
+
       Hapke_mue0 = Hapke_chi(theta_bar) * (cos(theta) + sin(theta)
      &     * tan(theta_bar) * Hapke_E2(theta, theta_bar) /
      &     (2.0 - Hapke_E1(theta, theta_bar)))
@@ -956,7 +967,7 @@ c---------------------------------------------------------------------------c
       IMPLICIT NONE
 
       REAL  g, h
-	
+
       Hapke_y = tan(g/2.0) / h
       RETURN
 
@@ -969,7 +980,7 @@ c---------------------------------------------------------------------------c
 
       REAL FUNCTION Hapke_r0(gamma)
 
-cFUNCTION: 
+cFUNCTION:
 c	Hapke_r0
 c
 cCALLED BY:
@@ -982,8 +993,8 @@ cINPUT PARAMETERS:
 c	gamma : albedo factor
 c
 cPURPOSE:
-c	Hapke_r0 (diffusive reflectance) is used in the more exact approximation to the 
-c	Chandreskehar H-function	
+c	Hapke_r0 (diffusive reflectance) is used in the more exact approximation to the
+c	Chandreskehar H-function
 c
 cREFERENCE:
 c	Hapke (1993); Eqn. 8.25; p. 196
@@ -992,7 +1003,7 @@ c	Hapke (1993); Eqn. 8.25; p. 196
       IMPLICIT NONE
 
       REAL  gamma
-	
+
       Hapke_r0 = (1.0 - gamma) / (1.0 + gamma)
 
       RETURN
@@ -1006,7 +1017,7 @@ c---------------------------------------------------------------------------c
 
       REAL FUNCTION Hapke_gamma(w)
 
-cFUNCTION: 
+cFUNCTION:
 c	Hapke_gamma
 c
 cCALLED BY:
@@ -1030,7 +1041,7 @@ c	Hapke (1993); Eqn. 8.22b; p. 195
       IMPLICIT NONE
 
       REAL  w
-		
+
       Hapke_gamma = sqrt(1.0 - w)
 
       RETURN
@@ -1044,7 +1055,7 @@ c---------------------------------------------------------------------------c
 
       REAL FUNCTION Hapke_chi(theta_bar)
 
-cFUNCTION: 
+cFUNCTION:
 c	Hapke_chi
 c
 cCALLED BY:
@@ -1060,7 +1071,7 @@ cINPUT PARAMETERS:
 c	theta_bar : macroscopic roughness parameter (mean slope angle)
 c
 cPURPOSE:
-c	Hapke_chi is a component in the calculation of the shadowing function and the 
+c	Hapke_chi is a component in the calculation of the shadowing function and the
 c	cosines of the effective incidence and emission angles when theta_bar NE 0.0
 c
 cREFERENCE:
@@ -1068,16 +1079,16 @@ c	Hapke (1993); Eqn. 12.45a; p. 344
 
 
       IMPLICIT NONE
-      
-      REAL  pi 
-        
+
+      REAL  pi
+
       REAL  theta_bar
-	
+
       pi = 2.0 * asin(1.0)
 
 
       Hapke_chi = 1.0 / sqrt(1.0 + pi * tan(theta_bar)**2.0)
-      
+
       RETURN
 
       END
@@ -1089,7 +1100,7 @@ c---------------------------------------------------------------------------c
 
       REAL FUNCTION Hapke_fpsi(psi)
 
-cFUNCTION: 
+cFUNCTION:
 c	Hapke_fpsi
 c
 cCALLED BY:
@@ -1111,13 +1122,13 @@ c	Hapke (1993); Eqn. 12.51; p. 345
       IMPLICIT NONE
       REAL pi
       REAL  psi
-	
+
       pi = 2.0 * asin(1.0)
 
 
-      if (psi .eq. pi) then 
+      if (psi .eq. pi) then
          Hapke_fpsi = 0.0
-      else 
+      else
          Hapke_fpsi = exp(-2.0 * tan(psi / 2.0))
       endif
 
@@ -1132,7 +1143,7 @@ c---------------------------------------------------------------------------c
 
       REAL FUNCTION Hapke_E1(x, theta_bar)
 
-cFUNCTION: 
+cFUNCTION:
 c	Hapke_E1
 c
 cCALLED BY:
@@ -1163,7 +1174,7 @@ c	Hapke (1993); Eqn. 12.45b; p. 344
 
       if (x .eq. 0.0) then
          Hapke_E1 = 0.0
-      else 
+      else
          Hapke_E1 = exp(-2.0 / pi * 1.0/tan(theta_bar) * 1.0/tan(x))
       endif
 
@@ -1177,7 +1188,7 @@ c---------------------------------------------------------------------------c
 
       REAL FUNCTION Hapke_E2(x, theta_bar)
 
-cFUNCTION: 
+cFUNCTION:
 c	Hapke_E2
 c
 cCALLED BY:
@@ -1206,7 +1217,7 @@ c	Hapke (1993); Eqn. 12.45c; p. 344
       REAL x, theta_bar
       pi = 2.0 * asin(1.0)
 
-      if (x .eq. 0.0) then 
+      if (x .eq. 0.0) then
          Hapke_E2 = 0.0
       else
          Hapke_E2 = exp(-1.0 / pi * (1.0/tan(theta_bar))**2.0 *
@@ -1218,12 +1229,12 @@ c	Hapke (1993); Eqn. 12.45c; p. 344
 
 c---------------------------------------------------------------------------c
 c---------------------------------------------------------------------------c
-c---------------------------------------------------------------------------c 
+c---------------------------------------------------------------------------c
 
       REAL FUNCTION phf_isotropic()
 c
-cFUNCTION: 
-c	phf_isotropic 
+cFUNCTION:
+c	phf_isotropic
 c
 cCALLED BY:
 c	HapkeBDREFPhaseFunctions
@@ -1253,7 +1264,7 @@ c---------------------------------------------------------------------------c
 
       REAL FUNCTION phf_aniso_neg(g)
 c
-cFUNCTION: 
+cFUNCTION:
 c	phf_aniso_neg
 c
 cCALLED BY:
@@ -1272,7 +1283,7 @@ cREFERENCE:
 c	Hapke (1993); p. 214
 
       IMPLICIT NONE
-      
+
       REAL g
 
       phf_aniso_neg = 1.0 - cos(g)
@@ -1288,7 +1299,7 @@ c---------------------------------------------------------------------------c
 
       REAL FUNCTION phf_aniso_pos(g)
 c
-cFUNCTION: 
+cFUNCTION:
 c	phf_aniso_pos
 c
 cCALLED BY:
@@ -1315,14 +1326,14 @@ c	Hapke (1993); p. 214
       RETURN
 
       END
-      
+
 c---------------------------------------------------------------------------c
 c---------------------------------------------------------------------------c
 c---------------------------------------------------------------------------c
 
       REAL FUNCTION phf_rayleigh(g)
 c
-cFUNCTION: 
+cFUNCTION:
 c	phf_rayleigh
 c
 cCALLED BY:
@@ -1338,7 +1349,7 @@ cPURPOSE:
 c	Calculate Rayleigh phase function
 c
 cREFERENCE:
-c	
+c
 
       IMPLICIT NONE
 
@@ -1357,7 +1368,7 @@ c---------------------------------------------------------------------------c
 
       REAL FUNCTION phf_hg1(g, a)
 c
-cFUNCTION: 
+cFUNCTION:
 c	phf_hg1
 c
 cCALLED BY:
@@ -1368,7 +1379,7 @@ c	NONE
 c
 cINPUT PARAMETERS:
 c	g : phase angle (radians)
-c	a : asymmetry parameter [-1,1];  
+c	a : asymmetry parameter [-1,1];
 c		Negative is back; Positive is forward.
 c
 cPURPOSE:
@@ -1381,7 +1392,7 @@ c
 
       REAL g, a
 
-      phf_hg1 = (1.0 - a**2.0) / ((1.0 + 2.0 * a * cos(g) 
+      phf_hg1 = (1.0 - a**2.0) / ((1.0 + 2.0 * a * cos(g)
      $     + a**2.0)**1.5)
 
       RETURN
@@ -1395,7 +1406,7 @@ c---------------------------------------------------------------------------c
 
       REAL FUNCTION phf_hg2(g, a, f)
 c
-cFUNCTION: 
+cFUNCTION:
 c	phf_hg2
 c
 cCALLED BY:
@@ -1436,7 +1447,7 @@ c---------------------------------------------------------------------------c
 
       REAL FUNCTION phf_hg3(g, af, ab, f)
 c
-cFUNCTION: 
+cFUNCTION:
 c	phf_hg3
 c
 cCALLED BY:

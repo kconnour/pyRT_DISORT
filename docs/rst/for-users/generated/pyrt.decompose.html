@@ -399,6 +399,11 @@ document.write(`
 <li class="toctree-l1"><a class="reference internal" href="pyrt.empty_mean_intensity.html">pyrt.empty_mean_intensity</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pyrt.empty_transmissivity_medium.html">pyrt.empty_transmissivity_medium</a></li>
 </ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="pyrt.make_hapke_surface.html">pyrt.make_hapke_surface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyrt.make_hapkeHG2_surface.html">pyrt.make_hapkeHG2_surface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyrt.make_hapkeHG2roughness_surface.html">pyrt.make_hapkeHG2roughness_surface</a></li>
+</ul>
 </div>
 </nav></div>
     </div>
@@ -494,8 +499,8 @@ moments.</p>
 <p>Compare the result of this general decomposition to the result of the
 formula for the Henyey-Greenstein decomposition.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">coeff0</span> <span class="o">=</span> <span class="n">pyrt</span><span class="o">.</span><span class="n">henyey_greenstein_legendre_coefficients</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">129</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">coeff</span> <span class="o">-</span> <span class="n">coeff0</span><span class="p">))</span>
-<span class="go">2.560646052839508e-12</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">coeff</span> <span class="o">-</span> <span class="n">coeff0</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
+<span class="go">True</span>
 </pre></div>
 </div>
 </dd></dl>

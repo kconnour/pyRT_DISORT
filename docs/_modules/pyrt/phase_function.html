@@ -135,6 +135,13 @@
                 
 
                     <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../rst/for-users/guides.html">
+                        Guides
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
                       <a class="nav-link nav-internal" href="../../rst/about-this-project/about-pyRT_DISORT.html">
                         About pyRT_DISORT
                       </a>
@@ -147,13 +154,21 @@
                       </a>
                     </li>
                 
-
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
                     <li class="nav-item">
                       <a class="nav-link nav-internal" href="../../rst/about-this-project/release-notes.html">
                         Release notes
                       </a>
                     </li>
                 
+                </div>
+            </div>
+            
   </ul>
 </nav></div>
       
@@ -258,6 +273,13 @@ document.write(`
                 
 
                     <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../rst/for-users/guides.html">
+                        Guides
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
                       <a class="nav-link nav-internal" href="../../rst/about-this-project/about-pyRT_DISORT.html">
                         About pyRT_DISORT
                       </a>
@@ -270,13 +292,21 @@ document.write(`
                       </a>
                     </li>
                 
-
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
                     <li class="nav-item">
                       <a class="nav-link nav-internal" href="../../rst/about-this-project/release-notes.html">
                         Release notes
                       </a>
                     </li>
                 
+                </div>
+            </div>
+            
   </ul>
 </nav></div>
         
@@ -414,10 +444,14 @@ document.write(`
 <span class="sd">    formula for the Henyey-Greenstein decomposition.</span>
 
 <span class="sd">    &gt;&gt;&gt; coeff0 = pyrt.henyey_greenstein_legendre_coefficients(0.5, 129)</span>
-<span class="sd">    &gt;&gt;&gt; np.amax(np.abs(coeff - coeff0))</span>
-<span class="sd">    2.560646052839508e-12</span>
+<span class="sd">    &gt;&gt;&gt; np.amax(np.abs(coeff - coeff0)) &lt; 1e-10</span>
+<span class="sd">    True</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Why does the last test check a boolean and not a number? When I do CI,</span>
+    <span class="c1">#  I find that it&#39;s OS dependent regarding what answer that test spits out</span>
+    <span class="c1">#  and therefore, my tests pass or fail depending on what the exact OS is.</span>
+    <span class="c1">#  So, I made it a bool so all OSs can agree the number is small.</span>
     <span class="k">def</span> <span class="nf">_make_legendre_polynomials</span><span class="p">(</span><span class="n">scat_angles</span><span class="p">,</span> <span class="n">n_mom</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Make an array of Legendre polynomials at the scattering angles.</span>
 
@@ -666,8 +700,8 @@ document.write(`
 <span class="sd">    &gt;&gt;&gt; ang = np.linspace(0, 180, num=181)</span>
 <span class="sd">    &gt;&gt;&gt; pf = pyrt.construct_henyey_greenstein(g, ang) * 4 * np.pi  # normalize it</span>
 <span class="sd">    &gt;&gt;&gt; lc = pyrt.decompose(pf, ang, 129)</span>
-<span class="sd">    &gt;&gt;&gt; round(np.amax(np.abs(lc - coeff)), 12)</span>
-<span class="sd">    3e-12</span>
+<span class="sd">    &gt;&gt;&gt; np.amax(np.abs(lc - coeff)) &lt; 1e-10</span>
+<span class="sd">    True</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">asymmetry_parameter</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">asymmetry_parameter</span><span class="p">)</span>
