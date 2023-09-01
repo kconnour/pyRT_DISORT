@@ -5,23 +5,85 @@ import numpy as np
 from disort import disobrdf
 
 
-def _make_empty_bemst(n_streams) -> np.ndarray:
+def make_empty_bemst(n_streams: int) -> np.ndarray:
+    """Make an empty bemst array.
+
+    Parameters
+    ----------
+    n_streams
+        The number of streams.
+
+    Returns
+    -------
+    Array of zeros
+
+    """
     return np.zeros(int(0.5 * n_streams))
 
 
-def _make_empty_emust(n_polar) -> np.ndarray:
+def make_empty_emust(n_polar: int) -> np.ndarray:
+    """Make an empty emust array.
+
+    Parameters
+    ----------
+    n_polar
+        The number of polar angles.
+
+    Returns
+    -------
+    Array of zeros
+
+    """
     return np.zeros(n_polar)
 
 
-def _make_empty_rho_accurate(n_polar, n_azimuth) -> np.ndarray:
+def make_empty_rho_accurate(n_polar: int, n_azimuth: int) -> np.ndarray:
+    """Make an empty rho accurate array.
+
+    Parameters
+    ----------
+    n_polar
+        The number of polar angles.
+    n_azimuth
+        The number of azimuth angles.
+
+    Returns
+    -------
+    Array of zeros
+
+    """
     return np.zeros((n_polar, n_azimuth))
 
 
-def _make_empty_rhoq(n_streams) -> np.ndarray:
+def make_empty_rhoq(n_streams: int) -> np.ndarray:
+    """Make an empty rhoq array.
+
+    Parameters
+    ----------
+    n_streams
+        The number of streams.
+
+    Returns
+    -------
+    Array of zeros
+
+    """
     return np.zeros((int(0.5 * n_streams), int(0.5 * n_streams + 1), n_streams))
 
 
-def _make_empty_rhou(n_streams) -> np.ndarray:
+def make_empty_rhou(n_streams: int) -> np.ndarray:
+    """Make an empty rhou array.
+
+    Parameters
+    ----------
+    n_streams
+        The number of streams
+
+    Returns
+    -------
+    Array of zeros
+
+    """
     return np.zeros((n_streams, int(0.5 * n_streams + 1), n_streams))
 
 
@@ -29,11 +91,11 @@ def _call_disobrdf(user_angles: bool, only_fluxes: bool, n_polar: int, n_azimuth
                    mu0: float, phi: float, phi0: float,
                    beam_flux: float, albedo: float, phase_function_number: int,
                    brdf_arg: np.ndarray, n_mug: int):
-    bemst = _make_empty_bemst(n_streams)
-    _emust = _make_empty_emust(n_polar)
-    _rho_accurate = _make_empty_rho_accurate(n_polar, n_azimuth)
-    _rhou = _make_empty_rhou(n_streams)
-    _rhoq = _make_empty_rhoq(n_streams)
+    bemst = make_empty_bemst(n_streams)
+    _emust = make_empty_emust(n_polar)
+    _rho_accurate = make_empty_rho_accurate(n_polar, n_azimuth)
+    _rhou = make_empty_rhou(n_streams)
+    _rhoq = make_empty_rhoq(n_streams)
 
     # this returns: rhoq, rhou, emust, bemst, rho_accurate
     return disobrdf(user_angles, mu, beam_flux, mu0, False, albedo,
