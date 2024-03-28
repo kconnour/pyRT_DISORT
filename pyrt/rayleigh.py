@@ -58,7 +58,8 @@ def rayleigh_co2(column_density: ArrayLike, wavelength: ArrayLike) -> Column:
     Parameters
     ----------
     column_density: ArrayLike
-        1-dimensional array of the column density in each layer.
+        1-dimensional array of the column density
+        [:math:`\frac{particles}{\text{m^2}}`] in each layer.
     wavelength: ArrayLike
         1-dimensional array of the wavelengths [microns] to compute the optical
         depth at.
