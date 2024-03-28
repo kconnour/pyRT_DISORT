@@ -90,11 +90,23 @@ def scale_height(temperature: ArrayLike, mass: ArrayLike, gravity: float) -> np.
     mass: ArrayLike
         The 1-dimensional particle mass [kg] of the grid.
     gravity: float
-        The gravitational constant.
+        The gravitational acceleration [:math:`\frac{m}{\text{s^2}}`].
 
     Returns
     -------
-    The scale height in each model layer.
+    The scale height [m] in each model layer.
+
+    Examples
+    --------
+    Get the scale height of Mars's atmosphere, where the temperature is 210 K.
+    Note the atmosphere is primarily carbon dioxide and the gravitational
+    acceleration is 3.71 :math:`\frac{m}{\text{s^2}}`.
+
+    >>> import numpy as np
+    >>> from scipy.constants import m_u
+    >>> import pyrt
+    >>> int(np.rint(pyrt.scale_height(210, 44*m_u, 3.71)))
+    10696
 
     """
     return Boltzmann * temperature / (mass * gravity)
