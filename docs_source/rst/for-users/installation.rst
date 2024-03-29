@@ -3,7 +3,9 @@ Installation
 .. note::
    The installation and unit tests are run using Python 3.10 and 3.11 on
    Ubuntu 20.04, Ubuntu 22.04, MacOS 11, MacOS 12, and MacOS 13. If these won't
-   work for you, please raise an issue.
+   work for you, please raise an issue. Github is currently saying that this
+   will *not* work with python3.12 due to an issue with distutils. I'll look
+   into this once I muster up the motivation... 
 
 To install pyRT_DISORT, you must have FORTRAN installed on your computer. Once
 you have that, simply clone the repo (using
