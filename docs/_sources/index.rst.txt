@@ -1,6 +1,6 @@
 pyRT_DISORT
 ===========
-pyRT_DISORT is a package for working with DISORT in Python. I compiles the
+pyRT_DISORT is a package for working with DISORT in Python. It compiles the
 latest version of DISORT upon installation and provides some tools for helping
 to compute several of the inputs required by DISORT.
 

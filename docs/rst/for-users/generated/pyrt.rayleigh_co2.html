@@ -37,6 +37,7 @@
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/sphinx_highlight.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'rst/for-users/generated/pyrt.rayleigh_co2';</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -363,6 +364,7 @@ document.write(`
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="pyrt.column_density.html">pyrt.column_density</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyrt.scale_height.html">pyrt.scale_height</a></li>
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="pyrt.extinction_ratio.html">pyrt.extinction_ratio</a></li>
@@ -469,7 +471,8 @@ document.write(`
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>column_density</strong> (<em>ArrayLike</em>) – 1-dimensional array of the column density in each layer.</p></li>
+<li><p><strong>column_density</strong> (<em>ArrayLike</em>) – 1-dimensional array of the column density
+[<span class="math notranslate nohighlight">\(\frac{particles}{\text{m^2}}\)</span>] in each layer.</p></li>
 <li><p><strong>wavelength</strong> (<em>ArrayLike</em>) – 1-dimensional array of the wavelengths [microns] to compute the optical
 depth at.</p></li>
 </ul>

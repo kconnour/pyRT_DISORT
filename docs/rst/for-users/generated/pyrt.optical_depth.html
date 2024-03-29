@@ -37,6 +37,7 @@
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/sphinx_highlight.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'rst/for-users/generated/pyrt.optical_depth';</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -363,6 +364,7 @@ document.write(`
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="pyrt.column_density.html">pyrt.column_density</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyrt.scale_height.html">pyrt.scale_height</a></li>
 </ul>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="pyrt.extinction_ratio.html">pyrt.extinction_ratio</a></li>
@@ -470,7 +472,8 @@ document.write(`
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>q_profile</strong> (<em>np.ndarray</em>) – 1-dimensional array of volumetric mixing ratios.</p></li>
-<li><p><strong>column_density</strong> (<em>np.ndarray</em>) – 1-dimensional array of column densities.</p></li>
+<li><p><strong>column_density</strong> (<em>np.ndarray</em>) – 1-dimensional array of column densities
+[<span class="math notranslate nohighlight">\(\frac{\text{particles}}{m^2}\)</span>].</p></li>
 <li><p><strong>extinction_ratio</strong> (<em>np.ndarray</em>) – 2-dimensional array of extinction ratios.</p></li>
 <li><p><strong>column_integrated_od</strong> (<em>float</em>) – The column integrated optical depth.</p></li>
 </ul>

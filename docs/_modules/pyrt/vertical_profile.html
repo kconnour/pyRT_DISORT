@@ -409,11 +409,11 @@ document.write(`
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    altitude: np.ndarray</span>
-<span class="sd">        The altitudes at which to construct the profile.</span>
+<span class="sd">        The altitudes [m] at which to construct the profile.</span>
 <span class="sd">    q0: float</span>
 <span class="sd">        The surface volumetric mixing ratio.</span>
 <span class="sd">    scale_height: np.ndarray</span>
-<span class="sd">        The atmospheric scale height at each altitude.</span>
+<span class="sd">        The atmospheric scale height [m] at each altitude.</span>
 <span class="sd">    nu: float</span>
 <span class="sd">        The nu parameter.</span>
 
@@ -428,8 +428,8 @@ document.write(`
 
 <span class="sd">    &gt;&gt;&gt; import numpy as np</span>
 <span class="sd">    &gt;&gt;&gt; import pyrt</span>
-<span class="sd">    &gt;&gt;&gt; altitude = np.linspace(100, 0, num=15)</span>
-<span class="sd">    &gt;&gt;&gt; profile = conrath(altitude, 1, 10, 0.1)</span>
+<span class="sd">    &gt;&gt;&gt; altitude = np.linspace(100000, 0, num=15)</span>
+<span class="sd">    &gt;&gt;&gt; profile = conrath(altitude, 1, 10000, 0.1)</span>
 <span class="sd">    &gt;&gt;&gt; profile.shape</span>
 <span class="sd">    (15,)</span>
 

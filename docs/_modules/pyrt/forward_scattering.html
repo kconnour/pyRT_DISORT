@@ -422,10 +422,10 @@ document.write(`
 <span class="sd">        1-dimensional array of particle sizes corresponding to the first axis</span>
 <span class="sd">        of extinction_cross_section.</span>
 <span class="sd">    wavelength_grid: np.ndarray</span>
-<span class="sd">        1-dimensional array of wavelengths corresponding to the second axis</span>
-<span class="sd">        of extinction_cross_section.</span>
+<span class="sd">        1-dimensional array of wavelengths [microns] corresponding to the second</span>
+<span class="sd">        axis of ``extinction_cross_section``.</span>
 <span class="sd">    wavelength_reference: np.ndarray</span>
-<span class="sd">        The wavelengths to scale everything to.</span>
+<span class="sd">        The wavelength [microns] to scale everything to.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -443,14 +443,15 @@ document.write(`
 <div class="viewcode-block" id="optical_depth"><a class="viewcode-back" href="../../rst/for-users/generated/pyrt.optical_depth.html#pyrt.optical_depth">[docs]</a><span class="k">def</span> <span class="nf">optical_depth</span><span class="p">(</span><span class="n">q_profile</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">column_density</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                   <span class="n">extinction_ratio</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                   <span class="n">column_integrated_od</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make the optical depth in each model layer.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Make the optical depth in each model layer.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    q_profile: np.ndarray</span>
 <span class="sd">        1-dimensional array of volumetric mixing ratios.</span>
 <span class="sd">    column_density: np.ndarray</span>
-<span class="sd">        1-dimensional array of column densities.</span>
+<span class="sd">        1-dimensional array of column densities</span>
+<span class="sd">        [:math:`\frac{\text{particles}}{m^2}`].</span>
 <span class="sd">    extinction_ratio: np.ndarray</span>
 <span class="sd">        2-dimensional array of extinction ratios.</span>
 <span class="sd">    column_integrated_od: float</span>

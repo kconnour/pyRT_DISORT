@@ -7,11 +7,11 @@ def conrath(altitude: np.ndarray, q0: float, scale_height: np.ndarray, nu: float
     Parameters
     ----------
     altitude: np.ndarray
-        The altitudes at which to construct the profile.
+        The altitudes [m] at which to construct the profile.
     q0: float
         The surface volumetric mixing ratio.
     scale_height: np.ndarray
-        The atmospheric scale height at each altitude.
+        The atmospheric scale height [m] at each altitude.
     nu: float
         The nu parameter.
 
@@ -26,8 +26,8 @@ def conrath(altitude: np.ndarray, q0: float, scale_height: np.ndarray, nu: float
 
     >>> import numpy as np
     >>> import pyrt
-    >>> altitude = np.linspace(100, 0, num=15)
-    >>> profile = conrath(altitude, 1, 10, 0.1)
+    >>> altitude = np.linspace(100000, 0, num=15)
+    >>> profile = conrath(altitude, 1, 10000, 0.1)
     >>> profile.shape
     (15,)
 

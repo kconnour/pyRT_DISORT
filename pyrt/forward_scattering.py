@@ -20,10 +20,10 @@ def extinction_ratio(extinction_cross_section: np.ndarray,
         1-dimensional array of particle sizes corresponding to the first axis
         of extinction_cross_section.
     wavelength_grid: np.ndarray
-        1-dimensional array of wavelengths corresponding to the second axis
-        of extinction_cross_section.
+        1-dimensional array of wavelengths [microns] corresponding to the second
+        axis of ``extinction_cross_section``.
     wavelength_reference: np.ndarray
-        The wavelengths to scale everything to.
+        The wavelength [microns] to scale everything to.
 
     Returns
     -------
@@ -41,14 +41,15 @@ def extinction_ratio(extinction_cross_section: np.ndarray,
 def optical_depth(q_profile: np.ndarray, column_density: np.ndarray,
                   extinction_ratio: np.ndarray,
                   column_integrated_od: float) -> np.ndarray:
-    """Make the optical depth in each model layer.
+    r"""Make the optical depth in each model layer.
 
     Parameters
     ----------
     q_profile: np.ndarray
         1-dimensional array of volumetric mixing ratios.
     column_density: np.ndarray
-        1-dimensional array of column densities.
+        1-dimensional array of column densities
+        [:math:`\frac{\text{particles}}{m^2}`].
     extinction_ratio: np.ndarray
         2-dimensional array of extinction ratios.
     column_integrated_od: float

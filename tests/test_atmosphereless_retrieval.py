@@ -25,7 +25,7 @@ def test_retrieval_without_atmosphere_gives_expected_result():
     mu = np.cos(np.radians(emission_angle))
 
     # Define an empty atmosphere
-    z = np.linspace(100, 0, num=15)
+    z = np.linspace(100000, 0, num=15)
     optical_depth = np.zeros((z.shape[0] - 1))
     ssa = np.ones((z.shape[0] - 1))
     pmom = np.zeros((128, z.shape[0]-1))
