@@ -3,7 +3,7 @@
 import numpy as np
 from numpy.typing import ArrayLike
 from scipy.constants import Boltzmann
-from scipy.integrate import quadrature as quad
+from scipy.integrate import quad
 
 
 def column_density(pressure: ArrayLike, temperature: ArrayLike,
