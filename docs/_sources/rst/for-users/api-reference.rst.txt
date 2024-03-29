@@ -26,6 +26,7 @@ These describe utilities for working with equation of state variables.
    :toctree: generated/
 
    column_density
+   scale_height
 
 Forward scattering
 ------------------

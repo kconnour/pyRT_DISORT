@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>pyrt.empty_mean_intensity &#8212; pyRT_DISORT  documentation</title>
+    <title>pyrt.scale_height &#8212; pyRT_DISORT  documentation</title>
   
   
   
@@ -37,11 +37,12 @@
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/sphinx_highlight.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'rst/for-users/generated/pyrt.empty_mean_intensity';</script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'rst/for-users/generated/pyrt.scale_height';</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="pyrt.empty_transmissivity_medium" href="pyrt.empty_transmissivity_medium.html" />
-    <link rel="prev" title="pyrt.empty_intensity" href="pyrt.empty_intensity.html" />
+    <link rel="next" title="pyrt.extinction_ratio" href="pyrt.extinction_ratio.html" />
+    <link rel="prev" title="pyrt.column_density" href="pyrt.column_density.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -361,9 +362,9 @@ document.write(`
   <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="pyrt.Column.html">pyrt.Column</a></li>
 </ul>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="pyrt.column_density.html">pyrt.column_density</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pyrt.scale_height.html">pyrt.scale_height</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">pyrt.scale_height</a></li>
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="pyrt.extinction_ratio.html">pyrt.extinction_ratio</a></li>
@@ -390,14 +391,14 @@ document.write(`
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="pyrt.wavenumber.html">pyrt.wavenumber</a></li>
 </ul>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="pyrt.empty_albedo_medium.html">pyrt.empty_albedo_medium</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pyrt.empty_diffuse_up_flux.html">pyrt.empty_diffuse_up_flux</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pyrt.empty_diffuse_down_flux.html">pyrt.empty_diffuse_down_flux</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pyrt.empty_direct_beam_flux.html">pyrt.empty_direct_beam_flux</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pyrt.empty_flux_divergence.html">pyrt.empty_flux_divergence</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pyrt.empty_intensity.html">pyrt.empty_intensity</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">pyrt.empty_mean_intensity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyrt.empty_mean_intensity.html">pyrt.empty_mean_intensity</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pyrt.empty_transmissivity_medium.html">pyrt.empty_transmissivity_medium</a></li>
 </ul>
 <ul class="nav bd-sidenav">
@@ -444,7 +445,7 @@ document.write(`
     
     <li class="breadcrumb-item"><a href="../api-reference.html" class="nav-link">API Reference</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page">pyrt.empty_mean_intensity</li>
+    <li class="breadcrumb-item active" aria-current="page">pyrt.scale_height</li>
   </ul>
 </nav>
 </div>
@@ -461,23 +462,35 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section id="pyrt-empty-mean-intensity">
-<h1>pyrt.empty_mean_intensity<a class="headerlink" href="#pyrt-empty-mean-intensity" title="Permalink to this heading">#</a></h1>
+  <section id="pyrt-scale-height">
+<h1>pyrt.scale_height<a class="headerlink" href="#pyrt-scale-height" title="Permalink to this heading">#</a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="pyrt.empty_mean_intensity">
-<span class="sig-prename descclassname"><span class="pre">pyrt.</span></span><span class="sig-name descname"><span class="pre">empty_mean_intensity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_user_levels</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/pyrt/output.html#empty_mean_intensity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrt.empty_mean_intensity" title="Permalink to this definition">#</a></dt>
-<dd><p>Make empty mean intensity array.</p>
+<dt class="sig sig-object py" id="pyrt.scale_height">
+<span class="sig-prename descclassname"><span class="pre">pyrt.</span></span><span class="sig-name descname"><span class="pre">scale_height</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">temperature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gravity</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/pyrt/eos.html#scale_height"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyrt.scale_height" title="Permalink to this definition">#</a></dt>
+<dd><p>Compute the scale height of each model layer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>n_user_levels</strong> (<em>int</em>) – The number of user levels.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>temperature</strong> (<em>ArrayLike</em>) – The 1-dimensional temperature [K] of the grid.</p></li>
+<li><p><strong>mass</strong> (<em>ArrayLike</em>) – The 1-dimensional particle mass [kg] of the grid.</p></li>
+<li><p><strong>gravity</strong> (<em>float</em>) – The gravitational acceleration [<span class="math notranslate nohighlight">\(\frac{m}{s^2}\)</span>].</p></li>
+</ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>An empty array.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>The scale height [m] in each model layer.</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<p>Get the scale height of Mars’s atmosphere, where the temperature is 210 K.
+Note the atmosphere is primarily carbon dioxide and the gravitational
+acceleration is 3.71 <span class="math notranslate nohighlight">\(\frac{m}{s^2}\)</span>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.constants</span> <span class="kn">import</span> <span class="n">m_u</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pyrt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rint</span><span class="p">(</span><span class="n">pyrt</span><span class="o">.</span><span class="n">scale_height</span><span class="p">(</span><span class="mi">210</span><span class="p">,</span> <span class="mi">44</span><span class="o">*</span><span class="n">m_u</span><span class="p">,</span> <span class="mf">3.71</span><span class="p">)))</span>
+<span class="go">10696</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </section>
@@ -494,20 +507,20 @@ document.write(`
     <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
-       href="pyrt.empty_intensity.html"
+       href="pyrt.column_density.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">pyrt.empty_intensity</p>
+        <p class="prev-next-title">pyrt.column_density</p>
       </div>
     </a>
     <a class="right-next"
-       href="pyrt.empty_transmissivity_medium.html"
+       href="pyrt.extinction_ratio.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">pyrt.empty_transmissivity_medium</p>
+        <p class="prev-next-title">pyrt.extinction_ratio</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -529,13 +542,13 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyrt.empty_mean_intensity"><code class="docutils literal notranslate"><span class="pre">empty_mean_intensity()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyrt.scale_height"><code class="docutils literal notranslate"><span class="pre">scale_height()</span></code></a></li>
 </ul>
   </nav></div>
 
   <div class="sidebar-secondary-item">
   <div class="tocsection sourcelink">
-    <a href="../../../_sources/rst/for-users/generated/pyrt.empty_mean_intensity.rst.txt">
+    <a href="../../../_sources/rst/for-users/generated/pyrt.scale_height.rst.txt">
       <i class="fa-solid fa-file-lines"></i> Show Source
     </a>
   </div>

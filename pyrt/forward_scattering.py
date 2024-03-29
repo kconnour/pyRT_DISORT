@@ -41,7 +41,7 @@ def extinction_ratio(extinction_cross_section: np.ndarray,
 def optical_depth(q_profile: np.ndarray, column_density: np.ndarray,
                   extinction_ratio: np.ndarray,
                   column_integrated_od: float) -> np.ndarray:
-    """Make the optical depth in each model layer.
+    r"""Make the optical depth in each model layer.
 
     Parameters
     ----------
@@ -49,7 +49,7 @@ def optical_depth(q_profile: np.ndarray, column_density: np.ndarray,
         1-dimensional array of volumetric mixing ratios.
     column_density: np.ndarray
         1-dimensional array of column densities
-        [:math:`\frac{particles}{\text{m^2}}`].
+        [:math:`\frac{\text{particles}}{m^2}`].
     extinction_ratio: np.ndarray
         2-dimensional array of extinction ratios.
     column_integrated_od: float

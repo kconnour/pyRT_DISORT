@@ -8,7 +8,7 @@ from scipy.integrate import quadrature as quad
 
 def column_density(pressure: ArrayLike, temperature: ArrayLike,
                    altitude: ArrayLike) -> np.ndarray:
-    """Create the column density from a given grid of equation of state
+    r"""Create the column density from a given grid of equation of state
     variables, assuming each grid point can be hydrostatically approximated.
 
     Parameters
@@ -23,7 +23,7 @@ def column_density(pressure: ArrayLike, temperature: ArrayLike,
 
     Returns
     -------
-    The column density [:math:`\frac{particles}{\text{m^2}}`] of each point in
+    The column density [:math:`\frac{\text{particles}}{m^2}`] of each point in
     the vertical column.
 
     Notes
@@ -81,7 +81,7 @@ def column_density(pressure: ArrayLike, temperature: ArrayLike,
 
 
 def scale_height(temperature: ArrayLike, mass: ArrayLike, gravity: float) -> np.ndarray:
-    """Compute the scale height of each model layer.
+    r"""Compute the scale height of each model layer.
 
     Parameters
     ----------
@@ -90,7 +90,7 @@ def scale_height(temperature: ArrayLike, mass: ArrayLike, gravity: float) -> np.
     mass: ArrayLike
         The 1-dimensional particle mass [kg] of the grid.
     gravity: float
-        The gravitational acceleration [:math:`\frac{m}{\text{s^2}}`].
+        The gravitational acceleration [:math:`\frac{m}{s^2}`].
 
     Returns
     -------
@@ -100,7 +100,7 @@ def scale_height(temperature: ArrayLike, mass: ArrayLike, gravity: float) -> np.
     --------
     Get the scale height of Mars's atmosphere, where the temperature is 210 K.
     Note the atmosphere is primarily carbon dioxide and the gravitational
-    acceleration is 3.71 :math:`\frac{m}{\text{s^2}}`.
+    acceleration is 3.71 :math:`\frac{m}{s^2}`.
 
     >>> import numpy as np
     >>> from scipy.constants import m_u

@@ -407,23 +407,85 @@ document.write(`
 <span class="kn">from</span> <span class="nn">disort</span> <span class="kn">import</span> <span class="n">disobrdf</span>
 
 
-<span class="k">def</span> <span class="nf">_make_empty_bemst</span><span class="p">(</span><span class="n">n_streams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">make_empty_bemst</span><span class="p">(</span><span class="n">n_streams</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make an empty bemst array.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_streams</span>
+<span class="sd">        The number of streams.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Array of zeros</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">n_streams</span><span class="p">))</span>
 
 
-<span class="k">def</span> <span class="nf">_make_empty_emust</span><span class="p">(</span><span class="n">n_polar</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">make_empty_emust</span><span class="p">(</span><span class="n">n_polar</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make an empty emust array.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_polar</span>
+<span class="sd">        The number of polar angles.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Array of zeros</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_polar</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_make_empty_rho_accurate</span><span class="p">(</span><span class="n">n_polar</span><span class="p">,</span> <span class="n">n_azimuth</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">make_empty_rho_accurate</span><span class="p">(</span><span class="n">n_polar</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">n_azimuth</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make an empty rho accurate array.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_polar</span>
+<span class="sd">        The number of polar angles.</span>
+<span class="sd">    n_azimuth</span>
+<span class="sd">        The number of azimuth angles.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Array of zeros</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_polar</span><span class="p">,</span> <span class="n">n_azimuth</span><span class="p">))</span>
 
 
-<span class="k">def</span> <span class="nf">_make_empty_rhoq</span><span class="p">(</span><span class="n">n_streams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">make_empty_rhoq</span><span class="p">(</span><span class="n">n_streams</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make an empty rhoq array.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_streams</span>
+<span class="sd">        The number of streams.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Array of zeros</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">int</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">n_streams</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">n_streams</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">n_streams</span><span class="p">))</span>
 
 
-<span class="k">def</span> <span class="nf">_make_empty_rhou</span><span class="p">(</span><span class="n">n_streams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">make_empty_rhou</span><span class="p">(</span><span class="n">n_streams</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make an empty rhou array.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_streams</span>
+<span class="sd">        The number of streams</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Array of zeros</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_streams</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">n_streams</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">n_streams</span><span class="p">))</span>
 
 
@@ -431,11 +493,11 @@ document.write(`
                    <span class="n">mu0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">phi</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">phi0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
                    <span class="n">beam_flux</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">albedo</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">phase_function_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                    <span class="n">brdf_arg</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">n_mug</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-    <span class="n">bemst</span> <span class="o">=</span> <span class="n">_make_empty_bemst</span><span class="p">(</span><span class="n">n_streams</span><span class="p">)</span>
-    <span class="n">_emust</span> <span class="o">=</span> <span class="n">_make_empty_emust</span><span class="p">(</span><span class="n">n_polar</span><span class="p">)</span>
-    <span class="n">_rho_accurate</span> <span class="o">=</span> <span class="n">_make_empty_rho_accurate</span><span class="p">(</span><span class="n">n_polar</span><span class="p">,</span> <span class="n">n_azimuth</span><span class="p">)</span>
-    <span class="n">_rhou</span> <span class="o">=</span> <span class="n">_make_empty_rhou</span><span class="p">(</span><span class="n">n_streams</span><span class="p">)</span>
-    <span class="n">_rhoq</span> <span class="o">=</span> <span class="n">_make_empty_rhoq</span><span class="p">(</span><span class="n">n_streams</span><span class="p">)</span>
+    <span class="n">bemst</span> <span class="o">=</span> <span class="n">make_empty_bemst</span><span class="p">(</span><span class="n">n_streams</span><span class="p">)</span>
+    <span class="n">_emust</span> <span class="o">=</span> <span class="n">make_empty_emust</span><span class="p">(</span><span class="n">n_polar</span><span class="p">)</span>
+    <span class="n">_rho_accurate</span> <span class="o">=</span> <span class="n">make_empty_rho_accurate</span><span class="p">(</span><span class="n">n_polar</span><span class="p">,</span> <span class="n">n_azimuth</span><span class="p">)</span>
+    <span class="n">_rhou</span> <span class="o">=</span> <span class="n">make_empty_rhou</span><span class="p">(</span><span class="n">n_streams</span><span class="p">)</span>
+    <span class="n">_rhoq</span> <span class="o">=</span> <span class="n">make_empty_rhoq</span><span class="p">(</span><span class="n">n_streams</span><span class="p">)</span>
 
     <span class="c1"># this returns: rhoq, rhou, emust, bemst, rho_accurate</span>
     <span class="k">return</span> <span class="n">disobrdf</span><span class="p">(</span><span class="n">user_angles</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">beam_flux</span><span class="p">,</span> <span class="n">mu0</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">albedo</span><span class="p">,</span>

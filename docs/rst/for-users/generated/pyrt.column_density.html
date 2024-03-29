@@ -37,10 +37,11 @@
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/sphinx_highlight.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'rst/for-users/generated/pyrt.column_density';</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="pyrt.extinction_ratio" href="pyrt.extinction_ratio.html" />
+    <link rel="next" title="pyrt.scale_height" href="pyrt.scale_height.html" />
     <link rel="prev" title="pyrt.Column" href="pyrt.Column.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -363,6 +364,7 @@ document.write(`
 </ul>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">pyrt.column_density</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyrt.scale_height.html">pyrt.scale_height</a></li>
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="pyrt.extinction_ratio.html">pyrt.extinction_ratio</a></li>
@@ -472,12 +474,19 @@ variables, assuming each grid point can be hydrostatically approximated.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>pressure</strong> (<em>ArrayLike</em>) – The 1-dimensional pressure [Pa] of the grid.</p></li>
 <li><p><strong>temperature</strong> (<em>ArrayLike</em>) – The 1-dimensional temperature [K] of the grid.</p></li>
-<li><p><strong>altitude</strong> (<em>ArrayLike</em>) – The 1-dimensional altitude [km] of each point in the grid. It must be
+<li><p><strong>altitude</strong> (<em>ArrayLike</em>) – The 1-dimensional altitude [m] of each point in the grid. It must be
 monotonically decreasing, otherwise this function will give nonsense.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>The column density of each point in the grid.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>The column density [<span class="math notranslate nohighlight">\(\frac{\text{particles}}{m^2}\)</span>] of each point in</p></li>
+<li><p><em>the vertical column.</em></p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>ndarray</em></p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -493,22 +502,26 @@ representing Mars where the surface pressure is 600 Pa, the temperature is
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.constants</span> <span class="kn">import</span> <span class="n">Boltzmann</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pyrt</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">altitude</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">80</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">pressure</span> <span class="o">=</span> <span class="mi">600</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">altitude</span> <span class="o">/</span> <span class="mi">10</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">temperature</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">80</span><span class="p">,))</span> <span class="o">*</span> <span class="mi">180</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">altitude</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">80000</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">81</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pressure</span> <span class="o">=</span> <span class="mi">600</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">altitude</span> <span class="o">/</span> <span class="mi">10000</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">temperature</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">81</span><span class="p">,))</span> <span class="o">*</span> <span class="mi">180</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">colden</span> <span class="o">=</span> <span class="n">column_density</span><span class="p">(</span><span class="n">pressure</span><span class="p">,</span> <span class="n">temperature</span><span class="p">,</span> <span class="n">altitude</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">colden</span><span class="o">.</span><span class="n">shape</span>
-<span class="go">(79,)</span>
+<span class="go">(80,)</span>
 </pre></div>
 </div>
-<p>Get the column-integrated column density.
-&gt;&gt;&gt; total_colden = np.sum(colden)
-&gt;&gt;&gt; total_colden
-2.415575739216228e+27</p>
-<p>Compute the analytical result of this scenario.
-&gt;&gt;&gt; analytical_result = 600 * 10000 * (1 - np.exp(-80/10)) / 180 / Boltzmann
-&gt;&gt;&gt; analytical_result
-2.4135135900389294e+27</p>
+<p>Get the column-integrated column density.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">total_colden</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">colden</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">total_colden</span><span class="si">:</span><span class="s1">.2e</span><span class="si">}</span><span class="s1">&#39;</span>
+<span class="go">&#39;2.42e+27&#39;</span>
+</pre></div>
+</div>
+<p>Compute the analytical result of this scenario.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">analytical_result</span> <span class="o">=</span> <span class="mi">600</span> <span class="o">*</span> <span class="mi">10000</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">80000</span><span class="o">/</span><span class="mi">10000</span><span class="p">))</span> <span class="o">/</span> <span class="mi">180</span> <span class="o">/</span> <span class="n">Boltzmann</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">analytical_result</span><span class="si">:</span><span class="s1">.2e</span><span class="si">}</span><span class="s1">&#39;</span>
+<span class="go">&#39;2.41e+27&#39;</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </section>
@@ -534,11 +547,11 @@ representing Mars where the surface pressure is 600 Pa, the temperature is
       </div>
     </a>
     <a class="right-next"
-       href="pyrt.extinction_ratio.html"
+       href="pyrt.scale_height.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">pyrt.extinction_ratio</p>
+        <p class="prev-next-title">pyrt.scale_height</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
