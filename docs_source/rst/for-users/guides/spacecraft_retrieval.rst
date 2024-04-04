@@ -129,7 +129,7 @@ We can also make some variables that DISORT needs in special cases.
 .. code-block:: python
 
    TEMPER = temperature_profile
-   H_LYR = pyrt.scale_height(temperature_profile, mass, gravity)
+   H_LYR = altitude_grid
 
 Rayleigh scattering
 -------------------
@@ -321,7 +321,7 @@ but you can change these to your liking
    DO_PSEUDO_SPHERE = False
    HEADER = ''
    PRNT = None
-   EARTH_RADIUS = 6371
+   EARTH_RADIUS = 6371     # this should have the same units as H_LYR
 
 Radiation
 ---------

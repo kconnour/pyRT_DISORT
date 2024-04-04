@@ -29,7 +29,7 @@ gravity = 3.7
 column_density = pyrt.column_density(pressure_profile, temperature_profile, altitude_grid)
 
 TEMPER = temperature_profile
-H_LYR = pyrt.scale_height(temperature_profile, mass, gravity)
+H_LYR = altitude_grid
 
 rayleigh_co2 = pyrt.rayleigh_co2(column_density, pixel_wavelengths)
 print(np.sum(rayleigh_co2.optical_depth, axis=0))
@@ -84,7 +84,7 @@ FISOT = 0
 PLANK = False
 BTEMP = temperature_profile[-1]
 TTEMP = temperature_profile[0]
-TEMIS = 1
+TEMIS = 0
 
 ALBMED = pyrt.empty_albedo_medium(MAXUMU)
 FLUP = pyrt.empty_diffuse_up_flux(MAXULV)
