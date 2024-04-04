@@ -538,7 +538,7 @@ scattering optical depth in each model layer.</p>
 </div>
 <p>We can also make some variables that DISORT needs in special cases.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">TEMPER</span> <span class="o">=</span> <span class="n">temperature_profile</span>
-<span class="n">H_LYR</span> <span class="o">=</span> <span class="n">pyrt</span><span class="o">.</span><span class="n">scale_height</span><span class="p">(</span><span class="n">temperature_profile</span><span class="p">,</span> <span class="n">mass</span><span class="p">,</span> <span class="n">gravity</span><span class="p">)</span>
+<span class="n">H_LYR</span> <span class="o">=</span> <span class="n">altitude_grid</span>
 </pre></div>
 </div>
 </section>
@@ -706,7 +706,7 @@ but you can change these to your liking</p>
 <span class="n">DO_PSEUDO_SPHERE</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="n">HEADER</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 <span class="n">PRNT</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="n">EARTH_RADIUS</span> <span class="o">=</span> <span class="mi">6371</span>
+<span class="n">EARTH_RADIUS</span> <span class="o">=</span> <span class="mi">6371</span>     <span class="c1"># this should have the same units as H_LYR</span>
 </pre></div>
 </div>
 </section>
