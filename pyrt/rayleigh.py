@@ -77,7 +77,8 @@ def rayleigh_co2(column_density: ArrayLike, wavelength: ArrayLike) -> Column:
        \tau_i = N_i * \sigma_i.
 
     The molecular cross-section is given by laboratory measurements from
-    `Sneep and Ubachs, 2005 <https://doi.org/10.1016/j.jqsrt.2004.07.025>`_.
+    `Sneep and Ubachs, 2005, JQSRT
+    <https://doi.org/10.1016/j.jqsrt.2004.07.025>`_.
 
     Examples
     --------
