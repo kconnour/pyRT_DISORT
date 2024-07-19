@@ -87,7 +87,7 @@ def rayleigh_co2(column_density: ArrayLike, wavelength: ArrayLike) -> Column:
 
     >>> import numpy as np
     >>> import pyrt
-    >>> column_density = np.linspace(10**26, 10**27, num=15)
+    >>> column_density = np.linspace(1, 10, num=15) * 10**26
     >>> wavs = np.linspace(0.2, 1, num=5)
     >>> rayleigh_column = pyrt.rayleigh_co2(column_density, wavs)
     >>> rayleigh_column.optical_depth.shape

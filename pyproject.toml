@@ -1,6 +1,25 @@
 [build-system]
-requires = ["setuptools", "wheel", "numpy==1.24.0"]
+requires = ["setuptools >= 61.0"]
 build-backend = "setuptools.build_meta"
-# The numpy requirement is due to f2py
-# see more here: https://github.com/numpy/numpy/issues/24008
-# The requirement ought to be removed after f2py is fixed
+
+[project]
+name = "pyRT_DISORT"
+version = "1.2.0"
+authors = [
+  {name = "Kyle Connour", email = "kyle.d.connour@gmail.com"},
+  {name = "Mike Wolff", email = "mjwolff@spacescience.org"},
+]
+requires-python = ">=3.9"
+readme = "README.rst"
+description = "Make radiative transfer more accessible to the yearning masses"
+dependencies = ["numpy", "scipy"]
+
+[project.optional-dependencies]
+dev = ["Sphinx", "pylint", "pytest", "pydata-sphinx-theme"]
+
+[project.urls]
+Homepage = "https://github.com/kconnour/pyRT_DISORT"
+Documentation = "https://kconnour.github.io/pyRT_DISORT/"
+
+[tool.setuptools.packages]
+find = {}

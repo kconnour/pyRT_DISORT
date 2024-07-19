@@ -1,0 +1,727 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Principles &#8212; pyRT_DISORT  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'rst/for-contributors/principles';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="About pyRT_DISORT" href="../about-this-project/about-pyRT_DISORT.html" />
+    <link rel="prev" title="Spacecraft Retrieval" href="../for-users/guides/spacecraft_retrieval.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pyRT_DISORT  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../for-users/installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../for-users/api-reference.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../for-users/guides.html">
+    Guides
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#">
+    Principles
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../about-this-project/about-pyRT_DISORT.html">
+    About pyRT_DISORT
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../about-this-project/about-DISORT.html">
+    About DISORT
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../about-this-project/release-notes.html">
+    Release notes
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/kconnour/pyRT_DISORT" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../for-users/installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../for-users/api-reference.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../for-users/guides.html">
+    Guides
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#">
+    Principles
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../about-this-project/about-pyRT_DISORT.html">
+    About pyRT_DISORT
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../about-this-project/about-DISORT.html">
+    About DISORT
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../about-this-project/release-notes.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/kconnour/pyRT_DISORT" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"></div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">Principles</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="principles">
+<h1>Principles<a class="headerlink" href="#principles" title="Link to this heading">#</a></h1>
+<p>Here, I outline what the files included in the project are for, along with some
+design philosophies I’ve learned along the way. I’ve found a good project should
+have several things: a good workflow, good code, good documentation, and
+good testing. I hope that this page serves as a guide for future
+modifications to the project.</p>
+<section id="workflow">
+<h2>Workflow<a class="headerlink" href="#workflow" title="Link to this heading">#</a></h2>
+<p>Before making any changes, you should create a fork of this repository and then
+create a branch to work on the feature. The branch
+should be self-contained to one particular topic or feature addition. When you
+develop code, you should exclusively push commits to this branch (i.e. don’t commit
+directly to the “master” branch). When you’re ready to merge your changes into
+the “master” branch, you should
+submit a pull request. This will allow Github to run some automated workflows
+(more on this below). If everything looks good, you can then merge the branch
+into the “master” branch.</p>
+<p>By doing this, the latest commits on the “master” branch will always be stable.
+In addition, it will allow you to conceivably work on several issues at once,
+by just switching which branch you’re working on. You’ll also allow Github
+to avoid merging code that will cause errors throughout the project (again,
+more on this below).</p>
+<section id="git-commits">
+<h3>Git commits<a class="headerlink" href="#git-commits" title="Link to this heading">#</a></h3>
+<p>When making commits, I start the message in a way that will complete this
+sentence: “If I accept this commit, I will ___”. That way, the commits are
+stylistically consistent and therefore a bit easier to read.</p>
+</section>
+</section>
+<section id="code">
+<h2>Code<a class="headerlink" href="#code" title="Link to this heading">#</a></h2>
+<p>All the code for the project lives in the <code class="docutils literal notranslate"><span class="pre">pyrt</span></code> directory. I believe that the
+most user friendly way to structure it is to make sure the user does not have
+to know about the module structure; therefore I chose to import all the classes and
+functions in <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code>. I also find that sometimes it’s desirable to call
+functions with either ints, floats, lists, or ndarrays. Thus, I chose to
+type hint all functions as ArrayLike and I frequently try to convert all inputs
+into ndarrays. I believe this makes the code user friendly, while still allowing
+the maintainer to expect a common data type to the core algorithms.</p>
+<p>Anytime you write or update a function/class, please put the associated tests
+in the <code class="docutils literal notranslate"><span class="pre">tests</span></code> folder on the same same level as the module. That folder should
+have a module called <code class="docutils literal notranslate"><span class="pre">test_&lt;name_of_module&gt;</span></code> (for example, there’s a module
+called <code class="docutils literal notranslate"><span class="pre">angles.py</span></code> and on the same level, there’s a <code class="docutils literal notranslate"><span class="pre">tests</span></code> directory
+containing <code class="docutils literal notranslate"><span class="pre">test_angles.py</span></code> and that file contains the unit tests for code
+in <code class="docutils literal notranslate"><span class="pre">angles.py</span></code>.</p>
+</section>
+<section id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Link to this heading">#</a></h2>
+<p>No one will use the code unless it’s documented, so you should document
+every function/class that a user might realistically want to use. I chose to
+document everything with <a class="reference external" href="https://numpydoc.readthedocs.io/en/latest/format.html">numpy-style</a>. docstrings for
+consistency. I believe that a realistic example is worth 1024 words, so I chose
+to put examples in the docstrings throughout. These have an additional bonus
+when it comes to testing (more on this below).</p>
+<section id="sphinx">
+<h3>Sphinx<a class="headerlink" href="#sphinx" title="Link to this heading">#</a></h3>
+<p>Sphinx is a great tool to automatically generate documentation as files you
+can view in a browser. Sadly, I found it was confusingly documented for getting
+started, so I give some pointers here. First, I’ve configured the project such
+that the files that tell Sphinx how to generate the documentation are in the
+<code class="docutils literal notranslate"><span class="pre">docs_source</span></code> directory. These are mostly .rst files. When Sphinx generates
+documentation, it should put them in the <code class="docutils literal notranslate"><span class="pre">docs</span></code> directory. I made this choice
+because Github will host documentation for projects like this one, but they
+insist that all the html/css files are specifically in a directory named
+<code class="docutils literal notranslate"><span class="pre">docs</span></code>. To generate the documentation, you’ll need the <code class="docutils literal notranslate"><span class="pre">Sphinx</span></code> and
+<code class="docutils literal notranslate"><span class="pre">pydata-sphinx-theme</span></code> packages (you can just install the project with the
+“dev” option to automatically download these).</p>
+<p>Sphinx is designed to be a CLI but I dislike this choice, because, as far as I
+can tell, Sphinx needs to be installed by the Python version it compiles docs
+for. So, if you have projects generated by different Python versions, or even
+update your Python interpreter without updating Sphinx, it will cause errors.
+Consequently, I recommend running Sphinx with this syntax:
+<code class="code docutils literal notranslate"><span class="pre">~/repos/pyRT_DISORT/venv/bin/python</span> <span class="pre">-m</span> <span class="pre">sphinx.cmd.build</span> <span class="pre">-b</span> <span class="pre">html</span>
+<span class="pre">~/repos/pyRT_DISORT/docs_source</span> <span class="pre">~/repos/pyRT_DISORT/docs</span> <span class="pre">-E</span></code>.
+I briefly discuss this on the notes page of the documentation.</p>
+<p>Note that I never figured out a good way to have Sphinx automatically generate
+documentation when I push to Github (I hear it’s possible though). Consequently,
+you have to diligent about regenerating the documentation every time you push
+to “master”, otherwise the docs can get out of sync with the source code.</p>
+</section>
+</section>
+<section id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Link to this heading">#</a></h2>
+<p>I think it’s very important for <em>all</em> the code to be tested. When possible,
+put examples of functions into the docstrings. When it comes time to test the
+code (which is usually before submitting a pull request), you can have pytest
+run a test suite on your code. If you’re in the <code class="docutils literal notranslate"><span class="pre">pyRT_DISORT</span></code> directory, this
+is simply <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pytest</span> <span class="pre">pyrt</span></code>. I included a <code class="docutils literal notranslate"><span class="pre">pytest.ini</span></code> file on the main
+level of the directory, which will tell pytest that it should run unit tests
+on everything under the “Examples” header of docstrings, in addition to running
+tests on all functions within the <code class="docutils literal notranslate"><span class="pre">tests</span></code> directory (the last part is pytest
+default behavior). It will let you know what functions aren’t working before
+attempting to merge a branch into the “master” branch.</p>
+<p>To provide further assurances that the code works, I added a file named
+<code class="docutils literal notranslate"><span class="pre">ci.yaml</span></code> within the <code class="docutils literal notranslate"><span class="pre">.github/workflows</span></code> directory. This file defines
+what actions that Github should take when an action happens. In this case,
+I’ve told it that any time someone tries to merge a branch into “master” or
+directly pushes to “master”, it will run a test suite. This involves installing
+pyRT_DISORT and running pytest on the docstrings and unit tests. Github runs
+this on multiple Python versions and operating systems, so ideally the user will
+know that this code is installable and works as advertised on MacOS 11, 12, 13,
+etc. and Ubuntu 20.04, 22.04, etc. on Python 3.10, 3.11, 3.12, etc. In my
+opinion, this is one of the nicest features that Github offers. If all tests
+pass, the project will have a green check mark on the home page and the README
+file will note that the CI is passing; oterwise, there will be red X.</p>
+<section id="linter">
+<h3>Linter<a class="headerlink" href="#linter" title="Link to this heading">#</a></h3>
+<p>I also have the CI run a linter and save the results. To see the automated
+linting results, first go to the “Actions” tab on the project homepage. Then,
+click on the workflow run. Click one of the jobs that ran and then look for the
+command “Lint with pylint”. There, you can see the output of pylint on the
+code.</p>
+</section>
+</section>
+<section id="miscellaneous">
+<h2>Miscellaneous<a class="headerlink" href="#miscellaneous" title="Link to this heading">#</a></h2>
+<section id="oddball-files">
+<h3>Oddball files<a class="headerlink" href="#oddball-files" title="Link to this heading">#</a></h3>
+<p>There are a number of files in the main level of the project that I haven’t
+discussed.</p>
+<ul class="simple">
+<li><p>The .gitignore file is simply a list of files that should not be
+tracked by git.</p></li>
+<li><p>The .pylintrc file tells pylint how to behave when it runs. Practically
+speaking, this defines what pylint outputs when it runs the CI.</p></li>
+<li><p>The CITATION.cff file is a way to describe how to cite this repository. It’s
+not clear to me if this should be removed if you publish each release with
+zenodo.</p></li>
+<li><p>The CONTRIBUTING.md file tells potential contributors how they should
+contribute to the project.</p></li>
+<li><p>LICENSE.txt is the license.</p></li>
+<li><p>pyproject.toml is the current best way to define an installation. It’s in this
+file where I put the project metadata and tell pip how I want it to install
+the project.</p></li>
+<li><p>README.rst is the file that lives on the Github homepage.</p></li>
+</ul>
+</section>
+<section id="github-files">
+<h3>Github files<a class="headerlink" href="#github-files" title="Link to this heading">#</a></h3>
+<p>I defined a number of files for Github integration, all within the <code class="docutils literal notranslate"><span class="pre">.github</span></code>
+directory.</p>
+<ul class="simple">
+<li><p>PULL_REQUEST_TEMPLATE.md is the template that I asked users to fill out when
+making a pull request. It just makes it easy for me to have some consistency
+when looking at pull requests.</p></li>
+<li><p>I also have bug_report.yaml, documentation.yaml, and feature_request.yaml,
+which all define a template I ask users to fill out when asking for changes
+to the project. These are under the <code class="docutils literal notranslate"><span class="pre">ISSUE_TEMPLATE</span></code> directory. I thought
+these are the 3 types of issues I was most likely to encounter, but you can
+of course add more if it becomes useful.</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../for-users/guides/spacecraft_retrieval.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Spacecraft Retrieval</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../about-this-project/about-pyRT_DISORT.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">About pyRT_DISORT</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#workflow">Workflow</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#git-commits">Git commits</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#code">Code</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#documentation">Documentation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sphinx">Sphinx</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">Testing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linter">Linter</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#miscellaneous">Miscellaneous</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#oddball-files">Oddball files</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#github-files">Github files</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../../_sources/rst/for-contributors/principles.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2023, kconnour.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.6.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.4.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
