@@ -1,6 +1,13 @@
 Release notes
 =============
 
+v1.2.0
+------
+The major change is separating the FORTRAN from the Python code. These are now
+in separate repositories, with the Python code living in this repository.
+Consequently, the surface API is now updated so that any functions that would've
+called disobrdf now just return a list of arguments to pass to disobrdf.
+
 v1.0.0
 ------
 Initial release! This update transitions pyRT_DISORT into a must lighter package
