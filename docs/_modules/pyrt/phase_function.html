@@ -472,8 +472,8 @@ document.write(`
 <span class="sd">    formula for the Henyey-Greenstein decomposition.</span>
 
 <span class="sd">    &gt;&gt;&gt; coeff0 = pyrt.henyey_greenstein_legendre_coefficients(0.5, 129)</span>
-<span class="sd">    &gt;&gt;&gt; np.amax(np.abs(coeff - coeff0)) &lt; 1e-10</span>
-<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; print(round(np.amax(np.abs(coeff - coeff0)), 12))</span>
+<span class="sd">    2e-12</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Why does the last test check a boolean and not a number? When I do CI,</span>
@@ -571,7 +571,7 @@ document.write(`
 <span class="sd">    &gt;&gt;&gt; sa = np.linspace(0, 180, num=181)</span>
 <span class="sd">    &gt;&gt;&gt; pf = pyrt.construct_henyey_greenstein(g, sa) * 4 * np.pi  # 4 pi is a normalization factor</span>
 <span class="sd">    &gt;&gt;&gt; fit_g = pyrt.fit_asymmetry_parameter(pf, sa)</span>
-<span class="sd">    &gt;&gt;&gt; round(fit_g, 5)</span>
+<span class="sd">    &gt;&gt;&gt; print(round(fit_g, 5))</span>
 <span class="sd">    0.83473</span>
 
 <span class="sd">    It&#39;s not completely terrible but not particularly inspiring. The error is</span>
@@ -581,7 +581,7 @@ document.write(`
 <span class="sd">    &gt;&gt;&gt; sa = np.linspace(0, 180, num=18100)</span>
 <span class="sd">    &gt;&gt;&gt; pf = pyrt.construct_henyey_greenstein(g, sa) * 4 * np.pi</span>
 <span class="sd">    &gt;&gt;&gt; fit_g = pyrt.fit_asymmetry_parameter(pf, sa)</span>
-<span class="sd">    &gt;&gt;&gt; round(fit_g, 5)</span>
+<span class="sd">    &gt;&gt;&gt; print(round(fit_g, 5))</span>
 <span class="sd">    0.80034</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -740,7 +740,7 @@ document.write(`
 <span class="sd">    &gt;&gt;&gt; ang = np.linspace(0, 180, num=181)</span>
 <span class="sd">    &gt;&gt;&gt; pf = pyrt.construct_henyey_greenstein(g, ang) * 4 * np.pi  # normalize it</span>
 <span class="sd">    &gt;&gt;&gt; lc = pyrt.decompose(pf, ang, 129)</span>
-<span class="sd">    &gt;&gt;&gt; np.amax(np.abs(lc - coeff)) &lt; 1e-10</span>
+<span class="sd">    &gt;&gt;&gt; print(np.amax(np.abs(lc - coeff)) &lt; 1e-10)</span>
 <span class="sd">    True</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>

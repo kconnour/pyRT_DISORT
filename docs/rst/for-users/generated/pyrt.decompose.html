@@ -525,8 +525,8 @@ moments.</p>
 <p>Compare the result of this general decomposition to the result of the
 formula for the Henyey-Greenstein decomposition.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">coeff0</span> <span class="o">=</span> <span class="n">pyrt</span><span class="o">.</span><span class="n">henyey_greenstein_legendre_coefficients</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">129</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">coeff</span> <span class="o">-</span> <span class="n">coeff0</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
-<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">coeff</span> <span class="o">-</span> <span class="n">coeff0</span><span class="p">)),</span> <span class="mi">12</span><span class="p">))</span>
+<span class="go">2e-12</span>
 </pre></div>
 </div>
 </dd></dl>

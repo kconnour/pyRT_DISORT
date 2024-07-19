@@ -520,7 +520,7 @@ document.write(`
 
 <span class="sd">    &gt;&gt;&gt; import numpy as np</span>
 <span class="sd">    &gt;&gt;&gt; import pyrt</span>
-<span class="sd">    &gt;&gt;&gt; column_density = np.linspace(10**26, 10**27, num=15)</span>
+<span class="sd">    &gt;&gt;&gt; column_density = np.linspace(1, 10, num=15) * 10**26</span>
 <span class="sd">    &gt;&gt;&gt; wavs = np.linspace(0.2, 1, num=5)</span>
 <span class="sd">    &gt;&gt;&gt; rayleigh_column = pyrt.rayleigh_co2(column_density, wavs)</span>
 <span class="sd">    &gt;&gt;&gt; rayleigh_column.optical_depth.shape</span>

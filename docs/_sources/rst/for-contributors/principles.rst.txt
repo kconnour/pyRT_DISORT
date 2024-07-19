@@ -92,7 +92,7 @@ I think it's very important for *all* the code to be tested. When possible,
 put examples of functions into the docstrings. When it comes time to test the
 code (which is usually before submitting a pull request), you can have pytest
 run a test suite on your code. If you're in the ``pyRT_DISORT`` directory, this
-is simply ``python -m pytest .``. I included a ``pytest.ini`` file on the main
+is simply ``python -m pytest pyrt``. I included a ``pytest.ini`` file on the main
 level of the directory, which will tell pytest that it should run unit tests
 on everything under the "Examples" header of docstrings, in addition to running
 tests on all functions within the ``tests`` directory (the last part is pytest
