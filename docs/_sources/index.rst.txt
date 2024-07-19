@@ -14,6 +14,12 @@ to compute several of the inputs required by DISORT.
 
 .. toctree::
    :maxdepth: 1
+   :caption: For contributors
+
+   rst/for-contributors/principles
+
+.. toctree::
+   :maxdepth: 1
    :caption: About this project
 
    rst/about-this-project/about-pyRT_DISORT
