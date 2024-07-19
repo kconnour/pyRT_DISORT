@@ -42,8 +42,8 @@ def decompose(phase_function: ArrayLike, scattering_angles: ArrayLike,
     formula for the Henyey-Greenstein decomposition.
 
     >>> coeff0 = pyrt.henyey_greenstein_legendre_coefficients(0.5, 129)
-    >>> np.amax(np.abs(coeff - coeff0)) < 1e-10
-    True
+    >>> print(round(np.amax(np.abs(coeff - coeff0)), 12))
+    2e-12
 
     """
     # Why does the last test check a boolean and not a number? When I do CI,
@@ -138,7 +138,7 @@ def fit_asymmetry_parameter(phase_function: ArrayLike,
     >>> sa = np.linspace(0, 180, num=181)
     >>> pf = pyrt.construct_henyey_greenstein(g, sa) * 4 * np.pi  # 4 pi is a normalization factor
     >>> fit_g = pyrt.fit_asymmetry_parameter(pf, sa)
-    >>> round(fit_g, 5)
+    >>> print(round(fit_g, 5))
     0.83473
 
     It's not completely terrible but not particularly inspiring. The error is
@@ -148,7 +148,7 @@ def fit_asymmetry_parameter(phase_function: ArrayLike,
     >>> sa = np.linspace(0, 180, num=18100)
     >>> pf = pyrt.construct_henyey_greenstein(g, sa) * 4 * np.pi
     >>> fit_g = pyrt.fit_asymmetry_parameter(pf, sa)
-    >>> round(fit_g, 5)
+    >>> print(round(fit_g, 5))
     0.80034
 
     """
@@ -298,7 +298,7 @@ def henyey_greenstein_legendre_coefficients(
     >>> ang = np.linspace(0, 180, num=181)
     >>> pf = pyrt.construct_henyey_greenstein(g, ang) * 4 * np.pi  # normalize it
     >>> lc = pyrt.decompose(pf, ang, 129)
-    >>> np.amax(np.abs(lc - coeff)) < 1e-10
+    >>> print(np.amax(np.abs(lc - coeff)) < 1e-10)
     True
 
     """
