@@ -42,8 +42,8 @@ def decompose(phase_function: ArrayLike, scattering_angles: ArrayLike,
     formula for the Henyey-Greenstein decomposition.
 
     >>> coeff0 = pyrt.henyey_greenstein_legendre_coefficients(0.5, 129)
-    >>> print(round(np.amax(np.abs(coeff - coeff0)), 12))
-    2e-12
+    >>> print(np.amax(np.abs(coeff - coeff0)) < 1e-10)
+    True
 
     """
     # Why does the last test check a boolean and not a number? When I do CI,
